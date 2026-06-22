@@ -273,22 +273,23 @@
 <auro-header level="4" id="localizationCalendar">Calendar</auro-header>
 <auro-header level="5" id="localizationCalendarVisibleStrings">Visible Strings</auro-header>
 <p>By default, the calendar weekday names rendered above the day grid and the month names rendered in the calendar header are derived from the active <code>locale</code> using the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so they update automatically when <code>locale</code> changes. Use the <code>monthNames</code> attribute to override the derived month names — for example, to supply a translation the browser does not produce or to support a locale the browser does not recognize.</p>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings.html) -->
-<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings.html -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings-diff.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings-diff.html -->
 
 <pre class="language-diff"><code class="language-diff">- &lt;auro-datepicker&gt;
-+ &lt;auro-datepicker monthNames='["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]'&gt;
-    &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
-    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
++ &lt;auro-datepicker monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'&gt;
+    &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Seleccione un rango de fechas&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(opcional)&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <p>The following live example sets <code>monthNames</code> imperatively on an <code>es-MX</code> picker:</p>
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization.html) -->
-<!-- The below content is automatically added from ./../apiExamples/localization.html -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings.html -->
 <auro-datepicker
   range
+  monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'
   locale="es-MX"
   rangeLabelStart="fecha de salida"
   rangeLabelEnd="fecha de regreso"
@@ -312,10 +313,11 @@
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/localization.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization-calendar-strings.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/localization-calendar-strings.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker
   range
+  monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'
   locale="es-MX"
   rangeLabelStart="fecha de salida"
   rangeLabelEnd="fecha de regreso"
@@ -335,6 +337,21 @@
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Salida&lt;/span&gt;
   &lt;span slot="bib.fullscreen.toLabel"&gt;Regreso&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization-calendar-strings.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/localization-calendar-strings.js -->
+<pre class="language-js"><code class="language-js">export function localizationCalendarStringsExample() {
+  const localizedDatepicker = document.querySelector("#localizationExample");
+​
+  if (!localizedDatepicker) {
+    return;
+  }
+​
+  localizedDatepicker.monthNames = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+  ];
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
@@ -580,70 +597,8 @@
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="localizationSnowflake">Layout Interaction</auro-header>
-<p>Locale-driven formatting applies across both the <code>classic</code> and <code>snowflake</code> layouts. In the snowflake layout, the localized value renders via <code>Intl.DateTimeFormat</code> using the active <code>locale</code>, so the visible date adapts automatically.</p>
-<p>The localized value is a compact summary — by design it uses a fixed <code>{ month: 'short', day: '2-digit' }</code> shape and does <strong>not</strong> reflect the <code>format</code> attribute. <code>format</code> governs the input mask only. To render it differently (for example, to include the year or honor a custom format), project content into the <code>displayValue</code> slot.</p>
-<div class="exampleWrapper--ondark">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake-locale.html) -->
-<!-- The below content is automatically added from ./../apiExamples/snowflake-locale.html -->
-<p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"><strong><code>locale="fr-FR"</code></strong> — derives <code>dd/mm/yyyy</code> from the locale. Mask: <code>DD/MM/YYYY</code>.</p>
-<auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="fr-FR">
-<span slot="label">Date de départ</span>
-<span slot="bib.fullscreen.headline">Choisir une date</span>
-<span slot="fromLabel">Date de départ</span>
-<span slot="bib.fullscreen.fromLabel">Date de départ</span>
-<span slot="helpText">Texte d'aide</span>
-</auro-datepicker>
-<p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"><strong><code>locale="ja-JP"</code>, range</strong> — derives <code>yyyy/mm/dd</code>. Mask: <code>YYYY/MM/DD</code>.</p>
-<auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="ja-JP" range>
-<span slot="label">出発日 / 帰国日</span>
-<span slot="bib.fullscreen.headline">日付を選択</span>
-<span slot="fromLabel">出発日</span>
-<span slot="toLabel">帰国日</span>
-<span slot="bib.fullscreen.fromLabel">出発日</span>
-<span slot="bib.fullscreen.toLabel">帰国日</span>
-</auro-datepicker>
-<p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"><strong><code>locale="fr-FR"</code> + explicit <code>format="yyyy/mm/dd"</code></strong> — explicit format wins for the mask, but the localized value is rendered the same as the first picker (it ignores <code>format</code>).</p>
-<auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="fr-FR" format="yyyy/mm/dd">
-<span slot="label">Date avec format explicite</span>
-<span slot="bib.fullscreen.headline">Choisir une date</span>
-<span slot="fromLabel">Date avec format explicite</span>
-<span slot="bib.fullscreen.fromLabel">Date avec format explicite</span>
-</auro-datepicker>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake-locale.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/snowflake-locale.html -->
-<pre class="language-html"><code class="language-html">&lt;p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"&gt;&lt;strong&gt;&lt;code&gt;locale="fr-FR"&lt;/code&gt;&lt;/strong&gt; — derives &lt;code&gt;dd/mm/yyyy&lt;/code&gt; from the locale. Mask: &lt;code&gt;DD/MM/YYYY&lt;/code&gt;.&lt;/p&gt;
-&lt;auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="fr-FR"&gt;
-  &lt;span slot="label"&gt;Date de départ&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Choisir une date&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Date de départ&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;Date de départ&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Texte d'aide&lt;/span&gt;
-&lt;/auro-datepicker&gt;
-​
-&lt;p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"&gt;&lt;strong&gt;&lt;code&gt;locale="ja-JP"&lt;/code&gt;, range&lt;/strong&gt; — derives &lt;code&gt;yyyy/mm/dd&lt;/code&gt;. Mask: &lt;code&gt;YYYY/MM/DD&lt;/code&gt;.&lt;/p&gt;
-&lt;auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="ja-JP" range&gt;
-  &lt;span slot="label"&gt;出発日 / 帰国日&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;日付を選択&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;出発日&lt;/span&gt;
-  &lt;span slot="toLabel"&gt;帰国日&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;出発日&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.toLabel"&gt;帰国日&lt;/span&gt;
-&lt;/auro-datepicker&gt;
-​
-&lt;p class="body-sm" style="color: var(--ds-basic-color-texticon-inverse);"&gt;&lt;strong&gt;&lt;code&gt;locale="fr-FR"&lt;/code&gt; + explicit &lt;code&gt;format="yyyy/mm/dd"&lt;/code&gt;&lt;/strong&gt; — explicit format wins for the mask, but the localized value is rendered the same as the first picker (it ignores &lt;code&gt;format&lt;/code&gt;).&lt;/p&gt;
-&lt;auro-datepicker layout="snowflake" shape="snowflake" appearance="inverse" locale="fr-FR" format="yyyy/mm/dd"&gt;
-  &lt;span slot="label"&gt;Date avec format explicite&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Choisir une date&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Date avec format explicite&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;Date avec format explicite&lt;/span&gt;
-&lt;/auro-datepicker&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
+<auro-header level="4" id="localizationTypography">Typography Note</auro-header>
+<p>Full-width CJK punctuation such as <code>（</code> and <code>）</code> (U+FF08, U+FF09) carries a half-em of intrinsic side bearing baked into the glyph. When consumer-supplied content like <code>&lt;span slot=&quot;optionalFromLabel&quot;&gt;（任意）&lt;/span&gt;</code> renders next to non-CJK label text, that built-in space can read as a visible gap. The whitespace is part of the glyph metrics, not text content — trimming the string or editing the HTML will not remove it. Any adjustment is a typographic decision for the consuming app.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>

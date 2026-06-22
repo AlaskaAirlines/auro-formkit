@@ -1198,7 +1198,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/month-day-year.html) -->
 <!-- The below content is automatically added from ../apiExamples/month-day-year.html -->
-<auro-input type="date" locale="badsads">
+<auro-input type="date">
 <span slot="label">Arrival date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
@@ -1208,7 +1208,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/month-day-year.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/month-day-year.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" locale="badsads"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date"&gt;
   &lt;span slot="label"&gt;Arrival date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
