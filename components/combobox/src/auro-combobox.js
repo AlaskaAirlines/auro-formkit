@@ -732,24 +732,20 @@ export class AuroCombobox extends AuroElement {
     // already match, and a no-op flag flip would make the bib branch's
     // bail eat legitimate user-input events.
     const triggerNeedsSync = this.input.value !== nextValue;
-    const bibNeedsSync = Boolean(this.inputInBib && this.inputInBib !== this.input && this.inputInBib.value !== nextValue);
+    const bibNeedsSync = this.inputInBib.value !== nextValue;
     if (!triggerNeedsSync && !bibNeedsSync) {
       return null;
     }
 
     this._syncingDisplayValue = true;
-    if (triggerNeedsSync) {
-      this.input.value = nextValue;
-    }
-    if (bibNeedsSync) {
-      this.inputInBib.value = nextValue;
-    }
 
     const pending = [];
     if (triggerNeedsSync) {
+      this.input.value = nextValue;
       pending.push(this.input.updateComplete);
     }
     if (bibNeedsSync) {
+      this.inputInBib.value = nextValue;
       pending.push(this.inputInBib.updateComplete);
     }
     return Promise.all(pending).then(() => {
