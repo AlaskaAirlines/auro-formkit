@@ -1182,7 +1182,7 @@ export class AuroCombobox extends AuroElement {
         }
 
         // Move focus to the clear button when the user makes a selection.
-        if (!isEcho) {
+        if (!isEcho && this.menu.value !== undefined) {
           this.setClearBtnFocus();
         }
 
@@ -1210,18 +1210,7 @@ export class AuroCombobox extends AuroElement {
           this._programmaticFilterRefresh = false;
         }, 0);
       }
-
-      // base-input skips auto-validate when focus is inside its own shadow,
-      // which it is after setTriggerInputFocus — re-run so prior tooShort
-      // clears. processCreditCard reasserts errorMessage on every render.
-      if (!isEcho && this.menu.optionSelected && this.input.validate) {
-        this.input.updateComplete.then(() => {
-          this.input.validate(true);
-          if (this.input.validity === 'valid') {
-            this.input.errorMessage = '';
-          }
-        });
-      }
+      
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {

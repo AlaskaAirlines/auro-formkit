@@ -2099,7 +2099,7 @@ function runFullTest(mobileView) {
         setInputValue(el, '4');
         el.input.validate(true);
         await elementUpdated(el);
-        await expect(el.input.validity).to.equal('tooShort');
+        await expect(el.validity).to.equal('tooShort');
 
         const option = el.menu.options.find((o) => o.id === 'opt-cc');
         option.click();
@@ -2107,7 +2107,9 @@ function runFullTest(mobileView) {
         await el.input.updateComplete;
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        await expect(el.input.validity).to.equal('valid');
+        el.blur();
+
+        await expect(el.validity).to.equal('valid');
       });
     });
 
