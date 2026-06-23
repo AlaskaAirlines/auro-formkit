@@ -86,5 +86,6 @@ export const Value = stories.Value;
 export const YearMonthDay = stories.YearMonthDay;
 export const Locale = stories.Locale;
 export const LocaleSingle = stories.LocaleSingle;
+export const LocalizationVisibleStrings = stories.LocalizationVisibleStrings;
 export const Nested = stories.Nested;
 export const Simple = stories.Simple;
