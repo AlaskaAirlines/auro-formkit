@@ -339,19 +339,6 @@
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization-calendar-strings.js) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/localization-calendar-strings.js -->
-<pre class="language-js"><code class="language-js">export function localizationCalendarStringsExample() {
-  const localizedDatepicker = document.querySelector("#localizationExample");
-​
-  if (!localizedDatepicker) {
-    return;
-  }
-​
-  localizedDatepicker.monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-  ];
-}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
@@ -597,8 +584,6 @@
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="localizationTypography">Typography Note</auro-header>
-<p>Full-width CJK punctuation such as <code>（</code> and <code>）</code> (U+FF08, U+FF09) carries a half-em of intrinsic side bearing baked into the glyph. When consumer-supplied content like <code>&lt;span slot=&quot;optionalFromLabel&quot;&gt;（任意）&lt;/span&gt;</code> renders next to non-CJK label text, that built-in space can read as a visible gap. The whitespace is part of the glyph metrics, not text content — trimming the string or editing the HTML will not remove it. Any adjustment is a typographic decision for the consuming app.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
