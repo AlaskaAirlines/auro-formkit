@@ -255,9 +255,9 @@
 <auro-header level="3" id="localization">Localization</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/localization.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/localization.md -->
-<p>The component supports complete localization, including visible strings, screen reader announcements and locale based date formatting.</p>
+<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
 <auro-header level="4" id="localizationTrigger">Trigger</auro-header>
-<auro-header level="4" id="localizationTriggerVisibleStrings">Trigger Visible strings</auro-header>
+<auro-header level="5" id="localizationTriggerVisibleStrings">Visible Strings</auro-header>
 <p>The visible strings rendered in the input, trigger, and fullscreen bib are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
@@ -265,24 +265,81 @@
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker&gt;
 +   &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
 +   &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
-+   &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
++   &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
 +   &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
 +   &lt;span slot="bib.fullscreen.fromLabel"&gt;Abreisedatum&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="4" id="localizationCalendar">Calendar</auro-header>
-<auro-header level="4" id="localizationCalendarVisibleStrings">Visible strings</auro-header>
+<auro-header level="5" id="localizationCalendarVisibleStrings">Visible Strings</auro-header>
 <p>By default, the calendar weekday names rendered above the day grid and the month names rendered in the calendar header are derived from the active <code>locale</code> using the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so they update automatically when <code>locale</code> changes. Use the <code>monthNames</code> attribute to override the derived month names — for example, to supply a translation the browser does not produce or to support a locale the browser does not recognize.</p>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings.html) -->
-<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings.html -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings-diff.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings-diff.html -->
 
 <pre class="language-diff"><code class="language-diff">- &lt;auro-datepicker&gt;
-+ &lt;auro-datepicker monthNames='["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]'&gt;
-    &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
++ &lt;auro-datepicker monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'&gt;
+    &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Seleccione un rango de fechas&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(opcional)&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="localizationCalendarA11yStrings">Screen reader strings</auro-header>
+<p>The following live example sets <code>monthNames</code> imperatively on an <code>es-MX</code> picker:</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings.html -->
+<auro-datepicker
+  range
+  monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'
+  locale="es-MX"
+  rangeLabelStart="fecha de salida"
+  rangeLabelEnd="fecha de regreso"
+  rangeLabelBeforeRange="antes de la salida"
+  rangeLabelInRange="entre vuelos"
+  rangeLabelAfterRange="después del regreso"
+  navLabelPrevMonth="Ir al mes anterior"
+  navLabelNextMonth="Ir al mes siguiente"
+  calendarGridLabel="Días del mes del calendario"
+  id="localizationExample">
+<span slot="fromLabel">Salida</span>
+<span slot="toLabel">Regreso</span>
+<span slot="helpText">Seleccione un rango de fechas</span>
+<span slot="optionalFromLabel">(opcional)</span>
+<span slot="optionalToLabel">(opcional)</span>
+<span slot="bib.fullscreen.headline">Seleccione fechas</span>
+<span slot="bib.fullscreen.fromLabel">Salida</span>
+<span slot="bib.fullscreen.toLabel">Regreso</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization-calendar-strings.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/localization-calendar-strings.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker
+  range
+  monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'
+  locale="es-MX"
+  rangeLabelStart="fecha de salida"
+  rangeLabelEnd="fecha de regreso"
+  rangeLabelBeforeRange="antes de la salida"
+  rangeLabelInRange="entre vuelos"
+  rangeLabelAfterRange="después del regreso"
+  navLabelPrevMonth="Ir al mes anterior"
+  navLabelNextMonth="Ir al mes siguiente"
+  calendarGridLabel="Días del mes del calendario"
+  id="localizationExample"&gt;
+  &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
+  &lt;span slot="toLabel"&gt;Regreso&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Seleccione un rango de fechas&lt;/span&gt;
+  &lt;span slot="optionalFromLabel"&gt;(opcional)&lt;/span&gt;
+  &lt;span slot="optionalToLabel"&gt;(opcional)&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Seleccione fechas&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Salida&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.toLabel"&gt;Regreso&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
 <p>Assistive-technology announcements — range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>) — are exposed as individual attributes so they can be translated independently of the visible UI. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
@@ -301,9 +358,11 @@
     &lt;span slot="fromLabel"&gt;Abreise&lt;/span&gt;
     &lt;span slot="toLabel"&gt;Rückkehr&lt;/span&gt;
     &lt;span slot="helpText"&gt;Wählen Sie einen Zeitraum&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalToLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="localizationDateFormatting">Date formatting</auro-header>
+<auro-header level="4" id="localizationDateFormatting">Date Formatting</auro-header>
 <p>The <code>locale</code> attribute drives the date format used by the input and the calendar. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <code>Intl</code> API, so <code>format</code> does not need to be set manually.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale.html -->
@@ -312,7 +371,7 @@
 + &lt;auro-datepicker locale="de-DE"&gt;
     &lt;span slot="fromLabel"&gt;Deutsches Datum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <p>If no <code>locale</code> attribute is present, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute; if none is found, it defaults to <code>en-US</code>.</p>
@@ -323,7 +382,7 @@
     &lt;auro-datepicker&gt;
       &lt;span slot="fromLabel"&gt;継承された ja-JP 日付形式&lt;/span&gt;
       &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
-      &lt;span slot="optionalLabel"&gt;（任意）&lt;/span&gt;
+      &lt;span slot="optionalFromLabel"&gt;（任意）&lt;/span&gt;
     &lt;/auro-datepicker&gt;
 + &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -336,14 +395,15 @@
 +   format="mm/dd/yyyy"&gt;
     &lt;span slot="fromLabel"&gt;Deutsches Datum mit mm/dd/yyyy-Format&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
+<p>The following live example shows several locale configurations in action:</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/locale.html -->
 <div data-locale="de-DE">
-<auro-header level="4" >de-DE Example</auro-header>
+<p class="body-sm"><strong>de-DE</strong></p>
 <auro-datepicker
     locale="de-DE"
     range
@@ -355,11 +415,16 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
-<span slot="fromLabel">Deutsches Datum</span>
+<span slot="fromLabel">Abreisedatum</span>
+<span slot="toLabel">Rückkehrdatum</span>
 <span slot="helpText">Hilfetext</span>
-<span slot="optionalLabel">(freiwillig)</span>
+<span slot="optionalFromLabel">(freiwillig)</span>
+<span slot="optionalToLabel">(freiwillig)</span>
+<span slot="bib.fullscreen.headline">Datum auswählen</span>
+<span slot="bib.fullscreen.fromLabel">Abreisedatum</span>
+<span slot="bib.fullscreen.toLabel">Rückkehrdatum</span>
 </auro-datepicker>
-<auro-header level="4" >zh-CN Example</auro-header>
+<p class="body-sm"><strong>zh-CN</strong></p>
 <auro-datepicker
     locale="zh-CN"
     range
@@ -371,11 +436,16 @@
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数">
-<span slot="fromLabel">中文日期</span>
+<span slot="fromLabel">出发日期</span>
+<span slot="toLabel">返回日期</span>
 <span slot="helpText">帮助文本</span>
-<span slot="optionalLabel">（可选）</span>
+<span slot="optionalFromLabel">（可选）</span>
+<span slot="optionalToLabel">（可选）</span>
+<span slot="bib.fullscreen.headline">选择日期</span>
+<span slot="bib.fullscreen.fromLabel">出发日期</span>
+<span slot="bib.fullscreen.toLabel">返回日期</span>
 </auro-datepicker>
-<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
+<p class="body-sm"><strong>Inherited de-DE (via <code>data-locale</code>)</strong></p>
 <auro-datepicker
     range
     rangeLabelStart="Startdatum"
@@ -386,11 +456,16 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
-<span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="fromLabel">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+<span slot="toLabel">Rückkehrdatum</span>
 <span slot="helpText">Hilfetext</span>
-<span slot="optionalLabel">(freiwillig)</span>
+<span slot="optionalFromLabel">(freiwillig)</span>
+<span slot="optionalToLabel">(freiwillig)</span>
+<span slot="bib.fullscreen.headline">Datum auswählen</span>
+<span slot="bib.fullscreen.fromLabel">Abreisedatum</span>
+<span slot="bib.fullscreen.toLabel">Rückkehrdatum</span>
 </auro-datepicker>
-<auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
+<p class="body-sm"><strong>ja-JP with explicit <code>format="mm/dd/yyyy"</code></strong></p>
 <auro-datepicker
     locale="ja-JP"
     format="mm/dd/yyyy"
@@ -403,9 +478,14 @@
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付">
-<span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
+<span slot="fromLabel">出発日</span>
+<span slot="toLabel">帰国日</span>
 <span slot="helpText">ヘルプテキスト</span>
-<span slot="optionalLabel">（任意）</span>
+<span slot="optionalFromLabel">（任意）</span>
+<span slot="optionalToLabel">（任意）</span>
+<span slot="bib.fullscreen.headline">日付を選択</span>
+<span slot="bib.fullscreen.fromLabel">出発日</span>
+<span slot="bib.fullscreen.toLabel">帰国日</span>
 </auro-datepicker>
 </div>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -415,7 +495,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
 <pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
-  &lt;auro-header level="4" &gt;de-DE Example&lt;/auro-header&gt;
+  &lt;p class="body-sm"&gt;&lt;strong&gt;de-DE&lt;/strong&gt;&lt;/p&gt;
   &lt;auro-datepicker
     locale="de-DE"
     range
@@ -427,11 +507,16 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
-    &lt;span slot="fromLabel"&gt;Deutsches Datum&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="toLabel"&gt;Rückkehrdatum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalToLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.toLabel"&gt;Rückkehrdatum&lt;/span&gt;
   &lt;/auro-datepicker&gt;
-  &lt;auro-header level="4" &gt;zh-CN Example&lt;/auro-header&gt;
+  &lt;p class="body-sm"&gt;&lt;strong&gt;zh-CN&lt;/strong&gt;&lt;/p&gt;
   &lt;auro-datepicker
     locale="zh-CN"
     range
@@ -443,11 +528,16 @@
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数"&gt;
-    &lt;span slot="fromLabel"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;出发日期&lt;/span&gt;
+    &lt;span slot="toLabel"&gt;返回日期&lt;/span&gt;
     &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;（可选）&lt;/span&gt;
+    &lt;span slot="optionalToLabel"&gt;（可选）&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;选择日期&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;出发日期&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.toLabel"&gt;返回日期&lt;/span&gt;
   &lt;/auro-datepicker&gt;
-  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
+  &lt;p class="body-sm"&gt;&lt;strong&gt;Inherited de-DE (via &lt;code&gt;data-locale&lt;/code&gt;)&lt;/strong&gt;&lt;/p&gt;
   &lt;auro-datepicker
     range
     rangeLabelStart="Startdatum"
@@ -458,11 +548,16 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
-    &lt;span slot="fromLabel"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Abreisedatum (geerbt aus `data-locale="de-DE"`)&lt;/span&gt;
+    &lt;span slot="toLabel"&gt;Rückkehrdatum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="optionalToLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.toLabel"&gt;Rückkehrdatum&lt;/span&gt;
   &lt;/auro-datepicker&gt;
-  &lt;auro-header level="4" &gt;ja-JP with `mm/dd/yyyy` format Example&lt;/auro-header&gt;
+  &lt;p class="body-sm"&gt;&lt;strong&gt;ja-JP with explicit &lt;code&gt;format="mm/dd/yyyy"&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
   &lt;auro-datepicker
     locale="ja-JP"
     format="mm/dd/yyyy"
@@ -475,9 +570,14 @@
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付"&gt;
-    &lt;span slot="fromLabel"&gt;明示的な mm/dd/yyyy 形式の ja-JP ロケール&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;出発日&lt;/span&gt;
+    &lt;span slot="toLabel"&gt;帰国日&lt;/span&gt;
     &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;（任意）&lt;/span&gt;
+    &lt;span slot="optionalFromLabel"&gt;（任意）&lt;/span&gt;
+    &lt;span slot="optionalToLabel"&gt;（任意）&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;日付を選択&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;出発日&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.toLabel"&gt;帰国日&lt;/span&gt;
   &lt;/auro-datepicker&gt;
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

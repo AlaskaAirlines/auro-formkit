@@ -22,6 +22,7 @@
 <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#autoComplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
+<auro-anchorlink fluid href="#typeAhead" class="level2 body-xs">Type-Ahead</auro-anchorlink>
 <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
 <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
 <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
@@ -660,9 +661,11 @@
 <auro-select class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
 <span slot="helpText">This select has custom styles applied via CSS Shadow Parts.</span>
+<auro-menu>
 <auro-menuoption value="one">Option One</auro-menuoption>
 <auro-menuoption value="two">Option Two</auro-menuoption>
 <auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-menu>
 </auro-select>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -687,9 +690,11 @@
 &lt;auro-select class="css-parts-demo"&gt;
   &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
   &lt;span slot="helpText"&gt;This select has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -743,6 +748,76 @@
     &lt;/auro-menu&gt;
   &lt;/auro-select&gt;
 &lt;/form&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="typeAhead">Type-Ahead</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/typeahead.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/typeahead.md -->
+<p>Type-ahead lets a guest jump to an option by typing. As keys are pressed, the active option advances to the first enabled option whose <strong>displayed text</strong> starts with the buffered keystrokes — following the <auro-hyperlink href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">WAI-ARIA Listbox pattern</auro-hyperlink>, and mirroring native HTML <code>&lt;select&gt;</code> behavior. Matching uses the rendered text rather than the <code>value</code> attribute.</p>
+<p>The <code>typeaheadTimeoutMs</code> attribute (default <code>500</code>) controls how long the buffer persists between keystrokes. Repeating the same character cycles through every enabled option starting with it; disabled options are skipped.</p>
+<div class="note">
+<strong>Note:</strong> The <kbd>Space</kbd> key is context-sensitive. When the type-ahead buffer is empty it toggles the bib open or closed, matching the rest of <code>&lt;auro-select&gt;</code>. When the buffer is active it extends the buffer instead, so multi-word options such as "San Francisco" can be matched by typing <kbd>s</kbd>, <kbd>a</kbd>, <kbd>n</kbd>, <kbd>Space</kbd>, <kbd>f</kbd>.
+</div>
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/typeahead.html) -->
+<!-- The below content is automatically added from ./../apiExamples/typeahead.html -->
+<auro-select>
+<span slot="ariaLabel.bib.close">Close Popup</span>
+<span slot="bib.fullscreen.headline">Airport</span>
+<span slot="label">Destination airport</span>
+<auro-menu>
+<auro-menuoption value="ANC">Anchorage</auro-menuoption>
+<auro-menuoption value="ATL">Atlanta</auro-menuoption>
+<auro-menuoption value="AUS">Austin</auro-menuoption>
+<auro-menuoption value="BOS">Boston</auro-menuoption>
+<auro-menuoption value="DEN">Denver</auro-menuoption>
+<auro-menuoption value="DFW" disabled>Dallas/Fort Worth</auro-menuoption>
+<auro-menuoption value="DTW">Detroit</auro-menuoption>
+<auro-menuoption value="HNL">Honolulu</auro-menuoption>
+<auro-menuoption value="LAX">Los Angeles</auro-menuoption>
+<auro-menuoption value="MIA">Miami</auro-menuoption>
+<auro-menuoption value="ORD">Chicago</auro-menuoption>
+<auro-menuoption value="PDX">Portland</auro-menuoption>
+<auro-menuoption value="PHX">Phoenix</auro-menuoption>
+<auro-menuoption value="SAN">San Diego</auro-menuoption>
+<auro-menuoption value="SEA">Seattle</auro-menuoption>
+<auro-menuoption value="SFO">San Francisco</auro-menuoption>
+<auro-menuoption value="SJC" disabled>San Jose</auro-menuoption>
+<auro-menuoption value="SLC">Salt Lake City</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/typeahead.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/typeahead.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close Popup&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Airport&lt;/span&gt;
+  &lt;span slot="label"&gt;Destination airport&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="ANC"&gt;Anchorage&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ATL"&gt;Atlanta&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="AUS"&gt;Austin&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="BOS"&gt;Boston&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DEN"&gt;Denver&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DFW" disabled&gt;Dallas/Fort Worth&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DTW"&gt;Detroit&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="HNL"&gt;Honolulu&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="LAX"&gt;Los Angeles&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="MIA"&gt;Miami&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ORD"&gt;Chicago&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PDX"&gt;Portland&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PHX"&gt;Phoenix&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SAN"&gt;San Diego&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SEA"&gt;Seattle&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SFO"&gt;San Francisco&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SJC" disabled&gt;San Jose&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SLC"&gt;Salt Lake City&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="disableComponent">Disable Component</auro-header>
