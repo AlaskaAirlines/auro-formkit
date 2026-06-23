@@ -1210,7 +1210,6 @@ export class AuroCombobox extends AuroElement {
           this._programmaticFilterRefresh = false;
         }, 0);
       }
-      
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
