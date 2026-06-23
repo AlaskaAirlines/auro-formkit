@@ -338,8 +338,6 @@
   &lt;span slot="bib.fullscreen.toLabel"&gt;Regreso&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization-calendar-strings.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
 <p>Assistive-technology announcements — range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>) — are exposed as individual attributes so they can be translated independently of the visible UI. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
