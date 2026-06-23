@@ -133,3 +133,4 @@ export const Appearance = stories.Appearance;
 export const CustomValidity = stories.CustomValidity;
 export const LargeFullscreenHeadline = stories.LargeFullscreenHeadline;
 export const InDrawer = stories.InDrawer;
+export const CssParts = stories.CssParts;
