@@ -1207,6 +1207,46 @@ function runFullTest(mobileView) {
     });
   });
 
+  // A pre-filled disabled field carries a value but isn't user-resettable —
+  // the reset button must stay disabled, because clicking it would only
+  // affect non-disabled fields (which here have nothing to reset).
+  describe('_hasResetableState', () => {
+    it('keeps the reset button disabled when only disabled fields carry values', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="locked" value="prefilled" disabled></auro-input>
+          <auro-input name="empty"></auro-input>
+          <auro-button type="reset">Reset</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      const [resetButton] = el.resetElements;
+      expect(el.isInitialState).to.be.true;
+      expect(resetButton.hasAttribute('disabled')).to.be.true;
+    });
+
+    // Empty-array values (checkbox-group / multiselect with no selection) must
+    // be treated as semantically equivalent to '' / undefined / null so the
+    // form stays in initial state and Reset stays disabled.
+    it('collapses empty-array values to null in _normalizeEmpty', async () => {
+      const el = await fixture(html`<auro-form></auro-form>`);
+      await elementUpdated(el);
+
+      expect(el._normalizeEmpty([])).to.equal(null);
+      expect(el._normalizeEmpty('')).to.equal(null);
+      expect(el._normalizeEmpty(undefined)).to.equal(null);
+
+      // Non-empty values must pass through untouched — including falsy-but-
+      // semantically-meaningful values like 0 and false.
+      expect(el._normalizeEmpty(0)).to.equal(0);
+      expect(el._normalizeEmpty(false)).to.equal(false);
+      expect(el._normalizeEmpty('value')).to.equal('value');
+      expect(el._normalizeEmpty(['a'])).to.deep.equal(['a']);
+    });
+  });
+
   describe('Slots', () => {
     describe('default', () => {
       it('should render content in the default slot', async () => {

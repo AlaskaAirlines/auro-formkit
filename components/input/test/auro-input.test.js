@@ -311,6 +311,30 @@ function runFullTest(mobileView) {
         expect(el.maskInstance.displayValue).to.equal(nativeInput.value);
       });
 
+      // The credit-card mask path writes through maskInstance.value rather
+      // than el.value to keep the mask's _value in sync. The `|| ''` fallback
+      // prevents passing an undefined formattedValue (which happens when value
+      // is cleared after the mask exists) into imask, where it would surface
+      // as a "changed outside of mask" warning.
+      it('clears maskInstance value via empty-string fallback when value is reset to empty', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        el.value = '4111111111111111';
+        await elementUpdated(el);
+        await elementUpdated(el);
+        expect(el.maskInstance).to.exist;
+        expect(el.maskInstance.value).to.not.equal('');
+
+        el.value = '';
+        await elementUpdated(el);
+        await elementUpdated(el);
+
+        expect(el.maskInstance.value).to.equal('');
+      });
+
       it('configureAutoFormatting is re-entrancy safe', async () => {
         const el = await fixture(html`
           <auro-input type="credit-card" label="CC"></auro-input>
@@ -362,6 +386,19 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         expect(el.value).to.equal('2000-12-31');
         expect(el.inputElement.value).to.equal('12/31/2000');
+      });
+
+      // When type=date is set without an explicit format, setCustomHelpTextMessage
+      // falls through the typeToI18n list and hits the date branch, wiring the
+      // default mm/dd/yyyy validity message. configureDataForType then resolves
+      // a default format from the locale, so subsequent renders read format
+      // from the property — exercising both ternary arms of placeholderStr.
+      it('type="date" without format wires default validity message and renders MM/DD/YYYY placeholder', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.setCustomValidityForType).to.exist;
+        expect(el.inputElement.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
       });
 
       it('dd/mm/yyyy — stores ISO, displays locale format', async () => {
@@ -1045,6 +1082,15 @@ function runFullTest(mobileView) {
         await expect(input).to.have.attribute('placeholder', 'John Doe');
       });
 
+      // type=date with an explicit format derives the placeholder from that
+      // format (uppercased) when the consumer hasn't supplied a placeholder
+      // of their own.
+      it('derives the placeholder from a date input\'s format when not explicitly set', async () => {
+        const el = await fixture(html`<auro-input type="date" format="dd/mm/yyyy"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.inputElement.getAttribute('placeholder')).to.equal('DD/MM/YYYY');
+      });
     });
 
     describe('readonly', () => {
@@ -1979,11 +2025,13 @@ function runFullTest(mobileView) {
       });
 
       it('should set auro-input attribute when registered under a custom name', async () => {
-        const customName = `custom-input-${Date.now()}`;
+        const customName = `custom-input-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
         AuroInput.register(customName);
 
-        const el = await fixture(html`<${unsafeStatic(customName)}></${unsafeStatic(customName)}>`);
-        await elementUpdated(el);
+        const host = await fixture(html`<div></div>`);
+        const el = document.createElement(customName);
+        host.appendChild(el);
+        await el.updateComplete;
 
         expect(el.tagName.toLowerCase()).to.equal(customName);
         expect(el.hasAttribute('auro-input')).to.be.true;
