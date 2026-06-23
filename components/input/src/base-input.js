@@ -700,10 +700,6 @@ export default class BaseInput extends AuroElement {
       this.wrapperElement.addEventListener('click', this.handleClick);
     }
 
-    // add attribute for query selectors when auro-input is registered under a custom name
-    if (this.tagName.toLowerCase() !== 'auro-input' && !this.hasAttribute('auro-input')) {
-      this.setAttribute('auro-input', '');
-    }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
     // use validity message override if declared when initializing the component
@@ -790,6 +786,13 @@ export default class BaseInput extends AuroElement {
 
     if (typeToI18n.includes(this.type)) {
       this.setCustomValidityForType = i18n(this.lang, this.type);
+    // COVERAGE: this `else if` branch is unreachable in WTR. connectedCallback
+    // (L682) calls configureDataForType, which at L1266-1268 assigns
+    // `this.format = this.util.getDateMaskFromLocale().toLowerCase()` for any
+    // type=date input whose `format` attribute is unset. That runs before
+    // firstUpdated invokes setCustomHelpTextMessage, so `!this.format` is
+    // always false here. Retained as a defensive fallback; the whole function
+    // is @deprecated per AB#1557296 and slated for removal.
     } else if (!this.format && this.type === 'date') {
       this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
     } else if (this.dateFormatMap[this.format]) {
@@ -1267,7 +1270,7 @@ export default class BaseInput extends AuroElement {
    */
   get placeholderStr() {
     if (!this.placeholder && this.type === 'date') {
-      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+      return this.format.toUpperCase();
     }
     return this.placeholder || "";
   }

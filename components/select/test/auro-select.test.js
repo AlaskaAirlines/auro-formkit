@@ -1767,6 +1767,46 @@ function runTest(mobileView) {
         }
       });
 
+      // ─── updateDisplayedValue removes stale slotted displayValue elements ──
+      // The emphasized layout clones <slot="displayValue"> nodes from the selected
+      // menuoption into the auro-select host's light DOM. On a second selection,
+      // the prior slotted node must be removed before the new one is appended —
+      // otherwise the trigger would visually stack icons from every option the
+      // user has ever clicked.
+      it('updateDisplayedValue removes previously-slotted displayValue elements on re-select', async () => {
+        const el = await emphasizedFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const flights = menu.querySelector('auro-menuoption[value="flights"]');
+        flights.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+
+        const slot = el.shadowRoot.querySelector('slot[name="displayValue"]');
+        expect(slot.assignedElements().length).to.equal(1);
+
+        const cars = menu.querySelector('auro-menuoption[value="cars"]');
+        cars.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+
+        // Old slotted node removed, new one appended — never more than one.
+        expect(slot.assignedElements().length).to.equal(1);
+      });
+
+      // ─── _getOptionDisplayText handles empty textContent ─────────────
+      // The textContent fallback guards the typeahead filter when an option
+      // has no text content (value-only). Called directly so the fixture
+      // doesn't need an empty-label menuoption, which trips axe.
+      it('_getOptionDisplayText returns an empty string for elements with no text', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const emptyEl = document.createElement('span');
+        expect(el._getOptionDisplayText(emptyEl)).to.equal('');
+      });
+
       // ─── handleMenuLoadingChange hides bib when loading starts ───────
       it('handleMenuLoadingChange hides bib when loading without placeholder', async () => {
         const el = await defaultFixture();
