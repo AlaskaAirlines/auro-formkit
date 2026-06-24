@@ -55,14 +55,10 @@ export async function dynamicMenuExample() {
   // Helper function that generates HTML for menuoptions
   function generateMenuOptionHtml(menu, label, value) {
     const option = document.createElement('auro-menuoption');
-    const displayValue = document.createElement('div');
-    displayValue.setAttribute("slot", "displayValue");
-    displayValue.innerHTML = value;
 
     option.value = value;
     option.innerHTML = label;
     menu.appendChild(option);
-    option.appendChild(displayValue);
   }
 
   // Main javascript that runs all JS to create example
