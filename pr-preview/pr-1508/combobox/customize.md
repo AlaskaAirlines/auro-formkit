@@ -1137,8 +1137,6 @@
             id="dynamicMenuExample"
             value="TAN"
             noFilter
-            persistInput
-            dvInputOnly
             setCustomValidityValueMissing="Please select an option from the list."
             required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
@@ -1154,8 +1152,6 @@
             id="dynamicMenuExampleTwo"
             value="GER"
             noFilter
-            persistInput
-            dvInputOnly
             setCustomValidityValueMissing="Please select an option from the list."
             required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
@@ -1185,8 +1181,6 @@
   id="dynamicMenuExample"
   value="TAN"
   noFilter
-  persistInput
-  dvInputOnly
   setCustomValidityValueMissing="Please select an option from the list."
   required&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic Combobox Header&lt;/span&gt;
@@ -1202,8 +1196,6 @@
   id="dynamicMenuExampleTwo"
   value="GER"
   noFilter
-  persistInput
-  dvInputOnly
   setCustomValidityValueMissing="Please select an option from the list."
   required&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic Combobox Header&lt;/span&gt;
