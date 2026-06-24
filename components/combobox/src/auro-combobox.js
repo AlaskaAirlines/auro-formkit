@@ -1537,6 +1537,13 @@ export class AuroCombobox extends AuroElement {
       this.optionSelected = undefined;
       this.value = undefined;
 
+      // clear the displayValue in the trigger if displayValue slot content is present
+      const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
+
+      if (displayValueInTrigger) {
+        displayValueInTrigger.remove();
+      }
+
       if (this.input.value) {
         this.input.clear();
       }
@@ -1560,15 +1567,12 @@ export class AuroCombobox extends AuroElement {
   }
 
   updated(changedProperties) {
-    // After the component is ready, send direct value changes to auro-menu.
+    // After the component is ready, propogate direct changes down to child components.
     if (changedProperties.has('value')) {
-      if (this.value && this.value.length > 0) {
-        this.hasValue = true;
-      } else {
-        this.hasValue = false;
-      }
+      this._programmaticFilterRefresh = true;
 
-      if (this.hasValue && !this.input.value && (!this.menu.options || this.menu.options.length === 0)) {
+      if (this.input.value !== this.value) {
+        this.menu.value = undefined;
         this.input.value = this.value;
       }
 
@@ -1587,7 +1591,7 @@ export class AuroCombobox extends AuroElement {
         composed: true,
         detail: {
           optionSelected: this.menu.optionSelected,
-          value: this.menu.value
+          value: this.value
         }
       }));
 
@@ -1617,7 +1621,7 @@ export class AuroCombobox extends AuroElement {
           this.noMatchOption
         ) {
           if (!this.dropdownOpen && this._userTyped) {
-            this.showBib('availableOptions');
+            this.showBib();
             this._userTyped = false;
           }
         }
