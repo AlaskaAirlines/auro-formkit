@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="8">ArrowDown</td>
+      <td rowspan="2">ArrowDown</td>
       <td rowspan="2">-</td>
       <td>Collapsed, list options have been populated</td>
       <td>
@@ -34,77 +34,7 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="2">Meta (Command / Windows key)</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>
-        Opens the bib.
-        <div class="note">
-          <strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the last enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Alt (Option)</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the last enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Control</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>
-        Opens the bib.
-        <div class="note">
-          <strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the last enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="8">ArrowUp</td>
+      <td rowspan="2">ArrowUp</td>
       <td rowspan="2">-</td>
       <td>Collapsed, list options have been populated</td>
       <td>
@@ -122,76 +52,6 @@
       </td>
       <td>
         Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Meta (Command / Windows key)</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>
-        Opens the bib.
-        <div class="note">
-          <strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Alt (Option)</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Control</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>
-        Opens the bib.
-        <div class="note">
-          <strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>

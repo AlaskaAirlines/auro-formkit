@@ -773,11 +773,8 @@ export class AuroCombobox extends AuroElement {
       option.setAttribute('aria-posinset', index + 1);
     });
 
-    if (this.value && this.input.value && !this.menu.value) {
-      if (this.behavior === 'suggestion' && this.menu.options && this.menu.options.some((opt) => opt.value === this.value)) {
-        this.setMenuValue(this.value);
-      }
-
+    if (this.input.value && this.menu.options && this.menu.options.some((opt) => opt.value === this.input.value)) {
+      this.setMenuValue(this.input.value);
       this.syncValuesAndStates();
     }
 
@@ -1328,8 +1325,6 @@ export class AuroCombobox extends AuroElement {
         });
       }
 
-      this.value = this.input.value;
-
       this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
     } else if (event.target === this.input) {
 
@@ -1344,6 +1339,8 @@ export class AuroCombobox extends AuroElement {
         bibNativeInput.value = this.input.value || '';
       }
     }
+
+    this.value = this.input.value;
 
     // Ignore re-entrant input events caused by programmatic value sets.
     if (this._syncingBibValue || this._syncingDisplayValue) {
