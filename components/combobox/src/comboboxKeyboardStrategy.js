@@ -168,4 +168,10 @@ export const comboboxKeyboardStrategy = {
       }
     }
   },
+
+  default(component, evt) {
+    if (evt.key.length === 1) {
+      component._userTyped = true;
+    }
+  }
 };
