@@ -36,79 +36,13 @@ export default class BaseInput extends AuroElement {
   constructor() {
     super();
 
-    this.appearance = "default";
-    this.disabled = false;
-    this.layout = 'classic';
-    this.locale = 'en-US';
-    this.max = undefined;
-    this._maxObject = undefined;
-    this.maxLength = undefined;
-    this.min = undefined;
-    this._minObject = undefined;
-    this.minLength = undefined;
-    this.required = false;
-    this.onDark = false;
-    this.setCustomValidityForType = undefined;
-    this.size = 'lg';
-    this.shape = 'classic';
-    this.value = undefined;
-    this._valueObject = undefined;
-
-    this._initializePrivateDefaults();
-  }
-
-  /**
-   * Internal Defaults.
-   * @private
-   * @returns {void}
-   */
-  _initializePrivateDefaults() {
+    // Single-source initialization. Alphabetized so duplicate or stale
+    // defaults are immediately obvious on a diff. Every field is assigned
+    // exactly once; `util` and `validation` are instantiated once each
+    // (previously the constructor + `_initializePrivateDefaults` allocated
+    // two of each and discarded the first).
     this.activeLabel = false;
-    this.appearance = "default";
-    this.icon = false;
-    this.disabled = false;
-    this.dvInputOnly = false;
-    this.hideLabelVisually = false;
-    this.max = undefined;
-    this.maxLength = undefined;
-    this.min = undefined;
-    this.minLength = undefined;
-    this.noValidate = false;
-    this.onDark = false;
-    this.required = false;
-    this.setCustomValidityForType = undefined;
-
-    // Used for storing raw values returned from input mask.
-    this._rawMaskValue = undefined;
-
-    /**
-     * @private
-     */
-    this.layout = 'classic';
-
-    /**
-     * @private
-     */
-    this.shape = 'classic';
-
-    /**
-     * @private
-     */
-    this.size = 'lg';
-
-    this.touched = false;
-    this.util = new AuroInputUtilities({
-      locale: "en-US",
-      format: this.format
-    });
-    this.validation = new AuroFormValidation();
-    this.inputIconName = undefined;
-    this.showPassword = false;
-    this.validationCCLength = undefined;
-    this.hasValue = false;
-    this.label = 'Input label is undefined';
-
-
+    /** @private */
     this.allowedInputTypes = [
       "text",
       "number",
@@ -117,7 +51,8 @@ export default class BaseInput extends AuroElement {
       "credit-card",
       "tel"
     ];
-    this.icon = false;
+    this.appearance = "default";
+    /** @private */
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
       'dd/mm/yyyy': 'dateDDMMYYYY',
@@ -134,27 +69,57 @@ export default class BaseInput extends AuroElement {
       'dd/mm': 'dateDDMM',
       'mm/dd': 'dateMMDD'
     };
+    this.disabled = false;
+    /** @private */
     this.domHandler = new DomHandler();
     this.dvInputOnly = false;
     this.hasValue = false;
+    this.hideLabelVisually = false;
+    this.icon = false;
+    /** @private */
     this.inputIconName = undefined;
+    /** @private */
     this.label = 'Input label is undefined';
+    this.layout = 'classic';
+    this.locale = 'en-US';
+    this.max = undefined;
+    this._maxObject = undefined;
+    this.maxLength = undefined;
+    this.min = undefined;
+    this._minObject = undefined;
+    this.minLength = undefined;
     this.noValidate = false;
-    this._rawMaskValue = undefined; // Used for storing raw values returned from input mask.
+    this.onDark = false;
+    // Raw values returned from the input mask before model normalization.
+    this._rawMaskValue = undefined;
+    this.required = false;
+    this.setCustomValidityForType = undefined;
+    // Credit Card is intentionally excluded — its mask manages the cursor
+    // itself, and listing it here caused cursor placement issues in Safari.
+    /** @private */
     this.setSelectionInputTypes = [
       "text",
       "password",
       "email"
-    ]; // Credit Card is not included as this caused cursor placement issues in Safari.
+    ];
+    this.shape = 'classic';
+    /** @private */
     this.showPassword = false;
+    this.size = 'lg';
     this.touched = false;
+    /** @private */
     this.uniqueId = new UniqueId().create();
+    /** @private */
     this.util = new AuroInputUtilities({
       locale: this.locale,
       format: this.format
     });
+    /** @private */
     this.validation = new AuroFormValidation();
+    /** @private */
     this.validationCCLength = undefined;
+    this.value = undefined;
+    this._valueObject = undefined;
   }
 
   // function to define props used within the scope of this component
