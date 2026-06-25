@@ -1273,21 +1273,8 @@ export class AuroSelect extends AuroElement {
     if (!selectedOption) return;
     const selectedValue = selectedOption.value;
 
-    if (this.multiSelect) {
-      const currentArray = this.menu.value || [];
-
-      if (!currentArray.includes(selectedValue)) {
-        this.value = JSON.stringify([
-          ...currentArray,
-          selectedValue
-        ]);
-      }
-    } else {
-      const currentValue = this.value;
-
-      if (currentValue !== selectedValue) {
-        this.value = selectedValue;
-      }
+    if (this.value !== selectedValue) {
+      this.value = selectedValue;
     }
   }
 
