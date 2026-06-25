@@ -4761,7 +4761,7 @@ function runFullTest(mobileView) {
         cell.focusButton();
         // Should not throw, button should still get focused via querySelector
         const focusedEl = cell.shadowRoot.activeElement;
-        const button = cell.shadowRoot.querySelector('button:not([aria-hidden])');
+        const button = cell.shadowRoot.querySelector('button:not([disabled])');
         expect(focusedEl).to.equal(button);
         cell._cachedButton = savedBtn;
       });
@@ -8337,8 +8337,11 @@ function runFullTest(mobileView) {
     });
 
     describe('Out-of-range cells', () => {
-      // Verify out-of-range cells marks out-of-range cells as aria-hidden.
-      it('should mark out-of-range cells as aria-hidden', async () => {
+      // Out-of-range cells use the native `disabled` attribute (spec-compliant
+      // way to express "not actionable" on a <button>). The host element also
+      // drops its `role`/`aria-label` via updateHostAria so AT does not
+      // navigate into them — no `aria-hidden` belt-and-suspenders needed.
+      it('should mark out-of-range cells as disabled without redundant aria-hidden', async () => {
         // centralDate shows June 2024; minDate=June 15 makes June 1-14 unconditionally out-of-range
         const el = await fixture(html`
           <auro-datepicker centralDate="2024-06-15" minDate="2024-06-15"></auro-datepicker>
@@ -8362,8 +8365,11 @@ function runFullTest(mobileView) {
         for (const cell of outOfRangeCells) {
           await cell.updateComplete;
           const button = cell.shadowRoot.querySelector('button');
-          expect(button.hasAttribute('aria-hidden')).to.be.true;
           expect(button.disabled).to.be.true;
+          expect(button.hasAttribute('aria-hidden')).to.be.false;
+          // The host loses role/aria-label so AT does not browse into it.
+          expect(cell.hasAttribute('role')).to.be.false;
+          expect(cell.hasAttribute('aria-label')).to.be.false;
         }
       });
 
