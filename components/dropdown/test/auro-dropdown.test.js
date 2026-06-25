@@ -2693,6 +2693,36 @@ function runFullTest(mobileView) {
       expect(trigger).to.have.attribute('aria-expanded');
     });
 
+    // Matches the WAI-ARIA APG select-only combobox reference markup. The
+    // implicit default of aria-haspopup on role="combobox" is "listbox", but
+    // setting it explicitly avoids relying on UA implicit-value mapping.
+    it("should render aria-haspopup='listbox' on trigger when a11yRole is set to combobox", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(trigger).to.have.attribute('aria-haspopup', 'listbox');
+    });
+
+    it("should not render aria-haspopup on trigger when a11yRole is the default button", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(trigger.hasAttribute('aria-haspopup')).to.be.false;
+    });
+
     describe("aria-activedescendant", () => {
       it("should set ariaActiveDescendantElement on the trigger when called with an element", async () => {
         const el = await fixture(html`
