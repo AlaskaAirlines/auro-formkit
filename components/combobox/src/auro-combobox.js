@@ -1573,7 +1573,10 @@ export class AuroCombobox extends AuroElement {
 
       if (this.input.value !== this.value) {
         this.menu.value = undefined;
-        this.input.value = this.value;
+
+        if (!this.persistInput) {
+          this.syncInputValuesAcrossTriggerAndBib(this.value || '');
+        }
       }
 
       if (!this.value) {

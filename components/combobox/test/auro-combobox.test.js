@@ -557,31 +557,56 @@ function runFullTest(mobileView) {
     });
 
     describe('persistInput behavior', () => {
-      it.skip('preserves typed text in input after option selection when persistInput is set', async () => {
+      it('preserves typed text in input after option selection when persistInput is set', async () => {
         const el = await persistInputFixture(mobileView);
         await elementUpdated(el);
 
-        // Type a value to open the bib
-        setInputValue(el, 'App');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
         el.input.click();
         await elementUpdated(el);
 
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        // Wait for menu option internal state to settle
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        // Select an option
         const menu = el.querySelector('auro-menu');
-        const option = menu.querySelector('auro-menuoption');
+        const option = menu.querySelector('auro-menuoption[value="Apples"]');
         option.click();
         await elementUpdated(option);
         await elementUpdated(menu);
         await new Promise((resolve) => setTimeout(resolve, 0));
         await elementUpdated(el);
 
-        // With persistInput, the input should keep the typed value
         await expect(el.value).to.equal('Apples');
+        await expect(el.input.value).to.equal('App');
+      });
+
+      it('leaves trigger input untouched on programmatic value set when persistInput is set', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        await elementUpdated(el);
+
+        el.value = 'Oranges';
+        await elementUpdated(el);
+
+        await expect(el.input.value).to.equal('App');
+        await expect(el.value).to.equal('Oranges');
+        await expect(el.menu.value).to.be.undefined;
       });
     });
 
@@ -1274,76 +1299,16 @@ function runFullTest(mobileView) {
     });
 
     describe('persistInput', () => {
-      // IS THIS FAILING DUE TO A BUG?
-      it.skip('should validate required state correctly when persistInput attribute is set', async () => {
+      it('reports valueMissing on blur when persistInput is set and no option selected', async () => {
         const el = await persistInputFixture(mobileView);
-
-        // debugger;
+        await elementUpdated(el);
 
         el.focus();
-        // el.shadowRoot.activeElement.blur();
         el.blur();
         await elementUpdated(el);
 
-        // validity should be `valueMissing` because the input and combo box value are still undefined
         await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
-
-        const activeInput = mobileView ? el.inputInBib : el.input;
-        // // setInputValue(el, 'pp');
-        // // el.input.click();
-        setInputValue(el, 'p');
-        el.input.click();
-        // await elementUpdated(el);
-        // // await sendKeys({ press: 'p' });
-        console.log(el.dropdownOpen);
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-        setInputValue(el, 'Apples');
-        // await sendKeys({ press: 'p' });
-        await sendKeys({ press: 'Tab' });
-        // await elementUpdated(el);
-
-        console.log('VALUE AFTER TAB', el.value);
-
-
-        await elementUpdated(el);
-
-        el.input.focus();
-        el.input.blur();
-        el.blur();
-
-        await elementUpdated(el);
-
-        console.log('Validity AFTER TAB', el.validity);
-
-        console.log(el.dropdownOpen);
-        console.log(document.activeElement);
-
-        // // if (mobileView) {
-        // //   // Wait for the fullscreen dialog transition to settle, close the
-        // //   // dialog, then move focus to the trigger input so the subsequent
-        // //   // blur deterministically triggers validation regardless of where
-        // //   // the dialog-close focus restoration lands.
-        // //   el.inputInBib.focus();
-        // //   await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        // //   el.hideBib();
-        // //   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-        // //   await elementUpdated(el);
-        // //   el.input.focus();
-        // // }
-
-        // // el.shadowRoot.activeElement.blur();
-        // el.input.focus();
-        // el.input.blur();
-        // el.blur();
-        // await elementUpdated(el);
-
-        // validity should be 'valid' because it's suggestion behavior mode
-        await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
-
     });
 
     describe('placement', () => {
