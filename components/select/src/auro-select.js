@@ -888,7 +888,16 @@ export class AuroSelect extends AuroElement {
       // conveys state without an explicit utterance.
       if (this.optionActive && !this.optionActive.hasAttribute('selected')) {
         const optionText = this.optionActive.textContent.trim();
-        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}, not selected`);
+        const message = `${optionText}, not selected`;
+        if (this.dropdown.isPopoverVisible) {
+          announceToScreenReader(this._getAnnouncementRoot(), message);
+        } else {
+          // Typeahead-on-closed fires this event before `show()` flips
+          // isPopoverVisible. Defer so the announcement targets the bib's
+          // live region once the fullscreen <dialog> opens — otherwise it
+          // lands in the host root, which is inert under the active modal.
+          queueMicrotask(() => announceToScreenReader(this._getAnnouncementRoot(), message));
+        }
       }
 
       if (this.dropdown.isPopoverVisible) {
