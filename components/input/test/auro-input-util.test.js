@@ -1,4 +1,4 @@
-/* eslint-disable no-magic-numbers, jsdoc/require-jsdoc */
+/* eslint-disable no-magic-numbers, jsdoc/require-jsdoc, max-lines */
 
 import { expect } from '@open-wc/testing';
 import { AuroInputUtil } from '../src/auro-input-util.js';
@@ -129,6 +129,58 @@ describe('AuroInputUtil', () => {
 
         it('is the same bound function as AuroInputUtil.toFormattedValue', () => {
           expect(toFormattedValue).to.equal(AuroInputUtil.toFormattedValue);
+        });
+      });
+
+      // Edge-case coverage the reviewer flagged. None of these are known
+      // production bugs — they exist to lock in current behavior so a
+      // future refactor that introduces a hidden TZ shift, off-by-one,
+      // or normalization regression fails the suite. Dates are
+      // constructed via `new Date(year, monthIndex, day, ...)` (local
+      // time, not the UTC-midnight `new Date('YYYY-MM-DD')` form) so
+      // every assertion is host-TZ agnostic.
+      describe('edge cases — leap year, DST, time-of-day', () => {
+        it('formats Feb 29 on a leap year', () => {
+          expect(toFormattedValue(new Date(2024, 1, 29), 'mm/dd/yyyy')).to.equal('02/29/2024');
+          expect(toFormattedValue(new Date(2024, 1, 29), 'yyyy/mm/dd')).to.equal('2024/02/29');
+        });
+
+        it('formats Feb 28 on a non-leap year (boundary check)', () => {
+          expect(toFormattedValue(new Date(2023, 1, 28), 'mm/dd/yyyy')).to.equal('02/28/2023');
+        });
+
+        it('formats the year-2000 leap day (centennial leap-year exception)', () => {
+          expect(toFormattedValue(new Date(2000, 1, 29), 'mm/dd/yyyy')).to.equal('02/29/2000');
+        });
+
+        it('formats end-of-month boundaries without rolling forward', () => {
+          expect(toFormattedValue(new Date(2024, 0, 31), 'mm/dd/yyyy')).to.equal('01/31/2024');
+          expect(toFormattedValue(new Date(2024, 3, 30), 'mm/dd/yyyy')).to.equal('04/30/2024');
+          expect(toFormattedValue(new Date(2024, 11, 31), 'mm/dd/yyyy')).to.equal('12/31/2024');
+        });
+
+        it('formats the US DST spring-forward day without shifting the calendar date', () => {
+          // 2024-03-10 02:00 local skips to 03:00 in US TZs that observe DST.
+          // Formatting reads getDate/getMonth/getFullYear locally so the
+          // calendar day must remain March 10 regardless of host TZ.
+          expect(toFormattedValue(new Date(2024, 2, 10), 'mm/dd/yyyy')).to.equal('03/10/2024');
+          // And mid-day on that date, which would be 02:30 ↔ 03:30 sensitive.
+          expect(toFormattedValue(new Date(2024, 2, 10, 2, 30), 'mm/dd/yyyy')).to.equal('03/10/2024');
+        });
+
+        it('formats the US DST fall-back day without shifting the calendar date', () => {
+          // 2024-11-03 01:00 local repeats. The duplicated hour shouldn't
+          // shift the formatted day.
+          expect(toFormattedValue(new Date(2024, 10, 3), 'mm/dd/yyyy')).to.equal('11/03/2024');
+          expect(toFormattedValue(new Date(2024, 10, 3, 1, 30), 'mm/dd/yyyy')).to.equal('11/03/2024');
+        });
+
+        it('does not shift the calendar day for late-evening or early-morning local times', () => {
+          // 23:30 of Jan 15 must format as Jan 15, not Jan 16 (would happen
+          // if a TZ conversion treated the value as UTC).
+          expect(toFormattedValue(new Date(2024, 0, 15, 23, 30), 'mm/dd/yyyy')).to.equal('01/15/2024');
+          // 00:30 of Jan 15 must format as Jan 15, not Jan 14.
+          expect(toFormattedValue(new Date(2024, 0, 15, 0, 30), 'mm/dd/yyyy')).to.equal('01/15/2024');
         });
       });
     });
