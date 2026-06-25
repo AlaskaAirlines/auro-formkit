@@ -332,7 +332,9 @@ export class AuroCalendarCell extends LitElement {
 
     if (hasDateTo && dayDate > departTimestamp && dayDate < returnTimestamp) return this.datepicker.rangeLabelInRange || 'in range';
 
-    // After start date, no end date yet, or after end date
+    if (!hasDateTo && dayDate > departTimestamp) return this.datepicker.rangeLabelEndPreview || 'previewing range end';
+
+    // After end date when both dateFrom and dateTo are set.
     return this.datepicker.rangeLabelAfterRange || 'after range';
   }
 

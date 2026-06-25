@@ -1204,6 +1204,9 @@ export class AuroCalendar extends RangeDatepicker {
     if (hasTo && date > departTs && date < returnTs) {
       return this.datepicker.rangeLabelInRange || 'in range';
     }
+    if (!hasTo && date > departTs) {
+      return this.datepicker.rangeLabelEndPreview || 'previewing range end';
+    }
     return this.datepicker.rangeLabelAfterRange || 'after range';
   }
 
