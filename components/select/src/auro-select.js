@@ -852,11 +852,13 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(this.optionActive);
       }
 
-      // Announce the active option for screen readers
-      if (this.optionActive) {
+      // Announce the active option for screen readers. Skip when the activated
+      // option is already selected: Enter triggers an auroMenu-selectedOption
+      // re-announce, and aria-selected on the active descendant otherwise
+      // conveys state without an explicit utterance.
+      if (this.optionActive && !this.optionActive.hasAttribute('selected')) {
         const optionText = this.optionActive.textContent.trim();
-        const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}${selectedState}`);
+        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}, not selected`);
       }
 
       if (this.dropdown.isPopoverVisible) {

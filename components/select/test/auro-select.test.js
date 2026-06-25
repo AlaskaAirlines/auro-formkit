@@ -2163,6 +2163,23 @@ function runTest(mobileView) {
           expect(liveRegion.textContent).to.equal('');
         });
 
+        it('should not announce activation of an already-selected option', async () => {
+          const el = await presetValueFixture();
+          await elementUpdated(el);
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          liveRegion.textContent = '';
+
+          // Opening the bib auto-activates the pre-selected option. Without the
+          // guard, the activatedOption handler would announce ", selected" here,
+          // then Enter would re-announce the same text 300ms later.
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(liveRegion.textContent).to.equal('');
+        });
+
         if (mobileView) {
           it('should route announcements to the bib live region in fullscreen mode', async () => {
             const el = await defaultFixture();
