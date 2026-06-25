@@ -3033,6 +3033,69 @@ function runFullTest(mobileView) {
     });
   });
 
+  // Regression coverage for commit e407410cd ("fix: not to directly convert
+  // value to Date to avoid date shifting from timezone diff"). The bug class:
+  // `new Date('2024-01-15')` parses as UTC midnight, which renders as Jan 14
+  // in zones west of UTC. These tests pass in any host TZ if the
+  // stringToDateInstance-based `valueObject` getter is wired in correctly.
+  // They actually exercise the bug only under a negative-offset TZ —
+  // run `npm run test:tz` (Pacific/Honolulu, UTC-10) to surface regressions.
+  describe('Timezone-safe value conversion', () => {
+    it('valueObject reflects the ISO calendar date without TZ shift', async () => {
+      const el = await fixture(html`<auro-datepicker value="2024-01-15"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      expect(el.valueObject.getFullYear()).to.equal(2024);
+      expect(el.valueObject.getMonth()).to.equal(0);
+      expect(el.valueObject.getDate()).to.equal(15);
+    });
+
+    it('valueEndObject reflects the ISO calendar date without TZ shift', async () => {
+      const el = await fixture(html`<auro-datepicker range value="2024-01-15" valueEnd="2024-01-20"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      expect(el.valueEndObject.getFullYear()).to.equal(2024);
+      expect(el.valueEndObject.getMonth()).to.equal(0);
+      expect(el.valueEndObject.getDate()).to.equal(20);
+    });
+
+    it('snowflake displayValue renders the value day, not a TZ-shifted day', async () => {
+      const el = await fixture(html`<auro-datepicker layout="snowflake" value="2024-01-15"></auro-datepicker>`);
+      await elementUpdated(el);
+      await nextFrame();
+
+      const slot = el.shadowRoot.querySelector('slot[name="displayValue"]');
+      // Fall back to the default slot content (the rendered short date) when
+      // no consumer-supplied content is assigned.
+      const text = slot ? slot.assignedNodes({ flatten: true }).map((node) => node.textContent || '').join(' ') : '';
+      const rendered = text || el.shadowRoot.textContent || '';
+      expect(rendered).to.match(/\b15\b/);
+      expect(rendered).to.not.match(/\b14\b/);
+    });
+
+    it('parses centralDate without TZ-shifting into the previous month', async () => {
+      // centralDate normalizes to the first of its month by design, so we
+      // can't assert on the day. The TZ bug would surface as the *month*
+      // shifting backwards in negative-offset zones (Jan 1 UTC parsed as
+      // Dec 31 local).
+      const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      expect(el.centralDateObject.getFullYear()).to.equal(2024);
+      expect(el.centralDateObject.getMonth()).to.equal(0);
+    });
+
+    it('minDate/maxDate Date getters do not shift across TZ', async () => {
+      const el = await fixture(html`<auro-datepicker minDate="2024-01-15" maxDate="2024-12-31"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      expect(el.minDateObject.getDate()).to.equal(15);
+      expect(el.minDateObject.getMonth()).to.equal(0);
+      expect(el.maxDateObject.getDate()).to.equal(31);
+      expect(el.maxDateObject.getMonth()).to.equal(11);
+    });
+  });
+
   describe('Private Functions', () => {
     // ─── displayValueFontClass returns body-lg for snowflake layout ────
     it('displayValueFontClass returns body-lg for snowflake layout', async () => {
