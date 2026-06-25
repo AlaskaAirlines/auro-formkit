@@ -2697,6 +2697,22 @@ function runFullTest(mobileView) {
         expect(() => AuroInputUtil.toFormattedValue(date, undefined)).to.not.throw();
         expect(AuroInputUtil.toFormattedValue(date, undefined)).to.be.undefined;
       });
+
+      // Regression: `formatISODate` is exposed on the public AuroInputUtil
+      // surface. `stringToDateInstance("not-a-date")` returns an Invalid
+      // Date (not a throw), so without an explicit NaN guard the function
+      // returned literal strings like "0NaN/0NaN/0NaN" instead of undefined.
+      it('AuroInputUtil.formatISODate returns undefined for invalid ISO strings', async () => {
+        const { AuroInputUtil } = await import('../src/auro-input-util.js');
+
+        expect(AuroInputUtil.formatISODate('not-a-date', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate('2024-99-99', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate('', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate(null, 'mm/dd/yyyy')).to.be.undefined;
+
+        // Well-formed input still formats correctly.
+        expect(AuroInputUtil.formatISODate('2024-01-15', 'mm/dd/yyyy')).to.equal('01/15/2024');
+      });
     });
   });
 
