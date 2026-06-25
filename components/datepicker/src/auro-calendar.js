@@ -84,7 +84,11 @@ export class AuroCalendar extends RangeDatepicker {
     this.calendarRangeMonths = null;
 
     /**
-     * Legacy array of disabled-date timestamps.
+     * @deprecated Use `auro-datepicker.blackoutDates` (an array of
+     * `YYYY-MM-DD` ISO strings) instead. This legacy array of Unix
+     * timestamps is still honored for backward compatibility but emits a
+     * one-time `console.debug` the first time a non-empty value is observed.
+     * Support will be removed in a future major release.
      * @private
      */
     this.disabledDays = [];
@@ -653,6 +657,10 @@ export class AuroCalendar extends RangeDatepicker {
       return this._blackoutSet;
     }
 
+    if (disabledDays.length > 0) {
+      this._warnDisabledDaysDeprecated();
+    }
+
     const set = new Set(disabledDays.map((day) => parseInt(day, 10)));
 
     // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
@@ -670,6 +678,32 @@ export class AuroCalendar extends RangeDatepicker {
     this._cachedBlackoutDisabledDays = disabledDays;
     this._cachedBlackoutDates = blackoutDates;
     return set;
+  }
+
+  /**
+   * Per-class flag that gates the `disabledDays` deprecation warning so it
+   * fires exactly once per page no matter how many calendars or rebuild
+   * cycles encounter the legacy array.
+   * @private
+   */
+  static _warnedDisabledDaysDeprecation = false;
+
+  /**
+   * One-time `console.debug` directing consumers from the legacy
+   * `disabledDays` Unix-timestamp API to the ISO `blackoutDates` API. Fires
+   * the first time `_getBlackoutSet` rebuilds from a non-empty
+   * `disabledDays`; subsequent calls (on this or any other AuroCalendar
+   * instance on the page) are silent.
+   * @private
+   * @returns {void}
+   */
+  _warnDisabledDaysDeprecated() {
+    if (AuroCalendar._warnedDisabledDaysDeprecation) {
+      return;
+    }
+    AuroCalendar._warnedDisabledDaysDeprecation = true;
+    // eslint-disable-next-line no-console
+    console.debug('[auro-datepicker] The `disabledDays` property (Unix timestamps) is deprecated. Migrate to the `blackoutDates` property on auro-datepicker (an array of `YYYY-MM-DD` ISO strings). `disabledDays` will be removed in a future major release.');
   }
 
   /**

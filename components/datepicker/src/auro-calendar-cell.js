@@ -61,6 +61,14 @@ export class AuroCalendarCell extends LitElement {
         type: Boolean,
         reflect: true
       },
+      /**
+       * @deprecated Propagated from the legacy `auro-calendar.disabledDays`
+       * Unix-timestamp array. The cell honors it for backward compatibility
+       * (see the divergence-check fallback inside `isBlackout`), but
+       * consumers should migrate to `auro-datepicker.blackoutDates`
+       * (YYYY-MM-DD ISO strings). The calendar emits a one-time
+       * deprecation warning the first time a non-empty value is observed.
+       */
       disabledDays:  { type: Array },
       isCurrentDate: { type: Boolean },
       locale:        { type: String },
