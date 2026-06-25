@@ -13,6 +13,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 import { AuroDatepickerUtilities } from './utilities.js';
+import { buildBlackoutSet } from './blackoutUtils.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
@@ -661,23 +662,10 @@ export class AuroCalendar extends RangeDatepicker {
       this._warnDisabledDaysDeprecated();
     }
 
-    const set = new Set(disabledDays.map((day) => parseInt(day, 10)));
-
-    // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
-    if (Array.isArray(blackoutDates)) {
-      for (const isoStr of blackoutDates) {
-        const parts = isoStr.split('-');
-        const ts = Math.floor(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)).getTime() / 1000);
-        if (Number.isFinite(ts)) {
-          set.add(ts);
-        }
-      }
-    }
-
-    this._blackoutSet = set;
+    this._blackoutSet = buildBlackoutSet(disabledDays, blackoutDates);
     this._cachedBlackoutDisabledDays = disabledDays;
     this._cachedBlackoutDates = blackoutDates;
-    return set;
+    return this._blackoutSet;
   }
 
   /**
@@ -1326,32 +1314,15 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Checks whether a given date is a blackout date.
+   * Checks whether a given date is a blackout date. Delegates to the
+   * memoized `_getBlackoutSet` so the YYYY-MM-DD parsing and the
+   * legacy/ISO merge rules live in exactly one place (see `blackoutUtils.js`).
    * @private
    * @param {Number} dateTs - Unix timestamp (seconds).
    * @returns {Boolean} True if the date is blacked out.
    */
   isDateBlackout(dateTs) {
-    // Check legacy disabledDays.
-    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0) {
-      if (this.disabledDays.findIndex((day) => parseInt(day, 10) === dateTs) !== -1) {
-        return true;
-      }
-    }
-
-    // Check ISO blackoutDates.
-    const blackoutDates = this.datepicker?.blackoutDates;
-    if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
-      const date = new Date(dateTs * 1000);
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, '0');
-      const dd = String(date.getDate()).padStart(2, '0');
-      if (blackoutDates.includes(`${yyyy}-${mm}-${dd}`)) {
-        return true;
-      }
-    }
-
-    return false;
+    return this._getBlackoutSet().has(dateTs);
   }
 
   /**

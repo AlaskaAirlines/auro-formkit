@@ -13,6 +13,8 @@ import popoverVersion from './popoverVersion.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+import { isBlackoutTimestamp } from './blackoutUtils.js';
+
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
 export class AuroCalendarCell extends LitElement {
@@ -221,25 +223,9 @@ export class AuroCalendarCell extends LitElement {
     }
 
     // Pre-firstUpdated fallback — the cell may render once before the
-    // ancestor calendar is wired up. Uses the legacy O(N) scan so the
-    // result stays correct, just slower for the very first render.
-    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0 &&
-      (this.disabledDays.findIndex(dd => parseInt(dd, 10) === this.day.date) !== -1)) {
-      return true;
-    }
-
-    const blackoutDates = this.datepicker?.blackoutDates;
-    if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
-      const date = new Date(this.day.date * 1000);
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, '0');
-      const dd = String(date.getDate()).padStart(2, '0');
-      if (blackoutDates.includes(`${yyyy}-${mm}-${dd}`)) {
-        return true;
-      }
-    }
-
-    return false;
+    // ancestor calendar is wired up. Routes through the shared
+    // blackoutUtils helper so the parsing rules stay in one place.
+    return isBlackoutTimestamp(this.day.date, this.disabledDays, this.datepicker?.blackoutDates);
   }
 
   /**
