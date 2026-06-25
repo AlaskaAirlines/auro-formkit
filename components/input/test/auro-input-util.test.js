@@ -100,8 +100,25 @@ describe('AuroInputUtil', () => {
       });
 
       describe('invalid date value', () => {
-        it('returns undefined for a structurally valid ISO string that is not a real date', () => {
+        it('returns undefined when valueObject is undefined', () => {
           expect(toFormattedValue(undefined, 'mm/dd/yyyy')).to.be.undefined;
+        });
+
+        it('returns undefined when valueObject is null', () => {
+          expect(toFormattedValue(null, 'mm/dd/yyyy')).to.be.undefined;
+        });
+
+        it('returns undefined for an Invalid Date instance (NaN getTime)', () => {
+          // Date constructed from a malformed string yields a Date whose
+          // getTime() returns NaN — exercises the Number.isNaN branch of
+          // the valueObject validity guard.
+          expect(toFormattedValue(new Date('not-a-date'), 'mm/dd/yyyy')).to.be.undefined;
+        });
+
+        it('returns undefined for non-Date inputs (string, number, plain object)', () => {
+          expect(toFormattedValue('2024-01-15', 'mm/dd/yyyy')).to.be.undefined;
+          expect(toFormattedValue(1705276800000, 'mm/dd/yyyy')).to.be.undefined;
+          expect(toFormattedValue({ year: 2024 }, 'mm/dd/yyyy')).to.be.undefined;
         });
       });
 
