@@ -2214,6 +2214,22 @@ function runTest(mobileView) {
           expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
         }
       });
+
+      it('updates menu aria-label and dropdown bibDialogLabel when label text mutates at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const label = el.querySelector('[slot="label"]');
+
+        label.textContent = 'Updated label';
+        // MutationObserver callbacks flush as microtasks; elementUpdated awaits the next Lit cycle.
+        await elementUpdated(el);
+
+        expect(menu.getAttribute('aria-label')).to.equal('Updated label');
+        expect(dropdown.bibDialogLabel).to.equal('Updated label');
+      });
     });
 
     describe('Mouse Behavior', () => {

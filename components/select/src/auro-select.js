@@ -643,14 +643,48 @@ export class AuroSelect extends AuroElement {
       this.dropdown.dropdownWidth = this.customBibWidth;
     }
 
-    // Pass label text to the dropdown bib for accessible dialog naming
-    const labelElement = this.querySelector('span[slot="label"]');
-    if (labelElement) {
-      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
-    }
+    this._syncLabelText();
 
     // Exposes the CSS parts from the dropdown for styling
     this.dropdown.exposeCssParts();
+  }
+
+  /**
+   * Reads the current label slot text and pushes it to the dropdown bib
+   * (for dialog naming) and the menu (for listbox aria-label). Safe to call
+   * before either child has been wired up — each branch self-guards.
+   * @private
+   */
+  _syncLabelText() {
+    const labelElement = this.querySelector('[slot="label"]');
+    const text = labelElement ? labelElement.textContent.trim() : '';
+    if (this.dropdown) {
+      this.dropdown.bibDialogLabel = text || undefined;
+    }
+    if (this.menu) {
+      if (text) {
+        this.menu.setAttribute('aria-label', text);
+      } else {
+        this.menu.removeAttribute('aria-label');
+      }
+    }
+  }
+
+  /**
+   * Keeps the dialog/menu accessible names in sync when consumers mutate the
+   * label slot at runtime (e.g., i18n locale swap). `slotchange` alone is
+   * insufficient — it doesn't fire when textContent of an already-assigned
+   * slotted node changes, which is the common case.
+   * @private
+   */
+  _observeLabelChanges() {
+    if (this._labelObserver) return;
+    this._labelObserver = new MutationObserver(() => this._syncLabelText());
+    this._labelObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
   }
 
   /**
@@ -803,11 +837,7 @@ export class AuroSelect extends AuroElement {
     this.updateMenuShapeSize();
     this.setMenuValue(this.value);
 
-    // Set accessible name on the menu for screen readers based on the label slot content
-    const labelElement = this.querySelector('[slot="label"]');
-    if (labelElement) {
-      this.menu.setAttribute('aria-label', labelElement.textContent.trim());
-    }
+    this._syncLabelText();
 
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
@@ -1132,6 +1162,10 @@ export class AuroSelect extends AuroElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._clearTypeaheadBuffer();
+    if (this._labelObserver) {
+      this._labelObserver.disconnect();
+      this._labelObserver = null;
+    }
   }
 
   // lifecycle runs only after the element's DOM has been updated the first time
@@ -1142,6 +1176,7 @@ export class AuroSelect extends AuroElement {
     this.configureDropdown();
     this.configureMenu();
     this.configureSelect();
+    this._observeLabelChanges();
   }
 
   setMenuValue(value) {
