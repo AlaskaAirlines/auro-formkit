@@ -3706,6 +3706,28 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive).to.equal(previousActive);
         });
 
+        it('should leave a closed bib closed when no option matches the pressed key', async () => {
+          // Intentional deviation from WAI-ARIA APG / some native <select> implementations:
+          // a printable keystroke with no matching option must NOT open the bib.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'z' }));
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
         it('should loop through matching options when the same key is pressed repeatedly', async () => {
           const el = await fixture(html`
             <auro-select>

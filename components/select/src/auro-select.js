@@ -1006,6 +1006,7 @@ export class AuroSelect extends AuroElement {
       }
     }
 
+    // Intentional: no-match leaves the bib closed (deviates from APG / some native <select>).
     if (match) {
       if (!this.dropdown.isPopoverVisible) {
         this.dropdown.show();
