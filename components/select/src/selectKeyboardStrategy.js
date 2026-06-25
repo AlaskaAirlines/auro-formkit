@@ -64,6 +64,10 @@ export const selectKeyboardStrategy = {
   },
 
   Enter(component, evt, ctx) {
+    // Prevent the keypress from bubbling to parent containers (e.g., forms)
+    // which could interpret Enter as a submit. Matches APG select-only combobox
+    // and native <select> behavior: Enter opens the listbox when closed, selects
+    // the active option when open — it does not submit a parent form.
     evt.preventDefault();
     evt.stopPropagation();
     if (!ctx.isExpanded) {
