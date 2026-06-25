@@ -1135,6 +1135,25 @@ export default class BaseInput extends AuroElement {
       this.touched = true;
       this.validation.validate(this);
     }
+
+    // Prevents cursor jumping in Safari. Setting `this.value` triggers a Lit
+    // update that can re-render the input and reset the native cursor; we
+    // capture the caret position before that update commits and restore it
+    // via `setSelectionRange` once the update has flushed. Gated on
+    // `setSelectionInputTypes` so credit-card (and other masked types whose
+    // formatter manages the cursor itself) doesn't get a competing write.
+    const { selectionStart } = this.inputElement;
+
+    if (this.setSelectionInputTypes.includes(this.type)) {
+      this.updateComplete.then(() => {
+        try {
+          this.inputElement.setSelectionRange(selectionStart, selectionStart);
+        } catch (error) { // eslint-disable-line
+          // Some input types (number/email in certain UAs) throw on
+          // setSelectionRange; swallow and let the native cursor stand.
+        }
+      });
+    }
   }
 
   /**
