@@ -990,17 +990,20 @@ export class AuroSelect extends AuroElement {
 
     this.typeaheadBuffer += key;
 
-    const isRepeatedChar = this.typeaheadBuffer.length > 1 && new Set(this.typeaheadBuffer).size === 1;
+    // Prefer the literal buffer as a prefix per WAI-ARIA APG ("focus moves to the
+    // next item with a name that starts with the string of characters typed").
+    // Only fall back to single-char cycling when the repeated buffer has no
+    // longer prefix match — e.g. "aa" cycles through ["Apple", "Apricot"] only
+    // because no option starts with "aa".
+    let match = options.find((option) => this._getOptionDisplayText(option).startsWith(this.typeaheadBuffer));
 
-    let match = null;
+    const isRepeatedChar = !match && this.typeaheadBuffer.length > 1 && new Set(this.typeaheadBuffer).size === 1;
     if (isRepeatedChar) {
       const matches = options.filter((option) => this._getOptionDisplayText(option).startsWith(key));
       if (matches.length) {
         const cycleIndex = (this.typeaheadBuffer.length - 1) % matches.length;
         match = matches[cycleIndex];
       }
-    } else {
-      match = options.find((option) => this._getOptionDisplayText(option).startsWith(this.typeaheadBuffer));
     }
 
     if (match) {
