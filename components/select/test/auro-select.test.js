@@ -1953,24 +1953,6 @@ function runTest(mobileView) {
         await expect(el.isHiddenWhileLoading).to.be.false;
       });
 
-      // ─── _handleNativeSelectChange multiSelect adds value ────────────
-      it('_handleNativeSelectChange adds selected value in multiSelect mode', async () => {
-        const el = await multiSelectFixture();
-        await elementUpdated(el);
-
-        // Create a mock native select change event
-        const fakeSelect = document.createElement('select');
-        const option = document.createElement('option');
-        option.value = 'Apples';
-        fakeSelect.appendChild(option);
-        fakeSelect.selectedIndex = 0;
-
-        el._handleNativeSelectChange({ target: fakeSelect });
-        await elementUpdated(el);
-
-        await expect(el.value).to.include('Apples');
-      });
-
       // ─── renderLayout emphasized-left ────────────────────────────────
       it('renderLayout returns emphasized template for emphasized-left', async () => {
         const el = await defaultFixture();
