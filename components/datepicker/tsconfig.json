@@ -2,14 +2,11 @@
   "extends": "@aurodesignsystem/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": ".",
-    "rootDirs": ["src", "vendor"]
+    "rootDir": "src"
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.js",
-    "vendor/**/*.ts",
-    "vendor/**/*.js"
+    "src/**/*.js"
   ],
   "exclude": [
     "node_modules",
