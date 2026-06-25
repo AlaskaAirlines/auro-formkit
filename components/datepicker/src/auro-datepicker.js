@@ -1950,6 +1950,22 @@ export class AuroDatePicker extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
+    // True reconnect after `disconnectedCallback` aborted our controller:
+    // the existing signal is dead, so listeners registered against it
+    // would never fire. Create a fresh controller and re-run the
+    // configure* wiring (each method is idempotent — it just re-caches
+    // child refs and re-registers listeners against the new signal).
+    // `hasUpdated` gates this so the *first* connect (which precedes
+    // firstUpdated) still falls through to firstUpdated's initial wiring.
+    if (this.hasUpdated && this._listenerAbortController.signal.aborted) {
+      this._listenerAbortController = new AbortController();
+      this.configureDropdown();
+      this.configureInput();
+      this.configureCalendar();
+      this.configureDatepicker();
+      this.configureClickHandler();
+    }
+
     this.locale = this.domHandler.getLocale(this);
   }
 
