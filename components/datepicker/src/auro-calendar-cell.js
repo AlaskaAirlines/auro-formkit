@@ -695,8 +695,11 @@ export class AuroCalendarCell extends LitElement {
     const dayDate = this.day.date;
     const departTimestamp = new Date(dateFrom * 1000).setHours(0, 0, 0, 0) / 1000;
     const isInRange = dayDate > departTimestamp && dayDate < hoveredDate;
-    const isLastHovered = dayDate === hoveredDate && hoveredDate > departTimestamp;
-    const isDepartWithPreview = dayDate === departTimestamp && hoveredDate > departTimestamp;
+    // `>=` so hovering the depart cell itself (a same-day round-trip
+    // preview) still surfaces a visual cue: the depart cell receives both
+    // rangeDepartDate and lastHoveredDate.
+    const isLastHovered = dayDate === hoveredDate && hoveredDate >= departTimestamp;
+    const isDepartWithPreview = dayDate === departTimestamp && hoveredDate >= departTimestamp;
 
     btn.classList.toggle('inRange', isInRange);
     btn.classList.toggle('lastHoveredDate', isLastHovered);
