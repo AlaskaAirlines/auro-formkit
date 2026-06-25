@@ -1403,9 +1403,34 @@ export class AuroCalendar extends RangeDatepicker {
     // the last one.
     if (this._announceRafId) {
       cancelAnimationFrame(this._announceRafId);
+      this._announceRafId = null;
     }
+    this._deliverAnnouncement(dateStr, 0);
+  }
+
+  /**
+   * Writes `dateStr` to the live region. If the dropdown's dialog hasn't
+   * mounted yet (so getOrCreateLiveRegion can't attach), retries on the
+   * next animation frame up to MAX_LIVE_REGION_RETRIES instead of silently
+   * dropping the announcement. The retry uses the same `_announceRafId`
+   * the double-rAF below uses, so a newer announceSelection call (or
+   * disconnectedCallback) cancels any in-flight retry.
+   * @private
+   * @param {String} dateStr - The localized date string to announce.
+   * @param {Number} attempts - Number of prior retry attempts.
+   * @returns {void}
+   */
+  _deliverAnnouncement(dateStr, attempts) {
     const liveRegion = this.getOrCreateLiveRegion();
     if (!liveRegion) {
+      const MAX_LIVE_REGION_RETRIES = 10;
+      if (attempts < MAX_LIVE_REGION_RETRIES) {
+        this._announceRafId = requestAnimationFrame(() => {
+          this._deliverAnnouncement(dateStr, attempts + 1);
+        });
+      } else {
+        this._announceRafId = null;
+      }
       return;
     }
 
