@@ -1383,7 +1383,7 @@ export class AuroCombobox extends AuroElement {
     this.handleMenuOptions();
 
     // Run filtering inline — the re-entrant event won't reach this code.
-    this.menu.matchWord = normalizeFilterValue(this.inputInBib.value);
+    this.menu.matchWord = normalizeFilterValue(this.input.value);
     this.optionActive = null;
 
     if (this.value === this.input.value) {
