@@ -7400,6 +7400,33 @@ function runFullTest(mobileView) {
           newParent.remove();
         }
       });
+
+      // Verify a true disconnect→reconnect cycle re-arms the abort controller
+      // and re-wires the configure* listeners so the datepicker stays
+      // functional after being removed and later re-added.
+      it('reinitializes the abort controller and re-wires listeners on reconnect', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        await elementUpdated(el);
+
+        const originalController = el._listenerAbortController;
+        expect(originalController.signal.aborted).to.be.false;
+
+        // True disconnect — wait long enough for the queueMicrotask gate
+        // to fire and abort the controller.
+        el.remove();
+        await new Promise((resolve) => queueMicrotask(resolve));
+        expect(originalController.signal.aborted).to.be.true;
+
+        // Re-attach the same instance to the document. connectedCallback
+        // should detect the aborted signal and mint a fresh controller.
+        document.body.appendChild(el);
+        await elementUpdated(el);
+
+        expect(el._listenerAbortController).to.not.equal(originalController);
+        expect(el._listenerAbortController.signal.aborted).to.be.false;
+
+        el.remove();
+      });
     });
 
     // Verify the datepicker uses locale code when set.
