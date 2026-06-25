@@ -351,7 +351,8 @@ function runFullTest(mobileView) {
         expect(blackoutCell.isBlackout()).to.be.true;
 
         await blackoutCell.updateComplete;
-        // aria-disabled is on the host element (for aria-activedescendant)
+        // aria-disabled is on the host element so AT browsing the gridcell
+        // (with DOM focus on the parent grid wrapper) sees the disabled state.
         expect(blackoutCell.getAttribute('aria-disabled')).to.equal('true');
       });
 
@@ -1259,11 +1260,19 @@ function runFullTest(mobileView) {
         el.hideBib();
         await elementUpdated(el);
 
-        // Wait for rAF focus restoration
+        // Wait for rAF focus restoration (the auroDropdown-toggled handler
+        // posts inputList[0].focus() one frame after the close commits).
+        await new Promise((resolve) => requestAnimationFrame(resolve));
         await new Promise((resolve) => requestAnimationFrame(resolve));
 
         expect(dropdown.trigger.inert).to.be.false;
         expect(dropdown.isPopoverVisible).to.be.false;
+        // Focus must actually return to the trigger input — `inert === false`
+        // alone proves the attribute was cleared but says nothing about
+        // where the focus ring ended up. Without this assertion, focus
+        // could have escaped to `<body>` or remained on a child of the
+        // closed dialog and the test would still pass.
+        expect(el.shadowRoot.activeElement).to.equal(input);
       });
 
       // Verify the 'fullscreenBreakpoint' property does not cycle through content in fullscreen bib when Tab is pressed.
@@ -8335,6 +8344,52 @@ function runFullTest(mobileView) {
         expect(liveRegion.textContent).to.include('December');
         expect(liveRegion.textContent).to.include('2023');
       });
+
+      // Verify date-selection announcements populate the live region with
+      // the selected day so SR users hear what they just committed. Pairs
+      // with the existing prev/next-month announcements above.
+      it('should populate live region with the selected date when a cell is clicked', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="2024-01-15"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        // Settle the bib-open animation + cells' initial rAF cycle.
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        // Pick a deterministic mid-month cell (Jan 20, day 20 of the month
+        // for centralDate=2024-01-15).
+        const targetCell = allCells.find((cell) => {
+          const dt = new Date(cell.day.date * 1000);
+          return dt.getFullYear() === 2024 && dt.getMonth() === 0 && dt.getDate() === 20;
+        });
+        expect(targetCell).to.exist;
+
+        targetCell.handleTap();
+        await elementUpdated(el);
+
+        // Wait past the announceSelection double-rAF clear→set cycle.
+        await new Promise((resolve) => setTimeout(resolve, 150));
+
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const dialog = dropdown.bibContent.shadowRoot.querySelector('dialog');
+        const liveRegion = dialog.querySelector('[aria-live="assertive"]');
+        expect(liveRegion).to.not.be.null;
+        // The announcement format is `${formattedDate}, selected[…]` so we
+        // assert on the day-of-month, the month, the year, AND the
+        // confirmation token — proving the announcement is tied to the
+        // user action, not a stale month-nav string.
+        expect(liveRegion.textContent).to.include('20');
+        expect(liveRegion.textContent).to.include('January');
+        expect(liveRegion.textContent).to.include('2024');
+        expect(liveRegion.textContent.toLowerCase()).to.include('selected');
+      });
     });
 
     describe('Nav button aria-labels', () => {
@@ -9477,8 +9532,10 @@ function runFullTest(mobileView) {
         expect(calendar.activeCellDate).to.exist;
       });
 
-      // Verify arrow key navigation within calendar month keeps all cell buttons at tabindex="-1" (aria-activedescendant pattern).
-      it('should keep all cell buttons at tabindex="-1" (aria-activedescendant pattern)', async () => {
+      // Verify all cell buttons stay at tabindex="-1" because DOM focus is
+      // held on the grid wrapper; arrow keys move an internal "active"
+      // marker without shifting native focus.
+      it('should keep all cell buttons at tabindex="-1" (focus stays on grid wrapper)', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         await elementUpdated(el);
 
