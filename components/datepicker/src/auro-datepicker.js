@@ -1644,8 +1644,6 @@ export class AuroDatePicker extends AuroElement {
         // Skip centralDate update when user clicked a cell in range mode
         // to prevent the displayed months from shifting
         this.centralDate = this.value;
-        //TODO: TEST THIS CHANGE
-        // this.calendarRenderUtil.updateCentralDate(this, this.value);
       }
 
       this.setHasValue();
