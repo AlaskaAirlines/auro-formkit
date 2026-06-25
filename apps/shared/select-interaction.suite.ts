@@ -332,22 +332,20 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         expect(visible).toBe(false);
       });
 
-      test('Home is a no-op when the bib is collapsed', async ({ page }) => {
+      test('Home opens the bib and activates the first option when collapsed', async ({ page }) => {
         await focusTrigger(page, 'default');
         await page.keyboard.press('Home');
-        await page.waitForTimeout(50);
+        await waitForBibOpen(page, 'default');
 
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
       });
 
-      test('End is a no-op when the bib is collapsed', async ({ page }) => {
+      test('End opens the bib and activates the last option when collapsed', async ({ page }) => {
         await focusTrigger(page, 'default');
         await page.keyboard.press('End');
-        await page.waitForTimeout(50);
+        await waitForBibOpen(page, 'default');
 
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Grapes');
       });
 
       test('Shift+Tab is a no-op when the bib is closed', async ({ page }) => {
