@@ -1266,6 +1266,32 @@ function runFullTest(mobileView) {
 
         expect(input.type).to.equal('text');
       });
+
+      // Regression: the show/hide toggle must expose its pressed state via
+      // aria-pressed so SR users perceive the toggle pattern. Without it
+      // the only signal is the slot-text swap ("Show Password" / "Hide
+      // Password"), which AT does not interpret as a toggle.
+      it('should expose aria-pressed on the password toggle button', async () => {
+        const el = await fixture(html`<auro-input type="password" value="secret"></auro-input>`);
+        await elementUpdated(el);
+
+        const toggle = el.shadowRoot.querySelector('.passwordBtn');
+        expect(toggle).to.exist;
+
+        // auro-button's transportAttributes forwards `aria-*` from the host
+        // onto the inner `<button>`. Query inside its shadow root for the
+        // attribute that the AT actually sees.
+        await toggle.updateComplete;
+        const innerButton = toggle.shadowRoot.querySelector('button');
+        expect(innerButton).to.exist;
+        expect(innerButton.getAttribute('aria-pressed')).to.equal('false');
+
+        el.showPassword = true;
+        await elementUpdated(el);
+        await toggle.updateComplete;
+
+        expect(innerButton.getAttribute('aria-pressed')).to.equal('true');
+      });
     });
 
     describe('simple', () => {

@@ -540,6 +540,7 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickShowPassword}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
+          aria-pressed="${this.showPassword ? 'true' : 'false'}"
           class="notificationBtn passwordBtn"
           shape="circle"
           size="sm"
