@@ -357,14 +357,6 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * @private
-       */
-      options: {
-        type: Array,
-        state: true
-      },
-
-      /**
        * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
        * @type {HTMLElement|Array<HTMLElement>}
        */
@@ -827,16 +819,19 @@ export class AuroSelect extends AuroElement {
     if (typeof this.menu.initItems === 'function') {
       this.menu.initItems();
     }
-    this.options = this.menu.options;
     this.updateOptionPositions();
+    // renderNativeSelect reads this.menu.options, which the parent doesn't
+    // observe — request an update so the hidden native <option> list reflects
+    // the menu's options after initItems populates them.
+    this.requestUpdate();
 
-    // Keep aria-setsize/aria-posinset (and the cached options reference) in sync
-    // when the menu re-initializes its items — e.g., slotchange, async/lazy loads,
-    // value-triggered re-init. Without this, stale set-size is announced after
-    // dynamic option mutations.
+    // Keep aria-setsize/aria-posinset (and the native <option> list) in sync
+    // when the menu re-initializes its items — e.g., slotchange, async/lazy
+    // loads, value-triggered re-init. Without this, stale set-size is
+    // announced and the native select goes stale after dynamic mutations.
     this.menu.addEventListener('auroMenu-optionsChange', () => {
-      this.options = this.menu.options;
       this.updateOptionPositions();
+      this.requestUpdate();
     });
 
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
