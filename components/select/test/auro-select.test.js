@@ -3675,6 +3675,31 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive.textContent.trim()).to.equal('Apricot');
         });
 
+        it('should prefer a multi-character prefix over single-char cycling when buffer matches an option', async () => {
+          // Repeated-char cycling must not override a longer prefix match.
+          // Typing "aa" with "Aardvark" present should land on Aardvark, not cycle past it to Anchor.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="aardvark">Aardvark</auro-menuoption>
+                <auro-menuoption value="anchor">Anchor</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('aardvark');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('aardvark');
+        });
+
         it('should do nothing if there is no matching option for the pressed key', async () => {
           const el = await fixture(html`
             <auro-select>
