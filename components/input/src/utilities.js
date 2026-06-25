@@ -264,6 +264,13 @@ export class AuroInputUtilities {
    * @returns {string | undefined}
    */
   toFormattedValue(valueObject, format) {
+    // Exposed publicly via `AuroInputUtil.toFormattedValue`, so a missing
+    // `format` argument has to fail gracefully rather than throw on
+    // `format.toLowerCase()`. Treat any falsy value (undefined, null, '')
+    // as "no format → no display value".
+    if (!format) {
+      return undefined;
+    }
     const normalizedFormat = format.toLowerCase();
     const maskOptions = this.getMaskOptions('date', normalizedFormat);
 
