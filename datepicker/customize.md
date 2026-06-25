@@ -296,6 +296,7 @@
   rangeLabelBeforeRange="antes de la salida"
   rangeLabelInRange="entre vuelos"
   rangeLabelAfterRange="después del regreso"
+  rangeLabelEndPreview="previsualizando fecha de regreso"
   navLabelPrevMonth="Ir al mes anterior"
   navLabelNextMonth="Ir al mes siguiente"
   calendarGridLabel="Días del mes del calendario"
@@ -324,6 +325,7 @@
   rangeLabelBeforeRange="antes de la salida"
   rangeLabelInRange="entre vuelos"
   rangeLabelAfterRange="después del regreso"
+  rangeLabelEndPreview="previsualizando fecha de regreso"
   navLabelPrevMonth="Ir al mes anterior"
   navLabelNextMonth="Ir al mes siguiente"
   calendarGridLabel="Días del mes del calendario"
@@ -340,7 +342,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
-<p>Assistive-technology announcements — range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>) — are exposed as individual attributes so they can be translated independently of the visible UI. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
+<p>Assistive-technology announcements — range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelEndPreview</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>) — are exposed as individual attributes so they can be translated independently of the visible UI. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
 
@@ -352,6 +354,7 @@
 +   rangeLabelBeforeRange="vor dem Zeitraum"
 +   rangeLabelInRange="im Zeitraum"
 +   rangeLabelAfterRange="nach dem Zeitraum"
++   rangeLabelEndPreview="Vorschau Enddatum"
 +   navLabelPrevMonth="Vorheriger Monat"
 +   navLabelNextMonth="Nächster Monat"
 +   calendarGridLabel="Kalendertage des Monats"&gt;
@@ -412,6 +415,7 @@
     rangeLabelBeforeRange="vor dem Zeitraum"
     rangeLabelInRange="im Zeitraum"
     rangeLabelAfterRange="nach dem Zeitraum"
+    rangeLabelEndPreview="Vorschau Enddatum"
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
@@ -433,6 +437,7 @@
     rangeLabelBeforeRange="在此期间之前"
     rangeLabelInRange="在此期间内"
     rangeLabelAfterRange="在此期间之后"
+    rangeLabelEndPreview="预览结束日期"
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数">
@@ -453,6 +458,7 @@
     rangeLabelBeforeRange="vor dem Zeitraum"
     rangeLabelInRange="im Zeitraum"
     rangeLabelAfterRange="nach dem Zeitraum"
+    rangeLabelEndPreview="Vorschau Enddatum"
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
@@ -475,6 +481,7 @@
     rangeLabelBeforeRange="この期間の前"
     rangeLabelInRange="この期間内"
     rangeLabelAfterRange="この期間の後"
+    rangeLabelEndPreview="終了日プレビュー"
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付">
@@ -504,6 +511,7 @@
     rangeLabelBeforeRange="vor dem Zeitraum"
     rangeLabelInRange="im Zeitraum"
     rangeLabelAfterRange="nach dem Zeitraum"
+    rangeLabelEndPreview="Vorschau Enddatum"
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
@@ -525,6 +533,7 @@
     rangeLabelBeforeRange="在此期间之前"
     rangeLabelInRange="在此期间内"
     rangeLabelAfterRange="在此期间之后"
+    rangeLabelEndPreview="预览结束日期"
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数"&gt;
@@ -545,6 +554,7 @@
     rangeLabelBeforeRange="vor dem Zeitraum"
     rangeLabelInRange="im Zeitraum"
     rangeLabelAfterRange="nach dem Zeitraum"
+    rangeLabelEndPreview="Vorschau Enddatum"
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
@@ -567,6 +577,7 @@
     rangeLabelBeforeRange="この期間の前"
     rangeLabelInRange="この期間内"
     rangeLabelAfterRange="この期間の後"
+    rangeLabelEndPreview="終了日プレビュー"
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付"&gt;
