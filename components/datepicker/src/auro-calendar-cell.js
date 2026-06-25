@@ -588,7 +588,7 @@ export class AuroCalendarCell extends LitElement {
         this._cachedButton = this.shadowRoot.querySelector('button.day');
       });
 
-      // Update host-level aria attributes for ariaActiveDescendantElement.
+      // Keep the host's gridcell aria attributes in sync with the day data.
       this.updateHostAria();
     }
 
@@ -604,8 +604,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Updates ARIA attributes on the host element so that
-   * ariaActiveDescendantElement can expose cell info to the SR.
+   * Sets host-level ARIA so each cell exposes its date, selection state,
+   * and blackout status to assistive tech browsing the month grid.
    * @private
    * @returns {void}
    */
@@ -619,7 +619,6 @@ export class AuroCalendarCell extends LitElement {
       return;
     }
 
-    // The host acts as the gridcell for ariaActiveDescendantElement.
     this.setAttribute('role', 'gridcell');
     this.setAttribute('aria-label', this.getAriaLabel());
     this.setAttribute('aria-selected', this.selected ? 'true' : 'false');
@@ -646,7 +645,9 @@ export class AuroCalendarCell extends LitElement {
 
   /**
    * Imperatively marks this cell as active without triggering a Lit re-render.
-   * Note: buttons stay tabindex="-1" because the grid uses aria-activedescendant.
+   * Buttons stay tabindex="-1" because DOM focus stays on the grid wrapper —
+   * arrow keys move the active cell imperatively and the live region carries
+   * the SR announcement.
    * @returns {void}
    */
   setActive() {

@@ -486,9 +486,9 @@ export class AuroCalendar extends RangeDatepicker {
 
   /**
    * Sets the active cell across all months. Only one cell has tabindex="0" at a time.
-   * Uses imperative DOM manipulation — no Lit re-render triggered.
-   * Also updates ariaActiveDescendantElement on the grid wrapper so
-   * screen readers announce the active cell without moving DOM focus.
+   * Uses imperative DOM manipulation — no Lit re-render triggered. DOM focus
+   * stays on the grid wrapper; the live region (see getOrCreateLiveRegion)
+   * is what announces the active cell to assistive tech.
    * @param {Number} date - Unix timestamp of the cell to activate.
    * @returns {void}
    */
@@ -823,8 +823,8 @@ export class AuroCalendar extends RangeDatepicker {
 
   /**
    * Handles arrow key navigation on the calendar grid wrapper.
-   * Focus stays on the grid wrapper; only ariaActiveDescendantElement
-   * and the visual active-cell indicator change.
+   * Focus stays on the grid wrapper; only the visual active-cell indicator
+   * changes. The live region announces the new active cell.
    * @private
    * @param {KeyboardEvent} event - The keyboard event.
    * @returns {void}
@@ -1116,8 +1116,9 @@ export class AuroCalendar extends RangeDatepicker {
       return;
     }
 
-    // With aria-activedescendant, the button no longer receives native focus,
-    // so we use the debounced live region for the full context announcement.
+    // DOM focus stays on the grid wrapper while arrow keys move the active
+    // cell, so cell buttons never receive native focus. The debounced live
+    // region carries the full-context announcement instead.
     const announcement = this.buildFocusAnnouncement(date);
     this.announceFocusDebounced(announcement);
 
