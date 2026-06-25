@@ -625,7 +625,7 @@ export class AuroInput extends BaseInput {
     return html`
       <${this.helpTextTag}
         appearance="${this.onDark ? 'inverse' : this.appearance}"
-        ?error="${isError}">
+        ?error=${isError}>
         <p
           id="${this.uniqueId}"
           part="helpText"
