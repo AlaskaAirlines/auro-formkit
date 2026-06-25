@@ -1043,8 +1043,8 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      // Focus the calendar grid wrapper (aria-activedescendant handles
-      // the SR announcement for the active cell).
+      // Focus the calendar grid wrapper. The live region (announced just
+      // below) handles the SR announcement for the active cell.
       if (activeCell) {
         this.calendar.focusActiveCell();
 
