@@ -1008,10 +1008,14 @@ export class AuroSelect extends AuroElement {
 
     // Intentional: no-match leaves the bib closed (deviates from APG / some native <select>).
     if (match) {
+      // Pre-stash the match so the auroDropdown-toggled handler's `!optionActive`
+      // guard short-circuits and skips the firstActive/selected fallback —
+      // otherwise show() synchronously fires the handler, which writes
+      // aria-activedescendant once before we overwrite it.
+      this.menu.updateActiveOption(match);
       if (!this.dropdown.isPopoverVisible) {
         this.dropdown.show();
       }
-      this.menu.updateActiveOption(match);
     }
   }
 
