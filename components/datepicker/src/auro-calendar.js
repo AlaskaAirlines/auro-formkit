@@ -341,17 +341,44 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   updateActiveCellForVisibleMonth() {
-    // Use double-rAF to ensure child month/cell components have fully
-    // rendered and cached their button references before we set tabindex.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const newDate = this.computeActiveDate({ skipDateFrom: true });
+    this._afterMonthRender(() => {
+      const newDate = this.computeActiveDate({ skipDateFrom: true });
 
-        if (newDate !== null && newDate !== undefined) {
-          this.activeCellDate = newDate;
-          this.setActiveCell(this.activeCellDate);
-        }
-      });
+      if (newDate !== null && newDate !== undefined) {
+        this.activeCellDate = newDate;
+        this.setActiveCell(this.activeCellDate);
+      }
+    });
+  }
+
+  /**
+   * Schedules `callback` two animation frames out, giving the child
+   * `auro-formkit-calendar-month` and `auro-formkit-calendar-cell` elements
+   * a full render-and-paint cycle to settle before the callback reads or
+   * mutates DOM.
+   *
+   * Why two frames, not one:
+   * 1. Lit batches property updates and renders in a microtask, so frame N
+   *    schedules the render but the new DOM may not be painted yet.
+   * 2. Cells re-cache `_cachedButton` inside their own `updateComplete.then`,
+   *    which also lands a tick later. Reading buttons from frame N+1
+   *    (after both renders + cache refresh have flushed) reliably hits the
+   *    new month's cells.
+   *
+   * Used by every code path that calls `handleNextMonth`/`handlePrevMonth`
+   * and then needs to inspect the freshly-rendered cells (cross-month
+   * keyboard nav, boundary events, `updateActiveCellForVisibleMonth`).
+   * Do NOT collapse to a single rAF — it intermittently lands before
+   * `_cachedButton` is refreshed, which silently breaks focus restoration
+   * and `setActiveCell` lookups.
+   * @private
+   * @param {() => void} callback - Runs once after the month re-render and
+   * the cells' button caches have refreshed.
+   * @returns {void}
+   */
+  _afterMonthRender(callback) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(callback);
     });
   }
 
@@ -954,23 +981,21 @@ export class AuroCalendar extends RangeDatepicker {
           } else {
             this.handlePrevMonth({ skipActiveUpdate: true });
           }
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const cells = this.getAllFocusableCells();
-              const target = cells.find((cell) => cell.day && cell.day.date === targetTs);
-              if (target) {
-                this.setActiveCell(target.day.date);
-                this.handleCellFocused({ detail: { date: target.day.date } });
-              } else {
-                const fallback = this.pickNearestCell(cells, targetTs, navDir);
-                if (fallback) {
-                  this.setActiveCell(fallback.day.date);
-                  this.handleCellFocused({ detail: { date: fallback.day.date } });
-                }
+          this._afterMonthRender(() => {
+            const cells = this.getAllFocusableCells();
+            const target = cells.find((cell) => cell.day && cell.day.date === targetTs);
+            if (target) {
+              this.setActiveCell(target.day.date);
+              this.handleCellFocused({ detail: { date: target.day.date } });
+            } else {
+              const fallback = this.pickNearestCell(cells, targetTs, navDir);
+              if (fallback) {
+                this.setActiveCell(fallback.day.date);
+                this.handleCellFocused({ detail: { date: fallback.day.date } });
               }
-              // Re-focus grid wrapper after month change re-render
-              this.focusActiveCell();
-            });
+            }
+            // Re-focus grid wrapper after month change re-render
+            this.focusActiveCell();
           });
         }
       }
@@ -996,22 +1021,20 @@ export class AuroCalendar extends RangeDatepicker {
           } else {
             this.handlePrevMonth({ skipActiveUpdate: true });
           }
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const cells = this.getAllFocusableCells();
-              const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
-              if (target) {
-                this.setActiveCell(target.day.date);
-                this.handleCellFocused({ detail: { date: target.day.date } });
-              } else {
-                const nearest = this.pickNearestCell(cells, targetDate, navDirection);
-                if (nearest) {
-                  this.setActiveCell(nearest.day.date);
-                  this.handleCellFocused({ detail: { date: nearest.day.date } });
-                }
+          this._afterMonthRender(() => {
+            const cells = this.getAllFocusableCells();
+            const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
+            if (target) {
+              this.setActiveCell(target.day.date);
+              this.handleCellFocused({ detail: { date: target.day.date } });
+            } else {
+              const nearest = this.pickNearestCell(cells, targetDate, navDirection);
+              if (nearest) {
+                this.setActiveCell(nearest.day.date);
+                this.handleCellFocused({ detail: { date: nearest.day.date } });
               }
-              this.focusActiveCell();
-            });
+            }
+            this.focusActiveCell();
           });
         }
       }
@@ -1061,19 +1084,17 @@ export class AuroCalendar extends RangeDatepicker {
         }
 
         this.handleNextMonth({ skipActiveUpdate: true });
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const cells = this.getAllFocusableCells();
-            const target = cells.find((cell) => cell.day && cell.day.date === nextTs);
-            if (target) {
-              this.setActiveCell(target.day.date);
-              this.focusActiveCell();
-            } else if (cells.length > 0) {
-              // Fallback: first cell of the last rendered month
-              this.setActiveCell(cells[cells.length - 1].day.date);
-              this.focusActiveCell();
-            }
-          });
+        this._afterMonthRender(() => {
+          const cells = this.getAllFocusableCells();
+          const target = cells.find((cell) => cell.day && cell.day.date === nextTs);
+          if (target) {
+            this.setActiveCell(target.day.date);
+            this.focusActiveCell();
+          } else if (cells.length > 0) {
+            // Fallback: first cell of the last rendered month
+            this.setActiveCell(cells[cells.length - 1].day.date);
+            this.focusActiveCell();
+          }
         });
       } else if (direction === 'prev' && this.showPrevMonthBtn) {
         // Navigate to previous month and focus the computed previous date.
@@ -1087,19 +1108,17 @@ export class AuroCalendar extends RangeDatepicker {
         }
 
         this.handlePrevMonth({ skipActiveUpdate: true });
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const cells = this.getAllFocusableCells();
-            const target = cells.find((cell) => cell.day && cell.day.date === prevTs);
-            if (target) {
-              this.setActiveCell(target.day.date);
-              this.focusActiveCell();
-            } else if (cells.length > 0) {
-              // Fallback: last cell of the first rendered month
-              this.setActiveCell(cells[0].day.date);
-              this.focusActiveCell();
-            }
-          });
+        this._afterMonthRender(() => {
+          const cells = this.getAllFocusableCells();
+          const target = cells.find((cell) => cell.day && cell.day.date === prevTs);
+          if (target) {
+            this.setActiveCell(target.day.date);
+            this.focusActiveCell();
+          } else if (cells.length > 0) {
+            // Fallback: last cell of the first rendered month
+            this.setActiveCell(cells[0].day.date);
+            this.focusActiveCell();
+          }
         });
       }
     } else if (key === 'ArrowDown' || key === 'ArrowUp') {
@@ -1127,20 +1146,18 @@ export class AuroCalendar extends RangeDatepicker {
           } else {
             this.handlePrevMonth({ skipActiveUpdate: true });
           }
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const cells = this.getAllFocusableCells();
-              const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
-              if (target) {
-                this.setActiveCell(target.day.date);
-                this.focusActiveCell();
-              } else if (cells.length > 0) {
-                // Clamp to nearest focusable cell
-                const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
-                this.setActiveCell(nearest.day.date);
-                this.focusActiveCell();
-              }
-            });
+          this._afterMonthRender(() => {
+            const cells = this.getAllFocusableCells();
+            const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
+            if (target) {
+              this.setActiveCell(target.day.date);
+              this.focusActiveCell();
+            } else if (cells.length > 0) {
+              // Clamp to nearest focusable cell
+              const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
+              this.setActiveCell(nearest.day.date);
+              this.focusActiveCell();
+            }
           });
         }
       }
