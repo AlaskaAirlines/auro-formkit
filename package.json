@@ -27,7 +27,10 @@
   ],
   "files": [
     "components/*/dist/**/*",
-    "components/*/demo/**/*",
+    "components/*/demo/**/*.md",
+    "components/*/demo/**/*.html",
+    "components/*/demo/**/*.min.*",
+    "components/*/demo/**/*.json",
     "CHANGELOG.md",
     "README.md",
     "LICENSE",
