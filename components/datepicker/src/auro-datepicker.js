@@ -1118,7 +1118,7 @@ export class AuroDatePicker extends AuroElement {
         if (this.valueObject) {
           this.centralDate = this.value;
         } else if (!this.centralDate && !this.calendarStartDate && !this.minDate) {
-          this.centralDate = new Date();
+          this.centralDate = dateFormatter.toISOFormatString(new Date());
         }
       }
 
