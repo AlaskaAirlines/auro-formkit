@@ -1464,6 +1464,51 @@ function runTest(mobileView) {
         el.menu = savedMenu;
       });
 
+      // ─── aria-setsize/posinset re-stamp on dynamic option changes ────
+      it('re-stamps aria-setsize/aria-posinset when menu options change at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // Baseline: defaultFixture has 4 options, all stamped at init.
+        let options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(4);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('4');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+
+        // Append a new option after init — auro-menu's slotchange will
+        // re-run initItems() and dispatch auroMenu-optionsChange, which
+        // auro-select must hook to re-stamp position attributes.
+        const extra = document.createElement('auro-menuoption');
+        extra.setAttribute('value', 'Mangoes');
+        extra.textContent = 'Mangoes';
+        menu.appendChild(extra);
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(5);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('5');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+
+        // Remove an option — counts and positions should refresh again.
+        options[0].remove();
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(4);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('4');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+      });
+
       // ─── updateMenuShapeSize with no menu early return ───────────────
       it('updateMenuShapeSize returns early when menu is null', async () => {
         const el = await defaultFixture();

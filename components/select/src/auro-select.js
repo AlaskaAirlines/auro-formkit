@@ -829,6 +829,16 @@ export class AuroSelect extends AuroElement {
     }
     this.options = this.menu.options;
     this.updateOptionPositions();
+
+    // Keep aria-setsize/aria-posinset (and the cached options reference) in sync
+    // when the menu re-initializes its items — e.g., slotchange, async/lazy loads,
+    // value-triggered re-init. Without this, stale set-size is announced after
+    // dynamic option mutations.
+    this.menu.addEventListener('auroMenu-optionsChange', () => {
+      this.options = this.menu.options;
+      this.updateOptionPositions();
+    });
+
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
     this.menu.addEventListener("auroMenu-selectValueFailure", () => {
