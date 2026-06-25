@@ -1253,7 +1253,12 @@ export class AuroCombobox extends AuroElement {
      * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
-      if (!this.componentHasFocus && !this._inFullscreenTransition) {
+      // Skip while the dropdown is open — focus transits out briefly on
+      // mousedown of a menu option (popover top-layer breaks :focus-within),
+      // and validating against the pre-selection value flashes a stale error
+      // between mousedown and mouseup. The next focusout fires after the
+      // dropdown closes and validates against the post-selection value.
+      if (!this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
         this.validate();
       }
     });
@@ -1572,7 +1577,14 @@ export class AuroCombobox extends AuroElement {
       this._programmaticFilterRefresh = true;
 
       if (this.input.value !== this.value) {
-        this.menu.value = undefined;
+        // Only invalidate menu state when it's actually stale. On the selection
+        // path the auroMenu-selectedOption handler already set menu.value to
+        // this.value; wiping it here would clear optionSelected and trip
+        // valueMissing validation on a valid selection (relevant under
+        // persistInput, where input.value diverges from this.value by design).
+        if (this.menu.value !== this.value) {
+          this.menu.value = undefined;
+        }
 
         if (!this.persistInput) {
           this.syncInputValuesAcrossTriggerAndBib(this.value || '');
