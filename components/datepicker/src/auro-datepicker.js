@@ -226,7 +226,17 @@ export class AuroDatePicker extends AuroElement {
     this.handleClick = this.handleClick.bind(this);
 
     /**
-     * Aborts every listener registered in the configure* methods on disconnect.
+     * Single AbortController wired into every listener registered in the
+     * configure* methods so disconnectedCallback can tear them all down
+     * with one abort() call.
+     *
+     * The genuine leak risk is the listeners attached to children that can
+     * outlive the host if they get reparented — `this.dropdown`,
+     * `this.calendar`, and the inputs inside the dropdown's slot.
+     * Listeners attached to `this` (e.g. focusin/focusout on the host)
+     * form a self-contained reference graph that the GC can collect with
+     * the host anyway, but they share the same signal so the cleanup
+     * pattern stays uniform across all configure* sites.
      * @private
      */
     this._listenerAbortController = new AbortController();
@@ -1361,6 +1371,11 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureDatepicker() {
+    // These listeners are on `this` (the host), so they would GC with the
+    // host even without the abort signal — see the leak rationale on
+    // `_listenerAbortController`. The signal is still passed for uniform
+    // cleanup semantics with the child-element listeners in the other
+    // configure* methods.
     const { signal } = this._listenerAbortController;
 
     this.addEventListener('focusin', () => {
