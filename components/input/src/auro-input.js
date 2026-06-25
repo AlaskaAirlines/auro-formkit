@@ -614,25 +614,29 @@ export class AuroInput extends BaseInput {
    * @returns {html} - Returns HTML for the help text and error message.
    */
   renderHtmlHelpText() {
+    // Single `<p>` with stable identity across validity transitions —
+    // previously two distinct templates (valid vs invalid) caused Lit to
+    // replace the node entirely on a flip, and VoiceOver wouldn't
+    // re-announce because the live-region element it was watching had been
+    // removed and a new one inserted. Keeping one node means the `role`,
+    // `aria-live`, and text content all change in-place, which AT does
+    // observe and announce.
+    const isError = this.validity && this.validity !== 'valid';
     return html`
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-        ? html`
-          <${this.helpTextTag}
-            appearance="${this.onDark ? 'inverse' : this.appearance}">
-            <p id="${this.uniqueId}" part="helpText">
-              <slot name="helpText">${this.getHelpText()}</slot>
-            </p>
-          </${this.helpTextTag}>
-        `
-        : html`
-          <${this.helpTextTag} error
-            appearance="${this.onDark ? 'inverse' : this.appearance}">
-            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-              ${this.errorMessage}
-            </p>
-          </${this.helpTextTag}>
-        `
+      <${this.helpTextTag}
+        appearance="${this.onDark ? 'inverse' : this.appearance}"
+        ?error="${isError}">
+        <p
+          id="${this.uniqueId}"
+          part="helpText"
+          role="${ifDefined(isError ? 'alert' : undefined)}"
+          aria-live="${ifDefined(isError ? 'assertive' : undefined)}">
+          ${isError
+        ? this.errorMessage
+        : html`<slot name="helpText">${this.getHelpText()}</slot>`
       }
+        </p>
+      </${this.helpTextTag}>
     `;
   }
 
