@@ -949,10 +949,26 @@ export class AuroDatePicker extends AuroElement {
   // ─── Vendor calendar time conversions ─────────────────────────────────────
 
   /**
-   * Converts a Unix timestamp (seconds) from the vendor calendar to an ISO date string.
+   * Converts a Unix timestamp (seconds) from the vendored range-datepicker
+   * (`src/vendor/wc-range-datepicker/day.js`) to an ISO date string.
+   *
+   * Timezone contract:
+   * - INPUT: `time` is assumed to be the seconds-since-epoch of **local
+   *   midnight** for the intended calendar day. The vendor's Day constructor
+   *   builds it via `date-fns format(date, 't')` from a locally-constructed
+   *   Date, so this assumption currently holds end-to-end.
+   * - OUTPUT: `dateFormatter.toISOFormatString` reads the Date's local
+   *   getFullYear/getMonth/getDate components, so the returned YYYY-MM-DD
+   *   string matches the local calendar day.
+   *
+   * If the vendor ever switches to emitting UTC-midnight timestamps, this
+   * conversion will silently shift the returned date by one day in zones
+   * west of UTC. Any vendor swap should re-verify this contract; the TZ
+   * regression suite (`npm run test:hst`, UTC-10) will catch the symptom.
+   *
    * @private
-   * @param {number} time - Unix timestamp in seconds.
-   * @returns {string} ISO date string (yyyy-mm-dd).
+   * @param {number} time - Unix timestamp (seconds), local midnight of the day.
+   * @returns {string} ISO date string (yyyy-mm-dd) reflecting the local calendar day.
    */
   convertWcTimeToDate(time) {
     return dateFormatter.toISOFormatString(new Date(time * 1000));
