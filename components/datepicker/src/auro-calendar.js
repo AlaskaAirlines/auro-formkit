@@ -650,15 +650,21 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {Set<Number>}
    */
   _getBlackoutSet() {
-    const disabledDays = this.disabledDays || [];
+    // Normalize non-array values to a stable `null` sentinel rather than a
+    // fresh `[]` per call — otherwise the reference-identity cache key
+    // (`_cachedBlackoutDisabledDays === disabledDays`) never matches on
+    // subsequent calls and the Set rebuilds every time. `buildBlackoutSet`
+    // already treats null/non-array as "no legacy disabledDays" via its
+    // own Array.isArray gate.
+    const disabledDays = Array.isArray(this.disabledDays) ? this.disabledDays : null;
     const blackoutDates = this.datepicker?.blackoutDates;
-    if (this._blackoutSet
-      && this._cachedBlackoutDisabledDays === disabledDays
-      && this._cachedBlackoutDates === blackoutDates) {
+    if (this._blackoutSet &&
+      this._cachedBlackoutDisabledDays === disabledDays &&
+      this._cachedBlackoutDates === blackoutDates) {
       return this._blackoutSet;
     }
 
-    if (disabledDays.length > 0) {
+    if (disabledDays && disabledDays.length > 0) {
       this._warnDisabledDaysDeprecated();
     }
 

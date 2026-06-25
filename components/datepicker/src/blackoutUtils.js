@@ -30,7 +30,22 @@ export function parseIsoToTimestamp(isoStr) {
   const year = parseInt(parts[0], 10);
   const month = parseInt(parts[1], 10);
   const day = parseInt(parts[2], 10);
-  const ts = Math.floor(new Date(year, month - 1, day).getTime() / 1000);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return null;
+  }
+  // Reject overflow values like "2024-13-40" — JS `new Date(year, month, day)`
+  // silently normalizes those to a different calendar day, which would
+  // disable the wrong date if we let the result through.
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return null;
+  }
+  const date = new Date(year, month - 1, day);
+  // Guard the residual case where JS still rolls a value (e.g. Feb 30 → Mar 2).
+  // After construction, getFullYear/getMonth/getDate should match the inputs.
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+  const ts = Math.floor(date.getTime() / 1000);
   return Number.isFinite(ts) ? ts : null;
 }
 
