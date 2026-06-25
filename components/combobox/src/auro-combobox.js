@@ -1577,14 +1577,7 @@ export class AuroCombobox extends AuroElement {
       this._programmaticFilterRefresh = true;
 
       if (this.input.value !== this.value) {
-        // Only invalidate menu state when it's actually stale. On the selection
-        // path the auroMenu-selectedOption handler already set menu.value to
-        // this.value; wiping it here would clear optionSelected and trip
-        // valueMissing validation on a valid selection (relevant under
-        // persistInput, where input.value diverges from this.value by design).
-        if (this.menu.value !== this.value) {
-          this.menu.value = undefined;
-        }
+        this.menu.value = undefined;
 
         if (!this.persistInput) {
           this.syncInputValuesAcrossTriggerAndBib(this.value || '');
