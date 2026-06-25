@@ -3448,6 +3448,32 @@ function runTest(mobileView) {
           await expect(el.value).to.not.be.undefined;
         });
 
+        // Per WAI-ARIA APG select-only combobox, Tab on an open listbox must
+        // perform the default action (advance focus to the next tabbable).
+        // Adding preventDefault() here would violate the spec and trap focus
+        // on the trigger. Synthetic keydown events don't trigger native focus
+        // traversal in the test runner, so we assert the invariant directly:
+        // the handler must leave defaultPrevented === false.
+        it('should not preventDefault on Tab — preserves native focus advancement', async () => {
+          const el = await defaultFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.querySelector('[slot="trigger"]');
+
+          trigger.click();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', cancelable: true });
+          el.dispatchEvent(tabEvent);
+          await elementUpdated(el);
+
+          await expect(tabEvent.defaultPrevented).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
         if (mobileView) {
           it('should close the fullscreen dialog', async () => {
             const el = await defaultFixture();
