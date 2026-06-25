@@ -193,6 +193,8 @@ The trade-off: intercepted keys must have their native behaviors manually re-imp
 | **Space** | Opens the listbox | APG select-only combobox |
 | **Down Arrow** | Opens the listbox, moves visual focus to first option | APG select-only combobox |
 | **Up Arrow** | Opens the listbox, moves visual focus to last option | APG select-only combobox |
+| **Home** | Opens the listbox, moves visual focus to first option | APG select-only combobox |
+| **End** | Opens the listbox, moves visual focus to last option | APG select-only combobox |
 | **Tab** | Moves focus to next focusable element on the page (standard browser behavior) | APG select-only combobox |
 
 ### Desktop — Popup Open

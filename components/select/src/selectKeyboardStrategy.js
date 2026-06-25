@@ -51,16 +51,17 @@ export const selectKeyboardStrategy = {
   },
 
   End(component, evt, ctx) {
-    if (!ctx.isExpanded) {
-      return;
-    }
     evt.preventDefault();
     evt.stopPropagation();
     // `pop()` is safe here: getEnabledOptions returns a fresh filtered array.
     const lastOption = getEnabledOptions(component.menu).pop();
-    if (lastOption) {
-      component.menu.updateActiveOption(lastOption);
+    if (!lastOption) {
+      return;
     }
+    if (!ctx.isExpanded) {
+      component.dropdown.show();
+    }
+    component.menu.updateActiveOption(lastOption);
   },
 
   Enter(component, evt, ctx) {
@@ -78,15 +79,16 @@ export const selectKeyboardStrategy = {
   },
 
   Home(component, evt, ctx) {
-    if (!ctx.isExpanded) {
-      return;
-    }
     evt.preventDefault();
     evt.stopPropagation();
     const [firstOption] = getEnabledOptions(component.menu);
-    if (firstOption) {
-      component.menu.updateActiveOption(firstOption);
+    if (!firstOption) {
+      return;
     }
+    if (!ctx.isExpanded) {
+      component.dropdown.show();
+    }
+    component.menu.updateActiveOption(firstOption);
   },
 
   Tab(component, evt, ctx) {

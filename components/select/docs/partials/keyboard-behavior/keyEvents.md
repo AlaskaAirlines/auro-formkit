@@ -136,8 +136,15 @@
       </td>
     </tr>
     <tr>
-      <td>End</td>
-      <td>-</td>
+      <td rowspan="2">End</td>
+      <td rowspan="2">-</td>
+      <td>Collapsed</td>
+      <td>Trigger element</td>
+      <td>
+        Opens the bib and advances the <code>focused</code> option to the last enabled option in the list.
+      </td>
+    </tr>
+    <tr>
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
@@ -165,8 +172,15 @@
       </td>
     </tr>
     <tr>
-      <td>Home</td>
-      <td>-</td>
+      <td rowspan="2">Home</td>
+      <td rowspan="2">-</td>
+      <td>Collapsed</td>
+      <td>Trigger element</td>
+      <td>
+        Opens the bib and advances the <code>focused</code> option to the first enabled option in the list.
+      </td>
+    </tr>
+    <tr>
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>

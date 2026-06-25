@@ -22,6 +22,8 @@
 [ ] Space on the focused trigger — verify the bib opens
 [ ] Arrow Down — verify the bib opens and visual focus moves to the first option
 [ ] Arrow Up — verify the bib opens and visual focus moves to the last option
+[ ] Home — verify the bib opens and visual focus moves to the first option
+[ ] End — verify the bib opens and visual focus moves to the last option
 [ ] Tab away from the trigger — verify focus moves to the next focusable element (standard browser behavior)
 
 ## Keyboard Interactions — Desktop (Popup Open)
