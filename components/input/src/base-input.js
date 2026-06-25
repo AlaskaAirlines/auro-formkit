@@ -702,6 +702,15 @@ export default class BaseInput extends AuroElement {
 
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
+    // Normalize the format token to lowercase so case-mixed values supplied
+    // via attribute (e.g. `format="MM/DD/YYYY"`) hit the `dateFormatMap`
+    // lookup inside `setCustomHelpTextMessage`. Without this, an uppercase
+    // format silently misses the map and leaves `setCustomValidityForType`
+    // unset.
+    if (this.format) {
+      this.format = this.format.toLowerCase();
+    }
+
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
       this.ValidityMessageOverride = this.setCustomValidity;

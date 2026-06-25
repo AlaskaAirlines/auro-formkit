@@ -1210,6 +1210,22 @@ function runFullTest(mobileView) {
           expect(helpText.textContent).to.contain('Please enter a valid email');
         }
       });
+
+      // Regression: uppercase `format` attribute (e.g. "MM/DD/YYYY", as
+      // used in the new localization-locale-formatted example) used to
+      // silently miss the `dateFormatMap` lookup inside
+      // `setCustomHelpTextMessage`, leaving setCustomValidityForType unset
+      // and the user without a type-specific validation message. The
+      // firstUpdated normalization lowers the format so the map lookup
+      // finds the matching i18n key.
+      it('normalizes uppercase format to lowercase and sets setCustomValidityForType', async () => {
+        const el = await fixture(html`<auro-input type="date" format="MM/DD/YYYY"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.format).to.equal('mm/dd/yyyy');
+        expect(el.setCustomValidityForType).to.be.a('string');
+        expect(el.setCustomValidityForType.length).to.be.greaterThan(0);
+      });
     });
 
     describe('setCustomValidityRangeOverflow', () => {
