@@ -556,7 +556,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for cells after the range (or after start when no end is selected).
+       * Label announced for cells after a fully selected range (both
+       * `dateFrom` and `dateTo` are set). While a range is still being
+       * picked (`dateFrom` set, `dateTo` unset), focused cells past the
+       * start use `rangeLabelEndPreview` instead.
        * @default 'after range'
        */
       rangeLabelAfterRange: {
@@ -612,7 +615,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Dates that the user should have for reference as part of their decision making when selecting a date.
+       * Dates that the user should have for reference as part of their decision-making when selecting a date.
        * This should be a JSON string array of ISO date strings (`YYYY-MM-DD`).
        */
       referenceDates: {
@@ -1351,12 +1354,23 @@ export class AuroDatePicker extends AuroElement {
     const { signal } = this._listenerAbortController;
 
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
-      if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
-        this.inputList[0].value = this.convertWcTimeToDate(this.calendar.dateFrom);
+      // Compare the input's ISO value against the *converted* calendar
+      // timestamp (the vendor's `dateFrom`/`dateTo` are Unix-seconds
+      // strings — comparing the input ISO directly against them would
+      // never match, so the write would fire on every event and emit
+      // redundant input/change activity).
+      if (this.calendar.dateFrom !== undefined) {
+        const fromIso = this.convertWcTimeToDate(this.calendar.dateFrom);
+        if (this.inputList[0].value !== fromIso) {
+          this.inputList[0].value = fromIso;
+        }
       }
 
-      if (this.inputList[1] && this.calendar.dateTo && this.inputList[1].value !== this.calendar.dateTo) {
-        this.inputList[1].value = this.convertWcTimeToDate(this.calendar.dateTo);
+      if (this.inputList[1] && this.calendar.dateTo) {
+        const toIso = this.convertWcTimeToDate(this.calendar.dateTo);
+        if (this.inputList[1].value !== toIso) {
+          this.inputList[1].value = toIso;
+        }
       }
     }, { signal });
 
@@ -1621,7 +1635,12 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   _warnInvalidLocale(badLocale) {
-    const key = String(badLocale ?? '');
+    // Stringify without coalescing — `String(undefined)` / `String(null)`
+    // surface the actual offending value in the log, instead of the
+    // ambiguous `Locale ""` that `String(badLocale ?? '')` would produce.
+    // Dedup still works correctly because each unique stringification
+    // becomes its own Set entry.
+    const key = String(badLocale);
     const seen = AuroDatePicker._warnedInvalidLocales;
     if (seen.has(key)) {
       return;
@@ -1938,6 +1957,15 @@ export class AuroDatePicker extends AuroElement {
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
+
+    // If the element was disconnected before this first render finished,
+    // disconnectedCallback's microtask already aborted the controller. The
+    // connectedCallback reinit guard skips that case because `hasUpdated`
+    // is still false. Mint a fresh controller here so configure* registers
+    // listeners against a live signal.
+    if (this._listenerAbortController.signal.aborted) {
+      this._listenerAbortController = new AbortController();
+    }
 
     this.configureDropdown();
     this.configureInput();

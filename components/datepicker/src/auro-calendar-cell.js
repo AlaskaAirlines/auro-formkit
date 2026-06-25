@@ -213,8 +213,10 @@ export class AuroCalendarCell extends LitElement {
       // consumer or test mutated cell.disabledDays directly), the Set does
       // not reflect that addition — fall through to the per-cell scan only
       // when the reference no longer matches. Production data flow keeps
-      // these identical, so this branch stays cold.
-      if (this.disabledDays && this.disabledDays !== this.calendar.disabledDays && this.disabledDays.length > 0) {
+      // these identical, so this branch stays cold. Guarded with
+      // Array.isArray to match `_getBlackoutSet`'s contract: non-array
+      // values are treated as empty rather than crashing on `.findIndex`.
+      if (Array.isArray(this.disabledDays) && this.disabledDays !== this.calendar.disabledDays && this.disabledDays.length > 0) {
         if (this.disabledDays.findIndex((dd) => parseInt(dd, 10) === this.day.date) !== -1) {
           return true;
         }
@@ -626,9 +628,14 @@ export class AuroCalendarCell extends LitElement {
 
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     if (outOfRange) {
+      // Strip every aria attribute the in-range branch may have set on a
+      // previous render — if a cell flips from in-range to out-of-range
+      // (calendar shifts months, minDate/maxDate change, etc.).
       this.removeAttribute('role');
       this.removeAttribute('aria-label');
       this.removeAttribute('aria-current');
+      this.removeAttribute('aria-selected');
+      this.removeAttribute('aria-disabled');
       return;
     }
 

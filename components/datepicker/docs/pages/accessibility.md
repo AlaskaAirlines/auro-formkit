@@ -96,7 +96,7 @@ When `range` is set, each date cell's label includes its position relative to th
 | `rangeLabelBeforeRange` | "before range" | Announced for dates before the range start. |
 | `rangeLabelInRange` | "in range" | Announced for dates within the selected range. |
 | `rangeLabelAfterRange` | "after range" | Announced for dates after a fully selected range. |
-| `rangeLabelEndPreview` | "previewing range end" | Announced for the focused cell while picking the range end (`dateFrom` set, `dateTo` not yet selected) so AT users know Enter would commit this cell as the range end. |
+| `rangeLabelEndPreview` | "previewing range end" | Announced for the focused cell while picking the range end (`dateFrom` set, `dateTo` not yet selected) so AT users know that pressing Enter would commit this cell as the range end. |
 
 <auro-header level="2" id="fullscreenBehavior">Fullscreen (Modal) Behavior</auro-header>
 

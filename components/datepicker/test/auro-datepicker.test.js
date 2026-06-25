@@ -8707,6 +8707,75 @@ function runFullTest(mobileView) {
         expect(second).to.not.equal(first);
         expect(second.size).to.equal(2);
       });
+
+      // Verify the Set rejects overflow ISO strings ("2024-13-40", "2024-02-30")
+      // instead of silently disabling a wrapped calendar day.
+      it('rejects overflow ISO strings instead of silently normalizing them', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15" blackoutDates='["2024-13-40", "2024-02-30", "2024-01-15"]'></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const set = calendar._getBlackoutSet();
+
+        // Only the one well-formed ISO date should land in the Set.
+        expect(set.size).to.equal(1);
+      });
+
+      // Verify a non-array disabledDays value (e.g. a stray string) is
+      // treated as empty rather than triggering the deprecation warning
+      // or attempting to .length-scan a non-array.
+      it('treats non-array disabledDays as empty', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        calendar.constructor._warnedDisabledDaysDeprecation = false;
+        calendar.disabledDays = 'not-an-array';
+        calendar._blackoutSet = null;
+
+        const originalDebug = console.debug;
+        const calls = [];
+        console.debug = (...args) => calls.push(args);
+
+        try {
+          const set = calendar._getBlackoutSet();
+          expect(set.size).to.equal(0);
+          const matching = calls.filter((args) => typeof args[0] === 'string' && args[0].includes('disabledDays'));
+          expect(matching.length).to.equal(0);
+        } finally {
+          console.debug = originalDebug;
+        }
+      });
+
+      // Regression: non-array disabledDays must still hit the memoization
+      // cache on subsequent calls — earlier the helper allocated a fresh
+      // `[]` each time, so reference identity never matched and the Set
+      // rebuilt every call. The stable null sentinel keeps the cache live.
+      it('memoizes the Set when disabledDays is a non-array value', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        calendar.disabledDays = 'not-an-array';
+        calendar._blackoutSet = null;
+
+        const first = calendar._getBlackoutSet();
+        const second = calendar._getBlackoutSet();
+        expect(second).to.equal(first);
+      });
     });
 
     describe('disabledDays deprecation', () => {
