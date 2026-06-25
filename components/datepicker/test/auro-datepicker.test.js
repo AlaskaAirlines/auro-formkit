@@ -5277,6 +5277,18 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const lastCell = allCells[allCells.length - 1];
 
+        // Compute the target timestamp the same way handleMonthBoundary does
+        // (fromDate + 1 day, midnight-aligned). The old `cells[length-1]`
+        // clamp landed on the end of the new month — far from this target —
+        // and the `.to.exist` assertion couldn't tell that apart from a
+        // correct nearest-cell pick.
+        const expectedTarget = (() => {
+          const target = new Date(lastCell.day.date * 1000);
+          target.setDate(target.getDate() + 1);
+          target.setHours(0, 0, 0, 0);
+          return Math.floor(target.getTime() / 1000);
+        })();
+
         calendar.handleMonthBoundary({
           detail: {
             direction: 'next',
@@ -5289,7 +5301,7 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        expect(calendar.activeCellDate).to.exist;
+        expect(calendar.activeCellDate).to.equal(expectedTarget);
       });
 
       // Verify the 'handleMonthBoundary' property handles ArrowLeft boundary requiring prev month navigation.
@@ -5306,6 +5318,16 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const firstCell = allCells[0];
 
+        // Target = fromDate - 1 day (last day of previous month). The old
+        // `cells[0]` clamp landed on the START of the previous month — far
+        // from this target.
+        const expectedTarget = (() => {
+          const target = new Date(firstCell.day.date * 1000);
+          target.setDate(target.getDate() - 1);
+          target.setHours(0, 0, 0, 0);
+          return Math.floor(target.getTime() / 1000);
+        })();
+
         calendar.handleMonthBoundary({
           detail: {
             direction: 'prev',
@@ -5318,7 +5340,7 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        expect(calendar.activeCellDate).to.exist;
+        expect(calendar.activeCellDate).to.equal(expectedTarget);
       });
 
       // Verify the 'handleMonthBoundary' property returns early when fromDate not found in cells.
@@ -5389,6 +5411,15 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const lastCell = allCells[allCells.length - 1];
 
+        // Target = fromDate + 7 days. The old directional clamp
+        // (`cells[0]` for next) could land 20+ days from this target.
+        const expectedTarget = (() => {
+          const target = new Date(lastCell.day.date * 1000);
+          target.setDate(target.getDate() + 7);
+          target.setHours(0, 0, 0, 0);
+          return Math.floor(target.getTime() / 1000);
+        })();
+
         calendar.handleMonthBoundary({
           detail: {
             direction: 'next',
@@ -5401,7 +5432,7 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        expect(calendar.activeCellDate).to.exist;
+        expect(calendar.activeCellDate).to.equal(expectedTarget);
       });
 
       // Verify the 'handleMonthBoundary' property handles ArrowUp boundary requiring month navigation.
@@ -5418,6 +5449,15 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const firstCell = allCells[0];
 
+        // Target = fromDate - 7 days. The old `cells[length - 1]` clamp
+        // (for prev) could land 20+ days from this target.
+        const expectedTarget = (() => {
+          const target = new Date(firstCell.day.date * 1000);
+          target.setDate(target.getDate() - 7);
+          target.setHours(0, 0, 0, 0);
+          return Math.floor(target.getTime() / 1000);
+        })();
+
         calendar.handleMonthBoundary({
           detail: {
             direction: 'prev',
@@ -5430,7 +5470,7 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        expect(calendar.activeCellDate).to.exist;
+        expect(calendar.activeCellDate).to.equal(expectedTarget);
       });
 
       // Verify the 'handleMonthBoundary' property does not navigate when target date is out of range.

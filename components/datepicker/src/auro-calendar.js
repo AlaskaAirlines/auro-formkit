@@ -1118,10 +1118,15 @@ export class AuroCalendar extends RangeDatepicker {
           if (target) {
             this.setActiveCell(target.day.date);
             this.focusActiveCell();
-          } else if (cells.length > 0) {
-            // Fallback: first cell of the last rendered month
-            this.setActiveCell(cells[cells.length - 1].day.date);
-            this.focusActiveCell();
+          } else {
+            // Same nearest-by-date fallback handleGridKeyDown uses — direct
+            // `cells[length - 1]` would land on the end of the new month,
+            // far from the user's intended `nextTs`.
+            const fallback = this.pickNearestCell(cells, nextTs, 'next');
+            if (fallback) {
+              this.setActiveCell(fallback.day.date);
+              this.focusActiveCell();
+            }
           }
         });
       } else if (direction === 'prev' && this.showPrevMonthBtn) {
@@ -1142,10 +1147,15 @@ export class AuroCalendar extends RangeDatepicker {
           if (target) {
             this.setActiveCell(target.day.date);
             this.focusActiveCell();
-          } else if (cells.length > 0) {
-            // Fallback: last cell of the first rendered month
-            this.setActiveCell(cells[0].day.date);
-            this.focusActiveCell();
+          } else {
+            // Same nearest-by-date fallback handleGridKeyDown uses — direct
+            // `cells[0]` would land on the start of the previous month, far
+            // from the user's intended `prevTs`.
+            const fallback = this.pickNearestCell(cells, prevTs, 'prev');
+            if (fallback) {
+              this.setActiveCell(fallback.day.date);
+              this.focusActiveCell();
+            }
           }
         });
       }
@@ -1180,11 +1190,15 @@ export class AuroCalendar extends RangeDatepicker {
             if (target) {
               this.setActiveCell(target.day.date);
               this.focusActiveCell();
-            } else if (cells.length > 0) {
-              // Clamp to nearest focusable cell
-              const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
-              this.setActiveCell(nearest.day.date);
-              this.focusActiveCell();
+            } else {
+              // Same nearest-by-date fallback handleGridKeyDown uses — the
+              // old direction-based `cells[0]`/`cells[length-1]` clamp
+              // could land 25+ days from the intended target.
+              const nearest = this.pickNearestCell(cells, targetDate, navDirection);
+              if (nearest) {
+                this.setActiveCell(nearest.day.date);
+                this.focusActiveCell();
+              }
             }
           });
         }
