@@ -2723,6 +2723,25 @@ function runFullTest(mobileView) {
       expect(trigger.hasAttribute('aria-haspopup')).to.be.false;
     });
 
+    // When the slotted trigger owns its own focus, the wrapper sheds combobox
+    // semantics (role/aria-expanded/aria-controls/aria-labelledby) — aria-haspopup
+    // must follow the same guard so it isn't stranded on a role-less wrapper.
+    it("should not render aria-haspopup on the wrapper when triggerContentFocusable is true", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <button slot="trigger">Focusable Trigger</button>
+        </auro-dropdown>
+      `);
+
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(el.triggerContentFocusable).to.be.true;
+      expect(trigger.hasAttribute('aria-haspopup')).to.be.false;
+    });
+
     describe("aria-activedescendant", () => {
       it("should set ariaActiveDescendantElement on the trigger when called with an element", async () => {
         const el = await fixture(html`
