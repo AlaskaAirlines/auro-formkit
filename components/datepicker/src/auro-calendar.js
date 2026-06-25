@@ -610,6 +610,42 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
+   * Returns a memoized Set of blackout timestamps (seconds) drawn from both
+   * the legacy `disabledDays` array and the datepicker's ISO `blackoutDates`.
+   * The cache invalidates when either source array's reference changes, which
+   * matches Lit's own reactive identity semantics for array properties.
+   * @private
+   * @returns {Set<Number>}
+   */
+  _getBlackoutSet() {
+    const disabledDays = this.disabledDays || [];
+    const blackoutDates = this.datepicker?.blackoutDates;
+    if (this._blackoutSet
+      && this._cachedBlackoutDisabledDays === disabledDays
+      && this._cachedBlackoutDates === blackoutDates) {
+      return this._blackoutSet;
+    }
+
+    const set = new Set(disabledDays.map((day) => parseInt(day, 10)));
+
+    // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
+    if (Array.isArray(blackoutDates)) {
+      for (const isoStr of blackoutDates) {
+        const parts = isoStr.split('-');
+        const ts = Math.floor(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)).getTime() / 1000);
+        if (Number.isFinite(ts)) {
+          set.add(ts);
+        }
+      }
+    }
+
+    this._blackoutSet = set;
+    this._cachedBlackoutDisabledDays = disabledDays;
+    this._cachedBlackoutDates = blackoutDates;
+    return set;
+  }
+
+  /**
    * Computes the initial active date from data properties alone — no DOM required.
    * Priority:
    *   1. Selected date (dateFrom) if within range
@@ -653,21 +689,10 @@ export class AuroCalendar extends RangeDatepicker {
     const minTs = Number.isFinite(rawMin) ? rawMin : -Infinity;
     const maxTs = Number.isFinite(rawMax) ? rawMax : Infinity;
 
-    // Build a Set of blackout timestamps for O(1) lookup.
-    const blackoutSet = new Set(this.disabledDays.map((day) => parseInt(day, 10)));
-
-    // Also include ISO-format blackoutDates from the datepicker if available.
-    // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
-    const isoBlackouts = this.datepicker?.blackoutDates;
-    if (Array.isArray(isoBlackouts)) {
-      for (const isoStr of isoBlackouts) {
-        const parts = isoStr.split('-');
-        const ts = Math.floor(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)).getTime() / 1000);
-        if (Number.isFinite(ts)) {
-          blackoutSet.add(ts);
-        }
-      }
-    }
+    // Build a Set of blackout timestamps for O(1) lookup. Memoized by the
+    // identity of the source arrays so rapid month nav doesn't rebuild the
+    // Set (and re-parse every ISO string) on every keypress.
+    const blackoutSet = this._getBlackoutSet();
 
     /**
      * A date (unix timestamp in seconds, midnight-aligned) is "enabled" when
