@@ -470,6 +470,47 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
+   * Picks the focusable cell whose date is closest to targetTs. Used as a
+   * fallback after a month-boundary nav when the exact target date isn't
+   * focusable — typically because the month re-render lagged or the date
+   * was filtered out by isOutOfRange. When two cells are equidistant, the
+   * navigation direction breaks the tie so the user moves the way they
+   * pressed (forward → later cell, backward → earlier cell).
+   * @private
+   * @param {Array} cells - Focusable cells from getAllFocusableCells.
+   * @param {Number} targetTs - Desired Unix timestamp (seconds).
+   * @param {'next'|'prev'} direction - Navigation direction.
+   * @returns {Object|null} The nearest cell, or null when cells is empty.
+   */
+  pickNearestCell(cells, targetTs, direction) {
+    if (!cells.length) {
+      return null;
+    }
+    const forward = direction === 'next';
+    let best = null;
+    let bestDelta = Infinity;
+    cells.forEach((cell) => {
+      if (!cell.day) {
+        return;
+      }
+      const distance = Math.abs(cell.day.date - targetTs);
+      if (distance < bestDelta) {
+        best = cell;
+        bestDelta = distance;
+        return;
+      }
+      if (distance === bestDelta && best) {
+        if (forward && cell.day.date > best.day.date) {
+          best = cell;
+        } else if (!forward && cell.day.date < best.day.date) {
+          best = cell;
+        }
+      }
+    });
+    return best;
+  }
+
+  /**
    * Gets all focusable cells across all rendered months.
    * @private
    * @returns {Array} Array of auro-formkit-calendar-cell elements.
@@ -895,10 +936,12 @@ export class AuroCalendar extends RangeDatepicker {
               if (target) {
                 this.setActiveCell(target.day.date);
                 this.handleCellFocused({ detail: { date: target.day.date } });
-              } else if (cells.length > 0) {
-                const fallback = navDir === 'next' ? cells[cells.length - 1] : cells[0];
-                this.setActiveCell(fallback.day.date);
-                this.handleCellFocused({ detail: { date: fallback.day.date } });
+              } else {
+                const fallback = this.pickNearestCell(cells, targetTs, navDir);
+                if (fallback) {
+                  this.setActiveCell(fallback.day.date);
+                  this.handleCellFocused({ detail: { date: fallback.day.date } });
+                }
               }
               // Re-focus grid wrapper after month change re-render
               this.focusActiveCell();
@@ -935,16 +978,12 @@ export class AuroCalendar extends RangeDatepicker {
               if (target) {
                 this.setActiveCell(target.day.date);
                 this.handleCellFocused({ detail: { date: target.day.date } });
-              } else if (cells.length > 0) {
-                let nearest = null;
-
-                if (navDirection === 'next') {
-                  [nearest] = cells;
-                } else {
-                  nearest = cells[cells.length - 1];
+              } else {
+                const nearest = this.pickNearestCell(cells, targetDate, navDirection);
+                if (nearest) {
+                  this.setActiveCell(nearest.day.date);
+                  this.handleCellFocused({ detail: { date: nearest.day.date } });
                 }
-                this.setActiveCell(nearest.day.date);
-                this.handleCellFocused({ detail: { date: nearest.day.date } });
               }
               this.focusActiveCell();
             });

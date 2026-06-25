@@ -8487,6 +8487,59 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('pickNearestCell', () => {
+      // Verify the helper picks the cell with the smallest absolute distance
+      // from the target timestamp.
+      it('should pick the cell whose date is closest to the target', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+
+        // Pick a target halfway between two known cells.
+        const target = cells[3].day.date + 1;
+        const nearest = calendar.pickNearestCell(cells, target, 'next');
+        expect(nearest).to.equal(cells[3]);
+      });
+
+      // Verify directional tie-breaking when two cells are equidistant from
+      // the target — forward navigation picks the later cell.
+      it('should prefer the forward cell on a tie when direction is "next"', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+
+        // Target midpoint between cells[5] and cells[6].
+        const midpoint = (cells[5].day.date + cells[6].day.date) / 2;
+        const next = calendar.pickNearestCell(cells, midpoint, 'next');
+        const prev = calendar.pickNearestCell(cells, midpoint, 'prev');
+        expect(next).to.equal(cells[6]);
+        expect(prev).to.equal(cells[5]);
+      });
+
+      // Verify the helper returns null when there are no cells to pick from.
+      it('should return null for an empty cell list', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+        expect(calendar.pickNearestCell([], 0, 'next')).to.be.null;
+      });
+    });
+
     describe('announceSelection', () => {
       // Verify announceSelection does not throw and gives up after retrying
       // when the live region is permanently unavailable.
