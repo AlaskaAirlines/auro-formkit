@@ -289,6 +289,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for blackout (disabled but in-range) date cells.
+       * @default 'unavailable'
        */
       blackoutLabel: {
         type: String,
@@ -305,6 +306,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Accessible label for the calendar grid containing the days of the month.
+       * @default 'Calendar days of the month'
        */
       calendarGridLabel: {
         type: String,
@@ -467,6 +469,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Accessible label for the next month navigation button.
+       * @default 'Next month'
        */
       navLabelNextMonth: {
         type: String,
@@ -475,6 +478,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Accessible label for the previous month navigation button.
+       * @default 'Previous month'
        */
       navLabelPrevMonth: {
         type: String,
@@ -553,6 +557,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for cells after the range (or after start when no end is selected).
+       * @default 'after range'
        */
       rangeLabelAfterRange: {
         type: String,
@@ -561,6 +566,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for cells before the range start.
+       * @default 'before range'
        */
       rangeLabelBeforeRange: {
         type: String,
@@ -569,6 +575,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for the range end date cell.
+       * @default 'range end'
        */
       rangeLabelEnd: {
         type: String,
@@ -579,6 +586,7 @@ export class AuroDatePicker extends AuroElement {
        * Label announced for the focused cell while previewing a range end
        * (dateFrom set, dateTo not yet selected). Tells AT users that
        * pressing Enter would commit this cell as the range end.
+       * @default 'previewing range end'
        */
       rangeLabelEndPreview: {
         type: String,
@@ -587,6 +595,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for cells within the selected range.
+       * @default 'in range'
        */
       rangeLabelInRange: {
         type: String,
@@ -595,6 +604,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Label announced for the range start date cell.
+       * @default 'range start'
        */
       rangeLabelStart: {
         type: String,
