@@ -2676,6 +2676,96 @@ function runFullTest(mobileView) {
     });
   });
 
+  // Regression coverage for the TZ-safe ISO↔Date conversion paths. The bug
+  // class: `new Date('2024-01-15')` parses as UTC midnight, which renders as
+  // Jan 14 in zones west of UTC. The input relies on
+  // dateFormatter.stringToDateInstance (which parses local midnight) for
+  // valueObject/minObject/maxObject and the display formatters. These tests
+  // pass in any host TZ if those paths stay wired up; they actually exercise
+  // the bug only under a negative-offset TZ — `npm test` runs the suite
+  // under PST, EST, and HST so regressions surface in CI.
+  describe('Timezone-safe ISO date conversion', () => {
+    it('valueObject reflects the ISO calendar date without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+      await elementUpdated(el);
+
+      el.value = '2024-01-15';
+      await elementUpdated(el);
+      await elementUpdated(el);
+
+      expect(el.valueObject).to.be.instanceof(Date);
+      expect(el.valueObject.getFullYear()).to.equal(2024);
+      expect(el.valueObject.getMonth()).to.equal(0);
+      expect(el.valueObject.getDate()).to.equal(15);
+    });
+
+    it('minObject/maxObject reflect their ISO dates without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" min="2024-01-15" max="2024-12-31"></auro-input>`);
+      await elementUpdated(el);
+      await elementUpdated(el);
+
+      expect(el.minObject.getFullYear()).to.equal(2024);
+      expect(el.minObject.getMonth()).to.equal(0);
+      expect(el.minObject.getDate()).to.equal(15);
+
+      expect(el.maxObject.getFullYear()).to.equal(2024);
+      expect(el.maxObject.getMonth()).to.equal(11);
+      expect(el.maxObject.getDate()).to.equal(31);
+    });
+
+    it('display value formats the ISO calendar day, not a TZ-shifted day', async () => {
+      // mm/dd/yyyy + value="2024-01-15" must render "01/15/2024" regardless
+      // of host TZ. Under the pre-fix code, UTC midnight parsed in a
+      // negative zone would render "01/14/2024".
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" value="2024-01-15"></auro-input>`);
+      await elementUpdated(el);
+      await elementUpdated(el);
+
+      expect(el.inputElement.value).to.equal('01/15/2024');
+    });
+
+    it('display value preserves the day for dd/mm/yyyy format', async () => {
+      const el = await fixture(html`<auro-input type="date" format="dd/mm/yyyy" value="2024-01-15"></auro-input>`);
+      await elementUpdated(el);
+      await elementUpdated(el);
+
+      expect(el.inputElement.value).to.equal('15/01/2024');
+    });
+
+    it('round-trips display value back to the same ISO without TZ shift', async () => {
+      // The display string "01/15/2024" must convert back to "2024-01-15"
+      // regardless of host TZ. Tests the toModelValue → ISO path.
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+      await elementUpdated(el);
+
+      setInputValue(el, '01/15/2024');
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('2024-01-15');
+    });
+
+    it('AuroInputUtil.formatISODate returns the same calendar day across TZs', async () => {
+      // formatISODate is part of the public input util surface so consumer
+      // apps can render ISO dates safely. The test exercises a few formats
+      // and confirms the day never shifts.
+      const { AuroInputUtil } = await import('../src/auro-input-util.js');
+
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'mm/dd/yyyy')).to.equal('01/15/2024');
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'dd/mm/yyyy')).to.equal('15/01/2024');
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'yyyy/mm/dd')).to.equal('2024/01/15');
+    });
+
+    it('util.toFormattedValue formats a Date without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+      await elementUpdated(el);
+
+      // Construct a local-midnight Date directly so the test does not depend
+      // on stringToDateInstance — this proves the formatter side is TZ-safe.
+      const date = new Date(2024, 0, 15);
+      expect(el.util.toFormattedValue(date, 'mm/dd/yyyy')).to.equal('01/15/2024');
+    });
+  });
+
   describe('Keyboard Behavior', () => {
     it('date input cursor does not move back after user moves it left', async () => {
       const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" label="selection start test"></auro-input>`);
