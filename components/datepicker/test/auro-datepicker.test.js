@@ -8682,6 +8682,74 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('disabledDays deprecation', () => {
+      // Reset the per-class one-shot flag so this test owns the warning
+      // attempt regardless of other tests that may have populated it.
+      beforeEach(async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        if (calendar) {
+          calendar.constructor._warnedDisabledDaysDeprecation = false;
+        }
+      });
+
+      it('warns exactly once when a non-empty disabledDays array is observed', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        calendar.constructor._warnedDisabledDaysDeprecation = false;
+
+        const originalWarn = console.debug;
+        const calls = [];
+        console.debug = (...args) => calls.push(args);
+
+        try {
+          // Populate the legacy array, force a rebuild, then rebuild again.
+          calendar.disabledDays = ['1705276800'];
+          calendar._blackoutSet = null;
+          calendar._getBlackoutSet();
+          calendar._blackoutSet = null;
+          calendar._getBlackoutSet();
+
+          const matching = calls.filter((args) => typeof args[0] === 'string' && args[0].includes('disabledDays'));
+          expect(matching.length).to.equal(1);
+          expect(matching[0][0]).to.include('deprecated');
+          expect(matching[0][0]).to.include('blackoutDates');
+        } finally {
+          console.debug = originalWarn;
+        }
+      });
+
+      it('does not warn when disabledDays is empty', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        calendar.constructor._warnedDisabledDaysDeprecation = false;
+
+        const originalWarn = console.debug;
+        const calls = [];
+        console.debug = (...args) => calls.push(args);
+
+        try {
+          calendar._blackoutSet = null;
+          calendar._getBlackoutSet();
+
+          const matching = calls.filter((args) => typeof args[0] === 'string' && args[0].includes('disabledDays'));
+          expect(matching.length).to.equal(0);
+        } finally {
+          console.debug = originalWarn;
+        }
+      });
+    });
+
     describe('pickNearestCell', () => {
       // Verify the helper picks the cell with the smallest absolute distance
       // from the target timestamp.
