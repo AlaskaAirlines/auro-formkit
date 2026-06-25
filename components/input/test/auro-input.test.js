@@ -2673,6 +2673,30 @@ function runFullTest(mobileView) {
 
         expect(result).to.satisfy(d => d instanceof Date && isNaN(d.getTime()));
       });
+
+      // Regression: `toFormattedValue` is exposed publicly via
+      // `AuroInputUtil.toFormattedValue` (auro-input-util.js), so a falsy
+      // `format` argument must return undefined instead of throwing on
+      // `format.toLowerCase()`.
+      it('toFormattedValue returns undefined and does not throw when format is falsy', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const date = new Date(2024, 0, 15);
+        expect(() => el.util.toFormattedValue(date, undefined)).to.not.throw();
+        expect(el.util.toFormattedValue(date, undefined)).to.be.undefined;
+        expect(el.util.toFormattedValue(date, null)).to.be.undefined;
+        expect(el.util.toFormattedValue(date, '')).to.be.undefined;
+      });
+
+      // Same guarantee through the public AuroInputUtil surface.
+      it('AuroInputUtil.toFormattedValue handles a missing format gracefully', async () => {
+        const { AuroInputUtil } = await import('../src/auro-input-util.js');
+        const date = new Date(2024, 0, 15);
+
+        expect(() => AuroInputUtil.toFormattedValue(date, undefined)).to.not.throw();
+        expect(AuroInputUtil.toFormattedValue(date, undefined)).to.be.undefined;
+      });
     });
   });
 
