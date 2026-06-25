@@ -7887,10 +7887,15 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const todayCell = allCells.find((cell) => cell.isCurrentDate);
 
-        if (todayCell) {
-          await todayCell.updateComplete;
-          // aria-current is not on the host; check via the cell's isCurrentDate property
-          expect(todayCell.isCurrentDate).to.be.true;
+        expect(todayCell).to.exist;
+        await todayCell.updateComplete;
+        expect(todayCell.getAttribute('aria-current')).to.equal('date');
+
+        // Sanity check that non-today cells do not get the attribute.
+        const otherCell = allCells.find((cell) => !cell.isCurrentDate);
+        if (otherCell) {
+          await otherCell.updateComplete;
+          expect(otherCell.hasAttribute('aria-current')).to.be.false;
         }
       });
     });
