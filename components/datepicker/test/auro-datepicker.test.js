@@ -7240,6 +7240,39 @@ function runFullTest(mobileView) {
         expect(calendar._focusAnnounceTimer).to.be.null;
         expect(calendar._liveRegion).to.be.null;
       });
+
+      // Verify the datepicker aborts its listener AbortController on real disconnect
+      // but keeps it live when the element is only briefly re-parented.
+      it('aborts the listener controller after a real disconnect', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+        await elementUpdated(el);
+
+        expect(el._listenerAbortController.signal.aborted).to.be.false;
+
+        el.remove();
+        // The deferred abort runs at microtask time, after disconnectedCallback returns.
+        await new Promise((resolve) => queueMicrotask(resolve));
+
+        expect(el._listenerAbortController.signal.aborted).to.be.true;
+      });
+
+      // Verify the deferred abort does not fire when the element is re-parented
+      // (disconnect immediately followed by reconnect inside the same tick).
+      it('does not abort when re-parented synchronously', async () => {
+        const original = await fixture(html`<div><auro-datepicker centralDate="2024-01-15"></auro-datepicker></div>`);
+        const el = original.querySelector('auro-datepicker');
+        const newParent = document.createElement('div');
+        document.body.appendChild(newParent);
+
+        try {
+          newParent.appendChild(el); // triggers disconnect, then connect
+          await new Promise((resolve) => queueMicrotask(resolve));
+
+          expect(el._listenerAbortController.signal.aborted).to.be.false;
+        } finally {
+          newParent.remove();
+        }
+      });
     });
 
     // Verify the datepicker uses locale code when set.
