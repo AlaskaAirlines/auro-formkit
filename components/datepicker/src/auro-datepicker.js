@@ -225,6 +225,12 @@ export class AuroDatePicker extends AuroElement {
     this.handleClick = this.handleClick.bind(this);
 
     /**
+     * Aborts every listener registered in the configure* methods on disconnect.
+     * @private
+     */
+    this._listenerAbortController = new AbortController();
+
+    /**
      * @private
      */
     this.handleClearClick = this.handleClearClick.bind(this);
@@ -1088,11 +1094,13 @@ export class AuroDatePicker extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
+    const { signal } = this._listenerAbortController;
+
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
         this.dropdown.show();
       }
-    });
+    }, { signal });
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.notifyDatepickerToggled();
@@ -1190,7 +1198,7 @@ export class AuroDatePicker extends AuroElement {
           this.forceScrollOnNextMobileCalendarRender = false;
         }, 0);
       }
-    });
+    }, { signal });
 
     // Handle responsive strategy changes while the dropdown is open
     // (e.g. resizing from desktop → mobile or vice versa).
@@ -1237,7 +1245,7 @@ export class AuroDatePicker extends AuroElement {
           });
         });
       }
-    });
+    }, { signal });
   }
 
   /**
@@ -1250,6 +1258,8 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
+    const { signal } = this._listenerAbortController;
+
     this.inputList.forEach((input, index) => {
       input.addEventListener('input', (event) => {
         event.stopPropagation();
@@ -1261,7 +1271,7 @@ export class AuroDatePicker extends AuroElement {
         }
 
         this.notifyValueChanged();
-      });
+      }, { signal });
 
       input.addEventListener('auroFormElement-validated', (evt) => {
         // not to bubble up input's validated event.
@@ -1277,7 +1287,7 @@ export class AuroDatePicker extends AuroElement {
           this.validity = evt.detail.validity;
           this.errorMessage = evt.detail.message;
         }
-      });
+      }, { signal });
     });
   }
 
@@ -1291,6 +1301,8 @@ export class AuroDatePicker extends AuroElement {
     this.calendar.datepicker = this;
     this.calendar.dropdown = this.dropdown;
 
+    const { signal } = this._listenerAbortController;
+
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
         this.inputList[0].value = this.convertWcTimeToDate(this.calendar.dateFrom);
@@ -1299,11 +1311,11 @@ export class AuroDatePicker extends AuroElement {
       if (this.inputList[1] && this.calendar.dateTo && this.inputList[1].value !== this.calendar.dateTo) {
         this.inputList[1].value = this.convertWcTimeToDate(this.calendar.dateTo);
       }
-    });
+    }, { signal });
 
     this.calendar.addEventListener('auroCalendar-dismissRequest', () => {
       this.dropdown.hide();
-    });
+    }, { signal });
 
     this.calendar.addEventListener('auroCalendar-centralDateChanged', (event) => {
       const match = this.centralDateObject && this.util.datesMatch(event.detail.date, this.centralDateObject);
@@ -1313,7 +1325,7 @@ export class AuroDatePicker extends AuroElement {
       }
 
       this.notifyMonthChanged(event);
-    });
+    }, { signal });
   }
 
   /**
@@ -1322,10 +1334,12 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureDatepicker() {
+    const { signal } = this._listenerAbortController;
+
     this.addEventListener('focusin', () => {
       this.touched = true;
       this.hasFocus = true;
-    });
+    }, { signal });
 
     this.addEventListener('focusout', () => {
       this.hasFocus = false;
@@ -1337,7 +1351,7 @@ export class AuroDatePicker extends AuroElement {
       if (!this.matches(':focus-within')) {
         this.validate();
       }
-    });
+    }, { signal });
 
     if (this.valueObject) {
       this.calendar.dateFrom = this.convertToWcValidTime(this.valueObject);
@@ -1834,7 +1848,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureClickHandler() {
-    this.addEventListener('click', this.handleClick);
+    this.addEventListener('click', this.handleClick, { signal: this._listenerAbortController.signal });
   }
 
   firstUpdated() {
@@ -1854,6 +1868,17 @@ export class AuroDatePicker extends AuroElement {
     super.connectedCallback();
 
     this.locale = this.domHandler.getLocale(this);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // Defer so that re-parenting (auro-drawer slotting it into a dialog,
+    // for example) does not abort listeners we still need after reconnect.
+    queueMicrotask(() => {
+      if (!this.isConnected) {
+        this._listenerAbortController.abort();
+      }
+    });
   }
 
   // layout render methods
