@@ -8487,6 +8487,48 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('_getBlackoutSet memoization', () => {
+      // Verify the helper returns the same Set instance across calls when
+      // neither source array has been replaced.
+      it('should return a cached Set when the source arrays are unchanged', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15" blackoutDates='["2024-01-20"]'></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+        const first = calendar._getBlackoutSet();
+        const second = calendar._getBlackoutSet();
+        expect(second).to.equal(first);
+      });
+
+      // Verify the helper rebuilds the Set when blackoutDates is replaced
+      // (matching Lit's reactive identity semantics for array props).
+      it('should rebuild the Set when blackoutDates is replaced', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15" blackoutDates='["2024-01-20"]'></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const first = calendar._getBlackoutSet();
+
+        el.blackoutDates = ['2024-01-21', '2024-01-22'];
+        await elementUpdated(el);
+
+        const second = calendar._getBlackoutSet();
+        expect(second).to.not.equal(first);
+        expect(second.size).to.equal(2);
+      });
+    });
+
     describe('pickNearestCell', () => {
       // Verify the helper picks the cell with the smallest absolute distance
       // from the target timestamp.
