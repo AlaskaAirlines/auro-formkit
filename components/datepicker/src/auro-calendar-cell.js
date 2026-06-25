@@ -191,22 +191,42 @@ export class AuroCalendarCell extends LitElement {
       return false;
     }
 
-    // Check against disabledDays timestamps (legacy path)
+    // Delegate to the calendar's memoized blackout Set for O(1) lookup
+    // (instead of rescanning disabledDays + blackoutDates per render). The
+    // Set is rebuilt only when either source array reference changes — see
+    // auro-calendar.js#_getBlackoutSet.
+    if (this.calendar && typeof this.calendar._getBlackoutSet === 'function') {
+      if (this.calendar._getBlackoutSet().has(this.day.date)) {
+        return true;
+      }
+      // If the cell's local disabledDays diverged from the calendar's (a
+      // consumer or test mutated cell.disabledDays directly), the Set does
+      // not reflect that addition — fall through to the per-cell scan only
+      // when the reference no longer matches. Production data flow keeps
+      // these identical, so this branch stays cold.
+      if (this.disabledDays && this.disabledDays !== this.calendar.disabledDays && this.disabledDays.length > 0) {
+        if (this.disabledDays.findIndex((dd) => parseInt(dd, 10) === this.day.date) !== -1) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Pre-firstUpdated fallback — the cell may render once before the
+    // ancestor calendar is wired up. Uses the legacy O(N) scan so the
+    // result stays correct, just slower for the very first render.
     if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0 &&
       (this.disabledDays.findIndex(dd => parseInt(dd, 10) === this.day.date) !== -1)) {
       return true;
     }
 
-    // Check against blackoutDates (ISO format YYYY-MM-DD) on the datepicker
     const blackoutDates = this.datepicker?.blackoutDates;
-
     if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
       const date = new Date(this.day.date * 1000);
       const yyyy = date.getFullYear();
       const mm = String(date.getMonth() + 1).padStart(2, '0');
       const dd = String(date.getDate()).padStart(2, '0');
-      const cellDate = `${yyyy}-${mm}-${dd}`;
-      if (blackoutDates.includes(cellDate)) {
+      if (blackoutDates.includes(`${yyyy}-${mm}-${dd}`)) {
         return true;
       }
     }
@@ -527,6 +547,7 @@ export class AuroCalendarCell extends LitElement {
       setTimeout(() => this.firstUpdated(), 0);
       return;
     }
+    this.calendar = calendar;
     this.datepicker = calendar.datepicker;
     this._slotContentHandler = () => {
       this.handleSlotContent();
