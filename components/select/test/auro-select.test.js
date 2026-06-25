@@ -2998,7 +2998,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should do nothing while the bib is collapsed', async () => {
+        it('should open the bib and move to the last enabled option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -3009,7 +3009,11 @@ function runTest(mobileView) {
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
           await elementUpdated(el);
 
-          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          const menu = el.querySelector('auro-menu');
+          const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
+          await expect(el.optionActive).to.equal(lastOption);
         });
       });
 
@@ -3360,7 +3364,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should do nothing while the bib is collapsed', async () => {
+        it('should open the bib and move to the first enabled option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -3371,7 +3375,11 @@ function runTest(mobileView) {
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
           await elementUpdated(el);
 
-          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          const menu = el.querySelector('auro-menu');
+          const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
+          await expect(el.optionActive).to.equal(firstOption);
         });
       });
 
