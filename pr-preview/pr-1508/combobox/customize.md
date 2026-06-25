@@ -679,7 +679,7 @@
 <auro-menu>
 <auro-menuoption value="4500000000000000" id="option-cc-0">
 <auro-icon category="payment" customcolor name="cc-visa"></auro-icon>
-                4000 0000 0000 0000
+                4500 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption value="340000000000000" id="option-cc-1">
 <auro-icon category="payment" customcolor name="cc-amex"></auro-icon>
@@ -712,7 +712,7 @@
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="4500000000000000" id="option-cc-0"&gt;
       &lt;auro-icon category="payment" customcolor name="cc-visa"&gt;&lt;/auro-icon&gt;
-      4000 0000 0000 0000
+      4500 0000 0000 0000
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="340000000000000" id="option-cc-1"&gt;
       &lt;auro-icon category="payment" customcolor name="cc-amex"&gt;&lt;/auro-icon&gt;
