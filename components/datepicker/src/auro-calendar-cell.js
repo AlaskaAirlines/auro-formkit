@@ -15,12 +15,6 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
-const startOfDay = (ms) => {
-  const date = new Date(ms);
-  date.setHours(0, 0, 0, 0);
-  return date.getTime();
-};
-
 export class AuroCalendarCell extends LitElement {
   constructor() {
     super();
@@ -112,8 +106,8 @@ export class AuroCalendarCell extends LitElement {
     const parsedDateTo = parseInt(dateTo, 10);
 
     if (day) {
-      const departTimestamp = startOfDay(parsedDateFrom * 1000) / 1000;
-      const returnTimestamp = startOfDay(parsedDateTo * 1000) / 1000;
+      const departTimestamp = new Date(parsedDateFrom * 1000).setHours(0, 0, 0, 0) / 1000;
+      const returnTimestamp = new Date(parsedDateTo * 1000).setHours(0, 0, 0, 0) / 1000;
 
       if (day.date === departTimestamp || day.date === returnTimestamp) {
         this.selected = true;
@@ -323,12 +317,12 @@ export class AuroCalendarCell extends LitElement {
     const parsedDateFrom = Number.parseInt(this.dateFrom, 10);
     if (!Number.isFinite(parsedDateFrom)) return null;
 
-    const departTimestamp = startOfDay(parsedDateFrom * 1000) / 1000;
+    const departTimestamp = new Date(parsedDateFrom * 1000).setHours(0, 0, 0, 0) / 1000;
     const dayDate = this.day.date;
 
     const parsedDateTo = Number.parseInt(this.dateTo, 10);
     const hasDateTo = Number.isFinite(parsedDateTo);
-    const returnTimestamp = hasDateTo ? startOfDay(parsedDateTo * 1000) / 1000 : null;
+    const returnTimestamp = hasDateTo ? new Date(parsedDateTo * 1000).setHours(0, 0, 0, 0) / 1000 : null;
 
     if (dayDate === departTimestamp) return this.datepicker.rangeLabelStart || 'range start';
 
@@ -351,7 +345,7 @@ export class AuroCalendarCell extends LitElement {
    */
   isDepartDate(day, dateFrom) {
     const parsedDateFrom = parseInt(dateFrom, 10);
-    const departTimestamp = startOfDay(parsedDateFrom * 1000) / 1000;
+    const departTimestamp = new Date(parsedDateFrom * 1000).setHours(0, 0, 0, 0) / 1000;
 
     return this.selected && day.date === departTimestamp;
   }
@@ -366,7 +360,7 @@ export class AuroCalendarCell extends LitElement {
    */
   isReturnDate(day, dateFrom, dateTo) {
     const parsedDateTo = parseInt(dateTo, 10);
-    const returnTimestamp = startOfDay(parsedDateTo * 1000) / 1000;
+    const returnTimestamp = new Date(parsedDateTo * 1000).setHours(0, 0, 0, 0) / 1000;
 
     return this.selected && day.date === returnTimestamp && dateFrom;
   }
@@ -689,7 +683,7 @@ export class AuroCalendarCell extends LitElement {
     if (!btn || !this.day) return;
 
     const dayDate = this.day.date;
-    const departTimestamp = startOfDay(dateFrom * 1000) / 1000;
+    const departTimestamp = new Date(dateFrom * 1000).setHours(0, 0, 0, 0) / 1000;
     const isInRange = dayDate > departTimestamp && dayDate < hoveredDate;
     const isLastHovered = dayDate === hoveredDate && hoveredDate > departTimestamp;
     const isDepartWithPreview = dayDate === departTimestamp && hoveredDate > departTimestamp;

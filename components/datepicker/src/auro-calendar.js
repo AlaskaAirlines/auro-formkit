@@ -1,5 +1,4 @@
 import { html } from "lit/static-html.js";
-import { startOfDay } from 'date-fns';
 
 import styleCss from './styles/style-auro-calendar-css.js';
 import colorCss from './styles/color-calendar-css.js';
@@ -1188,10 +1187,10 @@ export class AuroCalendar extends RangeDatepicker {
       return null;
     }
 
-    const departTs = startOfDay(parsedFrom * 1000) / 1000;
+    const departTs = new Date(parsedFrom * 1000).setHours(0, 0, 0, 0) / 1000;
     const parsedTo = Number.parseInt(this.dateTo, 10);
     const hasTo = Number.isFinite(parsedTo);
-    const returnTs = hasTo ? startOfDay(parsedTo * 1000) / 1000 : null;
+    const returnTs = hasTo ? new Date(parsedTo * 1000).setHours(0, 0, 0, 0) / 1000 : null;
 
     if (date === departTs) {
       return this.datepicker.rangeLabelStart || 'range start';
