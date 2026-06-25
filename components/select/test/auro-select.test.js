@@ -3038,6 +3038,79 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.false;
           });
         }
+
+        // Per APG and native <select>, Enter must open the listbox when closed
+        // and select the active option when open — it must not bubble to a
+        // parent <form> (or auro-form's keydown listener) and trigger submit.
+        // See selectKeyboardStrategy.js Enter handler.
+        describe('does not bubble to parent form on Enter', () => {
+          it('should stop propagation when opening the bib from closed', async () => {
+            const wrapper = await fixture(html`
+              <form @submit=${(e) => e.preventDefault()}>
+                <auro-select>
+                  <span slot="bib.fullscreen.headline">Bib Headline</span>
+                  <span slot="label">Name</span>
+                  <auro-menu>
+                    <auro-menuoption value="Apples">Apples</auro-menuoption>
+                    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              </form>
+            `);
+            const el = wrapper.querySelector('auro-select');
+            await elementUpdated(el);
+
+            let bubbledEnterCount = 0;
+            wrapper.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') bubbledEnterCount += 1;
+            });
+
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await elementUpdated(el);
+
+            await expect(bubbledEnterCount).to.equal(0);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+          });
+
+          it('should stop propagation when selecting an option from open', async () => {
+            const wrapper = await fixture(html`
+              <form @submit=${(e) => e.preventDefault()}>
+                <auro-select>
+                  <span slot="bib.fullscreen.headline">Bib Headline</span>
+                  <span slot="label">Name</span>
+                  <auro-menu>
+                    <auro-menuoption value="Apples">Apples</auro-menuoption>
+                    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              </form>
+            `);
+            const el = wrapper.querySelector('auro-select');
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
+
+            trigger.click();
+            await elementUpdated(el);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            let bubbledEnterCount = 0;
+            wrapper.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') bubbledEnterCount += 1;
+            });
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await elementUpdated(el);
+
+            await expect(bubbledEnterCount).to.equal(0);
+            await expect(el.value).to.equal('Oranges');
+          });
+        });
       });
 
       describe('Escape', () => {
