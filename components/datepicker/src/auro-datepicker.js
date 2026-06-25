@@ -125,6 +125,7 @@ export class AuroDatePicker extends AuroElement {
     this.rangeLabelBeforeRange = 'before range';
     this.rangeLabelInRange = 'in range';
     this.rangeLabelAfterRange = 'after range';
+    this.rangeLabelEndPreview = 'previewing range end';
     this.blackoutDates = [];
     this.blackoutLabel = 'unavailable';
     this.navLabelPrevMonth = 'Previous month';
@@ -560,6 +561,16 @@ export class AuroDatePicker extends AuroElement {
        * Label announced for the range end date cell.
        */
       rangeLabelEnd: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the focused cell while previewing a range end
+       * (dateFrom set, dateTo not yet selected). Tells AT users that
+       * pressing Enter would commit this cell as the range end.
+       */
+      rangeLabelEndPreview: {
         type: String,
         reflect: true
       },
@@ -1703,8 +1714,6 @@ export class AuroDatePicker extends AuroElement {
         // Skip centralDate update when user clicked a cell in range mode
         // to prevent the displayed months from shifting
         this.centralDate = this.valueEnd;
-        // TODO: TEST THIS CHANGE
-        // this.calendarRenderUtil.updateCentralDate(this, this.formattedValueEnd);
       }
 
       this.validate();

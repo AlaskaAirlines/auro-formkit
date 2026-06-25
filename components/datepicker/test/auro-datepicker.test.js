@@ -5682,8 +5682,10 @@ function runFullTest(mobileView) {
         expect(result).to.equal('in range');
       });
 
-      // Verify the 'getRangePositionLabel' property returns "after range" for date after return when dateTo not set.
-      it('should return "after range" for date after return when dateTo not set', async () => {
+      // Verify the 'getRangePositionLabel' property returns the end-preview label
+      // for a date after dateFrom when dateTo is not yet set — this tells AT users
+      // that pressing Enter would commit the cell as the range end.
+      it('should return "previewing range end" for date after dateFrom when dateTo not set', async () => {
         const el = await fixture(html`<auro-datepicker range centralDate="2024-01-15"></auro-datepicker>`);
 
         const input = getInput(el, 0);
@@ -5701,7 +5703,7 @@ function runFullTest(mobileView) {
         calendar.dateTo = undefined;
 
         const result = calendar.getRangePositionLabel(afterTs);
-        expect(result).to.equal('after range');
+        expect(result).to.equal('previewing range end');
       });
     });
 
