@@ -7931,6 +7931,23 @@ function runFullTest(mobileView) {
           expect(otherCell.hasAttribute('aria-current')).to.be.false;
         }
       });
+
+      // Verify the grid wrapper carries aria-roledescription="calendar" so AT
+      // announces the widget as a calendar instead of just a "group".
+      it('should set aria-roledescription="calendar" on the grid wrapper', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const grid = calendar.shadowRoot.querySelector('#calendarGrid');
+
+        expect(grid).to.exist;
+        expect(grid.getAttribute('aria-roledescription')).to.equal('calendar');
+      });
     });
 
     describe('Range labels in aria-label', () => {
