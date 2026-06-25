@@ -1,4 +1,4 @@
-/* eslint-disable max-lines, no-undef, no-inline-comments, line-comment-position, prefer-destructuring, no-magic-numbers, no-unused-vars, no-await-in-loop, no-unused-expressions, no-underscore-dangle */
+/* eslint-disable no-console, max-lines, no-undef, no-inline-comments, line-comment-position, prefer-destructuring, no-magic-numbers, no-unused-vars, no-await-in-loop, no-unused-expressions, no-underscore-dangle */
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport, sendKeys } from '@web/test-runner-commands';
@@ -1088,6 +1088,35 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el._validLocale).to.equal('en-US');
         await expect(el.format).to.equal('mm/dd/yyyy');
+      });
+
+      it('should console.debug exactly once per unsupported locale', async () => {
+        // Use a tag we know the dedup set has not seen yet.
+        const badLocale = `not-real-${Math.floor(performance.now())}-locale`;
+        const originalWarn = console.debug;
+        const calls = [];
+        console.debug = (...args) => calls.push(args);
+
+        try {
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          await elementUpdated(el);
+
+          el.locale = badLocale;
+          await elementUpdated(el);
+
+          // Force another willUpdate by reassigning the same bad locale via
+          // a different intermediate value, so the dedup path is exercised.
+          el.locale = 'en-US';
+          await elementUpdated(el);
+          el.locale = badLocale;
+          await elementUpdated(el);
+
+          const matching = calls.filter((args) => typeof args[0] === 'string' && args[0].includes(badLocale));
+          expect(matching.length).to.equal(1);
+          expect(matching[0][0]).to.include('Falling back to "en-US"');
+        } finally {
+          console.debug = originalWarn;
+        }
       });
     });
 
