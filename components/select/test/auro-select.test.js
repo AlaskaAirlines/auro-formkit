@@ -1509,6 +1509,31 @@ function runTest(mobileView) {
         });
       });
 
+      // ─── native <option> list re-renders on dynamic option changes ───
+      it('re-renders the hidden native select when menu options change at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const nativeSelect = el.shadowRoot.querySelector('.nativeSelectWrapper select');
+
+        // Baseline: defaultFixture has 4 options, none of them Cherries.
+        expect(nativeSelect.querySelector('option[value="Cherries"]')).to.be.null;
+
+        // Append a new option. auro-menu's slotchange fires auroMenu-optionsChange,
+        // which auro-select hooks via requestUpdate() so renderNativeSelect re-stamps
+        // the hidden <option> list. Without that requestUpdate the native select
+        // would go stale, breaking form submission with dynamic options.
+        const extra = document.createElement('auro-menuoption');
+        extra.setAttribute('value', 'Cherries');
+        extra.textContent = 'Cherries';
+        menu.appendChild(extra);
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        expect(nativeSelect.querySelector('option[value="Cherries"]')).to.not.be.null;
+      });
+
       // ─── updateMenuShapeSize with no menu early return ───────────────
       it('updateMenuShapeSize returns early when menu is null', async () => {
         const el = await defaultFixture();
