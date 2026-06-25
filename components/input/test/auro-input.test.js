@@ -686,6 +686,43 @@ function runFullTest(mobileView) {
 
         expect(el.errorMessage).to.not.be.empty;
       });
+
+      // Regression: the help-text `<p>` must keep the same DOM node identity
+      // across valid → invalid → valid transitions. Earlier the template
+      // used two distinct branches, so Lit replaced the entire <p> on a
+      // validity flip; VoiceOver wouldn't re-announce because the
+      // aria-live region it was watching had been removed. Identity-stable
+      // means the role/aria-live attributes and text content flip in
+      // place, which AT does announce.
+      it('keeps the help-text <p> identity stable across validity transitions', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+        await elementUpdated(el);
+
+        const initialP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(initialP).to.exist;
+        expect(initialP.getAttribute('role')).to.be.null;
+        expect(initialP.getAttribute('aria-live')).to.be.null;
+
+        // Trigger an error state.
+        const input = el.shadowRoot.querySelector('input');
+        input.focus();
+        input.blur();
+        await elementUpdated(el);
+
+        const errorP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(errorP).to.equal(initialP);
+        expect(errorP.getAttribute('role')).to.equal('alert');
+        expect(errorP.getAttribute('aria-live')).to.equal('assertive');
+
+        // Flip back to valid by satisfying the required check.
+        el.value = 'now-valid';
+        await elementUpdated(el);
+
+        const recoveredP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(recoveredP).to.equal(initialP);
+        expect(recoveredP.getAttribute('role')).to.be.null;
+        expect(recoveredP.getAttribute('aria-live')).to.be.null;
+      });
     });
 
     describe('format', () => {
