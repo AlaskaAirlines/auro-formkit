@@ -38,9 +38,14 @@ export default class BaseInput extends AuroElement {
 
     // Single-source initialization. Alphabetized so duplicate or stale
     // defaults are immediately obvious on a diff. Every field is assigned
-    // exactly once; `util` and `validation` are instantiated once each
-    // (previously the constructor + `_initializePrivateDefaults` allocated
-    // two of each and discarded the first).
+    // exactly once here (previously the constructor + the old
+    // `_initializePrivateDefaults` overlapped — both wrote ~14 of the same
+    // fields and double-allocated `util` and `validation`, discarding the
+    // first instance). `validation` is now allocated exactly once; `util`
+    // is seeded here with an en-US default and then rebuilt in
+    // `connectedCallback` once the consumer-resolved locale is available,
+    // so a parent (datepicker/combobox) calling `validate()` synchronously
+    // during its own update cycle sees a populated util instance.
     this.activeLabel = false;
     /** @private */
     this.allowedInputTypes = [
@@ -1113,13 +1118,26 @@ export default class BaseInput extends AuroElement {
     // via `setSelectionRange` once the update has flushed. Gated on
     // `setSelectionInputTypes` so credit-card (and other masked types whose
     // formatter manages the cursor itself) doesn't get a competing write.
-    const { selectionStart } = this.inputElement;
-
+    // Capture the caret position INSIDE the gate — reading `selectionStart`
+    // on input types that don't support text selection (number, email in
+    // some browsers) throws InvalidStateError, which would crash all input
+    // handling. Wrap the read in try/catch belt-and-suspenders even though
+    // the gated types currently support it, since the list is a public
+    // property a consumer could mutate.
     if (this.setSelectionInputTypes.includes(this.type)) {
+      let selectionStart;
+      try {
+        selectionStart = this.inputElement.selectionStart;
+      } catch (error) { // eslint-disable-line no-unused-vars
+        return;
+      }
+      if (typeof selectionStart !== 'number') {
+        return;
+      }
       this.updateComplete.then(() => {
         try {
           this.inputElement.setSelectionRange(selectionStart, selectionStart);
-        } catch (error) { // eslint-disable-line
+        } catch (error) { // eslint-disable-line no-unused-vars
           // Some input types (number/email in certain UAs) throw on
           // setSelectionRange; swallow and let the native cursor stand.
         }
