@@ -674,16 +674,34 @@ export class AuroSelect extends AuroElement {
    * Keeps the dialog/menu accessible names in sync when consumers mutate the
    * label slot at runtime (e.g., i18n locale swap). `slotchange` alone is
    * insufficient — it doesn't fire when textContent of an already-assigned
-   * slotted node changes, which is the common case.
+   * slotted node changes, which is the common case. We scope the observer to
+   * the label node itself (not the whole host subtree) so option-content
+   * mutations don't trigger label re-syncs, and re-target on `slotchange`
+   * when consumers add or replace the label element.
    * @private
    */
   _observeLabelChanges() {
     if (this._labelObserver) return;
     this._labelObserver = new MutationObserver(() => this._syncLabelText());
-    this._labelObserver.observe(this, {
-      childList: true,
-      subtree: true,
-      characterData: true
+
+    const retarget = () => {
+      this._labelObserver.disconnect();
+      const labelElement = this.querySelector('[slot="label"]');
+      if (labelElement) {
+        this._labelObserver.observe(labelElement, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+      this._syncLabelText();
+    };
+
+    retarget();
+
+    this._retargetLabelObserver = retarget;
+    this.shadowRoot.querySelectorAll('slot[name="label"]').forEach((slot) => {
+      slot.addEventListener('slotchange', retarget);
     });
   }
 
@@ -1174,6 +1192,12 @@ export class AuroSelect extends AuroElement {
     if (this._labelObserver) {
       this._labelObserver.disconnect();
       this._labelObserver = null;
+    }
+    if (this._retargetLabelObserver && this.shadowRoot) {
+      this.shadowRoot.querySelectorAll('slot[name="label"]').forEach((slot) => {
+        slot.removeEventListener('slotchange', this._retargetLabelObserver);
+      });
+      this._retargetLabelObserver = null;
     }
   }
 
