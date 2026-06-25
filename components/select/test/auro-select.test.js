@@ -148,6 +148,31 @@ function runTest(mobileView) {
           expect(el.bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
         });
       }
+
+      it('keeps menu event listeners wired after a disconnect+reconnect cycle', async () => {
+        // Regression guard against the tempting "fix" of removing the listeners
+        // configureMenu() attaches in disconnectedCallback. Lit's firstUpdated
+        // runs once per instance, so listeners stripped on disconnect would
+        // never be re-attached on reconnect — optionActive, value, and
+        // announcement plumbing would silently break when the host is moved
+        // in the DOM (e.g., reparented inside a dialog or SPA route swap).
+        const el = await defaultFixture();
+        const parent = el.parentNode;
+        const firstOption = el.menu.querySelector('auro-menuoption[value="Apples"]');
+        const secondOption = el.menu.querySelector('auro-menuoption[value="Oranges"]');
+
+        el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', { detail: firstOption }));
+        await elementUpdated(el);
+        await expect(el.optionActive).to.equal(firstOption);
+
+        parent.removeChild(el);
+        parent.appendChild(el);
+        await elementUpdated(el);
+
+        el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', { detail: secondOption }));
+        await elementUpdated(el);
+        await expect(el.optionActive, 'menu listeners must survive a disconnect+reconnect cycle').to.equal(secondOption);
+      });
     });
 
     describe('Properties', () => {
