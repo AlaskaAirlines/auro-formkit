@@ -321,14 +321,16 @@ export default class AuroFormValidation {
         )
       }
 
-      // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false;
-      if (this.auroInputElements?.length === 2) {
-        if (!this.auroInputElements[1].value || this.auroInputElements[1].length === 0) {
+      const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
+
+      // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false.
+      // Skip for combobox: its second auro-input is the fullscreen-bib mirror of the same value, not an independent
+      // field (datepicker is the intended consumer — start/end are independently required).
+      if (this.auroInputElements?.length === 2 && !isCombobox) {
+        if (!this.auroInputElements[1].value || this.auroInputElements[1].value.length === 0) {
           hasValue = false;
         }
       }
-
-      const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
 
       if (isCombobox) {
 

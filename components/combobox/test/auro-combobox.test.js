@@ -590,6 +590,65 @@ function runFullTest(mobileView) {
         await expect(el.input.value).to.equal('App');
       });
 
+      it('reports valid (not valueMissing) after selecting a required option when persistInput is set', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        el.input.click();
+        await elementUpdated(el);
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const menu = el.querySelector('auro-menu');
+        const option = menu.querySelector('auro-menuoption[value="Apples"]');
+        option.click();
+        await elementUpdated(option);
+        await elementUpdated(menu);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.equal(option);
+        await expect(el.getAttribute('validity')).to.not.equal('valueMissing');
+      });
+
+      // TODO: revisit. Under behavior="suggestion" (the persistInputFixture
+      // default), typed text sets this.value via handleInputValueChange, so
+      // "zz" without a menu match is currently treated as valid. The
+      // "must select from menu" semantic only applies under behavior="filter".
+      // Decide whether persistInput should imply filter-style required-selection
+      // semantics, then either add a behavior="filter" fixture or remove this.
+      it.skip('reports valueMissing on blur when typed text has no matching selection under persistInput', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'z' });
+        await sendKeys({ press: 'z' });
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.be.undefined;
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
       it('leaves trigger input untouched on programmatic value set when persistInput is set', async () => {
         const el = await persistInputFixture(mobileView);
         await elementUpdated(el);
