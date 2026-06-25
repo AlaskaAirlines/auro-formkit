@@ -226,8 +226,8 @@ export class AuroDatePicker extends AuroElement {
     this.handleClick = this.handleClick.bind(this);
 
     /**
-     * Single AbortController wired into every listener registered in the
-     * configure* methods so disconnectedCallback can tear them all down
+     * Single AbortController shared by every listener registered in the
+     * configure* methods. Lets disconnectedCallback tear all of them down
      * with one abort() call.
      *
      * The genuine leak risk is the listeners attached to children that can
@@ -1592,6 +1592,36 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Per-class dedup set used by `_warnInvalidLocale`. Static so the dedup
+   * spans every datepicker instance on the page; lives on the class (not
+   * at module scope) so it stays an encapsulated implementation detail of
+   * this component and does not interfere with WCA's class-JSDoc
+   * attachment.
+   * @private
+   */
+  static _warnedInvalidLocales = new Set();
+
+  /**
+   * Logs a one-time `console.debug` when an unsupported locale falls back to
+   * en-US. Deduped by the offending tag so noisy re-renders that resurface
+   * the same bad value stay quiet, but each new bad value still signals so
+   * consumers can spot the typo or missing tag.
+   * @private
+   * @param {string|undefined} badLocale - The locale value that failed.
+   * @returns {void}
+   */
+  _warnInvalidLocale(badLocale) {
+    const key = String(badLocale ?? '');
+    const seen = AuroDatePicker._warnedInvalidLocales;
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    // eslint-disable-next-line no-console
+    console.debug(`[auro-datepicker] Locale "${key}" is not supported by Intl.DateTimeFormat. Falling back to "en-US". Pass a BCP 47 tag such as "en-US", "fr-FR", or "ja-JP".`);
+  }
+
+  /**
    * Lifecycle method to check if the locale is valid.
    * @ignore
    * @param {Map} changedProperties - The map of properties that have changed since the last update.
@@ -1601,10 +1631,15 @@ export class AuroDatePicker extends AuroElement {
     if (changedProperties.has('locale')) {
       try {
         const supported = Intl.DateTimeFormat.supportedLocalesOf([this.locale], { localeMatcher: 'lookup' });
-        this._validLocale = supported.length > 0 ? this.locale : 'en-US';
+        if (supported.length > 0) {
+          this._validLocale = this.locale;
+        } else {
+          this._validLocale = 'en-US';
+          this._warnInvalidLocale(this.locale);
+        }
       } catch {
-        console.debug(`[AuroDatePicker] The locale "${this.locale}" is not valid. Falling back to "en-US".`); // eslint-disable-line no-console
         this._validLocale = 'en-US';
+        this._warnInvalidLocale(this.locale);
       }
 
       const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
