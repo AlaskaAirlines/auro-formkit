@@ -3901,6 +3901,38 @@ function runTest(mobileView) {
           await expect(el.dropdown.isPopoverVisible).to.be.true;
         });
 
+        it('should not flash an intermediate active option when type-ahead opens the bib', async () => {
+          // Regression guard for the race where dropdown.show() synchronously
+          // fires auroDropdown-toggled, whose handler would set firstActive
+          // BEFORE the type-ahead match overrides it — producing a transient
+          // aria-activedescendant write. The fix calls updateActiveOption(match)
+          // before show() so the handler's `!optionActive` guard short-circuits.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+
+          const activations = [];
+          el.menu.addEventListener('auroMenu-activatedOption', (e) => {
+            activations.push(e.detail);
+          });
+
+          el.updateActiveOptionBasedOnKey('b');
+          await elementUpdated(el);
+
+          expect(activations.length).to.equal(1);
+          expect(activations[0].value).to.equal('banana');
+        });
+
         it('should ignore non-printable keys', async () => {
           const el = await defaultFixture();
           await elementUpdated(el);
