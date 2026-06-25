@@ -589,7 +589,8 @@ export class AuroCalendarCell extends LitElement {
     }
 
     // Update host aria when selection changes (aria-selected, range labels)
-    if (properties.has('dateFrom') || properties.has('dateTo') || properties.has('selected')) {
+    // or when isCurrentDate flips (aria-current).
+    if (properties.has('dateFrom') || properties.has('dateTo') || properties.has('selected') || properties.has('isCurrentDate')) {
       this.updateHostAria();
     }
 
@@ -612,12 +613,19 @@ export class AuroCalendarCell extends LitElement {
     if (outOfRange) {
       this.removeAttribute('role');
       this.removeAttribute('aria-label');
+      this.removeAttribute('aria-current');
       return;
     }
 
     this.setAttribute('role', 'gridcell');
     this.setAttribute('aria-label', this.getAriaLabel());
     this.setAttribute('aria-selected', this.selected ? 'true' : 'false');
+
+    if (this.isCurrentDate) {
+      this.setAttribute('aria-current', 'date');
+    } else {
+      this.removeAttribute('aria-current');
+    }
 
     if (this.isBlackout()) {
       this.setAttribute('aria-disabled', 'true');
