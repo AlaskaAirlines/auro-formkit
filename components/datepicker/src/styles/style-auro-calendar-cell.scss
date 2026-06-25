@@ -117,6 +117,16 @@
     }
   }
 
+  // Single-day preview: when the user hovers the depart cell after picking
+  // it, the cell carries both rangeDepartDate and lastHoveredDate. Round
+  // both corners so the in-range pill renders as a complete capsule on the
+  // one cell instead of inheriting the half-pill from lastHoveredDate.
+  &.rangeDepartDate.lastHoveredDate {
+    &::before {
+      border-radius: 10px;
+    }
+  }
+
   &.firstDayOfMonth {
     &::before {
       border-radius: 10px 0 0 10px;

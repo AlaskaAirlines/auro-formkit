@@ -4087,6 +4087,39 @@ function runFullTest(mobileView) {
       cell.clearRangePreviewClasses();
     });
 
+    // ─── single-day preview: hovering the depart cell after picking it ────
+    // Regression: with strict `>` comparisons, hovering the depart cell
+    // produced no visual cue at all. Now the depart cell receives both
+    // rangeDepartDate and lastHoveredDate so the user gets a single-day
+    // round-trip preview before committing.
+    it('applies both rangeDepartDate and lastHoveredDate when hovering the depart cell itself', async () => {
+      const el = await fixture(html`
+        <auro-datepicker range></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const cell = calendarMonth.shadowRoot.querySelector('auro-formkit-calendar-cell');
+
+      // hoveredDate === dateFrom === cell.day.date — single-day preview.
+      cell.updateRangePreviewClasses(cell.day.date, cell.day.date);
+
+      const button = cell.shadowRoot.querySelector('button');
+      expect(button.classList.contains('rangeDepartDate')).to.be.true;
+      expect(button.classList.contains('lastHoveredDate')).to.be.true;
+      // No inRange — the cell IS the depart, not a cell between depart and hover.
+      expect(button.classList.contains('inRange')).to.be.false;
+
+      cell.clearRangePreviewClasses();
+    });
+
     // ─── lastHoveredDate class is cleared on next/prev month nav ───────
     // Regression: after completing a range selection, the just-clicked
     // dateTo cell retains lastHoveredDate (imperative, not in classMap).
