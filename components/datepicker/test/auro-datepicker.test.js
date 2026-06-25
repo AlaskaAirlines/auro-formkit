@@ -8488,8 +8488,9 @@ function runFullTest(mobileView) {
     });
 
     describe('announceSelection', () => {
-      // Verify the 'announceSelection' property returns early when live region is null.
-      it('should return early when live region is null', async () => {
+      // Verify announceSelection does not throw and gives up after retrying
+      // when the live region is permanently unavailable.
+      it('should retry but not throw when live region is permanently null', async () => {
         const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
 
         const input = getInput(el, 0);
@@ -8500,12 +8501,50 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
-        // Stub getOrCreateLiveRegion to return null
         const original = calendar.getOrCreateLiveRegion;
         calendar.getOrCreateLiveRegion = () => null;
 
-        // Should not throw
+        // Should not throw and should eventually clear the pending rAF id
+        // once retries are exhausted (MAX_LIVE_REGION_RETRIES = 10).
         calendar.announceSelection('test');
+        for (let frame = 0; frame < 12; frame += 1) {
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
+        expect(calendar._announceRafId).to.be.null;
+
+        calendar.getOrCreateLiveRegion = original;
+      });
+
+      // Verify announceSelection retries until the live region is available,
+      // then writes the announcement (race recovery on first bib open).
+      it('should retry until the live region mounts and then announce', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+        const original = calendar.getOrCreateLiveRegion.bind(calendar);
+        let callCount = 0;
+        calendar.getOrCreateLiveRegion = () => {
+          callCount += 1;
+          return callCount < 3 ? null : original();
+        };
+
+        calendar.announceSelection('delayed test');
+
+        // 2 retries + the double-rAF that writes textContent = 4 frames min.
+        for (let frame = 0; frame < 6; frame += 1) {
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
+
+        expect(callCount).to.be.at.least(3);
+        const region = original();
+        expect(region.textContent).to.equal('delayed test');
 
         calendar.getOrCreateLiveRegion = original;
       });
