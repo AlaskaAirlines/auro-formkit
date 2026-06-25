@@ -633,7 +633,7 @@ export class AuroCalendarCell extends LitElement {
    * @returns {void}
    */
   focusButton() {
-    const button = this._cachedButton || this.shadowRoot.querySelector('button:not([aria-hidden])');
+    const button = this._cachedButton || this.shadowRoot.querySelector('button:not([disabled])');
     if (button) {
       button.focus({ focusVisible: true });
     }
@@ -746,7 +746,6 @@ export class AuroCalendarCell extends LitElement {
         @focus="${outOfRange ? undefined : this.handleFocus}"
         class="${classMap(buttonClasses)}"
         ?disabled="${outOfRange}"
-        aria-hidden="${outOfRange ? 'true' : nothing}"
         tabindex="-1">
         <div class="buttonWrapper" aria-hidden="true">
           <div class="currentDayMarker">${this.day?.title || nothing}</div>
