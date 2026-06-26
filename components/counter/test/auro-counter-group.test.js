@@ -359,6 +359,18 @@ function runFullTest(mobileView) {
         await expect(el.isDropdown).to.be.true;
         await expect(el.dropdown).to.exist;
       });
+
+      // Regression guard: counter rows are slotted through multiple shadow roots,
+      // so the floater's `:focus-within` check fails on the dropdown host in
+      // Chromium and the bib auto-closes on open without this flag.
+      it('should set noHideOnThisFocusLoss on the dropdown to prevent Chromium auto-close', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.dropdown.noHideOnThisFocusLoss).to.be.true;
+      });
     });
 
     describe('largeFullscreenHeadline', () => {
