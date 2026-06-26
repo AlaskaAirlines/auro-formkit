@@ -900,10 +900,14 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(this.optionActive);
       }
 
-      // Announce the active option for screen readers. Skip when the activated
-      // option is already selected: Enter triggers an auroMenu-selectedOption
-      // re-announce, and aria-selected on the active descendant otherwise
-      // conveys state without an explicit utterance.
+      // Live-region announce only for [not selected] options. For activations
+      // on an already-selected option — auto-activation on bib open, arrow
+      // navigation back to the selection, or click in multiSelect — rely on
+      // aria-activedescendant + aria-selected="true" to convey state per the
+      // WAI-ARIA listbox pattern. This is intentional, not limited to the
+      // initial activation on open: it also prevents a duplicate "X, selected"
+      // when Enter on the active+selected option re-fires
+      // auroMenu-selectedOption (see 03b289e39).
       if (this.optionActive && !this.optionActive.hasAttribute('selected')) {
         const optionText = this.optionActive.textContent.trim();
         const message = `${optionText}, not selected`;
@@ -924,6 +928,7 @@ export class AuroSelect extends AuroElement {
     });
 
     this.menu.addEventListener('auroMenu-selectedOption', () => {
+      const previousSelected = this.optionSelected;
 
       // Update the displayed value
       this.updateDisplayedValue();
@@ -943,13 +948,32 @@ export class AuroSelect extends AuroElement {
         this.dropdown.trigger.focus();
       }
 
-      // Announce the selection after the dropdown closes so it isn't
-      // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
-      const selectedValue = this.menu.currentLabel;
-      const announcementDelay = 300;
-      setTimeout(() => {
-        announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
-      }, announcementDelay);
+      // Describe the actual change. In multiSelect, currentLabel is the
+      // concatenated remaining list — announcing "{list}, selected" after a
+      // deselect would falsely claim every remaining label was just added.
+      // Diff previous vs next to recover the toggled option.
+      let announcement = '';
+      if (this.multiSelect) {
+        const prev = Array.isArray(previousSelected) ? previousSelected : [];
+        const removed = prev.find((opt) => !nextSelected.includes(opt));
+        const added = nextSelected.find((opt) => !prev.includes(opt));
+        if (removed) {
+          announcement = `${removed.textContent.trim()}, not selected`;
+        } else if (added) {
+          announcement = `${added.textContent.trim()}, selected`;
+        }
+      } else {
+        announcement = `${this.menu.currentLabel}, selected`;
+      }
+
+      // Delay so the utterance isn't overridden by VoiceOver's "collapsed"
+      // announcement from aria-expanded when the dropdown closes.
+      if (announcement) {
+        const announcementDelay = 300;
+        setTimeout(() => {
+          announceToScreenReader(this._getAnnouncementRoot(), announcement);
+        }, announcementDelay);
+      }
     });
   }
 

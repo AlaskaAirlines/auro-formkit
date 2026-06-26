@@ -2180,6 +2180,59 @@ function runTest(mobileView) {
           expect(liveRegion.textContent).to.equal('');
         });
 
+        it('should announce "not selected" when a multiSelect option is deselected', async () => {
+          const el = await presetMultiSelectFixture();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await elementUpdated(el);
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          liveRegion.textContent = '';
+
+          // Toggle "Price" off — currentLabel will collapse to "Duration", so the
+          // pre-fix code would falsely announce "Duration, selected" here.
+          const menu = el.querySelector('auro-menu');
+          const priceOption = menu.querySelector('auro-menuoption[value="price"]');
+          priceOption.click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          // Announcement is dispatched via setTimeout(300) inside the
+          // selectedOption handler, then routed through a rAF in
+          // announceToScreenReader.
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(liveRegion.textContent).to.equal('Price, not selected');
+        });
+
+        it('should announce "selected" with the added option when a multiSelect option is added', async () => {
+          const el = await presetMultiSelectFixture();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await elementUpdated(el);
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          liveRegion.textContent = '';
+
+          const menu = el.querySelector('auro-menu');
+          const stopsOption = menu.querySelector('auro-menuoption[value="stops"]');
+          stopsOption.click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(liveRegion.textContent).to.equal('Stops, selected');
+        });
+
         if (mobileView) {
           it('should route announcements to the bib live region in fullscreen mode', async () => {
             const el = await defaultFixture();
