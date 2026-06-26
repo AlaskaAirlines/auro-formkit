@@ -1225,6 +1225,18 @@ export class AuroSelect extends AuroElement {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    // Regression guard: firstUpdated() fires once per instance, so the label
+    // observer setup it triggers does NOT re-run on reconnect. After a
+    // disconnect+reconnect (reparent, SPA route swap), runtime label mutations
+    // would silently stop syncing menu aria-label / dropdown.bibDialogLabel
+    // unless we re-wire the observer here.
+    if (this.hasUpdated) {
+      this._observeLabelChanges();
+    }
+  }
+
   // lifecycle runs only after the element's DOM has been updated the first time
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name

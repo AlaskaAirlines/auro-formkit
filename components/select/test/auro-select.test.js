@@ -149,6 +149,29 @@ function runTest(mobileView) {
         });
       }
 
+      it('keeps label observation wired after a disconnect+reconnect cycle', async () => {
+        // Regression guard: _observeLabelChanges() is invoked from firstUpdated(),
+        // which Lit fires once per instance. disconnectedCallback() tears down
+        // both _labelObserver and the slotchange retarget listener; without a
+        // matching connectedCallback hook, runtime label mutations after a
+        // reparent would silently stop syncing menu aria-label and
+        // dropdown.bibDialogLabel.
+        const el = await defaultFixture();
+        const parent = el.parentNode;
+        const label = el.querySelector('[slot="label"]');
+
+        parent.removeChild(el);
+        parent.appendChild(el);
+        await elementUpdated(el);
+
+        label.textContent = 'Updated label';
+        await new Promise((r) => requestAnimationFrame(r));
+        await elementUpdated(el);
+
+        expect(el.menu.getAttribute('aria-label'), 'menu aria-label must re-sync after reconnect').to.equal('Updated label');
+        expect(el.dropdown.bibDialogLabel, 'dropdown bibDialogLabel must re-sync after reconnect').to.equal('Updated label');
+      });
+
       it('keeps menu event listeners wired after a disconnect+reconnect cycle', async () => {
         // Regression guard: the listeners configureMenu() attaches must NOT be torn
         // down in disconnectedCallback. configureMenu() runs from firstUpdated(),
