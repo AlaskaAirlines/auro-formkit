@@ -3125,6 +3125,24 @@ function runTest(mobileView) {
           const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
           await expect(el.optionActive).to.equal(lastOption);
         });
+
+        // Regression guard: pressing End while collapsed must produce exactly one
+        // auroMenu-activatedOption dispatch. show() synchronously fires
+        // auroDropdown-toggled, whose handler will set a fallback active option
+        // unless updateActiveOption is called first. See selectKeyboardStrategy.End.
+        it('should dispatch auroMenu-activatedOption exactly once when opening via End', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          let count = 0;
+          menu.addEventListener('auroMenu-activatedOption', () => { count += 1; });
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          await expect(count).to.equal(1);
+        });
       });
 
       describe('Enter', () => {
@@ -3490,6 +3508,21 @@ function runTest(mobileView) {
           const menu = el.querySelector('auro-menu');
           const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
           await expect(el.optionActive).to.equal(firstOption);
+        });
+
+        // Regression guard: see matching test under End — same double-dispatch risk.
+        it('should dispatch auroMenu-activatedOption exactly once when opening via Home', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          let count = 0;
+          menu.addEventListener('auroMenu-activatedOption', () => { count += 1; });
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          await expect(count).to.equal(1);
         });
       });
 

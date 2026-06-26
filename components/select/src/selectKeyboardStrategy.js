@@ -58,10 +58,14 @@ export const selectKeyboardStrategy = {
     if (!lastOption) {
       return;
     }
+    // Pre-stash before show() so the auroDropdown-toggled handler's
+    // `!optionActive` guard short-circuits the firstActive/selected fallback —
+    // otherwise show() synchronously fires the handler and writes
+    // aria-activedescendant once before we overwrite it.
+    component.menu.updateActiveOption(lastOption);
     if (!ctx.isExpanded) {
       component.dropdown.show();
     }
-    component.menu.updateActiveOption(lastOption);
   },
 
   Enter(component, evt, ctx) {
@@ -85,10 +89,11 @@ export const selectKeyboardStrategy = {
     if (!firstOption) {
       return;
     }
+    // See End() for why this must run before show().
+    component.menu.updateActiveOption(firstOption);
     if (!ctx.isExpanded) {
       component.dropdown.show();
     }
-    component.menu.updateActiveOption(firstOption);
   },
 
   Tab(component, evt, ctx) {
