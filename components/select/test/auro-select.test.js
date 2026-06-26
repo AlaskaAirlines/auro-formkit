@@ -150,12 +150,12 @@ function runTest(mobileView) {
       }
 
       it('keeps menu event listeners wired after a disconnect+reconnect cycle', async () => {
-        // Regression guard against the tempting "fix" of removing the listeners
-        // configureMenu() attaches in disconnectedCallback. Lit's firstUpdated
-        // runs once per instance, so listeners stripped on disconnect would
-        // never be re-attached on reconnect — optionActive, value, and
-        // announcement plumbing would silently break when the host is moved
-        // in the DOM (e.g., reparented inside a dialog or SPA route swap).
+        // Regression guard: the listeners configureMenu() attaches must NOT be torn
+        // down in disconnectedCallback. configureMenu() runs from firstUpdated(),
+        // which Lit fires once per instance, so any listener removed on disconnect
+        // would never be re-wired on reconnect — optionActive, value, and
+        // announcement plumbing would silently break when the host is moved in the
+        // DOM (e.g., reparented into a dialog or SPA route swap).
         const el = await defaultFixture();
         const parent = el.parentNode;
         const firstOption = el.menu.querySelector('auro-menuoption[value="Apples"]');
