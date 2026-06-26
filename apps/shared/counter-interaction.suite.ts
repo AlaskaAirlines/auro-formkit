@@ -250,8 +250,7 @@ export function counterInteractionSuite(framework: string) {
       test('clicking outside closes the dropdown', async ({ page }) => {
         await openDropdown(page, 'dropdown-group');
 
-        // Focus an element outside the dropdown to trigger focus-loss close
-        await page.locator('#outside-element').focus();
+        await page.locator('#outside-element').dispatchEvent('click');
         await waitForBibClosed(page, 'dropdown-group');
       });
     });
