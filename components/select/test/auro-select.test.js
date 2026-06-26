@@ -1712,6 +1712,24 @@ function runTest(mobileView) {
         expect(el.value).to.equal(originalValue);
       });
 
+      // ─── _handleNativeSelectChange no-ops in multiSelect mode ──
+      it('_handleNativeSelectChange does not corrupt JSON-array value in multiSelect mode', async () => {
+        const el = await multiSelectFixture();
+        el.value = JSON.stringify(['Apples', 'Bananas']);
+        await elementUpdated(el);
+
+        // Simulate a browser autofill/bfcache change on the hidden native <select>
+        el._handleNativeSelectChange({
+          target: {
+            options: [{ value: 'Cherries' }],
+            selectedIndex: 0
+          }
+        });
+
+        // multiSelect value shape must remain a JSON-stringified array
+        expect(el.value).to.equal(JSON.stringify(['Apples', 'Bananas']));
+      });
+
       // ─── renderNativeSelect falls back to textContent when option has no value ──
       it('renderNativeSelect uses textContent when option.value is empty', async () => {
         const el = await defaultFixture();
