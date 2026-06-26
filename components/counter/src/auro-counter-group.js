@@ -471,6 +471,13 @@ export class AuroCounterGroup extends AuroElement {
    */
   configureDropdownCounters() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+
+    // Counter rows are slotted into the bib through multiple shadow roots
+    // (dropdown → bib → bibtemplate → counter-group → counter), so the floater's
+    // `:focus-within` focus-loss check fails to match the dropdown host in Chromium
+    // and the bib auto-closes immediately after opening. Mirrors auro-select.
+    this.dropdown.noHideOnThisFocusLoss = true;
+
     this.dropdown.requestUpdate();
 
     const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
