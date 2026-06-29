@@ -102,7 +102,6 @@ function runFullTest(mobileView) {
     });
   });
 
-  // CONTAINS TEST THAT FAILS MAYBE DUE TO A BUG
   describe('User Stories', () => {
 
     it('reset method clears the value and validity state', async () => {
@@ -669,7 +668,6 @@ function runFullTest(mobileView) {
       });
     });
 
-    // IS THIS FAILING DUE TO A BUG?
     it('should swap values between two comboboxes', async () => {
       const wrapper = await swapFixture(mobileView);
 
@@ -699,7 +697,6 @@ function runFullTest(mobileView) {
       await expect(right.input.value).to.equal('Apples');
     });
 
-    // IS THIS FAILING DUE TO A BUG?
     it('should swap freeform typed values between two comboboxes', async () => {
       const wrapper = await swapFixture(mobileView);
 
@@ -785,7 +782,6 @@ function runFullTest(mobileView) {
     // updateTriggerTextDisplay and the value-branch ELSE write set input.value
     // with _syncingDisplayValue, which made handleInputValueChange bail
     // without re-running updateFilter.
-    // IS THIS FAILING DUE TO A BUG?
     it('should refresh availableOptions after a programmatic value swap', async () => {
       if (mobileView) {
         await setViewport({ width: 500, height: 800 });
@@ -887,7 +883,6 @@ function runFullTest(mobileView) {
     // These tests require fullscreen (mobile) mode
   });
 
-  // CONTAINS TEST THAT FAILS MAYBE DUE TO A BUG
   describe('Properties', () => {
     describe('appearance', () => {
       it('should default to "default"', async () => {
@@ -1965,7 +1960,7 @@ function runFullTest(mobileView) {
 
     describe('showBib', () => {
       it('should show the dropdown when input has matching options', async () => {
-        const el = await defaultFixture();
+        const el = await defaultFixture(mobileView);
 
         el.focus();
         await elementUpdated(el);
@@ -2359,8 +2354,10 @@ function runFullTest(mobileView) {
       el.menu.value = 'one';
       await elementUpdated(el);
 
-      // The displayValue should have been cloned into the input
-      const clonedDisplayValue = el.input.querySelector('[slot="displayValue"]');
+      // The displayValue should have been cloned into the input.
+      // :not(slot) excludes the template's <slot> forwarder (also slotted as
+      // displayValue) so we find the appended clone.
+      const clonedDisplayValue = el.input.querySelector('[slot="displayValue"]:not(slot)');
       expect(clonedDisplayValue).to.exist;
       expect(clonedDisplayValue.textContent).to.equal('Custom Display');
     });
@@ -3198,7 +3195,6 @@ function runFullTest(mobileView) {
     });
   });
 
-  // INVALID TESTING THAT FAILS?
   describe('Keyboard Behavior', () => {
     describe('Old keyboard tests', () => {
       it('should navigate menu options with up and down arrow keys', async () => {

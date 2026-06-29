@@ -687,8 +687,11 @@ export class AuroCombobox extends AuroElement {
       this.syncInputValuesAcrossTriggerAndBib(label || this.value);
     }
 
-    // update the displayValue in the trigger if displayValue slot content is present
-    const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
+    // Replace any previously appended displayValue clone in the trigger.
+    // :not(slot) excludes the template's <slot name="displayValue"
+    // slot="displayValue"> forwarder, which also has slot="displayValue"
+    // and would otherwise be matched first and removed.
+    const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]:not(slot)');
 
     if (displayValueInTrigger) {
       displayValueInTrigger.remove();
@@ -1322,6 +1325,9 @@ export class AuroCombobox extends AuroElement {
         return;
       }
 
+      // Filtering runs via re-entrance: writing this.input.value below
+      // dispatches an 'input' event that the trigger's listener routes to
+      // handleTriggerInputValueChange, which refreshes the menu filter.
       if (this.input.value !== this.inputInBib.value) {
         this._syncingBibValue = true;
         this.input.value = this.inputInBib.value;
@@ -1542,8 +1548,12 @@ export class AuroCombobox extends AuroElement {
       this.optionSelected = undefined;
       this.value = undefined;
 
-      // clear the displayValue in the trigger if displayValue slot content is present
-      const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
+      // Clear the appended displayValue clone in the trigger if present.
+      // :not(slot) excludes the template's <slot name="displayValue"
+      // slot="displayValue"> forwarder (line 1816), which also has
+      // slot="displayValue" and would otherwise be matched first and removed,
+      // permanently breaking the consumer-provided displayValue slot.
+      const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]:not(slot)');
 
       if (displayValueInTrigger) {
         displayValueInTrigger.remove();
@@ -1572,7 +1582,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   updated(changedProperties) {
-    // After the component is ready, propogate direct changes down to child components.
+    // After the component is ready, propagate direct changes down to child components.
     if (changedProperties.has('value')) {
       this._programmaticFilterRefresh = true;
 
