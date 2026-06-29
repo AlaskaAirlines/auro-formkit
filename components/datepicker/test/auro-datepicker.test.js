@@ -7392,6 +7392,49 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('handleGridFocusIn descendant guard', () => {
+      // Regression: when focusin bubbles to the grid from a cell descendant
+      // (mousedown on a cell button), the previously-active cell must not
+      // receive the activeCell ring. Before the guard, this caused the ring
+      // to flash on the stale active cell (e.g. the 1st-of-month set by
+      // month navigation while the grid was unfocused) on mousedown, before
+      // the click handler moved it to the clicked cell.
+      it('should not add activeCell ring when focusin bubbles from a cell descendant', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15" value="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const activeCell = calendar.getAllFocusableCells().find((cell) => cell.active);
+        expect(activeCell).to.exist;
+
+        const activeBtn = activeCell._cachedButton || activeCell.shadowRoot.querySelector('button.day');
+        expect(activeBtn).to.exist;
+
+        // Simulate the post-month-nav state: the active cell data is set, but
+        // the ring is not applied because the grid was not focused.
+        activeBtn.classList.remove('activeCell');
+        calendar._gridHasFocus = false;
+
+        // Dispatch focusin from a non-active cell host so the event bubbles
+        // to the grid div with event.target retargeted to a descendant — the
+        // shape of focusin produced by a mousedown on a cell button.
+        const otherCell = calendar.getAllFocusableCells().find((cell) => cell !== activeCell);
+        expect(otherCell).to.exist;
+        otherCell.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        await nextFrame();
+
+        // Guard must prevent the ring from being applied to the stale active cell.
+        expect(activeBtn.classList.contains('activeCell')).to.be.false;
+        // _gridHasFocus still flips so a subsequent setActiveCell (from click) can apply the ring.
+        expect(calendar._gridHasFocus).to.be.true;
+      });
+    });
+
     describe('disconnectedCallback cleanup', () => {
       // Verify 'disconnectedCallback cleanup' cleans up timers and live region on disconnect.
       it('should clean up timers and live region on disconnect', async () => {
