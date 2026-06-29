@@ -25,6 +25,7 @@
 <auro-anchorlink fluid href="#typeAhead" class="level2 body-xs">Type-Ahead</auro-anchorlink>
 <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
 <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
+<auro-anchorlink fluid href="#submenus" class="level2 body-xs">Submenus</auro-anchorlink>
 <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
 <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
@@ -901,6 +902,91 @@
     &lt;auro-menuoption value="departure" disabled&gt;Departure&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="prefer alaska"&gt;Prefer Alaska&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="submenus">Submenus</auro-header>
+<p>Options may be organized into nested groups by placing additional <code>&lt;auro-menu&gt;</code> elements inside the top-level <code>&lt;auro-menu&gt;</code>. Use <code>&lt;hr&gt;</code> elements to add visual dividers between groups. Nested groups receive an indent and an <code>aria-label="submenu"</code> so that assistive technologies can announce the grouping.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/with-submenus.html) -->
+<!-- The below content is automatically added from ./../apiExamples/with-submenus.html -->
+<auro-select placeholder="Placeholder Text">
+<span slot="bib.fullscreen.headline">Bib Headline</span>
+<span slot="label">Label</span>
+<auro-menu>
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="apples">Apples</auro-menuoption>
+<auro-menuoption value="oranges">Oranges</auro-menuoption>
+<auro-menuoption value="pears">Pears</auro-menuoption>
+<auro-menuoption value="grapes">Grapes</auro-menuoption>
+<auro-menuoption value="kiwi">Kiwi</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="person">Person</auro-menuoption>
+<auro-menuoption value="woman">Woman</auro-menuoption>
+<auro-menuoption value="man">Man</auro-menuoption>
+<auro-menuoption value="camera">Camera</auro-menuoption>
+<auro-menuoption value="tv">TV</auro-menuoption>
+</auro-menu>
+</auro-menu>
+<hr>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="cars">Cars</auro-menuoption>
+<auro-menuoption value="trucks">Trucks</auro-menuoption>
+<auro-menuoption value="boats">Boats</auro-menuoption>
+<auro-menuoption value="planes">Planes</auro-menuoption>
+<auro-menuoption value="motorcycles">Motorcycles</auro-menuoption>
+</auro-menu>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/with-submenus.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/with-submenus.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select placeholder="Placeholder Text"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
+  &lt;span slot="label"&gt;Label&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+    &lt;hr&gt;
+    &lt;auro-menu&gt;
+      &lt;auro-menuoption value="apples"&gt;Apples&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="oranges"&gt;Oranges&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="pears"&gt;Pears&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="grapes"&gt;Grapes&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="kiwi"&gt;Kiwi&lt;/auro-menuoption&gt;
+      &lt;hr&gt;
+      &lt;auro-menu&gt;
+        &lt;auro-menuoption value="person"&gt;Person&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="woman"&gt;Woman&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="man"&gt;Man&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="camera"&gt;Camera&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="tv"&gt;TV&lt;/auro-menuoption&gt;
+      &lt;/auro-menu&gt;
+    &lt;/auro-menu&gt;
+    &lt;hr&gt;
+    &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+    &lt;hr&gt;
+    &lt;auro-menu&gt;
+      &lt;auro-menuoption value="cars"&gt;Cars&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="trucks"&gt;Trucks&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="boats"&gt;Boats&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="planes"&gt;Planes&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="motorcycles"&gt;Motorcycles&lt;/auro-menuoption&gt;
+    &lt;/auro-menu&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
