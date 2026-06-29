@@ -100,7 +100,17 @@ export const comboboxKeyboardStrategy = {
   },
 
   Enter(component, evt, ctx) {
+    // Forms should not submit on Enter from a combobox, regardless of which
+    // child element (input, clear button, menu) is focused.
     evt.stopPropagation();
+
+    if (isClearBtnFocused(ctx)) {
+      // Let the browser dispatch Enter to the focused clear button so its
+      // built-in activation fires and clears the selection. Do NOT call
+      // preventDefault — that would block the activation.
+      return;
+    }
+
     if (ctx.isExpanded && component.menu.optionActive) {
       reconcileMenuIndex(component.menu);
       component.menu.makeSelection();
@@ -111,10 +121,6 @@ export const comboboxKeyboardStrategy = {
 
       evt.preventDefault();
     } else {
-      // Prevent the keypress from bubbling to parent containers (e.g., forms)
-      // which could interpret Enter as a submit or trigger other unintended behavior.
-      // This is safe because showBib() opens the dialog programmatically,
-      // not via event propagation.
       evt.preventDefault();
       component.showBib();
     }

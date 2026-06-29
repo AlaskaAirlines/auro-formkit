@@ -3466,13 +3466,15 @@ function runFullTest(mobileView) {
         setInputValue(el, '');
         await elementUpdated(el);
         await elementUpdated(el);
-        await sendKeys({ press: 'a' });
+        await sendKeys({ press: 'o' });
         el.input.click();
+        await elementUpdated(el);
+        activeInput.focus();
         await elementUpdated(el);
         await sendKeys({ press: 'Tab' });
         await elementUpdated(el);
 
-        await expect(el.value === options[1].textContent);
+        await expect(el.value).to.be.equal(options[1].textContent);
       });
 
       it('should make a selection and close the bib', async () => {
