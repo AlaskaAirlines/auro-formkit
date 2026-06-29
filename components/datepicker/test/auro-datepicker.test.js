@@ -5749,6 +5749,198 @@ function runFullTest(mobileView) {
 
         calendar.scrollToActiveCell();
       });
+
+      // Verify scrollToActiveCell resolves the active cell from activeCellDate
+      // and populates the _activeCell cache so subsequent calls skip the scan.
+      it('should resolve _activeCell from activeCellDate and populate the cache', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+        expect(cells.length).to.be.greaterThan(0);
+
+        const targetCell = cells[Math.floor(cells.length / 2)];
+        // Point activeCellDate at the target WITHOUT going through setActiveCell,
+        // so _activeCell starts empty and must be filled by the fallback path.
+        calendar.activeCellDate = targetCell.day.date;
+        calendar._activeCell = null;
+
+        calendar.scrollToActiveCell();
+
+        expect(calendar._activeCell).to.equal(targetCell);
+      });
+
+      // Verify scrollToActiveCell is a no-op when no cell matches activeCellDate.
+      it('should not throw when activeCellDate does not match any rendered cell', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        // Set an activeCellDate far outside the rendered month range.
+        calendar.activeCellDate = Math.floor(new Date(1900, 0, 1).getTime() / 1000);
+
+        // Should not throw.
+        calendar.scrollToActiveCell();
+      });
+
+      // Verify scrollToActiveCell reuses the cell cached by setActiveCell
+      // without re-querying getAllFocusableCells on the hot arrow-key path.
+      it('should reuse the cached cell from setActiveCell without re-scanning', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+        const targetCell = cells[Math.floor(cells.length / 2)];
+
+        // setActiveCell populates the cache.
+        calendar.setActiveCell(targetCell.day.date);
+        expect(calendar._activeCell).to.equal(targetCell);
+
+        let scanCount = 0;
+        const origGetCells = calendar.getAllFocusableCells;
+        calendar.getAllFocusableCells = function wrappedGetAllFocusableCells() {
+          scanCount += 1;
+          return origGetCells.call(this);
+        };
+
+        try {
+          calendar.scrollToActiveCell();
+
+          // Fast path: cache was used, no full-cell scan.
+          expect(scanCount).to.equal(0);
+          expect(calendar._activeCell).to.equal(targetCell);
+        } finally {
+          calendar.getAllFocusableCells = origGetCells;
+        }
+      });
+
+      // Verify scrollToActiveCell walks scrollable ancestors and calls scrollBy
+      // with behavior: 'auto' when the active cell sits outside the viewport.
+      it('should call scrollBy with behavior: auto on a scrollable ancestor when the cell is off-screen', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+        expect(cells.length).to.be.greaterThan(0);
+
+        const targetCell = cells[Math.floor(cells.length / 2)];
+        calendar.setActiveCell(targetCell.day.date);
+
+        const grid = calendar.shadowRoot.querySelector('#calendarGrid');
+        const button = targetCell._cachedButton || targetCell.shadowRoot.querySelector('button.day');
+
+        // Force #calendarGrid to look scrollable so the walker treats it as a
+        // viewport boundary, then position the button outside that viewport.
+        const originalGetComputedStyle = window.getComputedStyle;
+        const originalButtonRect = button.getBoundingClientRect;
+        const originalGridRect = grid.getBoundingClientRect;
+        const originalScrollBy = grid.scrollBy;
+
+        window.getComputedStyle = function patchedGetComputedStyle(node, ...rest) {
+          const result = originalGetComputedStyle.call(this, node, ...rest);
+          if (node === grid) {
+            return new Proxy(result, {
+              get(target, prop) {
+                if (prop === 'overflowY') {
+                  return 'auto';
+                }
+                return Reflect.get(target, prop);
+              }
+            });
+          }
+          return result;
+        };
+
+        button.getBoundingClientRect = () => ({ top: 0, bottom: 20, left: 0, right: 20, width: 20, height: 20 });
+        grid.getBoundingClientRect = () => ({ top: 100, bottom: 200, left: 0, right: 100, width: 100, height: 100 });
+
+        const scrollByCalls = [];
+        grid.scrollBy = function spyScrollBy(opts) {
+          scrollByCalls.push(opts);
+        };
+
+        try {
+          calendar.scrollToActiveCell();
+
+          expect(scrollByCalls.length).to.equal(1);
+          expect(scrollByCalls[0].behavior).to.equal('auto');
+          // Button top (0) is above grid top (100) — delta = top - scrollerTop = -100.
+          expect(scrollByCalls[0].top).to.equal(-100);
+        } finally {
+          window.getComputedStyle = originalGetComputedStyle;
+          button.getBoundingClientRect = originalButtonRect;
+          grid.getBoundingClientRect = originalGridRect;
+          grid.scrollBy = originalScrollBy;
+        }
+      });
+
+      // Verify the fallback path re-queries cells when the cache is stale
+      // (e.g. the cached cell has been detached after a month re-render),
+      // and refreshes the cache so the next call skips the scan.
+      it('should refresh _activeCell when the cached cell is detached', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const cells = calendar.getAllFocusableCells();
+        const targetCell = cells[Math.floor(cells.length / 2)];
+
+        calendar.activeCellDate = targetCell.day.date;
+        // Simulate a stale cache: a detached element with the same date.
+        const stale = document.createElement('div');
+        stale.day = { date: targetCell.day.date };
+        calendar._activeCell = stale;
+
+        calendar.scrollToActiveCell();
+
+        // Cache must drop the detached element and point at the live cell.
+        expect(calendar._activeCell).to.equal(targetCell);
+
+        // Subsequent call must hit the fast path (no rescan).
+        let scanCount = 0;
+        const origGetCells = calendar.getAllFocusableCells;
+        calendar.getAllFocusableCells = function wrappedGetAllFocusableCells() {
+          scanCount += 1;
+          return origGetCells.call(this);
+        };
+
+        try {
+          calendar.scrollToActiveCell();
+
+          expect(scanCount).to.equal(0);
+          expect(calendar._activeCell).to.equal(targetCell);
+        } finally {
+          calendar.getAllFocusableCells = origGetCells;
+        }
+      });
     });
 
     describe('focusCloseButton', () => {

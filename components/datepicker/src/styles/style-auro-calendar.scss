@@ -129,10 +129,6 @@
   }
 }
 
-.calendarWrapper.hasFooter {
-  padding-bottom: var(--desktop-footer-height);
-}
-
 :host([isfullscreen]) {
   width: 100%;
   max-height: 100dvh;

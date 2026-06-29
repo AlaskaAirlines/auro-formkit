@@ -68,6 +68,15 @@ export class AuroCalendar extends RangeDatepicker {
     this.activeCellDate = null;
 
     /**
+     * Cached reference to the active cell host. Set by setActiveCell and
+     * refreshed by scrollToActiveCell when its cache check misses (stale
+     * or missing). Lets scrollToActiveCell skip a full cell scan on each
+     * arrow key.
+     * @private
+     */
+    this._activeCell = null;
+
+    /**
      * Whether the #calendarGrid wrapper currently has focus.
      * Used to determine whether the visualFocus ring should be shown.
      * @private
@@ -578,6 +587,9 @@ export class AuroCalendar extends RangeDatepicker {
     });
 
     this.activeCellDate = date;
+    // Cache so scrollToActiveCell can scroll without re-querying all cells
+    // on every arrow keypress.
+    this._activeCell = newActiveCell;
 
     // Apply activeCell ring only when the grid currently has focus.
     if (newActiveCell && this._gridHasFocus) {
@@ -1035,6 +1047,9 @@ export class AuroCalendar extends RangeDatepicker {
                 this.handleCellFocused({ detail: { date: fallback.day.date } });
               }
             }
+            // Scroll AFTER the cross-month setActiveCell so the freshly
+            // activated cell is what gets scrolled into view.
+            this.scrollToActiveCell();
             // Re-focus grid wrapper after month change re-render
             this.focusActiveCell();
           });
@@ -1075,6 +1090,9 @@ export class AuroCalendar extends RangeDatepicker {
                 this.handleCellFocused({ detail: { date: nearest.day.date } });
               }
             }
+            // Scroll AFTER the cross-month setActiveCell so the freshly
+            // activated cell is what gets scrolled into view.
+            this.scrollToActiveCell();
             this.focusActiveCell();
           });
         }
@@ -1109,6 +1127,8 @@ export class AuroCalendar extends RangeDatepicker {
         const targetCell = allCells[targetIndex];
         this.setActiveCell(targetCell.day.date);
         this.scrollToActiveCell();
+        // Match the cross-month branches: keep DOM focus on the grid wrapper
+        // so subsequent arrow keys continue to land on this handler.
         this.focusActiveCell();
       } else if (direction === 'next' && this.showNextMonthBtn) {
         // Navigate to next month and focus the computed next date.
@@ -1130,7 +1150,6 @@ export class AuroCalendar extends RangeDatepicker {
           const target = cells.find((cell) => cell.day && cell.day.date === nextTs);
           if (target) {
             this.setActiveCell(target.day.date);
-            this.focusActiveCell();
           } else {
             // Same nearest-by-date fallback handleGridKeyDown uses — direct
             // `cells[length - 1]` would land on the end of the new month,
@@ -1138,9 +1157,10 @@ export class AuroCalendar extends RangeDatepicker {
             const fallback = this.pickNearestCell(cells, nextTs, 'next');
             if (fallback) {
               this.setActiveCell(fallback.day.date);
-              this.focusActiveCell();
             }
           }
+          this.scrollToActiveCell();
+          this.focusActiveCell();
         });
       } else if (direction === 'prev' && this.showPrevMonthBtn) {
         // Navigate to previous month and focus the computed previous date.
@@ -1159,7 +1179,6 @@ export class AuroCalendar extends RangeDatepicker {
           const target = cells.find((cell) => cell.day && cell.day.date === prevTs);
           if (target) {
             this.setActiveCell(target.day.date);
-            this.focusActiveCell();
           } else {
             // Same nearest-by-date fallback handleGridKeyDown uses — direct
             // `cells[0]` would land on the start of the previous month, far
@@ -1167,9 +1186,10 @@ export class AuroCalendar extends RangeDatepicker {
             const fallback = this.pickNearestCell(cells, prevTs, 'prev');
             if (fallback) {
               this.setActiveCell(fallback.day.date);
-              this.focusActiveCell();
             }
           }
+          this.scrollToActiveCell();
+          this.focusActiveCell();
         });
       }
     } else if (key === 'ArrowDown' || key === 'ArrowUp') {
@@ -1202,7 +1222,6 @@ export class AuroCalendar extends RangeDatepicker {
             const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
             if (target) {
               this.setActiveCell(target.day.date);
-              this.focusActiveCell();
             } else {
               // Same nearest-by-date fallback handleGridKeyDown uses — the
               // old direction-based `cells[0]`/`cells[length-1]` clamp
@@ -1210,9 +1229,10 @@ export class AuroCalendar extends RangeDatepicker {
               const nearest = this.pickNearestCell(cells, targetDate, navDirection);
               if (nearest) {
                 this.setActiveCell(nearest.day.date);
-                this.focusActiveCell();
               }
             }
+            this.scrollToActiveCell();
+            this.focusActiveCell();
           });
         }
       }
@@ -1413,7 +1433,28 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Scrolls the calendar to ensure the month containing the active cell is visible.
+   * Scrolls the calendar so the active cell is visible.
+   *
+   * Walks the flat tree (rendered, slot-aware) outward from the active
+   * cell's button and calls `scrollBy` on every vertically-scrollable
+   * ancestor by whatever delta still separates the cell from that
+   * ancestor's viewport. Native `scrollIntoView` is not used because the
+   * cell sits inside multiple nested scroll containers (the dropdown bib's
+   * `<dialog>`, the bibtemplate's `#bodyContainer`) and the algorithm only
+   * scrolls one of them on its own, leaving the cell short of the
+   * viewport in mobile fullscreen.
+   *
+   * Uses `behavior: 'auto'` (the spec's universally-supported non-animated
+   * value) so each `scrollBy` resolves synchronously and the next
+   * iteration's `getBoundingClientRect` reads post-scroll positions
+   * accurately. This also satisfies `prefers-reduced-motion` users — the
+   * scroll containers do not set CSS `scroll-behavior: smooth`, so `auto`
+   * is effectively instant.
+   *
+   * The active cell is looked up from the cache populated by
+   * `setActiveCell`. On a cache miss (stale or absent) the cache is
+   * refreshed from a single full scan so subsequent calls stay on the
+   * fast path.
    * @private
    * @returns {void}
    */
@@ -1422,16 +1463,69 @@ export class AuroCalendar extends RangeDatepicker {
       return;
     }
 
-    const date = new Date(this.activeCellDate * 1000);
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const selector = `#month-${month}-${year}`;
-    const monthElem = this.shadowRoot.querySelector(selector);
+    // Prefer the cell cached by setActiveCell so arrow-key navigation does
+    // not rebuild the full cell list on every keypress. Fall back to a
+    // lookup when the cache is stale (e.g. detached after month re-render)
+    // or absent (scrollToActiveCell called without a prior setActiveCell);
+    // refresh the cache on the fallback path so a subsequent call reuses it.
+    const activeDate = this.activeCellDate;
+    const cached = this._activeCell;
+    const cacheFresh = cached && cached.isConnected && cached.day && cached.day.date === activeDate;
+    let activeCell = null;
+    if (cacheFresh) {
+      activeCell = cached;
+    } else {
+      activeCell = this.getAllFocusableCells().find((cell) => cell.day && cell.day.date === activeDate);
+      this._activeCell = activeCell || null;
+    }
+    if (!activeCell) {
+      return;
+    }
 
-    if (monthElem) {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      monthElem.scrollIntoView({ block: 'nearest',
-        behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+    // Scroll the button inside the cell — it has concrete dimensions,
+    // which avoids quirks when the cell host has display: inline / contents
+    // / flex-without-explicit-size.
+    const target = activeCell._cachedButton ||
+      activeCell.shadowRoot?.querySelector('button.day') ||
+      activeCell;
+
+    // parentNode follows the authored DOM tree and steps over shadow roots
+    // via slot projection. A slotted element's visual parent is its
+    // assignedSlot's parent (inside the host's shadow tree), not the host
+    // itself. Without this hop, the walk skips right past #bodyContainer
+    // and <dialog> and finds no scrollable ancestor at all.
+    const flatParent = (current) => {
+      if (current.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        return current.host || null;
+      }
+      if (current.assignedSlot) {
+        return current.assignedSlot.parentNode;
+      }
+      return current.parentNode;
+    };
+
+    let node = flatParent(target);
+    while (node && node !== document && node !== window) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const { overflowY } = window.getComputedStyle(node);
+        if (overflowY === 'auto' || overflowY === 'scroll') {
+          const targetRect = target.getBoundingClientRect();
+          const scrollerRect = node.getBoundingClientRect();
+          let delta = 0;
+          if (targetRect.top < scrollerRect.top) {
+            delta = targetRect.top - scrollerRect.top;
+          } else if (targetRect.bottom > scrollerRect.bottom) {
+            delta = targetRect.bottom - scrollerRect.bottom;
+          }
+          if (delta !== 0) {
+            node.scrollBy({
+              top: delta,
+              behavior: 'auto'
+            });
+          }
+        }
+      }
+      node = flatParent(node);
     }
   }
 
@@ -1722,7 +1816,7 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
       </div>
 
-      <div class="calendarWrapper ${!this.isFullscreen && this.dropdown?.desktopModal ? 'hasFooter' : ''}">
+      <div class="calendarWrapper">
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
           <button tabIndex="0" class="calendarNavBtn prevMonth" aria-label="${this.datepicker?.navLabelPrevMonth || 'Previous month'}" @click="${this.handlePrevMonth}">

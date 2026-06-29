@@ -1108,11 +1108,14 @@ export class AuroDatePicker extends AuroElement {
           this.calendar.announceSelection(announcement);
         }, 500);
 
-        // On mobile fullscreen, scroll the month list so the active cell's
-        // month is visible. Without this, the list stays scrolled to the
-        // calendarStartDate month which may be far from the active cell.
-        if (this.dropdown.isBibFullscreen) {
+        // On mobile fullscreen — or when an explicit focusDate change has
+        // requested a forced scroll on the next render — scroll the active
+        // cell into view. Doing this here (after activeCellDate has been
+        // resolved by the rAF loop above) prevents a no-op scroll that
+        // would happen if we tried to scroll before the cell was set.
+        if (this.dropdown.isBibFullscreen || this.forceScrollOnNextMobileCalendarRender) {
           this.calendar.scrollToActiveCell();
+          this.forceScrollOnNextMobileCalendarRender = false;
         }
       } else if (attempts < MAX_ATTEMPTS) {
         requestAnimationFrame(tryFocus);
@@ -1236,18 +1239,10 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
-      if (this.dropdown.isPopoverVisible && this.forceScrollOnNextMobileCalendarRender) {
-
-        // Since the calendar is not rendered until the dropdown is opened,
-        // and the auroDropdown-toggled event fires before the popover is actually open,
-        // we need to wait until the next frame to ensure the calendar is fully rendered
-        // and the area we're trying to scroll to is present in the DOM.
-        setTimeout(() => {
-          this.calendar.scrollMonthIntoView(this.calendarFocusDate);
-          this.forceScrollOnNextMobileCalendarRender = false;
-        }, 0);
-      }
+      // Note: the forceScrollOnNextMobileCalendarRender scroll-into-view
+      // happens inside focusActiveCellWhenReady() once activeCellDate has
+      // been resolved by its rAF wait — not here in a setTimeout(0), which
+      // fired before the active date was set and silently no-op'd.
     }, { signal });
 
     // Handle responsive strategy changes while the dropdown is open
