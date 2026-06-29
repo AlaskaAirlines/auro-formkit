@@ -537,10 +537,23 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Shows the activeCell ring when the grid gains focus.
    * @private
+   * @param {FocusEvent} [event] - The focusin event.
    * @returns {void}
    */
-  handleGridFocusIn() {
+  handleGridFocusIn(event) {
     this._gridHasFocus = true;
+
+    // Only apply the activeCell ring when the grid wrapper itself receives focus
+    // (Tab/programmatic). When focus moves into a cell button via mousedown,
+    // event.target is the cell descendant — skip the ring here. The subsequent
+    // click handler calls setActiveCell on the clicked cell, which applies the
+    // ring there. Without this guard, mousedown briefly flashes the ring on the
+    // previously-active cell (e.g. the 1st-of-month set by month navigation
+    // when the grid was not focused).
+    if (event && event.target !== event.currentTarget) {
+      return;
+    }
+
     const activeCell = this.getAllFocusableCells().find((cell) => cell.active);
     if (activeCell) {
       const btn = activeCell._cachedButton || activeCell.shadowRoot.querySelector('button.day');
