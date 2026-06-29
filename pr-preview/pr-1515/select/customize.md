@@ -945,6 +945,7 @@
 <auro-menuoption value="planes">Planes</auro-menuoption>
 <auro-menuoption value="motorcycles">Motorcycles</auro-menuoption>
 </auro-menu>
+</auro-menu>
 </auro-select>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -985,6 +986,7 @@
       &lt;auro-menuoption value="boats"&gt;Boats&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="planes"&gt;Planes&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="motorcycles"&gt;Motorcycles&lt;/auro-menuoption&gt;
+    &lt;/auro-menu&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
