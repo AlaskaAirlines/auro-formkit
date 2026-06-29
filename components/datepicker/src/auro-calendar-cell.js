@@ -611,6 +611,18 @@ export class AuroCalendarCell extends LitElement {
       this.updateHostAria();
     }
 
+    // When the rendered range shifts (month nav, min/max change), a cell
+    // host may be re-rendered for a new date that is now out-of-range —
+    // but its imperatively-set `active` flag and `activeCell` ring class
+    // from the previous date persist because setActiveCell only iterates
+    // focusable (in-range) cells when clearing the prior active state.
+    // Drop the active state here so the disabled cell isn't left visually
+    // ringed.
+    if ((properties.has('day') || properties.has('min') || properties.has('max')) &&
+      this.active && this.isOutOfRange(this.day, this.min, this.max)) {
+      this.clearActive();
+    }
+
     // Configure popover when it first becomes rendered
     if (properties.has('hasPopoverContent') && this.hasPopoverContent) {
       this.updateComplete.then(() => this.configurePopover());
@@ -674,9 +686,19 @@ export class AuroCalendarCell extends LitElement {
    * Buttons stay tabindex="-1" because DOM focus stays on the grid wrapper —
    * arrow keys move the active cell imperatively and the live region carries
    * the SR announcement.
+   *
+   * Refuses to activate out-of-range cells: those are aria-hidden, have no
+   * click/focus handlers, and are filtered out of `getFocusableCells`. The
+   * active class showing on a disabled cell would be visually misleading,
+   * so this guard is the single source of truth across every code path
+   * that might call setActive (keyboard nav, focus restore, cell click).
    * @returns {void}
    */
   setActive() {
+    if (this.isOutOfRange(this.day, this.min, this.max)) {
+      return;
+    }
+
     this.active = true;
 
     // Show the popover when this cell becomes active via keyboard navigation.
