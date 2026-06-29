@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-continue, new-cap, curly, no-underscore-dangle, no-inline-comments, line-comment-position */
+/* eslint-disable max-lines, new-cap, curly, no-underscore-dangle */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
@@ -47,6 +47,7 @@ export default class BaseInput extends AuroElement {
     // so a parent (datepicker/combobox) calling `validate()` synchronously
     // during its own update cycle sees a populated util instance.
     this.activeLabel = false;
+
     /** @private */
     this.allowedInputTypes = [
       "text",
@@ -57,6 +58,7 @@ export default class BaseInput extends AuroElement {
       "tel"
     ];
     this.appearance = "default";
+
     /** @private */
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
@@ -75,14 +77,17 @@ export default class BaseInput extends AuroElement {
       'mm/dd': 'dateMMDD'
     };
     this.disabled = false;
+
     /** @private */
     this.domHandler = new DomHandler();
     this.dvInputOnly = false;
     this.hasValue = false;
     this.hideLabelVisually = false;
     this.icon = false;
+
     /** @private */
     this.inputIconName = undefined;
+
     /** @private */
     this.label = 'Input label is undefined';
     this.layout = 'classic';
@@ -106,19 +111,24 @@ export default class BaseInput extends AuroElement {
       "email"
     ];
     this.shape = 'classic';
+
     /** @private */
     this.showPassword = false;
     this.size = 'lg';
     this.touched = false;
+
     /** @private */
     this.uniqueId = new UniqueId().create();
+
     /** @private */
     this.util = new AuroInputUtilities({
       locale: this.locale,
       format: this.format
     });
+
     /** @private */
     this.validation = new AuroFormValidation();
+
     /** @private */
     this.validationCCLength = undefined;
     this.value = undefined;
@@ -699,7 +709,7 @@ export default class BaseInput extends AuroElement {
 
   /**
    * @private
-   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
+   * @deprecated Https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
    * @returns {void} Sets the default help text for the input.
    */
   setCustomHelpTextMessage() {
@@ -1027,9 +1037,9 @@ export default class BaseInput extends AuroElement {
     // the gated types currently support it, since the list is a public
     // property a consumer could mutate.
     if (this.setSelectionInputTypes.includes(this.type)) {
-      let selectionStart;
+      let selectionStart = null;
       try {
-        selectionStart = this.inputElement.selectionStart;
+        ({ selectionStart } = this.inputElement);
       } catch (error) { // eslint-disable-line no-unused-vars
         return;
       }
@@ -1215,7 +1225,7 @@ export default class BaseInput extends AuroElement {
   /**
    * Function to support credit-card feature type.
    * @private
-   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
+   * @deprecated Https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
    * @returns {object} JSON with data for credit card formatting.
    */
   matchInputValueToCreditCard() {
