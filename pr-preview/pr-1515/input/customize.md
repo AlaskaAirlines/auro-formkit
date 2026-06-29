@@ -646,7 +646,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
 <!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
+<auro-input type="date" max="2025-12-31" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
 <span slot="label">Event Date</span>
 <span slot="helpText">Enter a date no later than 12/31/2025.</span>
 </auro-input>
@@ -656,7 +656,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="2025-12-31" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
   &lt;span slot="label"&gt;Event Date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Enter a date no later than 12/31/2025.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -667,7 +667,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
 <!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
+<auro-input type="date" min="2024-01-01" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
 <span slot="label">Start Date</span>
 <span slot="helpText">Enter a date no earlier than 01/01/2024.</span>
 </auro-input>
@@ -677,7 +677,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="2024-01-01" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
   &lt;span slot="label"&gt;Start Date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Enter a date no earlier than 01/01/2024.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -888,7 +888,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/max-date.html) -->
 <!-- The below content is automatically added from ../apiExamples/max-date.html -->
-<auro-input type="date" max="03/25/2023" setCustomValidityRangeOverflow="The selected date is past the defined maximum date.">
+<auro-input type="date" max="2023-03-25" setCustomValidityRangeOverflow="The selected date is past the defined maximum date.">
 <span slot="label">Choose a date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
@@ -898,7 +898,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/max-date.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/max-date.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="03/25/2023" setCustomValidityRangeOverflow="The selected date is past the defined maximum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="2023-03-25" setCustomValidityRangeOverflow="The selected date is past the defined maximum date."&gt;
   &lt;span slot="label"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -954,7 +954,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/min-date.html) -->
 <!-- The below content is automatically added from ../apiExamples/min-date.html -->
-<auro-input type="date" min="03/25/2023" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date.">
+<auro-input type="date" min="2023-03-25" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date.">
 <span slot="label">Choose a date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
@@ -964,7 +964,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/min-date.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/min-date.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="03/25/2023" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="2023-03-25" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date."&gt;
   &lt;span slot="label"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>

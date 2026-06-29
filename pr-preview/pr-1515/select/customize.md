@@ -907,7 +907,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="submenus">Submenus</auro-header>
-<p>Options may be organized into nested groups by placing additional <code>&lt;auro-menu&gt;</code> elements inside the top-level <code>&lt;auro-menu&gt;</code>. Use <code>&lt;hr&gt;</code> elements to add visual dividers between groups. Nested groups receive an indent and an <code>aria-label="submenu"</code> so assistive technologies announce the grouping.</p>
+<p>Options may be organized into nested groups by placing additional <code>&lt;auro-menu&gt;</code> elements inside the top-level <code>&lt;auro-menu&gt;</code>. Use <code>&lt;hr&gt;</code> elements to add visual dividers between groups. Nested groups receive an indent and an <code>aria-label="submenu"</code> so that assistive technologies can announce the grouping.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/with-submenus.html) -->
 <!-- The below content is automatically added from ./../apiExamples/with-submenus.html -->
