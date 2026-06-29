@@ -22,7 +22,7 @@ $calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
   position: relative;
 
   display: block;
-  width: calc(100% - var(--ds-size-200, vac.$ds-size-200) - var(--ds-size-200, vac.$ds-size-200));
+  width: $calendar-width;
 
   margin: 0 var(--ds-size-200, vac.$ds-size-200);
 
