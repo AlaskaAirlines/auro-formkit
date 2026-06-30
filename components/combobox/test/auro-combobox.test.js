@@ -2822,49 +2822,84 @@ function runFullTest(mobileView) {
     describe('Screen Reader', function() {
       this.timeout(5000);
 
-      it('should populate the live region when an option is activated', async () => {
-        const el = await noFilterFixture(mobileView);
-        await elementUpdated(el);
+      if (mobileView) {
+        // The per-keystroke active-option announcement only fires in
+        // fullscreen mode — aria-activedescendant references break across
+        // the nested <dialog> shadow root, so we mirror the active option
+        // into the polite live region. In popover (non-fullscreen) mode,
+        // aria-activedescendant on the trigger input is read natively;
+        // mirroring would double-announce and flood the queue on key-repeat.
+        it('should populate the live region when an option is activated', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
 
-        // Open the dropdown and navigate to the first option
-        el.focus();
-        setInputValue(el, 'a');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        await elementUpdated(el);
+          // Open the dropdown and navigate to the first option
+          el.focus();
+          setInputValue(el, 'a');
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
 
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
 
-        // Wait a frame for the rAF inside announceToScreenReader
-        await new Promise((resolve) => requestAnimationFrame(resolve));
+          // Wait a frame for the rAF inside announceToScreenReader
+          await new Promise((resolve) => requestAnimationFrame(resolve));
 
-        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
-        await expect(liveRegion).to.exist;
-        await expect(liveRegion.textContent).to.not.equal('');
-      });
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          await expect(liveRegion).to.exist;
+          await expect(liveRegion.textContent).to.not.equal('');
+        });
 
-      it('should clear the live region after the announcement duration', async () => {
-        const el = await noFilterFixture(mobileView);
-        await elementUpdated(el);
+        it('should clear the live region after the announcement duration', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
 
-        el.focus();
-        setInputValue(el, 'a');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        await elementUpdated(el);
+          el.focus();
+          setInputValue(el, 'a');
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
 
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
 
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
-        expect(liveRegion.textContent).to.not.equal('');
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          expect(liveRegion.textContent).to.not.equal('');
 
-        // Multiple announcements can chain (e.g., active-option followed by selection),
-        // each resetting the 1000ms cleanup timer. Wait long enough for the final
-        // announcement's timer to expire.
-        await new Promise((resolve) => setTimeout(resolve, 2200));
-        expect(liveRegion.textContent).to.equal('');
-      });
+          // Multiple announcements can chain (e.g., active-option followed by selection),
+          // each resetting the 1000ms cleanup timer. Wait long enough for the final
+          // announcement's timer to expire.
+          await new Promise((resolve) => setTimeout(resolve, 2200));
+          expect(liveRegion.textContent).to.equal('');
+        });
+      } else {
+        // Regression: in popover (non-fullscreen) mode, ArrowUp/Down must not
+        // mirror the active option into the polite live region — VoiceOver
+        // already reads it natively via aria-activedescendant on the trigger
+        // input, and the manual mirror would double-announce on every key
+        // repeat, flooding the polite queue.
+        it('should not populate the live region on arrow nav in popover mode', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
+
+          // Fire the active-option event directly so the test doesn't depend
+          // on whether the keyboard bridge propagates in this test env.
+          const option = el.querySelector('auro-menuoption');
+          el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', {
+            detail: option,
+            bubbles: false,
+          }));
+
+          // Wait a frame for any rAF inside announceToScreenReader.
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          await expect(liveRegion).to.exist;
+          // No manual mirror — aria-activedescendant on the trigger input
+          // carries the active option to the screen reader natively.
+          await expect(liveRegion.textContent).to.equal('');
+        });
+      }
 
       if (mobileView) {
         it('should route announcements to the bib live region in fullscreen mode', async () => {
