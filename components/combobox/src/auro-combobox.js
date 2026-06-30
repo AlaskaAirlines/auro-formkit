@@ -1220,10 +1220,13 @@ export class AuroCombobox extends AuroElement {
         this.input.setActiveDescendant(this.optionActive);
       }
 
-      // Announce the active option for screen readers including position,
-      // since shadow DOM boundaries prevent native reading of
-      // aria-setsize/aria-posinset via aria-activedescendant.
-      if (this.optionActive) {
+      // In fullscreen mode the menu sits inside a nested <dialog> shadow root,
+      // and aria-activedescendant references across that boundary are lost —
+      // VoiceOver/NVDA don't read the active option natively, so we mirror it
+      // into the polite live region. In popover mode aria-activedescendant on
+      // the trigger input is read natively; double-announcing would flood the
+      // queue on arrow-key repeat.
+      if (this.optionActive && this.dropdown.isBibFullscreen) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
         const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
