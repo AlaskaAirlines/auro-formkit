@@ -157,6 +157,29 @@ export class AuroCombobox extends AuroElement {
     this.validation = new AuroFormValidation();
     this.validity = undefined;
     this._userTyped = false;
+    // Tracks every setTimeout scheduled via _scheduleTimer so
+    // disconnectedCallback can cancel them. Without this, a detached
+    // combobox's pending timers still fire — most are no-ops, but
+    // configureMenu's racing-condition retry would otherwise loop.
+    this._pendingTimers = new Set();
+  }
+
+  /**
+   * setTimeout wrapper that records the timer id so disconnectedCallback
+   * can cancel any outstanding callbacks. The id is removed from the set
+   * once the callback fires so the set doesn't grow unbounded.
+   * @param {Function} fn - Callback to run.
+   * @param {number} ms - Delay in milliseconds.
+   * @returns {number} The timer id.
+   * @private
+   */
+  _scheduleTimer(fn, ms) {
+    const id = setTimeout(() => {
+      this._pendingTimers.delete(id);
+      fn();
+    }, ms);
+    this._pendingTimers.add(id);
+    return id;
   }
 
   // This function is to define props used within the scope of this component
@@ -971,7 +994,7 @@ export class AuroCombobox extends AuroElement {
         this.dropdown.trigger.inert = false;
       }
 
-      setTimeout(() => {
+      this._scheduleTimer(() => {
         this.setInputFocus();
       }, 0);
     });
@@ -1115,7 +1138,7 @@ export class AuroCombobox extends AuroElement {
 
     // racing condition on custom-combobox with custom-menu
     if (!this.menu) {
-      setTimeout(() => {
+      this._scheduleTimer(() => {
         this.configureMenu();
       }, 0);
       return;
@@ -1184,7 +1207,7 @@ export class AuroCombobox extends AuroElement {
         const selectedValue = this.menu.value;
         if (selectedValue) {
           const announcementDelay = 300;
-          setTimeout(() => {
+          this._scheduleTimer(() => {
             announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
           }, announcementDelay);
         }
@@ -1489,6 +1512,11 @@ export class AuroCombobox extends AuroElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inFullscreenTransition = false;
+    // Cancel any outstanding timers so detached callbacks don't fire on
+    // disposed DOM — most are no-ops, but configureMenu's racing-condition
+    // retry would otherwise keep rescheduling itself indefinitely.
+    this._pendingTimers.forEach((id) => clearTimeout(id));
+    this._pendingTimers.clear();
   }
 
   firstUpdated() {
@@ -1530,7 +1558,7 @@ export class AuroCombobox extends AuroElement {
     this.menu.value = value;
     // Backup clear: if menu.value === menu.optionSelected.value already, the
     // listener won't fire and the flag would swallow the next user click.
-    setTimeout(() => {
+    this._scheduleTimer(() => {
       this._pendingMenuValueSync = false;
     }, 0);
   }
