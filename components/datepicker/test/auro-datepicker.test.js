@@ -324,9 +324,10 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates marks blackout dates as aria-disabled.
       it('should mark blackout dates as aria-disabled', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -339,11 +340,13 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
+
         const blackoutCell = allCells.find((cell) => {
           if (!cell.day) {
             return false;
           }
           const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
+
           return cellDate === isoDate;
         });
 
@@ -358,9 +361,10 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates does not select a blackout date when clicked.
       it('should not select a blackout date when clicked', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -389,9 +393,9 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates includes blackoutLabel in aria-label for blackout cells.
       it('should include blackoutLabel in aria-label for blackout cells', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]} blackoutLabel="sold out"></auro-datepicker>
@@ -418,9 +422,9 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates uses default blackoutLabel "unavailable" when not specified.
       it('should use default blackoutLabel "unavailable" when not specified', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -447,9 +451,9 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates sets customError validity when a blackout date is typed.
       it('should set customError validity when a blackout date is typed', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -472,9 +476,9 @@ function runFullTest(mobileView) {
 
       // Verify blackout dates uses setCustomValidityCustomError message for blackout validation.
       it('should use setCustomValidityCustomError message for blackout validation', async () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = toLocalISODate(tomorrow);
+        const dateToBlackout = new Date();
+        dateToBlackout.setDate(2);
+        const isoDate = toLocalISODate(dateToBlackout);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]} setCustomValidityCustomError="Date is sold out"></auro-datepicker>
