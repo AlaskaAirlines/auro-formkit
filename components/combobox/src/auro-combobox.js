@@ -135,8 +135,6 @@ export class AuroCombobox extends AuroElement {
     this.availableOptions = [];
     this.dropdownId = undefined;
     this.dropdownOpen = false;
-    this.triggerExpandedState = false;
-    this._expandedTimeout = null;
     this._inFullscreenTransition = false;
     this.errorMessage = null;
     this.isHiddenWhileLoading = false;
@@ -509,17 +507,6 @@ export class AuroCombobox extends AuroElement {
         attribute: false
       },
 
-      /**
-       * Deferred aria-expanded state for the trigger input.
-       * Delays the "true" transition so VoiceOver finishes its character echo
-       * before announcing "expanded".
-       * @private
-       */
-      triggerExpandedState: {
-        type: Boolean,
-        reflect: false,
-        attribute: false
-      },
     };
   }
 
@@ -855,18 +842,6 @@ export class AuroCombobox extends AuroElement {
     this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
-
-      // Defer aria-expanded "true" so VoiceOver finishes character echo
-      // before announcing "expanded". Set "false" immediately on close.
-      clearTimeout(this._expandedTimeout);
-      if (this.dropdownOpen) {
-        const expandedDelay = 150;
-        this._expandedTimeout = setTimeout(() => {
-          this.triggerExpandedState = true;
-        }, expandedDelay);
-      } else {
-        this.triggerExpandedState = false;
-      }
 
       // Clear aria-activedescendant when dropdown closes
       if (!this.dropdownOpen && this.input) {
@@ -1819,7 +1794,7 @@ export class AuroCombobox extends AuroElement {
               @input="${this.handleTriggerInputValueChange}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
-              .a11yExpanded="${this.triggerExpandedState}"
+              .a11yExpanded="${this.dropdownOpen}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
               .inputmode="${this.inputmode}"
