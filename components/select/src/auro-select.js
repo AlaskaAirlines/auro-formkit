@@ -1093,6 +1093,13 @@ export class AuroSelect extends AuroElement {
         const cycleIndex = (this.typeaheadBuffer.length - 1) % matches.length;
         match = matches[cycleIndex];
       }
+    } else if (!match && this.typeaheadBuffer.length > 1) {
+      // Buffer has no prefix match and isn't a repeat-char cycle (e.g. "a" then
+      // "b" against [Apple, Banana]). Reset to just the new key and retry —
+      // mirrors native <select>, which falls back to a single-char search when
+      // accumulated input matches nothing, rather than swallowing the keystroke.
+      this.typeaheadBuffer = key;
+      match = options.find((option) => this._getOptionDisplayText(option).startsWith(key));
     }
 
     // Intentional: no-match leaves the bib closed (deviates from APG / some native <select>).

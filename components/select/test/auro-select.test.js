@@ -4231,6 +4231,22 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive).to.equal(beforeActive);
         });
 
+        it('should fall back to the latest key when the accumulated buffer prefix-matches nothing', async () => {
+          // Fast "a" then "b" against [Apples, Oranges, Bananas]
+          // built buffer "ab", which prefix-matched nothing and failed the
+          // repeat-char gate, so the keystroke was silently dropped. Native
+          // <select> falls back to the latest key — jump to Bananas.
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          el.updateActiveOptionBasedOnKey('b');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+          expect(el.typeaheadBuffer).to.equal('b');
+        });
+
         it('should not open a closed dropdown when no match is found', async () => {
           const el = await defaultFixture();
           await elementUpdated(el);
