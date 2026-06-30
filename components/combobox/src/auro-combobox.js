@@ -763,6 +763,13 @@ export class AuroCombobox extends AuroElement {
   handleMenuOptions() {
     this.generateOptionsArray();
     this.availableOptions = [];
+    // Single source of truth for the menu's filter/highlight token per call.
+    // syncValuesAndStates re-writes the same value on exact-match keystrokes —
+    // Lit's hasChanged makes that a no-op — and the prior duplicate set inside
+    // handleTriggerInputValueChange is gone.
+    if (this.menu) {
+      this.menu.matchWord = normalizeFilterValue(this.input.value);
+    }
     this.updateFilter();
 
     // Set aria-setsize/aria-posinset on each visible option so screen readers
@@ -1386,9 +1393,6 @@ export class AuroCombobox extends AuroElement {
     }
 
     this.handleMenuOptions();
-
-    // Run filtering inline — the re-entrant event won't reach this code.
-    this.menu.matchWord = normalizeFilterValue(this.input.value);
     this.optionActive = null;
 
     if (this.value === this.input.value) {
