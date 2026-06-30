@@ -78,8 +78,7 @@ export const InDialogContainerQuery: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
-    userEvent.click(el.input);
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
@@ -113,8 +112,7 @@ export const InDrawerContainerQuery: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
-    userEvent.click(el.input);
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
