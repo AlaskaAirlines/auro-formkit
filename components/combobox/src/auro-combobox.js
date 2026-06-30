@@ -55,12 +55,23 @@ function getOptionLabel(option) {
   if (!option) {
     return '';
   }
-  const clone = option.cloneNode(true);
-  const displayValueEl = clone.querySelector('[slot="displayValue"]');
-  if (displayValueEl) {
-    displayValueEl.remove();
+
+  // Consumer-provided override: short-circuit the DOM walk entirely.
+  if (option.dataset && option.dataset.label) {
+    return option.dataset.label;
   }
-  return (clone.textContent || '').replace(/\s+/gu, ' ').trim();
+
+  // Walk direct children — the `slot` attribute only applies to direct children
+  // of the slot host, so a shallow filter is sufficient. Avoids the cloneNode +
+  // querySelector allocation that ran on every keystroke via syncValuesAndStates.
+  let text = '';
+  for (const node of option.childNodes) {
+    const isDisplayValueSlot = node.nodeType === Node.ELEMENT_NODE && node.getAttribute('slot') === 'displayValue';
+    if (!isDisplayValueSlot) {
+      text += node.textContent || '';
+    }
+  }
+  return text.replace(/\s+/gu, ' ').trim();
 }
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
