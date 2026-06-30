@@ -721,7 +721,7 @@ export class AuroCombobox extends AuroElement {
    *   or null when no sync was needed (so callers can skip post-flush work).
    * @private
    */
-  syncInputValuesAcrossTriggerAndBib(nextValue) {
+  async syncInputValuesAcrossTriggerAndBib(nextValue) {
     // Only set the flag when there's an actual write to suppress —
     // syncValuesAndStates re-enters here during typing when both inputs
     // already match, and a no-op flag flip would make the bib branch's
@@ -743,7 +743,11 @@ export class AuroCombobox extends AuroElement {
       this.inputInBib.value = nextValue;
       pending.push(this.inputInBib.updateComplete);
     }
-    return Promise.all(pending).then(() => {
+    // finally — not a bare .then — so that an imask throw (see commit
+    // d1857401c: imask can throw on credit-card format change) doesn't strand
+    // _syncingDisplayValue=true and silently swallow every subsequent input.
+    try {
+      await Promise.all(pending);
       // imask reasserts otherwise, and handleBlur reverts to its stale value.
       if (triggerNeedsSync && this.input.maskInstance && typeof this.input.maskInstance.updateValue === 'function') {
         this.input.maskInstance.updateValue();
@@ -751,8 +755,10 @@ export class AuroCombobox extends AuroElement {
       if (bibNeedsSync && this.inputInBib.maskInstance && typeof this.inputInBib.maskInstance.updateValue === 'function') {
         this.inputInBib.maskInstance.updateValue();
       }
+    } finally {
       this._syncingDisplayValue = false;
-    });
+    }
+    return null;
   }
 
   /**
