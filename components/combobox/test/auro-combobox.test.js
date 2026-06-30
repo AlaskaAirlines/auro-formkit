@@ -53,20 +53,24 @@ function runFullTest(mobileView) {
     });
 
     describe('disconnectedCallback', () => {
-      it('should reset _inFullscreenTransition so validation is not suppressed after reconnect', async () => {
-        const el = await defaultFixture(mobileView);
+      it('runs validation after reconnect even when disconnected mid-fullscreen-transition', async () => {
+        const el = await requiredFixture(mobileView);
         await elementUpdated(el);
 
-        // Simulate the flag being stuck mid-transition
+        // Simulate the in-transition flag being stuck — without the reset
+        // in disconnectedCallback this would suppress every subsequent
+        // validate() call after the element is reconnected.
         el._inFullscreenTransition = true;
 
-        // Disconnect and reconnect
         const parent = el.parentNode;
         parent.removeChild(el);
         parent.appendChild(el);
         await elementUpdated(el);
 
-        await expect(el._inFullscreenTransition).to.be.false;
+        // Observable: validation actually runs (sets validity).
+        el.validate(true);
+        await elementUpdated(el);
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
       });
     });
 
@@ -2114,31 +2118,38 @@ function runFullTest(mobileView) {
         await expect(el.menu.value).to.equal('Oranges');
       });
 
-      it('should not propagate the menu-selection echo back to value', async () => {
+      // Regression guard on the cascade-suppression state machine. The flag
+      // is the closing edge of an internal loop: setMenuValue arms it, the
+      // auroMenu-selectedOption listener consumes it, and the listener's
+      // writeback to combobox.value is skipped on that one echo so it
+      // doesn't re-trigger handleInputValueChange in suggestion mode (see
+      // also the "should not cascade" performUpdate-spy test). There is no
+      // clean DOM/ARIA observable for "the cascade was broken" — the bib
+      // and value end up in the same place either way — so the assertion
+      // targets the invariant the listener depends on.
+      it('arms and consumes the menu-sync flag across the echo cycle', async () => {
         const el = await defaultFixture(mobileView);
         await elementUpdated(el);
 
         el.setMenuValue('Oranges');
-        // Flag is armed synchronously by setMenuValue.
         await expect(el._pendingMenuValueSync).to.be.true;
 
         await elementUpdated(el);
         await el.menu.updateComplete;
 
-        // Listener consumes the flag on the echo event so the writeback to
-        // this.value is skipped (the closing edge of the cascade loop).
         await expect(el._pendingMenuValueSync).to.be.false;
       });
 
-      it('should clear the menu-sync flag even when the menu does not fire selectedOption', async () => {
+      // Regression guard on the cleanup path: setMenuValue('NotAnOption')
+      // fires auroMenu-selectValueFailure (not auroMenu-selectedOption), so
+      // the listener never runs and never consumes the flag. The
+      // setTimeout(0) backup clear in setMenuValue must still release it
+      // before the next user-click selection arrives — otherwise that next
+      // selection's writeback is silently swallowed.
+      it('clears the menu-sync flag when the menu does not fire selectedOption', async () => {
         const el = await defaultFixture(mobileView);
         await elementUpdated(el);
 
-        // Setting menu.value to a string that matches no option fires
-        // auroMenu-selectValueFailure instead of auroMenu-selectedOption, so
-        // the listener never runs and never consumes the flag. The
-        // setTimeout(0) backup clear in setMenuValue must still release it
-        // before the next user-click selection arrives.
         el.setMenuValue('NotAnOption');
         await expect(el._pendingMenuValueSync).to.be.true;
 
@@ -2474,7 +2485,7 @@ function runFullTest(mobileView) {
       expect(el.dropdown.bibDialogLabel).to.be.undefined;
     });
 
-    it('showBib sets isHiddenWhileLoading when menu is loading without placeholder', async () => {
+    it('showBib keeps the bib hidden when the menu is loading without a placeholder', async () => {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
@@ -2494,12 +2505,13 @@ function runFullTest(mobileView) {
 
       el.showBib();
 
-      expect(el.isHiddenWhileLoading).to.be.true;
+      // Observable: bib stays closed despite showBib() being called, because
+      // the loading-without-placeholder branch defers the open until loading
+      // completes (verified by the handleMenuLoadingChange test below).
       expect(el.dropdown.isPopoverVisible).to.be.false;
 
       // Cleanup
       el.menu.removeAttribute('loading');
-      el.isHiddenWhileLoading = false;
     });
 
     it('strategy-change sets trigger.inert true when switching to fullscreen while open', async () => {
@@ -2639,25 +2651,26 @@ function runFullTest(mobileView) {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Set isHiddenWhileLoading to true (simulating bib was hidden during loading)
+      // Reach the deferred-open state by invoking the public flag. The
+      // showBib() path that arms it is covered by the previous test; here
+      // we exercise just the loading-finished branch.
       el.isHiddenWhileLoading = true;
-
-      // Focus the input so this.contains(document.activeElement) is true
       el.input.focus();
       await elementUpdated(el);
 
-      // Spy on dropdown.show()
+      // Spy on dropdown.show() so we can verify the deferred open actually
+      // fires once loading completes — there is no other observable for
+      // "loading-finish ran the deferred open" since `isPopoverVisible` is
+      // driven by dropdown.show() itself.
       let showCalled = false;
       const origShow = el.dropdown.show;
       el.dropdown.show = () => { showCalled = true; };
 
-      // Dispatch the loading change event with loading: false
       el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
         detail: { loading: false, hasLoadingPlaceholder: false }
       }));
 
       expect(showCalled).to.be.true;
-      expect(el.isHiddenWhileLoading).to.be.false;
 
       // Cleanup
       el.dropdown.show = origShow;
