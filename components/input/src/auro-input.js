@@ -360,7 +360,7 @@ export class AuroInput extends BaseInput {
   /**
    * Determines default help text string.
    * @private
-   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
+   * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
    * @returns {string} Evaluates pre-determined help text.
    */
   getHelpText() {
