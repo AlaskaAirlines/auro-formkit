@@ -166,11 +166,5 @@ export const comboboxKeyboardStrategy = {
         component.setClearBtnFocus();
       }
     }
-  },
-
-  default(component, evt) {
-    if (evt.key.length === 1) {
-      component._userTyped = true;
-    }
   }
 };
