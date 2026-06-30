@@ -1539,6 +1539,81 @@ function runFullTest(mobileView) {
 
           expect(el.minObject).to.be.undefined;
         });
+
+        it('setting value to ISO string matching an existing valueObject does not replace the Date object', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+          await elementUpdated(el);
+
+          // Simulate auro-datepicker setting valueObject directly before value is synced
+          const targetDate = new Date(2024, 0, 15);
+          el.setDateObjectProperty('valueObject', targetDate);
+          await elementUpdated(el); // objectProperty → sets value to '2024-01-15'
+          await elementUpdated(el); // value change from undefined → guard fires → no re-parse
+
+          expect(el.value).to.equal('2024-01-15');
+          expect(el.valueObject).to.equal(targetDate);
+        });
+
+        describe('partial date format validation', () => {
+          [
+            {
+              format: 'mm/yyyy',
+              value: '12/2025'
+            },
+            {
+              format: 'yyyy',
+              value: '2025'
+            },
+            {
+              format: 'mm/dd',
+              value: '12/25'
+            },
+            {
+              format: 'mm/yy',
+              value: '12/25'
+            },
+            {
+              format: 'dd/mm',
+              value: '25/12'
+            },
+            {
+              format: 'yy/mm',
+              value: '25/12'
+            },
+            {
+              format: 'yyyy/mm',
+              value: '2025/12'
+            },
+            {
+              format: 'dd',
+              value: '25'
+            },
+            {
+              format: 'yy',
+              value: '25'
+            },
+            {
+              format: 'mm',
+              value: '12'
+            },
+          ].forEach(({ format, value }) => {
+            it(`valid value "${value}" for format "${format}" resolves to valid`, async () => {
+              const el = await fixture(html`<auro-input type="date" format="${format}" value="${value}"></auro-input>`);
+              await elementUpdated(el);
+              el.validate(true);
+              await elementUpdated(el);
+              expect(el.validity).to.equal('valid');
+            });
+          });
+
+          it('out-of-range value for partial format resolves to patternMismatch', async () => {
+            const el = await fixture(html`<auro-input type="date" format="mm/yyyy" value="13/2025"></auro-input>`);
+            await elementUpdated(el);
+            el.validate(true);
+            await elementUpdated(el);
+            expect(el.validity).to.equal('patternMismatch');
+          });
+        });
       });
 
       it('should validate type="email" input correctly', async () => {

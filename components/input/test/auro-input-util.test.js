@@ -77,6 +77,11 @@ describe('AuroInputUtil', () => {
         it('returns undefined for an impossible date', () => {
           expect(formatISODate('2025-13-99', 'mm/dd/yyyy')).to.be.undefined;
         });
+
+        it('returns undefined when isoStr is a non-string truthy value', () => {
+          // stringToDateInstance returns null (not a throw) for non-string input — only path to !(date instanceof Date)
+          expect(formatISODate(true, 'mm/dd/yyyy')).to.be.undefined;
+        });
       });
     });
 
@@ -306,6 +311,66 @@ describe('AuroInputUtil', () => {
 
         it('is idempotent on an already-converted date-fns mask', () => {
           expect(util.toDateFnsMask('MM/dd/yyyy')).to.equal('MM/dd/yyyy');
+        });
+      });
+
+      describe('isValidPartialDate', () => {
+        let util;
+
+        before(() => {
+          util = new AuroInputUtilities({ locale: 'en-US' });
+        });
+
+        it('returns false when value is falsy', () => {
+          expect(util.isValidPartialDate('', 'mm/yyyy')).to.be.false;
+        });
+
+        it('returns false when format is falsy', () => {
+          expect(util.isValidPartialDate('12/2025', '')).to.be.false;
+        });
+
+        describe('dd', () => {
+          it('returns true for a valid day', () => {
+            expect(util.isValidPartialDate('25', 'dd')).to.be.true;
+          });
+
+          it('returns false when day exceeds 31', () => {
+            expect(util.isValidPartialDate('32', 'dd')).to.be.false;
+          });
+
+          it('returns false for non-numeric input', () => {
+            expect(util.isValidPartialDate('ab', 'dd')).to.be.false;
+          });
+        });
+
+        describe('yy', () => {
+          it('returns true for a valid 2-digit year', () => {
+            expect(util.isValidPartialDate('25', 'yy')).to.be.true;
+          });
+
+          it('returns false when value length is not 2', () => {
+            expect(util.isValidPartialDate('100', 'yy')).to.be.false;
+          });
+        });
+
+        describe('yyyy', () => {
+          it('returns true for a valid 4-digit year', () => {
+            expect(util.isValidPartialDate('2025', 'yyyy')).to.be.true;
+          });
+
+          it('returns false when value is 0000 (below range)', () => {
+            expect(util.isValidPartialDate('0000', 'yyyy')).to.be.false;
+          });
+        });
+
+        describe('multi-component partial formats', () => {
+          it('returns true for a valid mm/yyyy value', () => {
+            expect(util.isValidPartialDate('12/2025', 'mm/yyyy')).to.be.true;
+          });
+
+          it('returns false when month is out of range', () => {
+            expect(util.isValidPartialDate('13/2025', 'mm/yyyy')).to.be.false;
+          });
         });
       });
     });

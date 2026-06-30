@@ -223,11 +223,17 @@ export default class AuroFormValidation {
           return;
         }
 
-        // Validate that the date passed was the correct format and is a valid date
+        // Validate that the date passed was the correct format and is a valid date.
+        // For partial date formats, valueObject is never populated; validate them directly.
         if (elem.value && !elem.valueObject) {
-          elem.validity = 'patternMismatch';
-          elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
-          return;
+          const isPartialDateFormat = elem.util && !elem.util.isFullDateFormat(elem.type, elem.format);
+          const isValidPartial = isPartialDateFormat && elem.util.isValidPartialDate(elem.value, elem.format);
+
+          if (!isValidPartial) {
+            elem.validity = 'patternMismatch';
+            elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
+            return;
+          }
         }
 
         // Perform the rest of the validation
