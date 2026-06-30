@@ -880,6 +880,48 @@ function runFullTest(mobileView) {
       expect(right.dropdown.isPopoverVisible).to.be.false;
     });
 
+    // Regression: when a programmatic value set in suggestion mode does not
+    // match any option, the unmatched-value branch in updated() must clear
+    // BOTH menu.value and menu.optionSelected. Clearing only menu.value left
+    // the previously-selected option element pinned as menu.optionSelected;
+    // a later auroMenu-selectedOption echo would then write its stale .value
+    // back into combobox.value (manifesting as Tab-after-Backspace
+    // re-selecting the prior option).
+    it('should clear menu.optionSelected when value is set to an unmatched string', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox value="Apples">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Precondition: the Apples option is pinned as menu.optionSelected.
+      await expect(el.menu.value).to.equal('Apples');
+      await expect(el.menu.optionSelected).to.not.be.undefined;
+
+      // Programmatically set value to an unmatched freeform string.
+      el.value = 'xyz';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Both menu.value AND menu.optionSelected must clear so a later
+      // auroMenu-selectedOption echo can't write the stale value back.
+      await expect(el.menu.value).to.be.undefined;
+      await expect(el.menu.optionSelected).to.be.undefined;
+      await expect(el.value).to.equal('xyz');
+    });
+
     // These tests require fullscreen (mobile) mode
   });
 
