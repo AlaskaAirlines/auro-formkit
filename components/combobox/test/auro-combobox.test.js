@@ -3058,9 +3058,10 @@ function runFullTest(mobileView) {
     describe('ARIA attributes', () => {
       it('aria-expanded reflects bib open/closed state on trigger input', async () => {
         const el = await defaultFixture(mobileView);
+        const triggerNativeInput = el.input.shadowRoot.querySelector('input');
 
-        // Initially closed — expanded should be falsy
-        await expect(el.triggerExpandedState).to.not.be.true;
+        // Initially closed — aria-expanded reflects false.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
 
         // Open the bib
         el.focus();
@@ -3070,10 +3071,45 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        // Wait for the 150ms delay on triggerExpandedState
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        // aria-expanded must reflect true synchronously on open — no deferral.
+        // A typeahead user who opens and selects in under the prior 150ms
+        // timer would otherwise see "collapsed → collapsed" and never hear
+        // the dropdown announced.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('true');
 
-        await expect(el.triggerExpandedState).to.be.true;
+        // Close the bib — aria-expanded flips back immediately.
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
+      });
+
+      // Regression: aria-expanded "true" used to be deferred via a 150ms
+      // setTimeout. A fast open/close (e.g. typeahead selection) would close
+      // the dropdown before the timer fired, and assistive tech would never
+      // hear the expanded state at all.
+      it('exposes aria-expanded=true before a fast close (<150ms) lands', async () => {
+        const el = await defaultFixture(mobileView);
+        const triggerNativeInput = el.input.shadowRoot.querySelector('input');
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        // Sample aria-expanded the next microtask after open — well under the
+        // prior 150ms timer. With the deferral in place, this would read
+        // "false" and AT would never hear the expanded state if the user
+        // selected and closed the bib before the timer fired.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('true');
+
+        // Now close fast — aria-expanded must have been true for at least one
+        // render cycle while open. With the prior deferral, the timer would
+        // be cleared on close and AT would only ever see "collapsed".
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
       });
 
       it('trigger input has a11yRole="combobox"', async () => {
