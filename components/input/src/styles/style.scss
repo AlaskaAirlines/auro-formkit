@@ -36,7 +36,13 @@ input {
   outline: none;
   overflow-clip-margin: 0 !important;
   text-overflow: ellipsis;
-  
+
+  // stylelint-disable-next-line selector-no-qualifying-type
+  &[type="number"] {
+    // Hide number input spinner arrows (Firefox, etc)
+    appearance: textfield;
+  }
+
   &::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
