@@ -9,7 +9,7 @@
 <p><code>auro-combobox</code> provides:</p>
 
 <ul>
-  <li><strong>ARIA combobox pattern</strong> — The input carries <code>aria-expanded</code>, <code>aria-owns</code>, and <code>aria-haspopup</code> to properly describe the relationship between the input and the suggestions list.</li>
+  <li><strong>ARIA combobox pattern</strong> — The input carries <code>role="combobox"</code>, <code>aria-expanded</code>, and <code>aria-controls</code> to properly describe the relationship between the input and the suggestions list.</li>
   <li><strong>Active descendant tracking</strong> — <code>aria-activedescendant</code> moves with keyboard navigation so screen readers announce the highlighted option without moving DOM focus.</li>
   <li><strong>Live region announcements</strong> — Selections are announced via <code>aria-live="polite"</code>, and validation errors use <code>aria-live="assertive"</code>.</li>
   <li><strong>Full keyboard navigation</strong> — Arrow keys navigate options, Enter selects, Escape closes, Home/End jump to boundaries. A dedicated keyboard strategy handles all interactions.</li>
