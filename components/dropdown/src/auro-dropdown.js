@@ -681,6 +681,19 @@ export class AuroDropdown extends AuroElement {
     if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
       this.trigger.focus();
     }
+
+
+    if (!this.isPopoverVisible) {
+      // wait til the bib gets fully closed and rendered
+      setTimeout(() => {
+        // check if it's still closed and the focus is still within the dropdown, but not in the bib. If so, move focus to the trigger.
+        if (!this.isPopoverVisible && this.matches(":focus-within") && !this.bib.matches(':focus-within')) {
+          return;
+        }
+        // Move focus out of bib into trigger.
+        this.trigger.focus();
+      });
+    };
   }
 
   firstUpdated() {
