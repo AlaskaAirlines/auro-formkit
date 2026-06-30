@@ -575,14 +575,18 @@ function runTest(mobileView) {
           `);
           await elementUpdated(el);
 
+          const menu = el.querySelector('auro-menu');
           const opts = el.querySelectorAll('auro-menuoption');
           opts[0].click();
+          await elementUpdated(menu);
           await elementUpdated(el);
           opts[1].click();
+          await elementUpdated(menu);
           await elementUpdated(el);
           expect(el.optionSelected.length).to.equal(2);
 
           opts[2].click(); // valueless -> selectValueFailure
+          await elementUpdated(menu);
           await elementUpdated(el);
 
           expect(el.optionSelected.length, 'valueless click must not clear prior selections').to.equal(2);
