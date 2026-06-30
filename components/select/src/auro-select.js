@@ -885,6 +885,14 @@ export class AuroSelect extends AuroElement {
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
     this.menu.addEventListener("auroMenu-selectValueFailure", () => {
+      // Menu dispatches this from two paths: a programmatic value mismatch
+      // (menu pre-clears its own optionSelected to undefined before firing)
+      // and a click on an unselected valueless option (menu leaves state
+      // untouched). Only mirror the clear in the first case — otherwise a
+      // valueless click in multiSelect would wipe every prior pick.
+      if (this.menu.optionSelected !== undefined) {
+        return;
+      }
       this.value = undefined;
       this.optionSelected = this.multiSelect ? [] : undefined;
       // The trigger label is rendered imperatively into #value, so a property
