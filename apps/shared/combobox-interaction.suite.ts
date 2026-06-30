@@ -377,9 +377,12 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         await waitForBibClosed(page, 'default');
 
         const value = await comboboxValue(page, 'default');
-        // Depending on behavior, either undefined or the typed text — but not a menu value
-        // The key assertion: no menu selection was forced by click-outside
-        expect(value).not.toBe('Oranges');
+        // Default fixture is suggestion mode: typing sets value to the input
+        // text, so 'a' should survive a click-outside. Asserting on the exact
+        // typed text catches a regression where the click silently picks an
+        // option (e.g. 'Apples' first-match). The prior `not.toBe('Oranges')`
+        // form would have passed even if 'Apples' was selected.
+        expect(value).toBe('a');
       });
     });
 

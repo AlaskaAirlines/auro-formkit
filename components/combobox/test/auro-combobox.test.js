@@ -3046,11 +3046,17 @@ function runFullTest(mobileView) {
           const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
           expect(liveRegion.textContent).to.not.equal('');
 
-          // Multiple announcements can chain (e.g., active-option followed by selection),
-          // each resetting the 1000ms cleanup timer. Wait long enough for the final
-          // announcement's timer to expire.
-          await new Promise((resolve) => setTimeout(resolve, 2200));
-          expect(liveRegion.textContent).to.equal('');
+          // Multiple announcements can chain (e.g., active-option followed
+          // by selection), each resetting the 1000ms cleanup timer. Poll
+          // for the empty live region rather than blocking on a fixed wait
+          // so this passes as soon as the last timer fires (≤ ~1300ms in
+          // practice) and the test doesn't flake under CI load if the
+          // chain runs longer than expected.
+          await waitUntil(
+            () => liveRegion.textContent === '',
+            'live region was not cleared after announcement timers expired',
+            { timeout: 3000 }
+          );
         });
       } else {
         // Regression: in popover (non-fullscreen) mode, ArrowUp/Down must not
@@ -4354,6 +4360,86 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      // Regression for 4271eed64 — disabled-option skipping. The Home test
+      // above pins the first-option case; this covers the symmetric End
+      // path against a disabled trailing option.
+      it('should skip a disabled last option and activate the prior enabled one', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="end-dis-option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="end-dis-option-1">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" id="end-dis-option-2" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'End',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.optionActive.value).to.equal('Oranges');
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
+      });
+    });
+
+    describe('ArrowUp wrap', () => {
+      // Regression for 4271eed64: ArrowUp from the first option should
+      // wrap to the LAST ENABLED option, not the literal last option when
+      // that one is disabled.
+      it('skips a disabled trailing option when wrapping from the first', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="wrap-dis-option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="wrap-dis-option-1">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" id="wrap-dis-option-2" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // First option is active by default; ArrowUp from there should
+        // wrap to the last ENABLED (Oranges), skipping the disabled Grapes.
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.optionActive.value).to.equal('Oranges');
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
     });
   });
