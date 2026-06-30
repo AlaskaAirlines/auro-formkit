@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+
 import * as dateFns from 'date-fns';
 import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
 
@@ -53,7 +53,7 @@ export class AuroInputUtilities {
   /**
    * Converts an IMask-style date mask to a date-fns compatible format string.
    * @param {string} mask - IMask date mask (e.g. "MM/DD/YYYY").
-   * @returns {string} date-fns format string (e.g. "MM/dd/yyyy").
+   * @returns {string} A date-fns format string (e.g. "MM/dd/yyyy").
    */
   toDateFnsMask(mask) {
     return mask
