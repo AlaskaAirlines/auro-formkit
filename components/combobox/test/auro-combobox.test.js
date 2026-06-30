@@ -72,6 +72,25 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el.getAttribute('validity')).to.equal('valueMissing');
       });
+
+      it('cancels pending timers so detached callbacks do not fire', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        // Schedule a representative long-tail timer via the same wrapper
+        // every internal caller uses (announcement / strategy-change focus /
+        // setMenuValue backup / configureMenu retry). The deferral matters:
+        // a 0ms timer would already be in the task queue when we disconnect.
+        let fired = false;
+        el._scheduleTimer(() => { fired = true; }, 50);
+        expect(el._pendingTimers.size).to.equal(1);
+
+        el.parentNode.removeChild(el);
+        expect(el._pendingTimers.size).to.equal(0);
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        expect(fired).to.be.false;
+      });
     });
 
     it('should use label slot content as the bib dialog label', async () => {
