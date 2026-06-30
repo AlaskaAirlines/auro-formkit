@@ -1386,6 +1386,16 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleTriggerInputValueChange(event) {
+    // 'input' fires for every user-initiated value change — typing, paste,
+    // IME composition end, dead-key composition, drag-drop. Flip _userTyped
+    // here so updated('availableOptions') auto-opens the bib for sources
+    // that keydown alone misses: paste fires no keydown, IME uses
+    // key='Process', and dead keys produce multi-char keys (all bypass the
+    // prior keydown.key.length===1 gate). Skip programmatic syncs.
+    if (!this._syncingDisplayValue && !this._syncingBibValue && !this._programmaticFilterRefresh) {
+      this._userTyped = true;
+    }
+
     this.handleMenuOptions();
 
     // Run filtering inline — the re-entrant event won't reach this code.

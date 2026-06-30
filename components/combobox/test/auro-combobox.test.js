@@ -922,6 +922,47 @@ function runFullTest(mobileView) {
       await expect(el.value).to.equal('xyz');
     });
 
+    // Regression: paste, IME composition, and dead-key input all fire
+    // 'input' events but bypass the previous keydown.key.length===1 gate
+    // (paste has no keydown; IME uses key='Process'; dead keys produce
+    // multi-char keys). _userTyped must flip on the 'input' event so
+    // updated('availableOptions') auto-opens the bib for these sources.
+    it('should flip _userTyped on a paste-style input event (no keydown)', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Precondition: _userTyped starts false.
+      expect(el._userTyped).to.be.false;
+
+      el.focus();
+      await elementUpdated(el);
+
+      // Simulate paste / IME compositionend / dead-key compositionend:
+      // set the value and dispatch only input events — no keydown
+      // beforehand. Under the old keydown.key.length===1 gate, _userTyped
+      // would stay false for these sources, suppressing the auto-open in
+      // updated('availableOptions').
+      const auroInput = el.input;
+      const nativeInput = auroInput.shadowRoot.querySelector('input');
+      nativeInput.value = 'Ap';
+      nativeInput.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+      auroInput.dispatchEvent(new InputEvent('input', {
+        bubbles: true,
+        composed: true,
+        inputType: 'insertFromPaste'
+      }));
+
+      // _userTyped must be set synchronously by handleTriggerInputValueChange
+      // so it's true when updated() runs and gates showBib().
+      expect(el._userTyped).to.be.true;
+    });
+
     // These tests require fullscreen (mobile) mode
   });
 
