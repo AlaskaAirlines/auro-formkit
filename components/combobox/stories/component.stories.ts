@@ -93,7 +93,7 @@ export const ComboboxArrowKeyNavigation: Story = {
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 100));
     await el.updateComplete;
-    await expect(el.menu.optionActive.id).toBe('option2');
+    await expect(el.menu.optionActive.id).toBe('option3');
     await expect(el.dropdown.isPopoverVisible).toBe(true);
 
   },
@@ -118,18 +118,20 @@ export const ComboboxEnterSelectsOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    userEvent.keyboard('{a}');
     // Open bib
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    userEvent.keyboard('{Enter}');
     await el.updateComplete;
     // Navigate to first option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await userEvent.keyboard('{ArrowDown}');
     await el.updateComplete;
     // Select it
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await userEvent.keyboard('{Enter}');
     await el.updateComplete;
     await new Promise((r) => setTimeout(r, 50));
-    await expect(el.dropdown.isPopoverVisible).toBe(false);
+    await expect(el.dropdownOpen).toBe(false);
     await expect(el.value).not.toBeNull();
   },
 };
@@ -357,7 +359,9 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     await el.updateComplete;
 
     // Type a value and open the bib
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    userEvent.keyboard('{a}');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -426,7 +430,6 @@ export const ComboboxFullscreenLiveRegionInBib: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -472,7 +475,6 @@ export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -517,7 +519,6 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -591,7 +592,6 @@ export const ComboboxInDialogBibOpen: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -647,7 +647,6 @@ export const ComboboxInDrawerBibOpen: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -710,7 +709,6 @@ export const ComboboxDisabledOption: Story = {
     el.focus();
     await el.updateComplete;
     userEvent.keyboard('{a}');
-    userEvent.click(el.input);
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },

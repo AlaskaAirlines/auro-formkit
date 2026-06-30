@@ -1629,7 +1629,13 @@ export class AuroCombobox extends AuroElement {
   updated(changedProperties) {
     // After the component is ready, propagate direct changes down to child components.
     if (changedProperties.has('value')) {
-      this._programmaticFilterRefresh = true;
+      // Only flag programmatic refreshes — user-typed value changes must not
+      // suppress the availableOptions branch's showBib(). Firefox batches
+      // 'value' and 'availableOptions' into the same updated() call, so
+      // setting the flag unconditionally here masks the user-typed open path.
+      if (!this._userTyped) {
+        this._programmaticFilterRefresh = true;
+      }
 
       if (this.input.value !== this.value) {
         // Clear menu.value AND menu.optionSelected together. Clearing only
