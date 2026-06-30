@@ -361,7 +361,7 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     // Type a value and open the bib
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -429,7 +429,7 @@ export const ComboboxFullscreenLiveRegionInBib: Story = {
     // Open the dropdown
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -474,7 +474,7 @@ export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
     // Open the dropdown
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -518,7 +518,7 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
     // Open the dropdown
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -591,7 +591,7 @@ export const ComboboxInDialogBibOpen: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -646,7 +646,7 @@ export const ComboboxInDrawerBibOpen: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -708,7 +708,7 @@ export const ComboboxDisabledOption: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
