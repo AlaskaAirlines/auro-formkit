@@ -1208,6 +1208,14 @@ export class AuroCombobox extends AuroElement {
     // stale option. Safe from re-entrancy because any resulting
     // input.value changes dispatch isProgrammatic events.
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
+      // Announce the rejection BEFORE we clear `this.value` so the live
+      // region carries the attempted value — without this the bib closes
+      // silently and screen-reader users get no signal that their request
+      // (e.g. a direct setMenuValue() call) was dropped.
+      const attemptedValue = this.value;
+      if (attemptedValue) {
+        announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${attemptedValue}`);
+      }
       this.value = undefined;
       this.optionSelected = undefined;
     });
@@ -1607,6 +1615,22 @@ export class AuroCombobox extends AuroElement {
 
         if (!this.persistInput) {
           this.syncInputValuesAcrossTriggerAndBib(this.value || '');
+        }
+
+        // Programmatic value with no matching option: updateFilter will close
+        // the bib silently (see line 648 — no noMatchOption + 0 results
+        // hides). Announce so screen-reader users hear the request was
+        // dropped. Gated on `input.value !== this.value` so this never fires
+        // for user typing — that path always reconciles input.value to
+        // this.value before updated() runs.
+        if (
+          this.value &&
+          this.menu &&
+          this.menu.options &&
+          this.menu.options.length > 0 &&
+          !this.menu.options.some((opt) => opt.value === this.value)
+        ) {
+          announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${this.value}`);
         }
       }
 
