@@ -1587,7 +1587,14 @@ export class AuroCombobox extends AuroElement {
       this._programmaticFilterRefresh = true;
 
       if (this.input.value !== this.value) {
-        this.menu.value = undefined;
+        // Clear menu.value AND menu.optionSelected together. Clearing only
+        // menu.value leaves the previously-selected option element pinned
+        // as menu.optionSelected; a later auroMenu-selectedOption event
+        // would then write its stale .value back into combobox.value
+        // (e.g. Tab-after-Backspace re-selecting the prior option).
+        if (this.menu.value || this.menu.optionSelected) {
+          this.menu.clearSelection();
+        }
 
         if (!this.persistInput) {
           this.syncInputValuesAcrossTriggerAndBib(this.value || '');
