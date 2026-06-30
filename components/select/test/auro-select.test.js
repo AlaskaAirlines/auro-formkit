@@ -558,6 +558,36 @@ function runTest(mobileView) {
           await expect(el.optionSelected.length).to.equal(0);
         });
 
+        it('should not wipe prior selections when a valueless option is clicked', async () => {
+          // Regression: menu fires auroMenu-selectValueFailure on a click of an
+          // unselected valueless option without mutating its own state. The
+          // select listener used to unconditionally clear value/optionSelected,
+          // dropping every prior multiSelect pick on a single bad click.
+          const el = await fixture(html`
+            <auro-select multiselect>
+              <span slot="label">Pick</span>
+              <auro-menu>
+                <auro-menuoption value="a">Alpha</auro-menuoption>
+                <auro-menuoption value="b">Beta</auro-menuoption>
+                <auro-menuoption>NoValue</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const opts = el.querySelectorAll('auro-menuoption');
+          opts[0].click();
+          await elementUpdated(el);
+          opts[1].click();
+          await elementUpdated(el);
+          expect(el.optionSelected.length).to.equal(2);
+
+          opts[2].click(); // valueless -> selectValueFailure
+          await elementUpdated(el);
+
+          expect(el.optionSelected.length, 'valueless click must not clear prior selections').to.equal(2);
+        });
+
         it('should not leak external mutation of select.optionSelected back into menu state', async () => {
           // Regression: select.optionSelected must be a cloned array in multiselect
           // mode so consumers mutating it cannot reach back into menu.optionSelected
