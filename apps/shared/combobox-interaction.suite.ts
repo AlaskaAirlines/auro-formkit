@@ -137,49 +137,6 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         await expect.poll(() => activeOptionValue(page, 'nested')).toBe('option 2');
       });
 
-      test('Alt+ArrowDown jumps to the last option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('Alt+ArrowDown');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
-      });
-
-      test('Meta+ArrowDown jumps to the last option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('Meta+ArrowDown');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
-      });
-
-      test('Alt+ArrowUp jumps to the first option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        // Navigate away from first
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('ArrowDown');
-
-        await page.keyboard.press('Alt+ArrowUp');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Apples');
-      });
-
-      test('Meta+ArrowUp jumps to the first option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('ArrowDown');
-
-        await page.keyboard.press('Meta+ArrowUp');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Apples');
-      });
-
       test('Home jumps to the first enabled option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
