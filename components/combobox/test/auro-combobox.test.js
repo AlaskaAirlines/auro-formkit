@@ -986,6 +986,154 @@ function runFullTest(mobileView) {
       expect(el._userTyped).to.be.true;
     });
 
+    // Regression for f876902e2 / AB#1560490: after the bib opens on a
+    // combobox that already has a value, the trigger native input's caret
+    // must end up at end-of-text. Clicking the trigger lands on
+    // auro-input's floating <label for="…"> overlay; Chrome resets the
+    // native input's selection to [0, 0] on label-focus before any JS
+    // runs. The fix schedules a doubleRaf'd setInputFocus() once the
+    // dropdown opens to put the caret back at end.
+    //
+    // Reading native selectionStart after the doubleRaf is unreliable in
+    // WTR (the browser may not honor setSelectionRange on an off-screen
+    // input, and the popover branch of setInputFocus delegates to
+    // auro-input.focus() whose mask-driven cursor restoration depends on
+    // implementation details outside this component). Verify the actual
+    // mechanism instead: setInputFocus must be called after the dropdown
+    // opens — without it the cursor stays wherever the click left it.
+    it('calls setInputFocus after the bib opens so the caret can park at end-of-text', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox value="Peaches">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-1">Peaches</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      await expect(el.input.value).to.equal('Peaches');
+
+      // Spy on setInputFocus before triggering the open so the listener's
+      // doubleRaf'd call is caught.
+      let setInputFocusCalls = 0;
+      const origSetInputFocus = el.setInputFocus.bind(el);
+      el.setInputFocus = () => { setInputFocusCalls += 1; origSetInputFocus(); };
+
+      // Fire the same event the dropdown emits when it opens. The
+      // auro-input click → showModal → focus chain is too platform-
+      // dependent to drive reliably in WTR; the listener at
+      // auroDropdown-toggled is what actually owns the caret-restore
+      // behavior.
+      el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+        detail: { expanded: true }
+      }));
+
+      // doubleRaf inside the toggled listener — wait both frames plus a
+      // tick for the call to land.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(setInputFocusCalls).to.be.at.least(1);
+
+      // Cleanup
+      el.setInputFocus = origSetInputFocus;
+    });
+
+    // Regression for d9b8eb2c6 / 4b90416db: when the user selects an option,
+    // the auroMenu-selectedOption listener calls setClearBtnFocus so the
+    // next Tab continues forward through the page. Gated on !isEcho and a
+    // defined menu.value so programmatic syncs and clearSelection paths
+    // don't hijack focus.
+    //
+    // Verifying via focus state across the nested shadow boundaries is
+    // flaky in WTR (the clear-button's auro-button.focus() race-conditions
+    // with the dropdown-close focus restore), so we spy on the actual
+    // focus() method on the clear-button element instead — closer to
+    // behavior than checking a private flag and unaffected by where focus
+    // ultimately lands after the close chain settles.
+    it('moves focus to the trigger clear button when the user picks an option', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Type then explicitly open via Enter — matches the existing pattern
+      // used elsewhere in this suite for opening the bib before a selection.
+      el.focus();
+      await elementUpdated(el);
+      await sendKeys({ press: 'a' });
+      el.input.click();
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      // Spy on the clear button's focus() — replaced before the selection
+      // so the listener's setClearBtnFocus → doubleRaf → clearBtn.focus()
+      // gets caught.
+      const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+      expect(clearBtn).to.exist;
+      let focusCalled = false;
+      const origFocus = clearBtn.focus.bind(clearBtn);
+      clearBtn.focus = () => { focusCalled = true; origFocus(); };
+
+      const option = el.menu.querySelector('auro-menuoption[value="Apples"]');
+      option.click();
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      // doubleRaf inside setClearBtnFocus plus a settle tick.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(focusCalled).to.be.true;
+
+      // Cleanup
+      clearBtn.focus = origFocus;
+    });
+
+    // Regression for 0146fd859: syncInputValuesAcrossTriggerAndBib must
+    // update BOTH the trigger and the bib inputs when their values diverge
+    // from `nextValue`. The previous guarded form short-circuited the bib
+    // write under conditions that aren't exercised by any single direct
+    // test — the perf simplification removed dead guards but the path
+    // itself (programmatic value → both inputs reflect it) wasn't pinned.
+    it('syncs both trigger and bib inputs on a programmatic value change', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Open the bib so the bibtemplate renders and inputInBib exists.
+      el.focus();
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.inputInBib);
+
+      // Programmatic value change — should propagate to BOTH inputs.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.input.updateComplete;
+      await el.inputInBib.updateComplete;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(el.input.value).to.equal('Apples');
+      expect(el.inputInBib.value).to.equal('Apples');
+    });
+
     // These tests require fullscreen (mobile) mode
   });
 
