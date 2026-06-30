@@ -2914,6 +2914,24 @@ function runFullTest(mobileView) {
         });
       }
 
+      // Regression: setting combobox.value to a freeform string with no
+      // matching option used to close the bib silently via updateFilter
+      // (no noMatchOption + 0 results → hideBib). Screen-reader users
+      // got no signal that their request was dropped.
+      it('announces when a programmatic value matches no option', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.value = 'NotAnOption';
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+        await expect(liveRegion).to.exist;
+        await expect(liveRegion.textContent).to.equal('No matching option for NotAnOption');
+      });
+
       if (mobileView) {
         it('should route announcements to the bib live region in fullscreen mode', async () => {
           const el = await noFilterFixture(mobileView);
