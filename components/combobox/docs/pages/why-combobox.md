@@ -23,7 +23,7 @@
 
 <ul>
   <li><strong>Suggestion mode</strong> (default) — The user can type any value. Suggestions are offered but not required.</li>
-  <li><strong>Filter mode</strong> — The user must select from the available options. Typed text filters the list but cannot be submitted as a value. Validation enforces this constraint.</li>
+  <li><strong>Filter mode</strong> — Typing filters the list and sets the component's <code>value</code> to the typed text, but validation keeps the input invalid until a menu option is selected. Consumers relying on <code>value</code> as a "committed selection" should gate on <code>validity</code>.</li>
 </ul>
 
 <auro-header level="2" id="realtimeFiltering">Real-time filtering</auro-header>
