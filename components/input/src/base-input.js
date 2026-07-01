@@ -462,6 +462,13 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * Custom help text message to display when validity = `patternMismatch`.
+       */
+      setCustomValidityPatternMismatch: {
+        type: String
+      },
+
+      /**
        * Custom help text message to display when validity = `rangeOverflow`.
        */
       setCustomValidityRangeOverflow: {
