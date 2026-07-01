@@ -8,6 +8,7 @@
 <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
 <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
 <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
+<auro-anchorlink fluid href="#resetOption" class="level2 body-xs">Reset Option</auro-anchorlink>
 <auro-anchorlink fluid href="#noCheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
 <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
 <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
@@ -158,6 +159,46 @@
       Hotels
       &lt;auro-icon slot="displayValue" category="destination" name="hotel-filled" customcolor&gt;&lt;/auro-icon&gt;
     &lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="resetOption">Adding a reset option</auro-header>
+<p><code>auro-select</code> has no built-in way to clear a selection from the trigger. If a user picks the wrong option on an optional field, they have no way to reset their selection.</p>
+<p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>value=""</code> won't work — <code>auro-menu</code> treats an empty string as a clear-selection signal.</p>
+<p>Use a non-empty sentinel like <code>value="none"</code> instead, choosing one that cannot collide with any real domain value. Either accept <code>"none"</code> on the backend, or coerce it in your submit handler:</p>
+        <pre><code>payload.suffix = payload.suffix === "none" ? "" : payload.suffix;</code></pre>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/none-option.html) -->
+<!-- The below content is automatically added from ./../apiExamples/none-option.html -->
+<auro-select>
+<span slot="bib.fullscreen.headline">Suffix</span>
+<span slot="label">Suffix</span>
+<span slot="helpText">If shown on your government-issued travel ID.</span>
+<auro-menu>
+<auro-menuoption value="none">None</auro-menuoption>
+<auro-menuoption value="Jr">Jr</auro-menuoption>
+<auro-menuoption value="Sr">Sr</auro-menuoption>
+<auro-menuoption value="II">II</auro-menuoption>
+<auro-menuoption value="III">III</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/none-option.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/none-option.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Suffix&lt;/span&gt;
+  &lt;span slot="label"&gt;Suffix&lt;/span&gt;
+  &lt;span slot="helpText"&gt;If shown on your government-issued travel ID.&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="none"&gt;None&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Jr"&gt;Jr&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Sr"&gt;Sr&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="II"&gt;II&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="III"&gt;III&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
