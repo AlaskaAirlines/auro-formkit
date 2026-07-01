@@ -3,7 +3,7 @@
 <p>The component supports two modes:</p>
 <ul>
   <li><strong>Suggestion (default)</strong> — The user may type any value. The menu provides suggestions but does not restrict input.</li>
-  <li><strong>Filter</strong> — The user must select from the menu. Typing filters the available options but does not set the component's value. The value is only set when a menu option is selected.</li>
+  <li><strong>Filter</strong> — Typing filters the available options and sets the component's <code>value</code> to the typed text, but the input is not considered valid until a menu option is selected. Validation surfaces <code>valueMissing</code> until the typed value matches a chosen option.</li>
 </ul>
 
 <p>Common use cases:</p>
