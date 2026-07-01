@@ -1040,7 +1040,7 @@ export default class BaseInput extends AuroElement {
       let selectionStart = null;
       try {
         ({ selectionStart } = this.inputElement);
-      } catch (error) { // eslint-disable-line no-unused-vars
+      } catch {
         return;
       }
       if (typeof selectionStart !== 'number') {
@@ -1049,7 +1049,7 @@ export default class BaseInput extends AuroElement {
       this.updateComplete.then(() => {
         try {
           this.inputElement.setSelectionRange(selectionStart, selectionStart);
-        } catch (error) { // eslint-disable-line no-unused-vars
+        } catch {
           // Some input types (number/email in certain UAs) throw on
           // setSelectionRange; swallow and let the native cursor stand.
         }
