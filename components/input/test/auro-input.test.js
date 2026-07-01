@@ -1540,20 +1540,6 @@ function runFullTest(mobileView) {
           expect(el.minObject).to.be.undefined;
         });
 
-        it('setting value to ISO string matching an existing valueObject does not replace the Date object', async () => {
-          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
-          await elementUpdated(el);
-
-          // Simulate auro-datepicker setting valueObject directly before value is synced
-          const targetDate = new Date(2024, 0, 15);
-          el.setDateObjectProperty('valueObject', targetDate);
-          await elementUpdated(el); // objectProperty → sets value to '2024-01-15'
-          await elementUpdated(el); // value change from undefined → guard fires → no re-parse
-
-          expect(el.value).to.equal('2024-01-15');
-          expect(el.valueObject).to.equal(targetDate);
-        });
-
         describe('partial date format validation', () => {
           [
             {

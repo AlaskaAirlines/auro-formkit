@@ -153,10 +153,11 @@ export class AuroInputUtilities {
         const dateFormat = format || this.overrideFormat || pattern || 'mm/dd/yyyy';
 
         if (dateFormat === 'dd' || dateFormat === 'yy' || dateFormat === 'yyyy') {
-          const maxValue = dateFormat === 'dd' ? 31 : (dateFormat === 'yy' ? 99 : 9999);
+          const fromValue = dateFormat === 'yyyy' ? 1900 : (dateFormat === 'yy' ? 0 : 1);
+          const maxValue = dateFormat === 'dd' ? 31 : (dateFormat === 'yy' ? 99 : 2100);
           return {
             mask: IMask.MaskedRange,
-            from: 1,
+            from: fromValue,
             to: maxValue,
             lazy: true,
             placeholderChar: '',
@@ -164,7 +165,8 @@ export class AuroInputUtilities {
               return value.toString().padStart(dateFormat.length, '0');
             },
             parse(str) {
-              return parseInt(str) || null;
+              const num = parseInt(str, 10);
+              return isNaN(num) ? null : num;
             }
           };
         }
@@ -230,7 +232,7 @@ export class AuroInputUtilities {
 
   /**
    * Validates a value against a partial date format (one that lacks yy/mm/dd all three).
-   * Single-component formats are checked as integer ranges; multi-component formats use
+   * Day- and year-only formats (dd/yy/yyyy) are checked as integer ranges; other partial formats use
    * a date-fns parse + round-trip to confirm both validity and exact formatting.
    * @param {string} value - The user-facing display value.
    * @param {string} format - The partial date format string (e.g. "mm/yyyy", "yyyy", "dd").
@@ -243,21 +245,32 @@ export class AuroInputUtilities {
     const normalizedFormat = format.toLowerCase();
 
     if (normalizedFormat === 'dd') {
-      const num = parseInt(value, 10);
-      return value.length === 2 && !isNaN(num) && num >= 1 && num <= 31;
+      const num = Number(value);
+      return (/^\d{2}$/u).test(value) && num >= 1 && num <= 31;
     }
     if (normalizedFormat === 'yy') {
-      const num = parseInt(value, 10);
-      return value.length === 2 && !isNaN(num) && num >= 0 && num <= 99;
+      const num = Number(value);
+      return (/^\d{2}$/u).test(value) && num >= 0 && num <= 99;
     }
     if (normalizedFormat === 'yyyy') {
-      const num = parseInt(value, 10);
-      return value.length === 4 && !isNaN(num) && num >= 1 && num <= 9999;
+      const num = Number(value);
+      return (/^\d{4}$/u).test(value) && num >= 1900 && num <= 2100;
     }
 
     const dateFnsMask = this.toDateFnsMask(normalizedFormat);
-    const parsed = dateFns.parse(value, dateFnsMask, new Date());
-    return dateFns.isValid(parsed) && dateFns.format(parsed, dateFnsMask) === value;
+    // Use the 1st of the current month as the reference so that formats
+    // omitting a day (e.g. MM/yyyy) never roll over on days 29–31.
+    const referenceDate = new Date();
+    referenceDate.setDate(1);
+    const parsed = dateFns.parse(value, dateFnsMask, referenceDate);
+    if (!dateFns.isValid(parsed) || dateFns.format(parsed, dateFnsMask) !== value) {
+      return false;
+    }
+    if (normalizedFormat.includes('yyyy')) {
+      const year = parsed.getFullYear();
+      return year >= 1900 && year <= 2100;
+    }
+    return true;
   }
 
   /**
