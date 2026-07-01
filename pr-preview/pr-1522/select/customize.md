@@ -164,9 +164,8 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="noneOption">Adding a "None" option</auro-header>
-<p>Once a selection is made in <code>auro-select</code>, there is no built-in UI affordance for a customer to clear it — no clear button on the trigger, no keyboard shortcut. If a customer picks the wrong option by accident (for example, choosing a suffix they did not mean to select on an optional field), they are stuck with <em>some</em> selection unless the menu offers an explicit way back to "no selection."</p>
-<p>The pattern for this is a selectable "None" (or "N/A") option at the top of the menu. It is tempting to reach for <code>value=""</code>, but that will not work — <code>auro-menu</code> treats an empty-string <code>value</code> the same as a missing <code>value</code> attribute and refuses to select the option. This is intentional: empty-string is reserved as the "cleared selection" signal.</p>
-<p>Instead, use a non-empty sentinel like <code>value="none"</code> and translate it at the boundary where the form submits. Either accept <code>"none"</code> on the backend, or coerce <code>"none"</code> → <code>""</code> (or omit the field entirely) in your submit handler.</p>
+<p><code>auro-select</code> has no built-in way to clear a selection from the trigger, so an accidental pick on an optional field strands the customer unless the menu offers a "None" option.</p>
+<p>Add a selectable "None" (or "N/A") entry at the top of the menu. <code>value=""</code> will not work — <code>auro-menu</code> reserves empty-string as the "cleared selection" signal and refuses to select the option. Use a non-empty sentinel like <code>value="none"</code> instead, then either accept <code>"none"</code> on the backend or coerce it to <code>""</code> (or omit the field) in your submit handler.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/none-option.html) -->
 <!-- The below content is automatically added from ./../apiExamples/none-option.html -->
