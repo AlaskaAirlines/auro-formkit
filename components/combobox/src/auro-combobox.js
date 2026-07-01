@@ -165,7 +165,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * setTimeout wrapper that records the timer id so disconnectedCallback
+   * Wraps setTimeout and records the timer id so disconnectedCallback
    * can cancel any outstanding callbacks. The id is removed from the set
    * once the callback fires so the set doesn't grow unbounded.
    * @param {Function} fn - Callback to run.
@@ -1711,12 +1711,10 @@ export class AuroCombobox extends AuroElement {
           this.menu.loading ||
           this.noMatchOption
         ) {
-          if (this._userTyped) {
-            if (!this.dropdownOpen) {
-              this.showBib();
-            }
-            this._userTyped = false;
+          if (this._userTyped && !this.dropdownOpen) {
+            this.showBib();
           }
+          this._userTyped = false;
         }
 
         if (!this.availableOptions.includes(this.menu.optionActive)) {
