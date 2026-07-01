@@ -307,6 +307,11 @@ export class AuroCalendar extends RangeDatepicker {
     if (!opts.skipActiveUpdate) {
       this.updateActiveCellForVisibleMonth();
     }
+    // clearRangePreview above strips classMap-managed range classes from
+    // the DOM; classMap's private state still thinks they're applied, so
+    // it won't re-add them on the post-nav re-render. Re-apply imperatively
+    // after both months and their cell button caches have settled.
+    this.scheduleCommittedRangeClassRefresh();
     this.announceMonthChange();
   }
 
@@ -325,6 +330,11 @@ export class AuroCalendar extends RangeDatepicker {
     if (!opts.skipActiveUpdate) {
       this.updateActiveCellForVisibleMonth();
     }
+    // clearRangePreview above strips classMap-managed range classes from
+    // the DOM; classMap's private state still thinks they're applied, so
+    // it won't re-add them on the post-nav re-render. Re-apply imperatively
+    // after both months and their cell button caches have settled.
+    this.scheduleCommittedRangeClassRefresh();
     this.announceMonthChange();
   }
 
@@ -1403,9 +1413,14 @@ export class AuroCalendar extends RangeDatepicker {
    * @private
    * @param {Object} [options] - Optional settings.
    * @param {boolean} [options.force=false] - When true, clears classes even
-   *   when both dateFrom and dateTo are set. Used by month nav handlers
-   *   since the subsequent re-render re-applies classMap-managed classes,
-   *   while `lastHoveredDate` (not in classMap) would otherwise persist.
+   *   when both dateFrom and dateTo are set. Used by month nav handlers to
+   *   strip the imperative-only `lastHoveredDate` before the re-render.
+   *   The other two classes (`inRange`, `rangeDepartDate`) are classMap-
+   *   managed and get stripped as a side effect here; because classMap
+   *   remembers what it last emitted and does not diff against the actual
+   *   DOM, the following month re-render will NOT re-add them on its own.
+   *   Nav handlers must schedule `refreshCommittedRangeClasses` (via
+   *   `scheduleCommittedRangeClassRefresh`) to resync them.
    * @returns {void}
    */
   clearRangePreview(options) {
@@ -1418,6 +1433,57 @@ export class AuroCalendar extends RangeDatepicker {
     allCells.forEach((cell) => {
       cell.clearRangePreviewClasses();
     });
+  }
+
+  /**
+   * Re-applies the committed-range classes across every focusable cell
+   * after a month navigation. classMap in the cell tracks its own
+   * previous state: once `clearRangePreview({ force: true })` strips
+   * `inRange`/`rangeDepartDate` imperatively before the re-render,
+   * classMap's next diff sees the same class-value it emitted before and
+   * produces no delta, leaving the DOM without the classes even though a
+   * full range is committed. Re-applying imperatively resyncs the two
+   * months' cells with `dateFrom`/`dateTo`.
+   *
+   * Iterates `getAllFocusableCells()` — out-of-range cells (blocked by
+   * `min`/`max`) can never carry range classes anyway, so skipping them
+   * is correct and cheaper than a whole-grid walk.
+   *
+   * The cell's `applyCommittedRangeClasses` reuses the same
+   * `isInRange`/`isDepartDate`/`isReturnDate` helpers `renderCellButton`
+   * uses, so we don't parse dateFrom/dateTo here — the helpers already
+   * normalize their inputs (midnight-truncation, string→int) internally.
+   * @private
+   * @returns {void}
+   */
+  refreshCommittedRangeClasses() {
+    if (this.noRange || !this.dateFrom || !this.dateTo) {
+      return;
+    }
+
+    const allCells = this.getAllFocusableCells();
+    allCells.forEach((cell) => {
+      cell.applyCommittedRangeClasses();
+    });
+  }
+
+  /**
+   * Schedules `refreshCommittedRangeClasses` to run after the month
+   * re-render has flushed and the cells' button caches have refreshed.
+   * Both `handlePrevMonth` and `handleNextMonth` need this exact call
+   * shape; keeping it in one place prevents them from drifting apart.
+   *
+   * Bails synchronously when a full committed range isn't set — otherwise
+   * every prev/next click in single-date mode (or before the user picks
+   * both dates in range mode) pays for an unused double-rAF hop.
+   * @private
+   * @returns {void}
+   */
+  scheduleCommittedRangeClassRefresh() {
+    if (this.noRange || !this.dateFrom || !this.dateTo) {
+      return;
+    }
+    this._afterMonthRender(() => this.refreshCommittedRangeClasses());
   }
 
   /**

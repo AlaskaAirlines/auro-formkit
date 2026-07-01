@@ -4211,6 +4211,107 @@ function runFullTest(mobileView) {
       expect(btn.classList.contains('lastHoveredDate')).to.be.false;
     });
 
+    // ─── committed inRange classes persist across next/prev month nav ──
+    // Regression: `clearRangePreview({ force: true })` in the month-nav
+    // handlers strips `inRange`/`rangeDepartDate` imperatively before the
+    // re-render. classMap in the cell remembers what it last emitted and
+    // does not diff against the actual DOM, so on the post-nav render its
+    // class-value stays the same and no delta is emitted — leaving the
+    // committed range dates without the `inRange` class in the DOM.
+    // `scheduleCommittedRangeClassRefresh` re-applies them imperatively
+    // once the re-render + cell-button caches have settled.
+    it('re-applies committed inRange classes on visible cells after next/prev month nav', async () => {
+      // Wide viewport so range mode renders two months (matches the
+      // established pattern in the existing "should render two calendars"
+      // test at ~line 1886, which also widens to 1200 without restoring
+      // afterward). An explicit restore here empirically causes ~7
+      // unrelated tests further down in the mobile-view pass to fail
+      // (centralDate-driven fixtures start rendering the current month
+      // instead of the fixture's centralDate) — likely a resize-driven
+      // state race in the datepicker. The file's convention is that
+      // later tests either don't depend on viewport or re-set it
+      // themselves; keep that.
+      await setViewport({
+        width: 1200,
+        height: 800
+      });
+
+      // Whole-year range so every day well inside 2024 is strictly
+      // between depart (Jan 1) and return (Dec 31). centralDate can't be
+      // passed as a static attribute here — the datepicker's dropdown
+      // open handler resets it to `this.value` when a value is set (see
+      // auro-datepicker.js line ~1172). We navigate forward with the
+      // Next button after opening so the depart cell is safely out of
+      // view, which lets us assert count === total-focusable (the strong
+      // form of the regression; `> 0` can pass while most cells stay
+      // broken).
+      const el = await fixture(html`
+        <auro-datepicker
+          range
+          value="2024-01-01"
+          valueEnd="2024-12-31"
+        ></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      // Fall back to a shadow-root query when `_cachedButton` hasn't
+      // populated yet — otherwise a stale cache can undercount even when
+      // the button is in the DOM and carries the class.
+      const cellHasInRange = (cell) => {
+        const btn = cell._cachedButton || cell.shadowRoot.querySelector('button.day');
+        return btn?.classList.contains('inRange');
+      };
+      const focusableCount = () => calendar.getAllFocusableCells().length;
+      const inRangeCount = () => calendar.getAllFocusableCells().filter(cellHasInRange).length;
+
+      const nextMonthBtn = calendar.shadowRoot.querySelector('.nextMonth');
+      const prevMonthBtn = calendar.shadowRoot.querySelector('.prevMonth');
+      // Two rAF because scheduleCommittedRangeClassRefresh uses
+      // `_afterMonthRender` (double-rAF for Lit render + cell cache flush).
+      const settleAfterNav = async () => {
+        await elementUpdated(calendar);
+        await nextFrame();
+        await nextFrame();
+      };
+
+      // Navigate three months forward from Jan+Feb so both visible
+      // months (Apr+May) are strictly interior to the Jan 1 → Dec 31
+      // range — no depart/return cell in view.
+      nextMonthBtn.click();
+      await settleAfterNav();
+      nextMonthBtn.click();
+      await settleAfterNav();
+      nextMonthBtn.click();
+      await settleAfterNav();
+
+      // Baseline: every focusable cell carries `inRange` before the
+      // regression's test move.
+      expect(focusableCount()).to.be.greaterThan(0);
+      expect(inRangeCount()).to.equal(focusableCount());
+
+      // Next-month nav: shifts view forward. Still entirely inside the
+      // Jan 1 → Dec 31 range, so every focusable cell must still carry
+      // `inRange` after the re-render + refresh flush. Equality here is
+      // what makes this test catch the regression: with the old code,
+      // classMap's memory leaves most cells without the class.
+      nextMonthBtn.click();
+      await settleAfterNav();
+      expect(inRangeCount()).to.equal(focusableCount());
+
+      // Prev-month nav: symmetric path — verify the same fix restores
+      // classes when navigating backwards.
+      prevMonthBtn.click();
+      await settleAfterNav();
+      expect(inRangeCount()).to.equal(focusableCount());
+    });
+
     // ─── clearRangePreview respects guard unless forced ────────────────
     it('clearRangePreview retains classes when both dates are set unless forced', async () => {
       const el = await fixture(html`

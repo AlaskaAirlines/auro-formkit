@@ -762,6 +762,41 @@ export class AuroCalendarCell extends LitElement {
     btn.classList.remove('inRange', 'lastHoveredDate', 'rangeDepartDate');
   }
 
+  /**
+   * Re-applies the committed-range classes (inRange / rangeDepartDate /
+   * rangeReturnDate) imperatively from the cell's current `day`,
+   * `dateFrom`, and `dateTo`. Used after month navigation flushes:
+   * classMap in `renderCellButton` tracks its own previous state, so a
+   * preceding imperative `classList.remove` (from
+   * `clearRangePreviewClasses`) leaves classMap thinking the class is
+   * still applied. On re-render with the same class-value, classMap emits
+   * no delta and the class stays missing in the DOM. Re-toggling
+   * imperatively resyncs the DOM with the committed range.
+   *
+   * Delegates to the same `isInRange` / `isDepartDate` / `isReturnDate`
+   * helpers `renderCellButton` uses, so the two code paths cannot drift
+   * (including whatever timestamp normalization those helpers apply).
+   * @returns {void}
+   */
+  applyCommittedRangeClasses() {
+    if (!this.day) return;
+    // Fall back to a shadowRoot query when `_cachedButton` hasn't
+    // populated yet — this method's whole job is recovering from stale
+    // DOM after a month re-render, so no-oping on a cache miss defeats
+    // the fix (mirrors the fallback in `clearActive()`).
+    const btn = this._cachedButton || this.shadowRoot?.querySelector('button.day');
+    if (!btn) return;
+
+    const hasRange = this.datepicker?.hasAttribute('range');
+    const inRange = hasRange && this.dateTo && this.isInRange(this.day, this.dateFrom, this.dateTo);
+    const isDepart = hasRange && this.isDepartDate(this.day, this.dateFrom) && this.dateTo;
+    const isReturn = hasRange && this.isReturnDate(this.day, this.dateFrom, this.dateTo);
+
+    btn.classList.toggle('inRange', Boolean(inRange));
+    btn.classList.toggle('rangeDepartDate', Boolean(isDepart));
+    btn.classList.toggle('rangeReturnDate', Boolean(isReturn));
+  }
+
   renderCellButton() {
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     const blackout = this.isBlackout();
