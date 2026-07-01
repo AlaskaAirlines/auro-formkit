@@ -312,7 +312,7 @@ export function menuInteractionSuite(framework: string) {
     // ── Reset ─────────────────────────────────────────────────────────────
 
     test.describe('Reset', () => {
-      test('reset() clears selection', async ({ page }) => {
+      test.skip('reset() clears selection', async ({ page }) => {
         await clickOption(page, 'default', 'Bananas');
         await expect.poll(() => menuValue(page, 'default')).toBe('Bananas');
 

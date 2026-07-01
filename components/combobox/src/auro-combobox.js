@@ -740,8 +740,8 @@ export class AuroCombobox extends AuroElement {
    * Writes nextValue to the trigger input and the bib input when their current
    * value differs, then re-asserts imask after Lit's update flushes.
    * @param {string} nextValue - The value to write to both inputs.
-   * @returns {Promise<void> | null} Promise that resolves after the inputs flush,
-   *   or null when no sync was needed (so callers can skip post-flush work).
+   * @returns {Promise<void>} Resolves after both inputs flush and imask
+   *   re-asserts; resolves immediately when no sync is needed.
    * @private
    */
   async syncInputValuesAcrossTriggerAndBib(nextValue) {
@@ -752,7 +752,7 @@ export class AuroCombobox extends AuroElement {
     const triggerNeedsSync = this.input.value !== nextValue;
     const bibNeedsSync = Boolean(this.inputInBib) && this.inputInBib.value !== nextValue;
     if (!triggerNeedsSync && !bibNeedsSync) {
-      return null;
+      return;
     }
 
     this._syncingDisplayValue = true;
@@ -781,7 +781,6 @@ export class AuroCombobox extends AuroElement {
     } finally {
       this._syncingDisplayValue = false;
     }
-    return null;
   }
 
   /**

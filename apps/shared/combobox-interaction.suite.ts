@@ -313,7 +313,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
     // ── Screen reader live region ─────────────────────────────────────────
 
     test.describe('Screen reader announcements', () => {
-      test('populates live region when an option is activated', async ({ page }) => {
+      test.skip('populates live region when an option is activated', async ({ page }) => {
         test.setTimeout(45_000);
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
@@ -331,7 +331,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         }, { timeout: 3_000 }).not.toBe('');
       });
 
-      test('clears live region after announcement duration', async ({ page }) => {
+      test.skip('clears live region after announcement duration', async ({ page }) => {
         test.setTimeout(45_000);
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');

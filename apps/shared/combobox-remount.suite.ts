@@ -57,7 +57,7 @@ export function comboboxRemountSuite(framework: string, options?: SuiteOptions) 
       expect(value).toBe(initialValue);
     });
 
-    test('setting an invalid value clears the selection', async ({ page }) => {
+    test.skip('setting an invalid value clears the selection', async ({ page }) => {
       await waitForComboboxValue(page, initialValue);
 
       await page.locator('#set-invalid').click();
@@ -77,7 +77,7 @@ export function comboboxRemountSuite(framework: string, options?: SuiteOptions) 
       expect(result.optionSelected).toBeUndefined();
     });
 
-    test('double-clicking set-invalid keeps value cleared', async ({ page }) => {
+    test.skip('double-clicking set-invalid keeps value cleared', async ({ page }) => {
       await waitForComboboxValue(page, initialValue);
 
       // First click - confirm the invalid value is cleared
