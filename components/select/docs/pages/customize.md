@@ -8,6 +8,7 @@
       <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
       <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
       <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
+      <auro-anchorlink fluid href="#resetOption" class="level2 body-xs">Reset Option</auro-anchorlink>
       <auro-anchorlink fluid href="#noCheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
       <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
       <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
@@ -70,6 +71,20 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/display-value.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="resetOption">Adding a reset option</auro-header>
+        <p><code>auro-select</code> has no built-in way to clear a selection from the trigger. If a user picks the wrong option on an optional field, they have no way to reset their selection.</p>
+        <p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>value=""</code> won't work — <code>auro-menu</code> treats an empty string as a clear-selection signal.</p>
+        <p>Use a non-empty sentinel like <code>value="none"</code> instead, choosing one that cannot collide with any real domain value. Either accept <code>"none"</code> on the backend, or coerce it in your submit handler:</p>
+        <pre><code>payload.suffix = payload.suffix === "none" ? "" : payload.suffix;</code></pre>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/none-option.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/none-option.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="noCheckmark">Hide checkmark indicators</auro-header>
