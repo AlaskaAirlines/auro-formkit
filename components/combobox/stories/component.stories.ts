@@ -120,9 +120,9 @@ export const ComboboxEnterSelectsOption: Story = {
     await el.updateComplete;
     el.focus();
     await el.updateComplete;
-    userEvent.keyboard('{a}');
+    await userEvent.keyboard('{a}');
     // Open bib
-    userEvent.keyboard('{Enter}');
+    await userEvent.keyboard('{Enter}');
     await el.updateComplete;
     // Navigate to first option
     await userEvent.keyboard('{ArrowDown}');

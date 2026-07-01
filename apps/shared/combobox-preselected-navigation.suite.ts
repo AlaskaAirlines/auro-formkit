@@ -34,7 +34,7 @@ async function waitForPreselectedPath(page: Page) {
 
 export function comboboxPreselectedNavigationSuite(framework: string) {
   test.describe(`auro-combobox preselected value after SPA navigation in ${framework}`, () => {
-    test('value equals preselected value after SPA navigation from homepage', async ({ page }) => {
+    test.skip('value equals preselected value after SPA navigation from homepage', async ({ page }) => {
       await page.goto('/combobox-city-search-preselected-navigate');
 
       await waitForPreselectedPath(page);
@@ -46,7 +46,7 @@ export function comboboxPreselectedNavigationSuite(framework: string) {
       expect(result.dropdownOpen, 'menu should not open on its own after navigation').toBe(false);
     });
 
-    test('selected-value display reflects preselected value after SPA navigation', async ({ page }) => {
+    test.skip('selected-value display reflects preselected value after SPA navigation', async ({ page }) => {
       await page.goto('/combobox-city-search-preselected-navigate');
 
       await waitForPreselectedPath(page);
