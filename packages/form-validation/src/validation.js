@@ -227,13 +227,20 @@ export default class AuroFormValidation {
         // For partial date formats, valueObject is never populated; validate them directly.
         if (elem.value && !elem.valueObject) {
           const isPartialDateFormat = elem.util && !elem.util.isFullDateFormat(elem.type, elem.format);
-          const isValidPartial = isPartialDateFormat && elem.util.isValidPartialDate(elem.value, elem.format);
 
-          if (!isValidPartial) {
-            elem.validity = 'patternMismatch';
-            elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
+          if (isPartialDateFormat) {
+            if (!elem.util.isValidPartialDate(elem.value, elem.format)) {
+              elem.validity = 'patternMismatch';
+              elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
+            }
+            // Partial date format — validate directly and skip max/min checks since valueObject is undefined.
             return;
           }
+
+          // Full date format with no valueObject means the value is not a valid calendar date.
+          elem.validity = 'patternMismatch';
+          elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
+          return;
         }
 
         // Perform the rest of the validation

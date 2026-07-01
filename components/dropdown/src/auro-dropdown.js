@@ -686,14 +686,18 @@ export class AuroDropdown extends AuroElement {
     if (!this.isPopoverVisible) {
       // wait til the bib gets fully closed and rendered
       setTimeout(() => {
-        // check if it's still closed and the focus is still within the dropdown, but not in the bib. If so, move focus to the trigger.
-        if (!this.isPopoverVisible && this.matches(":focus-within") && !this.bib.matches(':focus-within')) {
+        // Skip if the bib re-opened, or if focus moved intentionally outside the dropdown (not to body).
+        // Restore focus to trigger when focus is still inside the bib (:focus-within) or fell to body.
+        if (this.isPopoverVisible ||
+          // eslint-disable-next-line no-extra-parens
+          (!this.bibContent?.matches(':focus-within') &&
+            document.activeElement !== document.body)) {
           return;
         }
-        // Move focus out of bib into trigger.
+        // Restore focus to the trigger.
         this.trigger.focus();
       });
-    };
+    }
   }
 
   firstUpdated() {

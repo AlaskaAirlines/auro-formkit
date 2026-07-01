@@ -341,6 +341,10 @@ describe('AuroInputUtil', () => {
           it('returns false for non-numeric input', () => {
             expect(util.isValidPartialDate('ab', 'dd')).to.be.false;
           });
+
+          it('returns false for partially-numeric input', () => {
+            expect(util.isValidPartialDate('2a', 'dd')).to.be.false;
+          });
         });
 
         describe('yy', () => {
@@ -351,15 +355,37 @@ describe('AuroInputUtil', () => {
           it('returns false when value length is not 2', () => {
             expect(util.isValidPartialDate('100', 'yy')).to.be.false;
           });
+
+          it('returns false for partially-numeric input', () => {
+            expect(util.isValidPartialDate('2a', 'yy')).to.be.false;
+          });
         });
 
         describe('yyyy', () => {
-          it('returns true for a valid 4-digit year', () => {
+          it('returns true for a valid 4-digit year within 1900–2100', () => {
             expect(util.isValidPartialDate('2025', 'yyyy')).to.be.true;
           });
 
-          it('returns false when value is 0000 (below range)', () => {
+          it('returns true for the lower boundary 1900', () => {
+            expect(util.isValidPartialDate('1900', 'yyyy')).to.be.true;
+          });
+
+          it('returns true for the upper boundary 2100', () => {
+            expect(util.isValidPartialDate('2100', 'yyyy')).to.be.true;
+          });
+
+          it('returns false for years below 1900', () => {
+            expect(util.isValidPartialDate('1899', 'yyyy')).to.be.false;
             expect(util.isValidPartialDate('0000', 'yyyy')).to.be.false;
+          });
+
+          it('returns false for years above 2100', () => {
+            expect(util.isValidPartialDate('2101', 'yyyy')).to.be.false;
+            expect(util.isValidPartialDate('9999', 'yyyy')).to.be.false;
+          });
+
+          it('returns false for partially-numeric input', () => {
+            expect(util.isValidPartialDate('202a', 'yyyy')).to.be.false;
           });
         });
 
@@ -370,6 +396,11 @@ describe('AuroInputUtil', () => {
 
           it('returns false when month is out of range', () => {
             expect(util.isValidPartialDate('13/2025', 'mm/yyyy')).to.be.false;
+          });
+
+          it('returns false when year is outside 1900–2100 in mm/yyyy', () => {
+            expect(util.isValidPartialDate('12/1800', 'mm/yyyy')).to.be.false;
+            expect(util.isValidPartialDate('12/2200', 'mm/yyyy')).to.be.false;
           });
         });
       });

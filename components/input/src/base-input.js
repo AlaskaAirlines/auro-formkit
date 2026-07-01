@@ -538,7 +538,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Populates the `type` attribute on the input.
-       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number'}
+       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
        * @default 'text'
        */
       type: {
@@ -563,7 +563,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
-       * The format for this property should be ISO for `date` type inputs.
+       * For `date` type inputs using a full date format (year/month/day), the `value` should be ISO (YYYY-MM-DD). Partial date formats use the display format.
        */
       value: {
         type: String

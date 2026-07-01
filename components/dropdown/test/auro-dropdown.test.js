@@ -2238,6 +2238,71 @@ function runFullTest(mobileView) {
       await expect(el.isPopoverVisible).to.be.false;
     });
 
+    // ─── handleDropdownToggle async focus-restore path ────────────────
+    it('handleDropdownToggle should call trigger.focus() when bib closes with focus inside bib', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>
+            <button id="bib-button">Bib button</button>
+          </div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      // Focus the bib button so bibContent matches :focus-within.
+      el.querySelector('#bib-button').focus();
+
+      // Spy on trigger.focus before calling close.
+      let focusCalled = false;
+      el.trigger.focus = () => { focusCalled = true; };
+
+      // Close via handleDropdownToggle directly — the bib stays visually open so
+      // :focus-within remains true and the async restore path fires unconditionally.
+      el.handleDropdownToggle({ detail: { expanded: false } });
+      await elementUpdated(el);
+
+      // Drain the macrotask queue so the setTimeout callback fires.
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(focusCalled).to.be.true;
+    });
+
+    // ─── handleDropdownToggle async path skips focus when bib re-opens ──
+    it('handleDropdownToggle should not call trigger.focus() if dropdown re-opens before timer fires', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>
+            <button id="bib-button">Bib button</button>
+          </div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      el.querySelector('#bib-button').focus();
+
+      let focusCalled = false;
+      el.trigger.focus = () => { focusCalled = true; };
+
+      // Close then immediately re-open before the timer fires — guard should abort.
+      el.handleDropdownToggle({ detail: { expanded: false } });
+      el.isPopoverVisible = true;
+      await elementUpdated(el);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(focusCalled).to.be.false;
+    });
+
     // ─── chevron renders with onDark inverse appearance ───────────────
     it('chevron should render with inverse appearance when onDark is set', async () => {
       const el = await fixture(html`
