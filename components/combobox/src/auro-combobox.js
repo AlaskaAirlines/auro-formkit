@@ -1711,8 +1711,10 @@ export class AuroCombobox extends AuroElement {
           this.menu.loading ||
           this.noMatchOption
         ) {
-          if (!this.dropdownOpen && this._userTyped) {
-            this.showBib();
+          if (this._userTyped) {
+            if (!this.dropdownOpen) {
+              this.showBib();
+            }
             this._userTyped = false;
           }
         }
