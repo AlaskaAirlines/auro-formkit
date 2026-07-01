@@ -165,7 +165,7 @@
 </auro-accordion>
 <auro-header level="3" id="resetOption">Adding a reset option</auro-header>
 <p><code>auro-select</code> has no built-in way to clear a selection from the trigger. If a user picks the wrong option on an optional field, they have no way to reset their selection.</p>
-<p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>auro-menu</code> treats an empty or whitespace-only value as a clear-selection instruction, so an option with <code>value=""</code> will clear the field rather than remain selected.</p>
+<p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>value=""</code> won't work — <code>auro-menu</code> treats an empty string as a clear-selection signal.</p>
 <p>Use a non-empty sentinel like <code>value="none"</code> instead, choosing one that cannot collide with any real domain value. Either accept <code>"none"</code> on the backend, or coerce it in your submit handler:</p>
         <pre><code>payload.suffix = payload.suffix === "none" ? "" : payload.suffix;</code></pre>
 <div class="exampleWrapper">
