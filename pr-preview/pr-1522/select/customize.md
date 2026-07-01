@@ -8,7 +8,7 @@
 <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
 <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
 <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
-<auro-anchorlink fluid href="#noneOption" class="level2 body-xs">"None" Option</auro-anchorlink>
+<auro-anchorlink fluid href="#resetOption" class="level2 body-xs">Reset Option</auro-anchorlink>
 <auro-anchorlink fluid href="#noCheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
 <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
 <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
@@ -163,9 +163,11 @@
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="noneOption">Adding a "None" option</auro-header>
-<p><code>auro-select</code> has no built-in way to clear a selection from the trigger, so an accidental pick on an optional field strands the customer unless the menu offers a "None" option.</p>
-<p>Add a selectable "None" (or "N/A") entry at the top of the menu. <code>value=""</code> will not work — <code>auro-menu</code> reserves empty-string as the "cleared selection" signal and refuses to select the option. Use a non-empty sentinel like <code>value="none"</code> instead, then either accept <code>"none"</code> on the backend or coerce it to <code>""</code> (or omit the field) in your submit handler.</p>
+<auro-header level="3" id="resetOption">Adding a reset option</auro-header>
+<p><code>auro-select</code> has no built-in way to clear a selection from the trigger. If a user picks the wrong option on an optional field, they have no way to reset their selection.</p>
+<p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>auro-menu</code> treats an empty or whitespace-only value as a clear-selection instruction, so an option with <code>value=""</code> will clear the field rather than remain selected.</p>
+<p>Use a non-empty sentinel like <code>value="none"</code> instead, choosing one that cannot collide with any real domain value. Either accept <code>"none"</code> on the backend, or coerce it in your submit handler:</p>
+        <pre><code>payload.suffix = payload.suffix === "none" ? "" : payload.suffix;</code></pre>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/none-option.html) -->
 <!-- The below content is automatically added from ./../apiExamples/none-option.html -->
