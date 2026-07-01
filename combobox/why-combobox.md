@@ -4,7 +4,7 @@
 <p>Native <code>&lt;datalist&gt;</code> support varies between browsers. Some announce suggestion counts, others do not. Keyboard behavior is inconsistent, and there is no standard way to communicate selection state to screen readers.</p>
 <p><code>auro-combobox</code> provides:</p>
 <ul>
-<li><strong>ARIA combobox pattern</strong> — The input carries <code>aria-expanded</code>, <code>aria-owns</code>, and <code>aria-haspopup</code> to properly describe the relationship between the input and the suggestions list.</li>
+<li><strong>ARIA combobox pattern</strong> — The input carries <code>role="combobox"</code>, <code>aria-expanded</code>, and <code>aria-controls</code> to properly describe the relationship between the input and the suggestions list.</li>
 <li><strong>Active descendant tracking</strong> — <code>aria-activedescendant</code> moves with keyboard navigation so screen readers announce the highlighted option without moving DOM focus.</li>
 <li><strong>Live region announcements</strong> — Selections are announced via <code>aria-live="polite"</code>, and validation errors use <code>aria-live="assertive"</code>.</li>
 <li><strong>Full keyboard navigation</strong> — Arrow keys navigate options, Enter selects, Escape closes, Home/End jump to boundaries. A dedicated keyboard strategy handles all interactions.</li>
@@ -14,7 +14,7 @@
 <p><code>auro-combobox</code> supports two modes:</p>
 <ul>
 <li><strong>Suggestion mode</strong> (default) — The user can type any value. Suggestions are offered but not required.</li>
-<li><strong>Filter mode</strong> — The user must select from the available options. Typed text filters the list but cannot be submitted as a value. Validation enforces this constraint.</li>
+<li><strong>Filter mode</strong> — Typing filters the list and sets the component's <code>value</code> to the typed text, but validation keeps the input invalid until a menu option is selected. Consumers relying on <code>value</code> as a "committed selection" should gate on <code>validity</code>.</li>
 </ul>
 <auro-header level="2" id="realtimeFiltering">Real-time filtering</auro-header>
 <p><code>&lt;datalist&gt;</code> filtering is browser-controlled and cannot be customized. Some browsers match from the start of the option text, others match anywhere.</p>
