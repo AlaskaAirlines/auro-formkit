@@ -1812,6 +1812,26 @@ function runTest(mobileView) {
         expect(el.value).to.equal(JSON.stringify(['Apples', 'Bananas']));
       });
 
+      // ─── autofill/bfcache divergence on multiSelect is reverted ──
+      it('reverts hidden native <select> to formattedValue[0] on autofill in multiSelect', async () => {
+        const el = await multiSelectFixture();
+        el.value = JSON.stringify(['Apples', 'Bananas']);
+        await elementUpdated(el);
+
+        const { nativeSelect } = el;
+        expect(nativeSelect.value).to.equal('Apples');
+
+        // Simulate autofill/bfcache writing a divergent value + firing change,
+        // exactly what a password manager or restored form state would do.
+        nativeSelect.value = 'Cherries';
+        nativeSelect.dispatchEvent(new Event('change'));
+
+        // Component value stays authoritative and native select is snapped back
+        // to formattedValue[0] so form submissions under `name` stay consistent.
+        expect(el.value).to.equal(JSON.stringify(['Apples', 'Bananas']));
+        expect(nativeSelect.value).to.equal('Apples');
+      });
+
       // ─── renderNativeSelect falls back to textContent when option has no value ──
       it('renderNativeSelect uses textContent when option.value is empty', async () => {
         const el = await defaultFixture();
