@@ -855,25 +855,6 @@ function runFullTest(mobileView) {
         expect(errorHelpText.getAttribute('aria-live')).to.equal('assertive');
         expect(errorHelpText.textContent.trim()).to.equal('Date is required');
       });
-
-      // This test should pass but fails due to a bug
-      // it('should set aria-invalid on the inner input when in error state', async () => {
-      //   const el = await fixture(html`
-      //     <auro-datepicker required></auro-datepicker>
-      //   `);
-
-      //   el.value = '01/15/2024';
-      //   el.validate(true);
-      //   await elementUpdated(el);
-      //   expect(el.getAttribute('validity')).to.equal('valid');
-
-      //   // Clear value to trigger valueMissing
-      //   el.value = '';
-      //   el.validate(true);
-      //   await elementUpdated(el);
-
-      //   expect(el.getAttribute('validity')).to.equal('valueMissing');
-      // });
     });
 
     describe('format', () => {
@@ -921,7 +902,6 @@ function runFullTest(mobileView) {
         await expect(el.getAttribute('format')).to.equal('dd/mm/yyyy');
       });
 
-      // it('should accept ISO value and display it in the configured format', async() => {
       // Verify the 'format' property accepts and apply a customized date format.
       it('should accept and apply a customized date format', async() => {
         const el = await fixture(html`
