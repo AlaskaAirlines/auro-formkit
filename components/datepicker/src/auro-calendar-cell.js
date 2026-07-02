@@ -544,7 +544,7 @@ export class AuroCalendarCell extends LitElement {
       // to attach — but cap attempts so a permanently detached cell doesn't
       // spin forever. 10 turns is far more than any observed race needs.
       this._firstUpdatedRetries = (this._firstUpdatedRetries || 0) + 1;
-      if (this._firstUpdatedRetries > 10) { // eslint-disable-line no-magic-numbers
+      if (this._firstUpdatedRetries > 10) {
         return;
       }
       this._firstUpdatedRetryTimer = setTimeout(() => {
