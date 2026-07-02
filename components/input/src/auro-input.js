@@ -323,20 +323,15 @@ export class AuroInput extends BaseInput {
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+    // flatten:true resolves through auro-combobox's forwarding slot
+    // (<slot name="displayValue" slot="displayValue">) so a clone appended
+    // directly to auro-input's light DOM alongside the forwarder still
+    // counts as content. The prior nodes[0].tagName === 'SLOT' recursion
+    // discarded any siblings past the forwarder.
+    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const nodes = slot.assignedNodes({ flatten: true });
 
-    // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
-    if (nodes && nodes[0] && nodes[0].tagName === 'SLOT') {
-      nodes = nodes[0].assignedNodes();
-    }
-
-    let hasContent = false;
-
-    if (nodes.length > 0) {
-      hasContent = true;
-    }
-
-    this.hasDisplayValueContent = hasContent;
+    this.hasDisplayValueContent = nodes.length > 0;
   }
 
   firstUpdated() {
