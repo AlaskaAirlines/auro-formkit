@@ -679,8 +679,19 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Returns a memoized Set of blackout timestamps (seconds) drawn from both
    * the legacy `disabledDays` array and the datepicker's ISO `blackoutDates`.
-   * The cache invalidates when either source array's reference changes, which
-   * matches Lit's own reactive identity semantics for array properties.
+   *
+   * The cache invalidates on **reference identity** — only when the
+   * consumer reassigns the array (`el.blackoutDates = [...]`), matching
+   * Lit's own reactivity semantics for array properties. In-place mutations
+   * on the existing array (`push`, `splice`, index assignment) will NOT
+   * invalidate the cache and the new entries will be silently ignored.
+   * Consumers must reassign to update — see the JSDoc on
+   * `auro-datepicker.blackoutDates` for the recommended pattern.
+   *
+   * A shallow-equality tier was considered but rejected: it would run
+   * O(N) work on every cell render (this method is called per-cell via
+   * `isBlackout()`) and still wouldn't catch same-length value swaps,
+   * offering a false sense of safety.
    * @private
    * @returns {Set<Number>}
    */

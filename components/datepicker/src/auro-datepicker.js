@@ -281,6 +281,14 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
+       *
+       * **Immutable update required.** The datepicker treats this array as
+       * immutable and memoizes a lookup Set keyed on the array's reference
+       * identity — matching Lit's own reactivity semantics for array
+       * properties. In-place mutations (`blackoutDates.push(...)`,
+       * `blackoutDates[i] = ...`, `blackoutDates.splice(...)`) will not
+       * invalidate the cache and the new entries will be silently ignored.
+       * To update, reassign the property: `el.blackoutDates = [...el.blackoutDates, '2024-12-25']`.
        */
       blackoutDates: {
         type: Array,
