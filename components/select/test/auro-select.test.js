@@ -1334,6 +1334,31 @@ function runTest(mobileView) {
           await elementUpdated(el);
           await expect(dropdown.isPopoverVisible).to.be.true;
         });
+
+        // Guards auro-select.js first-highlight fallback: on open with no
+        // selection, the first *active* option (not just non-disabled) must be
+        // highlighted so aria-activedescendant never points at a hidden row or
+        // static placeholder.
+        it('should highlight the first non-hidden, non-static option on open', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static>Header</auro-menuoption>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry">Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive.value).to.equal('banana');
+        });
       });
 
       describe('setMenuValue', () => {
@@ -3160,6 +3185,54 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(lastOption);
         });
 
+        it('should skip options with the hidden attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry" hidden>Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          // A hidden option must never land in aria-activedescendant.
+          await expect(el.optionActive.value).to.equal('banana');
+        });
+
+        it('should skip options with the static attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption static>Footer</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          await expect(el.optionActive.value).to.equal('banana');
+          await expect(el.optionActive.hasAttribute('static')).to.be.false;
+        });
+
         // Regression guard: pressing End while collapsed must produce exactly one
         // auroMenu-activatedOption dispatch. show() synchronously fires
         // auroDropdown-toggled, whose handler will set a fallback active option
@@ -3542,6 +3615,54 @@ function runTest(mobileView) {
           const menu = el.querySelector('auro-menu');
           const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
           await expect(el.optionActive).to.equal(firstOption);
+        });
+
+        it('should skip a leading hidden option', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry">Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          // A hidden option must never land in aria-activedescendant.
+          await expect(el.optionActive.value).to.equal('banana');
+        });
+
+        it('should skip a leading static placeholder', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static nomatch>No results</auro-menuoption>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          await expect(el.optionActive.value).to.equal('apple');
+          await expect(el.optionActive.hasAttribute('static')).to.be.false;
         });
 
         // Regression guard: see matching test under End — same double-dispatch risk.
@@ -4336,14 +4457,13 @@ function runTest(mobileView) {
           await elementUpdated(el);
 
           // 'n' is the first letter of the static "No results" placeholder
-          // (the only option whose displayed text starts with 'n').
-          // Type-ahead must NOT activate that row.
+          // (the only option whose displayed text starts with 'n'). Type-ahead
+          // must NOT activate that row — since no other option matches, the
+          // expected outcome is no active option at all.
           el.updateActiveOptionBasedOnKey('n');
           await elementUpdated(el);
 
-          if (el.menu.optionActive) {
-            await expect(el.menu.optionActive.hasAttribute('static')).to.be.false;
-          }
+          await expect(el.menu.optionActive === undefined || el.menu.optionActive === null).to.be.true;
         });
 
         it('should not mutate the buffer when all options are disabled', async () => {
