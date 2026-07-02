@@ -1751,6 +1751,10 @@ export class AuroCalendar extends RangeDatepicker {
    * originally tried aria-live="polite" here, but VoiceOver treats
    * polite as "wait until idle" — which never happens during active
    * keyboard navigation — so the announcements were silently dropped.
+   *
+   * This is a documented deviation from WCAG 2.1 SC 4.1.3, which
+   * prefers `polite` for status messages. See the "Documented
+   * Deviation" section in components/datepicker/docs/pages/accessibility.md.
    * @private
    * @param {String} dateStr - The localized date string to announce.
    * @returns {void}
