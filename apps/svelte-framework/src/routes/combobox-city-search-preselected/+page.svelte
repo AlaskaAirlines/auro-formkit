@@ -95,11 +95,13 @@
 	}
 
 	function handleOptionSelected(event: Event) {
-		// Ignore `input` events that bubble up from inner trigger/bib inputs —
-		// only react when auro-combobox itself dispatches the event.
-		if (event.target !== event.currentTarget) return;
-		const el = event.currentTarget as any;
-		selectedValue = el?.value ?? '';
+		// auro-combobox dispatches a CustomEvent with a detail payload;
+		// inner trigger/bib input events bubble up as plain Events.
+		// event.target/currentTarget are unreliable here because native
+		// input events cross shadow DOM with retargeting.
+		const detail = (event as CustomEvent).detail;
+		if (!detail) return;
+		selectedValue = (detail.value ?? '') as string;
 	}
 
 	function triggerValidation() {
