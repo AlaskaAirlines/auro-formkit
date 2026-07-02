@@ -41,7 +41,7 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | `role="rowgroup"` | Body group | Groups the week rows. |
 | `role="row"` | Week row | Groups each week of date cells. |
 | `role="columnheader"` | Day-of-week header | Each weekday cell in the header row exposes the abbreviated day name as visible text and the full localized day name via `aria-label` (e.g. `aria-label="Sunday"`). |
-| `role="gridcell"` | In-range date cell, active-descendant proxy | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and a visually-hidden text label. A proxy `<span>` inside the calendar grid wrapper mirrors the active cell's ARIA attributes for `aria-activedescendant`. |
+| `role="gridcell"` | In-range date cell | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and an `aria-label` on the host with the full localized date string. |
 | Out-of-range date cell | Cells outside the valid min/max range | The button uses the native `disabled` attribute (spec-compliant way to express "not actionable" on a `<button>`) and is filtered out of keyboard navigation. The host cell drops its `role` and `aria-label` so assistive tech does not browse into it — no `aria-hidden` or `role="presentation"` is applied. |
 | `aria-disabled="true"` | Blackout date cell | Cells matching the `blackout` dates list. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label includes ", unavailable" to communicate that the date cannot be selected. |
 | `aria-selected` | Date cell button | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
@@ -51,9 +51,9 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 
 The component uses `delegatesFocus: true` on its shadow root, meaning focus is automatically delegated to the first focusable element inside the component (the date input).
 
-<auro-header level="3" id="ariaActivedescendant">aria-activedescendant</auro-header>
+<auro-header level="3" id="activeCellTracking">Active Cell Tracking</auro-header>
 
-The calendar grid uses an **`aria-activedescendant`** pattern for keyboard navigation. DOM focus remains on a wrapper element (`#calendarGrid`) while `aria-activedescendant` points to a proxy `<span>` that mirrors the active cell's ARIA attributes (`aria-label`, `aria-selected`, `aria-current`, `aria-disabled`). This approach keeps the screen reader in sync with the visually active cell without moving DOM focus on every keystroke, which prevents duplicate announcements during rapid arrow-key navigation.
+The calendar tracks a single active cell across the rendered month(s). DOM focus stays on the `#calendarGrid` wrapper the entire time — arrow keys never move focus onto individual cell buttons. `setActiveCell()` imperatively marks the chosen cell (adds the `active` property on the cell host and an `.activeCell` class on its button) without a Lit re-render. Screen-reader awareness of the active cell is provided by an `aria-live` region rather than by `aria-activedescendant`, so the reader is never asked to shift its point of regard on every arrow keypress — a debounce coalesces bursts (see [Screen Reader Announcements](#screenReaderAnnouncements)).
 
 The active cell receives an `.activeCell` CSS class to display a visible focus ring, since the native `:focus-visible` pseudo-class applies to the grid wrapper (which holds actual DOM focus), not to individual cells.
 
@@ -66,7 +66,7 @@ The initial active cell is determined in priority order:
 
 <auro-header level="3" id="focusOnOpen">Focus on Open</auro-header>
 
-When the calendar bib opens, focus moves to the calendar grid wrapper (`#calendarGrid`). The `aria-activedescendant` attribute points to a proxy element that carries the active date cell's label, so screen readers announce the active date. This applies to both desktop and fullscreen modes.
+When the calendar bib opens, focus moves to the calendar grid wrapper (`#calendarGrid`). The initial active cell is marked via `setActiveCell()`, and the `aria-live` region announces its full localized label so screen readers describe the starting position. This applies to both desktop and fullscreen modes.
 
 <auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
 
