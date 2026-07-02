@@ -536,6 +536,18 @@ export class AuroCalendarCell extends LitElement {
   }
 
   firstUpdated() {
+    this._initFromAncestors();
+  }
+
+  /**
+   * Wires the cell to its ancestor calendar-month and calendar (and, via
+   * the calendar, to the datepicker). Extracted from firstUpdated() so the
+   * retry loop can re-attempt without recursively invoking a Lit lifecycle
+   * method (which is outside the framework's contract).
+   * @private
+   * @returns {void}
+   */
+  _initFromAncestors() {
     const calendarMonth = this.runtimeUtils.closestElement('auro-formkit-calendar-month', this);
     const calendar = this.runtimeUtils.closestElement('auro-formkit-calendar', calendarMonth);
 
@@ -549,7 +561,7 @@ export class AuroCalendarCell extends LitElement {
       }
       this._firstUpdatedRetryTimer = setTimeout(() => {
         this._firstUpdatedRetryTimer = null;
-        this.firstUpdated();
+        this._initFromAncestors();
       }, 0);
       return;
     }

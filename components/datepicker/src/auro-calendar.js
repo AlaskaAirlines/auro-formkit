@@ -140,8 +140,11 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * @deprecated See constructor JSDoc — migrate to
    * `auro-datepicker.blackoutDates`. The getter/setter pair exists so the
-   * one-time deprecation warning fires on every consumer assignment,
-   * not only when `_getBlackoutSet()` happens to rebuild.
+   * one-time deprecation warning fires as soon as a consumer assigns a
+   * non-empty array (empty assignments are ignored — an empty array is
+   * indistinguishable from the constructor default and would produce a
+   * spurious warning), rather than only when `_getBlackoutSet()` happens
+   * to rebuild.
    * @returns {Array} The current legacy `disabledDays` array.
    */
   get disabledDays() {
@@ -904,12 +907,15 @@ export class AuroCalendar extends RangeDatepicker {
     // that has no DOM cell. Determine the visible range based on centralDate and
     // the number of rendered months.
     //
-    // numCalendars is assigned during renderAllCalendars(), which runs after
-    // updated() — so the visible-change handler's eager computeActiveDate()
-    // call arrives with numCalendars still undefined. Math.max(undefined, 1)
-    // is NaN, which would silently skip the visible-month scan below. Fall
-    // back to maximumRenderableMonths' desktop default (1 for non-range,
-    // 2 for range) so the scan window is correctly sized on first open.
+    // numCalendars is assigned inside renderAllCalendars(), which runs during
+    // render() — so by the time the visible-change handler in updated()
+    // calls computeActiveDate() in the same cycle, numCalendars is normally
+    // set. Guard against the pre-first-render path anyway (e.g. any future
+    // caller that reaches computeActiveDate before render() has run):
+    // Math.max(undefined, 1) is NaN, which would silently skip the
+    // visible-month scan below. Fall back to maximumRenderableMonths'
+    // desktop default (1 for non-range, 2 for range) so the scan window is
+    // correctly sized whenever numCalendars is not yet populated.
     let renderedMonths = null;
 
     if (Number.isFinite(this.numCalendars) && this.numCalendars > 0) {
