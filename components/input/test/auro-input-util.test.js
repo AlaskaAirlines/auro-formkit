@@ -253,6 +253,21 @@ describe('AuroInputUtil', () => {
         expect(result).to.equal('xx/xx/xxxx');
       });
 
+      it('toModelValue with mm/dd/yy maps 2-digit years using date-fns rolling window', () => {
+        // date-fns `yy` token uses a rolling window: [currentYear-49, currentYear+50].
+        // Compute expected years dynamically so assertions stay correct as the window slides.
+        const util = new AuroInputUtilities({ locale: 'en-US' });
+        const refYear = new Date().getFullYear();
+        const resolve2digit = (yy) => {
+          const base = (Math.floor(refYear / 100) * 100) + yy;
+          if (base > refYear + 50) return base - 100;
+          if (base < refYear - 49) return base + 100;
+          return base;
+        };
+        expect(util.toModelValue('01/15/25', 'mm/dd/yy')).to.equal(`${resolve2digit(25)}-01-15`);
+        expect(util.toModelValue('12/31/99', 'mm/dd/yy')).to.equal(`${resolve2digit(99)}-12-31`);
+      });
+
       it('getDateMaskFromLocale uses locale parameter when this.locale is falsy', () => {
         const util = new AuroInputUtilities({ locale: 'en-US' });
         util.locale = '';
