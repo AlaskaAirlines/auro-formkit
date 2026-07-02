@@ -6026,6 +6026,87 @@ function runFullTest(mobileView) {
           calendar.getAllFocusableCells = origGetCells;
         }
       });
+
+      // Real-DOM coverage for the grid-width fix (commit f87f81742).
+      // Reads the resolved CSS width instead of asserting a value inside JS,
+      // so a stylesheet regression that ships a different width — e.g.
+      // reverting to the old calc(100% - ...) rule — fails here.
+      it('should render the calendar-month at the design-token width', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const monthEl = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        expect(monthEl).to.exist;
+
+        // $calendar-width in style-auro-calendar-month.scss is 336px.
+        // Use getComputedStyle().width so we compare against the resolved
+        // CSS `width` property, independent of padding/border-box math.
+        expect(window.getComputedStyle(monthEl).width).to.equal('336px');
+      });
+
+      // Real-DOM coverage for the mobile scroll fix (commit 5b0d5720a).
+      // The mocked ancestor-walk test above verifies the arithmetic in
+      // isolation; this one exercises the whole pipeline against a real
+      // scrollable ancestor. Instead of relying on the fullscreen dialog
+      // (which computes its scroll region from viewport metrics that vary
+      // in the headless test env), we impose a fixed-height scroll region
+      // directly on #calendarGrid so the scrollable ancestor is guaranteed
+      // to exist. The ancestor-walk logic itself is what's under test —
+      // which container happens to be the scroller is incidental.
+      it('should actually scroll a real scrollable ancestor so the active cell is in view', async () => {
+        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15"></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const grid = calendar.shadowRoot.querySelector('#calendarGrid');
+        expect(grid).to.exist;
+
+        // Impose a real scrollable region. No stubs on scrollBy /
+        // getBoundingClientRect / getComputedStyle — the layout engine
+        // computes everything.
+        grid.style.overflowY = 'auto';
+        grid.style.maxHeight = '100px';
+        await nextFrame();
+        expect(grid.scrollHeight).to.be.greaterThan(grid.clientHeight);
+
+        const allCells = calendar.getAllFocusableCells();
+        expect(allCells.length).to.be.greaterThan(10);
+        // Pick a cell late in the list so it starts below the 100px viewport.
+        const targetCell = allCells[allCells.length - 1];
+        const button = targetCell._cachedButton || targetCell.shadowRoot.querySelector('button.day');
+
+        grid.scrollTop = 0;
+        await nextFrame();
+        const gridRectBefore = grid.getBoundingClientRect();
+        const buttonRectBefore = button.getBoundingClientRect();
+        expect(buttonRectBefore.top).to.be.greaterThanOrEqual(gridRectBefore.bottom);
+
+        calendar.setActiveCell(targetCell.day.date);
+        calendar.scrollToActiveCell();
+        await nextFrame();
+
+        // scrollTop moving up from 0 is the observable evidence that the
+        // ancestor walk found the scroll container and applied a delta —
+        // the primary behavior guarantee of commit 5b0d5720a.
+        expect(grid.scrollTop).to.be.greaterThan(0);
+
+        // And the button now sits within the grid's viewport.
+        const gridRectAfter = grid.getBoundingClientRect();
+        const buttonRectAfter = button.getBoundingClientRect();
+        expect(buttonRectAfter.top).to.be.lessThan(gridRectAfter.bottom);
+        expect(buttonRectAfter.bottom).to.be.greaterThan(gridRectAfter.top);
+      });
     });
 
     describe('focusCloseButton', () => {
