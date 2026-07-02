@@ -152,10 +152,17 @@ export class AuroCalendar extends RangeDatepicker {
    * @param {Array} value - The legacy `disabledDays` array to set.
    */
   set disabledDays(value) {
+    const oldValue = this._disabledDays;
     if (Array.isArray(value) && value.length > 0) {
       this._warnDisabledDaysDeprecated();
     }
     this._disabledDays = value;
+    // `disabledDays` is a Lit `@property({ type: Array })` on the
+    // RangeDatepicker base class; Lit's generated setter (which we've
+    // overridden here to insert the warning) is what normally invalidates
+    // the reactive cycle. Re-invoke requestUpdate manually so consumer
+    // assignments still re-render the calendar.
+    this.requestUpdate('disabledDays', oldValue);
   }
 
   static get styles() {
