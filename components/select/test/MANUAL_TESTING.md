@@ -47,9 +47,9 @@
 [ ] Enter on a highlighted option — verify it selects the option, closes the dialog, and returns focus to the trigger
 [ ] Escape — verify the dialog closes without selecting and focus returns to the trigger
 [ ] Space on a highlighted option — verify same behavior as Escape
-[ ] Tab (no option highlighted) — verify the dialog closes and focus returns to the trigger
-[ ] Tab (option highlighted) — verify the highlighted option is selected, the dialog closes, and focus returns to the trigger
-[ ] Shift+Tab — verify the highlighted option is selected, the dialog closes, and focus moves to the previous element
+[ ] Tab (no option highlighted) — verify the dialog closes and focus moves to the next focusable element after the select (same as desktop; native `<dialog>` focus restoration + browser Tab traversal)
+[ ] Tab (option highlighted) — verify the highlighted option is selected, the dialog closes, and focus moves to the next focusable element after the select
+[ ] Shift+Tab — verify the highlighted option is selected, the dialog closes, and focus moves to the previous focusable element before the select
 [ ] Home — verify visual focus moves to the first option
 [ ] End — verify visual focus moves to the last option
 
