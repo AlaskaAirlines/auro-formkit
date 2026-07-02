@@ -647,20 +647,37 @@ function runFullTest(mobileView) {
         await expect(el.getAttribute('validity')).to.not.equal('valueMissing');
       });
 
-      // TODO: revisit. Under behavior="suggestion" (the persistInputFixture
-      // default), typed text sets this.value via handleInputValueChange, so
-      // "zz" without a menu match is currently treated as valid. The
-      // "must select from menu" semantic only applies under behavior="filter".
-      // Decide whether persistInput should imply filter-style required-selection
-      // semantics, then either add a behavior="filter" fixture or remove this.
-      it.skip('reports valueMissing on blur when typed text has no matching selection under persistInput', async () => {
-        const el = await persistInputFixture(mobileView);
+      // filter behavior enforces "must select from menu": typed text without
+      // a matching option leaves optionSelected undefined and required's
+      // valueMissing fires on blur. persistInput here only pins the typed
+      // display value; the required-selection semantic comes from behavior.
+      it('reports valueMissing on blur when typed text has no matching selection under filter + persistInput', async () => {
+        if (mobileView) {
+          await setViewport({ width: 500, height: 800 });
+        } else {
+          await setViewport({ width: 800, height: 800 });
+        }
+        const el = await fixture(html`
+          <auro-combobox required persistInput behavior="filter">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
         await elementUpdated(el);
 
         el.focus();
         await elementUpdated(el);
         await sendKeys({ press: 'z' });
         await sendKeys({ press: 'z' });
+        await elementUpdated(el);
+
+        // Close the bib before blur so the combobox's focusout handler runs
+        // its validate() call (see auro-combobox.js line 1310 — validate is
+        // skipped while dropdownOpen to avoid flashing errors mid-selection).
+        await sendKeys({ press: 'Escape' });
 
         el.input.focus();
         el.input.blur();
@@ -2402,7 +2419,7 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('validity')).to.be.false;
       });
 
-      it.skip('should re-run input validation when a fresh user selection lands', async () => {
+      it('should re-run input validation when a fresh user selection lands', async () => {
         const el = await fixture(html`
           <auro-combobox type="credit-card">
             <span slot="label">Card</span>
@@ -2420,9 +2437,12 @@ function runFullTest(mobileView) {
 
         await elementUpdated(el);
 
-        if (mobileView) {
-          await sendKeys({ press: 'Escape' });
-        }
+        // Close the bib before blur — the combobox's focusout handler skips
+        // `validate()` while `dropdownOpen` is true (see auro-combobox.js
+        // line 1310: prevents flashing pre-selection errors during a menu
+        // option mousedown). Real users tab/click-out which closes the bib
+        // first; typed-then-blur without closing is a test-only shape.
+        await sendKeys({ press: 'Escape' });
 
         el.input.focus();
         el.input.blur();
@@ -2438,6 +2458,8 @@ function runFullTest(mobileView) {
         await el.input.updateComplete;
         await new Promise((resolve) => setTimeout(resolve, 0));
 
+        // Enter selects the option and closes the bib in most paths, but
+        // mobile fullscreen may need an explicit Escape to return focus.
         if (mobileView) {
           await sendKeys({ press: 'Escape' });
         }

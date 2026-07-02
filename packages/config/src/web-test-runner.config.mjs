@@ -7,6 +7,11 @@ export default {
     'test/**/*.test.js',
     '!**/node_modules/**'
   ],
+  // Filter out browser `console.debug()` output. We emit `console.debug` from
+  // component internals (e.g. deprecation notices, locale fallbacks) to help
+  // consumers troubleshoot integration issues at runtime — they shouldn't
+  // clutter our own test output. Warnings, errors, log, and info still print.
+  filterBrowserLogs: (log) => log.type !== 'debug',
   reporters: [defaultReporter(), jsonSummaryReporter()],
   nodeResolve: {
     moduleDirectories: [

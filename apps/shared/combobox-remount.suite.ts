@@ -57,53 +57,70 @@ export function comboboxRemountSuite(framework: string, options?: SuiteOptions) 
       expect(value).toBe(initialValue);
     });
 
-    test.skip('setting an invalid value clears the selection', async ({ page }) => {
+    // Preserve contract: setting an unmatched programmatic value keeps the
+    // freeform value on the combobox while clearing menu.value/optionSelected.
+    // Matches the WTR "should clear menu.optionSelected when value is set to
+    // an unmatched string" regression test.
+    test('setting an invalid value clears menu selection but preserves the value', async ({ page }) => {
       await waitForComboboxValue(page, initialValue);
 
       await page.locator('#set-invalid').click();
 
-      // Wait for value to be cleared
+      // Wait for the menu selection to clear.
       await page.waitForFunction(
-        () => (document.querySelector('auro-combobox') as any)?.value === undefined,
+        () => {
+          const el = document.querySelector('auro-combobox') as any;
+          return el?.menu?.value === undefined && el?.menu?.optionSelected === undefined;
+        },
         { timeout: 3000 },
       );
 
       const result = await page.locator('auro-combobox').evaluate((el: any) => ({
         value: el.value,
-        optionSelected: el.optionSelected,
+        menuValue: el.menu?.value,
+        menuOptionSelected: el.menu?.optionSelected,
       }));
 
-      expect(result.value).toBeUndefined();
-      expect(result.optionSelected).toBeUndefined();
+      expect(result.value).toBe('invalid-option');
+      expect(result.menuValue).toBeUndefined();
+      expect(result.menuOptionSelected).toBeUndefined();
     });
 
-    test.skip('double-clicking set-invalid keeps value cleared', async ({ page }) => {
+    test('double-clicking set-invalid keeps the freeform value pinned', async ({ page }) => {
       await waitForComboboxValue(page, initialValue);
 
-      // First click - confirm the invalid value is cleared
+      // First click - confirm the menu state clears to the unmatched value.
       await page.locator('#set-invalid').click();
       await page.waitForFunction(
-        () => (document.querySelector('auro-combobox') as any)?.value === undefined,
+        () => {
+          const el = document.querySelector('auro-combobox') as any;
+          return el?.value === 'invalid-option' && el?.menu?.optionSelected === undefined;
+        },
         { timeout: 3000 },
       );
 
-      // Second click - ensure the assignment takes effect before polling for cleared state
+      // Second click - re-assert the same value; state must remain identical.
       await page.locator('#set-invalid').click();
       await page.locator('auro-combobox').evaluate(async (el: any) => {
         await el.updateComplete;
       });
       await page.waitForFunction(
-        () => (document.querySelector('auro-combobox') as any)?.value === undefined,
+        () => {
+          const el = document.querySelector('auro-combobox') as any;
+          return el?.value === 'invalid-option' && el?.menu?.optionSelected === undefined;
+        },
         { timeout: 3000 },
       );
 
       const result = await page.locator('auro-combobox').evaluate((el: any) => ({
         value: el.value,
-        optionSelected: el.optionSelected,
+        menuValue: el.menu?.value,
+        menuOptionSelected: el.menu?.optionSelected,
       }));
 
-      expect(result.value).toBeUndefined();
-      expect(result.optionSelected).toBeUndefined();
+      expect(result.value).toBe('invalid-option');
+      expect(result.menuValue).toBeUndefined();
+      expect(result.menuOptionSelected).toBeUndefined();
     });
   });
 }

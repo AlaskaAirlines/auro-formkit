@@ -95,7 +95,10 @@
 	}
 
 	function handleOptionSelected(event: Event) {
-		const el = event.target as any;
+		// Ignore `input` events that bubble up from inner trigger/bib inputs —
+		// only react when auro-combobox itself dispatches the event.
+		if (event.target !== event.currentTarget) return;
+		const el = event.currentTarget as any;
 		selectedValue = el?.value ?? '';
 	}
 

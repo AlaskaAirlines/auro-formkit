@@ -1246,7 +1246,21 @@ export class AuroCombobox extends AuroElement {
       this.optionActive = evt.detail;
 
       if (this.input) {
-        this.input.setActiveDescendant(this.optionActive);
+        // Defer to after this optionActive assignment flushes through Lit:
+        // the template binds `.a11yActivedescendant` on the trigger input,
+        // which propagates to auro-input.updated() → setAttribute(
+        // 'aria-activedescendant', id) on the internal <input>. That
+        // setAttribute call clears the reflected ariaActiveDescendantElement
+        // property, so setting the ref first (synchronously here) gets
+        // clobbered. Awaiting updateComplete lets the attribute write finish
+        // first; the element reference then sticks and screen readers can
+        // cross the shadow-DOM boundary to the auro-menuoption in light DOM.
+        const targetOption = this.optionActive;
+        this.updateComplete.then(() => {
+          if (this.input && this.optionActive === targetOption) {
+            this.input.setActiveDescendant(targetOption);
+          }
+        });
       }
 
       // In fullscreen mode the menu sits inside a nested <dialog> shadow root,
@@ -1381,6 +1395,18 @@ export class AuroCombobox extends AuroElement {
         this.inputInBib.skipNextProgrammaticInputEvent = true;
         bibNativeInput.value = this.input.value || '';
       }
+    }
+
+    // SPA preselect guard: on init render, auro-input's notifyValueChanged
+    // echoes an empty value through as an isProgrammatic input event before
+    // the framework-set combobox.value has propagated down to the input.
+    // Without this bail, the `this.value = this.input.value` below clobbers
+    // the framework value with '' and clear() wipes optionSelected. Scoped
+    // to the exact shape of that echo (isProgrammatic + non-empty combobox
+    // value + empty input.value) so it doesn't affect the swap/typed paths
+    // where value/input already track each other through the sync helpers.
+    if (event && event.isProgrammatic && this.value && !this.input.value) {
+      return;
     }
 
     this.value = this.input.value;

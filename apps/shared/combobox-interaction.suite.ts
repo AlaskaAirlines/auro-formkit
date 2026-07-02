@@ -310,49 +310,28 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       });
     });
 
-    // ── Screen reader live region ─────────────────────────────────────────
+    // ── Screen reader announcements ───────────────────────────────────────
 
     test.describe('Screen reader announcements', () => {
-      test.skip('populates live region when an option is activated', async ({ page }) => {
-        test.setTimeout(45_000);
+      // Desktop's screen reader hook is aria-activedescendant — expressed
+      // via the ariaActiveDescendantElement DOM property so the reference
+      // can cross the shadow-DOM boundary between the trigger input and the
+      // menu option in light DOM. The polite live region (#srAnnouncement)
+      // is populated only in fullscreen mode (see auro-combobox.js:1259 and
+      // the fullscreen-mobile suite below), so no desktop live-region test.
+      test('points the trigger input at the active option via ariaActiveDescendantElement', async ({ page }) => {
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
         await waitForOptionsReady(page, 'no-filter');
 
         await page.keyboard.press('ArrowDown');
 
-        // The live region is inside the combobox's shadow root
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            const liveRegion = root?.querySelector('#srAnnouncement');
-            return liveRegion?.textContent ?? '';
-          });
-        }, { timeout: 3_000 }).not.toBe('');
-      });
-
-      test.skip('clears live region after announcement duration', async ({ page }) => {
-        test.setTimeout(45_000);
-        await typeInCombobox(page, 'no-filter', 'a');
-        await waitForBibOpen(page, 'no-filter');
-
-        await page.keyboard.press('ArrowDown');
-
-        // Wait for the announcement to appear
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            return root?.querySelector('#srAnnouncement')?.textContent ?? '';
-          });
-        }, { timeout: 3_000 }).not.toBe('');
-
-        // Wait for it to be cleared (component uses a ~1000ms timer)
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            return root?.querySelector('#srAnnouncement')?.textContent ?? '';
-          });
-        }, { timeout: 5_000 }).toBe('');
+        await expect.poll(() =>
+          combobox(page, 'no-filter').evaluate((el: any) => {
+            const inputEl = el.input?.inputElement;
+            return inputEl?.ariaActiveDescendantElement?.value ?? null;
+          }),
+        { timeout: 3_000 }).not.toBeNull();
       });
     });
 
@@ -597,6 +576,32 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
           return bibText || hostText;
         });
       }, { timeout: 3_000 }).not.toBe('');
+    });
+
+    test('live region clears after announcement duration in fullscreen', async ({ page }) => {
+      await typeInCombobox(page, 'no-filter', 'a');
+      await waitForBibOpen(page, 'no-filter');
+
+      // Wait for fullscreen to settle
+      await expect.poll(async () =>
+        combobox(page, 'no-filter').evaluate((el: any) => Boolean(el.dropdown?.isBibFullscreen)),
+      ).toBe(true);
+
+      await page.keyboard.press('ArrowDown');
+
+      const readLiveRegion = () =>
+        combobox(page, 'no-filter').evaluate((el: any) => {
+          const bibEl = el.dropdown?.bibElement?.value;
+          const bibText = bibEl?.shadowRoot?.querySelector('#srAnnouncement')?.textContent ?? '';
+          const hostText = el.shadowRoot?.querySelector('#srAnnouncement')?.textContent ?? '';
+          return bibText || hostText;
+        });
+
+      // Wait for the announcement to appear
+      await expect.poll(readLiveRegion, { timeout: 3_000 }).not.toBe('');
+
+      // Wait for it to be cleared (announceToScreenReader uses a ~1000ms timer)
+      await expect.poll(readLiveRegion, { timeout: 5_000 }).toBe('');
     });
   });
 }
