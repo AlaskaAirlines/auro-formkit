@@ -861,7 +861,21 @@ export class AuroCalendar extends RangeDatepicker {
     // rendered month(s) first so a single-month calendar does not pick a date
     // that has no DOM cell. Determine the visible range based on centralDate and
     // the number of rendered months.
-    const renderedMonths = Math.max(this.numCalendars, 1);
+    //
+    // numCalendars is assigned during renderAllCalendars(), which runs after
+    // updated() — so the visible-change handler's eager computeActiveDate()
+    // call arrives with numCalendars still undefined. Math.max(undefined, 1)
+    // is NaN, which would silently skip the visible-month scan below. Fall
+    // back to maximumRenderableMonths' desktop default (1 for non-range,
+    // 2 for range) so the scan window is correctly sized on first open.
+    let renderedMonths = null;
+
+    if (Number.isFinite(this.numCalendars) && this.numCalendars > 0) {
+      renderedMonths = this.numCalendars;
+    } else {
+      renderedMonths = this.noRange ? 1 : 2;
+    }
+
     const visibleAnchor = this.centralDateObject ?? new Date(now * 1000);
     const visMonthStart = new Date(visibleAnchor.getFullYear(), visibleAnchor.getMonth(), 1);
     visMonthStart.setHours(0, 0, 0, 0);
