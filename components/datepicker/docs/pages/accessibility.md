@@ -78,7 +78,7 @@ When the calendar bib opens, focus moves to the calendar grid wrapper (`#calenda
 
 <auro-header level="3" id="ariaLiveDeviation">Documented Deviation: `aria-live="assertive"` for Arrow-Key Navigation</auro-header>
 
-WCAG 2.1 SC 4.1.3 (Status Messages) generally recommends `aria-live="polite"` for non-critical status updates so screen readers don't interrupt the user. The calendar's navigation live region intentionally uses `aria-live="assertive"` instead. This is a knowing deviation, made for the following reason:
+WCAG 2.1 SC 4.1.3 (Status Messages) generally recommends `aria-live="polite"` for non-critical status updates so screen readers don't interrupt the user. The calendar's navigation live region intentionally uses `aria-live="assertive"` instead. This is a knowing deviation, made for the following reasons:
 
 - **VoiceOver behavior** — VoiceOver treats `polite` announcements as "wait until idle," and during active arrow-key traversal the screen reader is never idle. Polite announcements are silently dropped, leaving keyboard users with no feedback about which cell is now active. `assertive` is the only reliable way to communicate the newly focused date on macOS/iOS VoiceOver during navigation.
 - **Interruption mitigation** — A 150 ms debounce is applied in [`announceFocusDebounced`](../src/auro-calendar.js) so only the final cell after a burst of arrow keys is announced. Rapid navigation produces one announcement per pause, not one per keystroke, which minimizes the interruption cost of `assertive`.
