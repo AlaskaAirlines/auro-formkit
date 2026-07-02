@@ -1230,8 +1230,15 @@ export class AuroDatePicker extends AuroElement {
         // Always clear the inert flag. Only restore focus to the input when the datepicker
         // still has focus (e.g. Escape, date selected) — not when the user tabbed away,
         // which would pull them back and require extra Tab presses to escape.
+        //
+        // `_restoreFocusOnClose` is set by the Escape handler in
+        // datepickerKeyboardStrategy.js to force restore even when hasFocus
+        // has already been cleared — hidePopover() (desktop non-modal path)
+        // can drop focus to <body> before this update fires.
         this.dropdown.trigger.inert = false;
-        if (this.hasFocus) {
+        const shouldRestoreFocus = this.hasFocus || this._restoreFocusOnClose;
+        this._restoreFocusOnClose = false;
+        if (shouldRestoreFocus) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
               this.inputList[0].focus();
