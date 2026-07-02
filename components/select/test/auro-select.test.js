@@ -4551,6 +4551,45 @@ function runTest(mobileView) {
           expect(el.typeaheadBuffer).to.equal('');
         });
 
+        it('should clear the type-ahead buffer when value is set programmatically', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed the buffer while the host keeps focus.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          // Programmatic value change (e.g. a parent controller or reset button)
+          // must reset the buffer so the next keystroke starts fresh.
+          el.value = 'Grapes';
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+
+          // 'b' alone should now activate 'Bananas' — would fail if 'a' had
+          // survived, since 'ab' has no match.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+        });
+
+        it('should clear the type-ahead buffer on reset()', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          el.reset();
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
         it('cycles active option via type-ahead in multiselect mode without altering selection', async () => {
           const el = await multiSelectFixture();
           await elementUpdated(el);
