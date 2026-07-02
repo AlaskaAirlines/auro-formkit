@@ -1801,6 +1801,45 @@ function runFullTest(mobileView) {
         expect(el.valueObject).to.be.undefined;
       });
 
+      it('valueObject round-trips correctly on US DST spring-forward day (2025-03-09)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2025-03-09';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2025-03-09');
+      });
+
+      it('valueObject round-trips correctly on US DST fall-back day (2024-11-03)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-11-03';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-11-03');
+      });
+
+      it('valueObject round-trips correctly on a leap day (2024-02-29)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-02-29';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-02-29');
+      });
+
+      it('valueObject is undefined for Feb 29 on a non-leap year (2023-02-29)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2023-02-29';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.undefined;
+      });
+
       it('keeps ISO model value and updates display when format changes', async () => {
         const el = await fixture(html`
           <auro-input type="date" format="mm/dd/yyyy"></auro-input>
