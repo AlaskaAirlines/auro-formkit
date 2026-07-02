@@ -1166,12 +1166,13 @@ export class AuroDatePicker extends AuroElement {
         this.calendar.activeCellDate = null;
 
         // Show the month containing the selected date (or today) instead of
-        // whichever month the user last navigated to.
+        // whichever month the user last navigated to. Route through
+        // updateCentralDate so centralDate stays first-of-month.
         // Respect consumer-provided centralDate/calendarStartDate if no value is set.
         if (this.valueObject) {
-          this.centralDate = this.value;
+          this.calendarRenderUtil.updateCentralDate(this, this.value);
         } else if (!this.centralDate && !this.calendarStartDate && !this.minDate) {
-          this.centralDate = dateFormatter.toISOFormatString(new Date());
+          this.calendarRenderUtil.updateCentralDate(this, new Date());
         }
       }
 
@@ -1755,8 +1756,12 @@ export class AuroDatePicker extends AuroElement {
 
       if (this.value && this.value.length === this.inputList[0].lengthForType && !(this.wasCellClick && this.range)) {
         // Skip centralDate update when user clicked a cell in range mode
-        // to prevent the displayed months from shifting
-        this.centralDate = this.value;
+        // to prevent the displayed months from shifting. Route through
+        // updateCentralDate so centralDate stays first-of-month — direct
+        // assignment of the raw value briefly holds a mid-month string
+        // and violates the invariant that observers (e.g. calendar sync)
+        // rely on.
+        this.calendarRenderUtil.updateCentralDate(this, this.value);
       }
 
       this.setHasValue();
@@ -1814,8 +1819,10 @@ export class AuroDatePicker extends AuroElement {
 
       if (this.valueEnd && this.valueEnd.length === this.inputList[1].lengthForType && !this.wasCellClick) {
         // Skip centralDate update when user clicked a cell in range mode
-        // to prevent the displayed months from shifting
-        this.centralDate = this.valueEnd;
+        // to prevent the displayed months from shifting. Route through
+        // updateCentralDate to preserve the first-of-month invariant
+        // (see matching comment in the value branch above).
+        this.calendarRenderUtil.updateCentralDate(this, this.valueEnd);
       }
 
       this.validate();
