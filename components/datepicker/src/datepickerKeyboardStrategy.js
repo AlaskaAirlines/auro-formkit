@@ -24,6 +24,15 @@ export const datepickerKeyboardStrategy = {
     evt.stopPropagation();
     evt.preventDefault();
 
+    // Signal to the visibility-change handler in auro-datepicker.js that
+    // focus should be restored to the trigger regardless of hasFocus.
+    // hidePopover() (desktop non-modal path) does not auto-restore focus,
+    // and hiding the grid's popover ancestor drops focus to <body>. That
+    // synchronously fires focusout on the datepicker host — clearing
+    // hasFocus — before updated() runs, which would otherwise skip the
+    // input refocus. Native <dialog>.close() (modal path) restores focus
+    // itself, but the flag is harmless there.
+    component._restoreFocusOnClose = true;
     component.hideBib();
   },
 
