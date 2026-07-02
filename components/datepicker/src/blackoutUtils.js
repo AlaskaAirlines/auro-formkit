@@ -20,23 +20,28 @@
  * @returns {number|null} Local-midnight Unix timestamp (seconds), or null.
  */
 export function parseIsoToTimestamp(isoStr) {
+  // Strict YYYY-MM-DD matcher with named groups. Rejects trailing garbage
+  // ("2024x-01-01"), short segments ("2024-1-1"), and any non-digit
+  // characters. `parseInt` alone accepted both because it stops at the
+  // first non-digit and doesn't require a minimum length.
+  const ISO_DATE_RE = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/u;
+  const MAX_MONTH = 12;
+  const MAX_DAY = 31;
+
   if (typeof isoStr !== 'string') {
     return null;
   }
-  const parts = isoStr.split('-');
-  if (parts.length !== 3) {
+  const match = ISO_DATE_RE.exec(isoStr);
+  if (!match) {
     return null;
   }
-  const year = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10);
-  const day = parseInt(parts[2], 10);
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
-    return null;
-  }
+  const year = Number(match.groups.year);
+  const month = Number(match.groups.month);
+  const day = Number(match.groups.day);
   // Reject overflow values like "2024-13-40" — JS `new Date(year, month, day)`
   // silently normalizes those to a different calendar day, which would
   // disable the wrong date if we let the result through.
-  if (month < 1 || month > 12 || day < 1 || day > 31) {
+  if (month < 1 || month > MAX_MONTH || day < 1 || day > MAX_DAY) {
     return null;
   }
   const date = new Date(year, month - 1, day);
