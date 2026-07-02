@@ -10161,12 +10161,18 @@ function runFullTest(mobileView) {
         `);
         await elementUpdated(el);
         await el.focus();
+        await elementUpdated(el);
 
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // sendKeys() dispatches real keyboard events via WebDriver and
+        // resolves once the event is delivered. Combined with
+        // elementUpdated (Lit reactive settle) and nextFrame (browser
+        // paint), we can wait deterministically instead of sleeping.
         await sendKeys({ press: 'Tab' });
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await elementUpdated(el);
         await sendKeys({ press: key });
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await elementUpdated(el);
+        await nextFrame();
+
         await expect(el.value).to.be.undefined;
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
