@@ -1131,6 +1131,8 @@ export class AuroCalendar extends RangeDatepicker {
       let targetIndex = -1;
       if (direction === 'next') {
         targetIndex = currentIndex + 1;
+      } else if (direction === 'prev') {
+        targetIndex = currentIndex - 1;
       }
 
       if (targetIndex >= 0 && targetIndex < allCells.length) {
