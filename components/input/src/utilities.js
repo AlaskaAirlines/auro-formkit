@@ -7,7 +7,7 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, radix, no-nested-ternary */
+/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, no-nested-ternary, complexity, max-lines */
 
 import IMask from 'imask';
 
