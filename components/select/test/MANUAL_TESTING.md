@@ -53,6 +53,19 @@
 [ ] Home — verify visual focus moves to the first option
 [ ] End — verify visual focus moves to the last option
 
+## Type-ahead / Type-to-search
+
+[ ] With bib closed, type letters that match an option prefix (e.g., "ba") — verify the bib opens and the first matching option is highlighted
+[ ] With bib closed, type letters that match no option (e.g., "zzz") — verify the bib stays closed (intentional deviation from native select)
+[ ] With bib open, type same letter repeatedly (e.g., "a" then "a" again with no prefix match) — verify visual focus cycles through options starting with that letter
+[ ] With bib open, type a multi-letter prefix (e.g., "app") — verify the first option whose text starts with the buffer is highlighted (prefix match, not cycle)
+[ ] Type letters, then wait ~500ms without typing — verify the next keystroke starts a fresh buffer
+[ ] With bib open and typeahead buffer active, press Space — verify the space extends the buffer (does not toggle/close the bib)
+[ ] With bib open and buffer empty, press Space on a highlighted option — verify same behavior as Escape (closes without selecting)
+[ ] Type letters to build a buffer, then press Escape — verify the buffer clears (next keystroke starts fresh, not a continuation)
+[ ] Type letters to build a buffer, then blur the trigger (Tab away) — verify the buffer clears
+[ ] Set value programmatically or call `reset()` while a buffer is pending — verify the buffer clears
+
 ## Touch / Tap Interactions
 
 [ ] Tap the trigger — verify the bib opens (popover on desktop, fullscreen on mobile)
@@ -149,6 +162,21 @@
 [ ] Verify focus trapping in fullscreen dialog mode
 [ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify focus indicators are clearly visible
+
+### Multi-Select Announcements
+[ ] In multi-select mode, select an option — verify screen reader announces `"<label>, selected"` (only the toggled option, not the full list)
+[ ] In multi-select mode, deselect a previously selected option — verify screen reader announces `"<label>, not selected"`
+[ ] Rapidly toggle multiple options — verify each add/remove is announced individually (announcements are debounced ~300ms so the `aria-expanded` collapse announcement does not override them)
+
+### aria-setsize / aria-posinset
+[ ] Inspect any option in the DOM — verify `aria-setsize` equals the total count of visible (non-hidden, non-static) options
+[ ] Inspect any option — verify `aria-posinset` equals its 1-based position among visible options
+[ ] Dynamically add or remove options via slot change (or via async/lazy load) — verify `aria-setsize` and `aria-posinset` re-stamp on all remaining options
+[ ] Change `value` programmatically to trigger a menu re-init — verify positional ARIA attributes remain correct
+
+### Mobile Announcement Routing
+[ ] At the fullscreen breakpoint, open the dialog and select/deselect an option in multi-select — verify the screen reader hears the announcement (the live region is routed into the bib's shadow root because everything outside the `<dialog>` is inert)
+[ ] At desktop (popover) sizes, verify the same announcements come from the host component's shadow root live region
 
 ## Slots
 
