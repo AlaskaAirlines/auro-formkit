@@ -980,14 +980,17 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    let inputEvent = null;
-
-    inputEvent = new Event('input', {
+    // This echoes Lit's reactive value update (and handleClickClear's
+    // programmatic clear) — it is NOT a fresh user-input event. Mark it
+    // `isProgrammatic` so consumers (e.g. auro-combobox) can distinguish
+    // it from genuine user typing and skip clobbering their own
+    // programmatic state during init-time renders.
+    const inputEvent = new Event('input', {
       bubbles: true,
       composed: true,
     });
+    inputEvent.isProgrammatic = true;
 
-    // Dispatched event to alert outside shadow DOM context of event firing.
     this.dispatchEvent(inputEvent);
   }
 
