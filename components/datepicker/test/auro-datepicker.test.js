@@ -8991,8 +8991,13 @@ function runFullTest(mobileView) {
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
 
-        // June 1-14 are before minDate — assert they exist so the test never silently passes
-        const minTs = new Date('2024-06-15').getTime() / 1000;
+        // June 1-14 are before minDate — assert they exist so the test never silently passes.
+        // `new Date(2024, 5, 15)` is local midnight so it aligns with how the
+        // cell stores `day.date` (also local-midnight). Parsing `'2024-06-15'`
+        // instead treats it as UTC midnight, which drifts the boundary across
+        // day-of-month in positive-offset zones (e.g. Europe/London BST) and
+        // sweeps in-range cells into the filter.
+        const minTs = new Date(2024, 5, 15).getTime() / 1000;
         const outOfRangeCells = allCells.filter((cell) => cell.day && cell.day.date < minTs);
 
         expect(outOfRangeCells.length).to.be.greaterThan(0);
@@ -9029,7 +9034,9 @@ function runFullTest(mobileView) {
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
 
-        const minTs = new Date('2024-06-15').getTime() / 1000;
+        // Local midnight to match the cell's day.date representation — see the
+        // matching comment in the "should mark out-of-range cells as disabled" test above.
+        const minTs = new Date(2024, 5, 15).getTime() / 1000;
         const cellsBeforeMin = allCells.filter((cell) => cell.day && cell.day.date < minTs);
 
         expect(cellsBeforeMin.length).to.be.greaterThan(0);
