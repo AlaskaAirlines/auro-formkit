@@ -838,6 +838,12 @@ export class AuroSelect extends AuroElement {
 
   /**
    * Binds all behavior needed to the menu after rendering.
+   *
+   * The `<auro-menu>` reference is captured once and not re-targeted on
+   * `slotchange`. Runtime option mutations are covered via
+   * `auroMenu-optionsChange`, so swap options inside the menu freely; do not
+   * swap the `<auro-menu>` element itself under a live select — remount the
+   * parent `<auro-select>` instead.
    * @private
    * @returns {void}
    */
