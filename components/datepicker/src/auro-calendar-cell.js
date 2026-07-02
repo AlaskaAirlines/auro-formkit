@@ -540,9 +540,20 @@ export class AuroCalendarCell extends LitElement {
     const calendar = this.runtimeUtils.closestElement('auro-formkit-calendar', calendarMonth);
 
     if (!calendar) {
-      setTimeout(() => this.firstUpdated(), 0);
+      // Retry on the next event-loop turn to give the ancestor chain a chance
+      // to attach — but cap attempts so a permanently detached cell doesn't
+      // spin forever. 10 turns is far more than any observed race needs.
+      this._firstUpdatedRetries = (this._firstUpdatedRetries || 0) + 1;
+      if (this._firstUpdatedRetries > 10) { // eslint-disable-line no-magic-numbers
+        return;
+      }
+      this._firstUpdatedRetryTimer = setTimeout(() => {
+        this._firstUpdatedRetryTimer = null;
+        this.firstUpdated();
+      }, 0);
       return;
     }
+    this._firstUpdatedRetries = 0;
     this.calendar = calendar;
     this.datepicker = calendar.datepicker;
     this._slotContentHandler = () => {
@@ -569,6 +580,10 @@ export class AuroCalendarCell extends LitElement {
     super.disconnectedCallback();
     if (this.datepicker && this._slotContentHandler) {
       this.datepicker.removeEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
+    }
+    if (this._firstUpdatedRetryTimer) {
+      clearTimeout(this._firstUpdatedRetryTimer);
+      this._firstUpdatedRetryTimer = null;
     }
   }
 
