@@ -766,6 +766,64 @@ function runFullTest(mobileView) {
       await expect(right.input.value).to.equal('a');
     });
 
+    // Regression: with persistInput + framework re-mount (Svelte `{#key}`),
+    // a fresh combobox mounts with `value` set to a valid option but
+    // `input.value` still holding stale typed text from another field.
+    // handleSlotChange must reconcile by matching against `this.value` (not
+    // just `input.value`) so the option's displayValue clone lands in the
+    // trigger — otherwise the trigger shows the stale typed text (or nothing
+    // when hidden by the empty `<span slot="displayValue">` forwarder).
+    it('should sync menu.optionSelected to combobox.value on mount when input.value diverges under persistInput', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      // Framework-set combobox.value that DOESN'T match the trigger's typed
+      // value (mimics the swap-remount shape from consumer apps).
+      const el = await fixture(html`
+        <auro-combobox persistInput value="Oranges">
+          <span slot="label">Name</span>
+          <span slot="displayValue"></span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="opt-apples">
+              Apples
+              <span slot="displayValue">Apples</span>
+            </auro-menuoption>
+            <auro-menuoption value="Oranges" id="opt-oranges">
+              Oranges
+              <span slot="displayValue">Oranges</span>
+            </auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Simulate the pre-swap stale-typed-text state by directly writing to
+      // the trigger input (bypassing the Lit template's typedValue binding).
+      el.input.value = 'stale-typed';
+      await elementUpdated(el);
+
+      // Re-trigger the slotchange path (the one that fires on Svelte
+      // re-mount / SPA hydration) so the reconciliation runs against the
+      // now-diverged input.value + framework-set combobox.value.
+      el.handleSlotChange({ target: { name: '' } });
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Menu must reflect the framework-set value, not the stale typed text.
+      await expect(el.menu.value).to.equal('Oranges');
+      await expect(el.menu.optionSelected).to.not.be.undefined;
+      await expect(el.menu.optionSelected.value).to.equal('Oranges');
+      // The option's <span slot="displayValue"> must be cloned into the
+      // trigger so the visible display picks up the right label.
+      const clone = el.input.querySelector('[slot="displayValue"]:not(slot)');
+      await expect(clone).to.not.be.null;
+      await expect(clone.textContent.trim()).to.equal('Oranges');
+    });
+
     // Regression: programmatic value/input mutations in noFilter + persistInput
     // + suggestion mode (the dynamic-menu apiExample swap pattern) used to pump
     // a ~125-update cascade between handleInputValueChange and the

@@ -786,9 +786,11 @@ export class AuroCombobox extends AuroElement {
   /**
    * Processes hidden state of all menu options and determines if there are any available options not hidden.
    * @private
+   * @param {object} [root0={}] - Optional flag bag.
+   * @param {boolean} [root0.preferComboboxValue=false] - When true, a match on `this.value` wins the tie-break over `this.input.value` (used by handleSlotChange on mount / re-mount).
    * @returns {void}
    */
-  handleMenuOptions() {
+  handleMenuOptions({ preferComboboxValue = false } = {}) {
     this.generateOptionsArray();
     this.availableOptions = [];
     // Single source of truth for the menu's filter/highlight token per call.
@@ -809,8 +811,20 @@ export class AuroCombobox extends AuroElement {
       option.setAttribute('aria-posinset', index + 1);
     });
 
-    if (this.input.value && this.menu.options && this.menu.options.some((opt) => opt.value === this.input.value)) {
-      this.setMenuValue(this.input.value);
+    // On mount/re-mount (via handleSlotChange), prefer the framework-set
+    // `this.value` when it matches a menu option. Covers SPA preselect and
+    // consumer swap patterns (e.g. Svelte `{#key}` re-mount) where
+    // `this.value` is authoritative but `this.input.value` may be empty or
+    // carry stale typed text from another field. Do NOT enable this in the
+    // event-driven path — user clears would be undone by re-syncing to the
+    // previous combobox.value.
+    const valueMatches = preferComboboxValue &&
+      this.value &&
+      this.menu.options &&
+      this.menu.options.some((opt) => opt.value === this.value);
+    const matchValue = valueMatches ? this.value : this.input.value;
+    if (matchValue && this.menu.options && this.menu.options.some((opt) => opt.value === matchValue)) {
+      this.setMenuValue(matchValue);
       this.syncValuesAndStates();
     }
 
@@ -1841,7 +1855,11 @@ export class AuroCombobox extends AuroElement {
           }
         });
 
-        this.handleMenuOptions();
+        // Slot change (mount/re-mount): pass `preferComboboxValue` so that a
+        // framework-set `this.value` wins over any stale `input.value` when
+        // matching against the newly-available options. Fixes the display
+        // for SPA preselect and Svelte `{#key}` re-mount swap patterns.
+        this.handleMenuOptions({ preferComboboxValue: true });
 
         break;
 
