@@ -101,7 +101,10 @@ export class AuroCalendar extends RangeDatepicker {
      * Support will be removed in a future major release.
      * @private
      */
-    this.disabledDays = [];
+    // Initialize the backing field directly so the constructor's default
+    // empty array doesn't trigger the deprecation warning. Assignments from
+    // consumers still route through the setter below.
+    this._disabledDays = [];
 
     /**
      * @private
@@ -132,6 +135,27 @@ export class AuroCalendar extends RangeDatepicker {
      * @private
      */
     this._calendarInstanceId = Date.now().toString(36);
+  }
+
+  /**
+   * @deprecated See constructor JSDoc — migrate to
+   * `auro-datepicker.blackoutDates`. The getter/setter pair exists so the
+   * one-time deprecation warning fires on every consumer assignment,
+   * not only when `_getBlackoutSet()` happens to rebuild.
+   * @returns {Array} The current legacy `disabledDays` array.
+   */
+  get disabledDays() {
+    return this._disabledDays;
+  }
+
+  /**
+   * @param {Array} value - The legacy `disabledDays` array to set.
+   */
+  set disabledDays(value) {
+    if (Array.isArray(value) && value.length > 0) {
+      this._warnDisabledDaysDeprecated();
+    }
+    this._disabledDays = value;
   }
 
   static get styles() {
