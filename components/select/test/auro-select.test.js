@@ -3,6 +3,7 @@ import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plu
 
 import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
+import sinon from 'sinon';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
@@ -2251,18 +2252,30 @@ function runTest(mobileView) {
           const el = await defaultFixture();
           await elementUpdated(el);
 
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
-          await elementUpdated(el);
+          // Fake only setTimeout/clearTimeout — the announcement's cleanup timer
+          // is scheduled from inside a real rAF, so we need the fake in place
+          // before that rAF fires, but rAF/microtasks/Date must stay real so
+          // Lit's scheduler and @open-wc/testing helpers keep working.
+          const clock = sinon.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
-          expect(liveRegion.textContent).to.not.equal('');
+          try {
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+            await elementUpdated(el);
 
-          // Multiple announcements can chain (e.g., active-option followed by selection),
-          // each resetting the 1000ms cleanup timer. Wait long enough for the final
-          // announcement's timer to expire.
-          await new Promise((resolve) => setTimeout(resolve, 2200));
-          expect(liveRegion.textContent).to.equal('');
+            // Real rAF frames: the first flushes announceToScreenReader's rAF
+            // callback (sets textContent, arms the fake 1000ms cleanup); the
+            // second absorbs any chained announcement (e.g., active-option
+            // followed by selection) that would rearm the timer.
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+            expect(liveRegion.textContent).to.not.equal('');
+
+            await clock.tickAsync(1000);
+            expect(liveRegion.textContent).to.equal('');
+          } finally {
+            clock.restore();
+          }
         });
 
         it('should not announce activation of an already-selected option', async () => {
