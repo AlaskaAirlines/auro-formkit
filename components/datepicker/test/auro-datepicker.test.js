@@ -3427,6 +3427,34 @@ function runFullTest(mobileView) {
       expect(el.valueEnd).to.equal(undefined);
     });
 
+    // Regression guard: a value-only change that trips the willUpdate swap
+    // must also clear the second input and calendar.dateTo in the same
+    // reactive cycle. Property changes made inside willUpdate are added to
+    // the current cycle's changedProperties (per Lit's lifecycle contract),
+    // so the updated() valueEnd branch — which imperatively syncs the
+    // stale end input and calendar.dateTo — runs in the same cycle.
+    it('updated clears second input and calendar.dateTo on value-only swap', async () => {
+      const el = await fixture(html`
+        <auro-datepicker range value="2024-01-05" valueEnd="2024-01-10"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      // Baseline: end state is populated end-to-end.
+      expect(el.valueEnd).to.equal('2024-01-10');
+      expect(el.inputList[1].value).to.equal('2024-01-10');
+      expect(el.calendar.dateTo).to.exist;
+
+      // Change ONLY value — no direct valueEnd assignment. This is
+      // the exact scenario Copilot flagged: changedProperties starts
+      // as {value} only, and willUpdate has to propagate.
+      el.value = '2024-01-15';
+      await elementUpdated(el);
+
+      expect(el.valueEnd).to.equal(undefined);
+      expect(el.inputList[1].value).to.equal('');
+      expect(el.calendar.dateTo).to.equal(undefined);
+    });
+
     // ─── minDate updates central date when minDate year is later ────────
     it('minDate updates central date when minDateYear > calendar.year', async () => {
       const el = await fixture(html`
