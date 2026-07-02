@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 import { navigateArrow } from '@aurodesignsystem/utils';
-import { getEnabledOptions } from './selectUtils.js';
+import { getActiveOptions } from './selectUtils.js';
 
 export const selectKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
@@ -53,8 +53,10 @@ export const selectKeyboardStrategy = {
   End(component, evt, ctx) {
     evt.preventDefault();
     evt.stopPropagation();
-    // `pop()` is safe here: getEnabledOptions returns a fresh filtered array.
-    const lastOption = getEnabledOptions(component.menu).pop();
+    // `pop()` is safe here: getActiveOptions returns a fresh filtered array.
+    // Uses "active" (not "enabled") so hidden and static rows — which a screen
+    // reader must not announce as focused — are skipped.
+    const lastOption = getActiveOptions(component.menu).pop();
     if (!lastOption) {
       return;
     }
@@ -85,7 +87,7 @@ export const selectKeyboardStrategy = {
   Home(component, evt, ctx) {
     evt.preventDefault();
     evt.stopPropagation();
-    const [firstOption] = getEnabledOptions(component.menu);
+    const [firstOption] = getActiveOptions(component.menu);
     if (!firstOption) {
       return;
     }

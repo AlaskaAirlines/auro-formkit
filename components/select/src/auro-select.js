@@ -20,7 +20,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
-import { getActiveOptions, getEnabledOptions } from './selectUtils.js';
+import { getActiveOptions } from './selectUtils.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -588,8 +588,11 @@ export class AuroSelect extends AuroElement {
           } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
             this.menu.updateActiveOption(this.optionSelected[0]);
           } else {
-            // If no activeOption has yet to be set, then make the first enabled option active by default
-            const [firstActive] = getEnabledOptions(this.menu);
+            // If no activeOption has yet to be set, make the first active option
+            // (non-disabled, non-hidden, non-static) active by default. "Active" —
+            // not just "enabled" — so hidden rows and static placeholders never
+            // land in aria-activedescendant on open.
+            const [firstActive] = getActiveOptions(this.menu);
             this.menu.updateActiveOption(firstActive);
           }
         }
