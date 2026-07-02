@@ -3762,6 +3762,98 @@ function runTest(mobileView) {
         });
       });
 
+      // Regression: chorded shortcuts (Cmd+C, Ctrl+V, Alt+X, Cmd+Space, …)
+      // must not leak into the type-ahead buffer or toggle the bib. Native
+      // <select> ignores modified letter/Space keys; the default-branch
+      // guard in selectKeyboardStrategy enforces the same.
+      describe('Modifier-chorded printable keys', () => {
+        it('should ignore Ctrl+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'v', ctrlKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should ignore Meta+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', metaKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should ignore Alt+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', altKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should not toggle the bib on Ctrl+Space / Meta+Space / Alt+Space', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', ctrlKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', metaKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', altKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should not extend an active typeahead buffer with Ctrl+letter', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Seed a buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Ctrl+p must not append 'p' to the buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', ctrlKey: true }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+        });
+      });
+
       describe('Tab', () => {
         it('should close the bib', async () => {
           const el = await defaultFixture();

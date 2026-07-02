@@ -112,6 +112,15 @@ export const selectKeyboardStrategy = {
   },
 
   default(component, evt, ctx) {
+    // Ignore keys chorded with Ctrl/Meta/Alt so browser/OS shortcuts
+    // (Cmd+C, Ctrl+V, Alt+X, Cmd+Space, …) don't leak into typeahead
+    // or toggle the bib. Native <select> ignores modified keys.
+    // ArrowUp/ArrowDown handle modifier+arrow explicitly above; this
+    // guard only affects the default (printable/Space) branch.
+    if (evt.ctrlKey || evt.metaKey || evt.altKey) {
+      return;
+    }
+
     // Space resolves to either typeahead-buffer extension or bib toggle
     // depending on whether a type-ahead buffer is active. Mirrors native
     // <select> and the WAI-ARIA APG Listbox guidance: mid-typeahead space
