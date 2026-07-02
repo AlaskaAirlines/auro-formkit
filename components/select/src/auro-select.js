@@ -925,10 +925,15 @@ export class AuroSelect extends AuroElement {
         if (this.dropdown.isPopoverVisible) {
           announceToScreenReader(this._getAnnouncementRoot(), message);
         } else {
-          // Typeahead-on-closed fires this event before `show()` flips
-          // isPopoverVisible. Defer so the announcement targets the bib's
-          // live region once the fullscreen <dialog> opens — otherwise it
-          // lands in the host root, which is inert under the active modal.
+          // Typeahead-on-closed calls updateActiveOption() before show(), so
+          // this handler runs with isPopoverVisible still false. queueMicrotask
+          // is safe because show() → showBib() flips isPopoverVisible and
+          // dialog.showModal() both run synchronously in the same task; the
+          // microtask queue only drains once _handleTypeahead unwinds, by
+          // which point _getAnnouncementRoot() resolves to the bib's shadow
+          // root inside the now-open modal. Do NOT switch to auroDropdown-toggled
+          // — it fires before showModal(), landing the announcement in the
+          // host root while the dialog is still not-yet-modal.
           queueMicrotask(() => announceToScreenReader(this._getAnnouncementRoot(), message));
         }
       }
