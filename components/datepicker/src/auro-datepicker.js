@@ -1676,6 +1676,18 @@ export class AuroDatePicker extends AuroElement {
       this.calendar.requestUpdate();
       this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
     }
+
+    // Range invariant: if a value change (from click or programmatic) has
+    // moved start past end, clear valueEnd here so both properties land in
+    // the SAME reactive cycle. Doing it in updated() would schedule a
+    // second cycle after cellClickActive/wasCellClick has already been
+    // consumed by the value branch, leaving the valueEnd branch to run
+    // with a stale handshake and racing with any intervening programmatic
+    // value assignments.
+    if ((changedProperties.has('value') || changedProperties.has('valueEnd')) &&
+      this.valueObject && this.valueEndObject && this.valueObject > this.valueEndObject) {
+      this.valueEnd = undefined;
+    }
   }
 
   updated(changedProperties) {
@@ -1825,10 +1837,6 @@ export class AuroDatePicker extends AuroElement {
 
       // Validate the last input
       this.validation.validate(lastInput, true);
-    }
-
-    if (this.valueObject && this.valueEndObject && this.valueObject > this.valueEndObject) {
-      this.valueEnd = undefined;
     }
 
     // This resets the datepicker when the minDate is set to a new value that is
