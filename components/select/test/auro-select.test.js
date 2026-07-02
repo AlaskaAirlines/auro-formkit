@@ -2432,24 +2432,6 @@ function runTest(mobileView) {
             trigger.click();
             await expect(dropdown.isPopoverVisible).to.be.false;
           });
-
-          // // BUG: The select uses popover='manual' which does not support light dismiss,
-          // // and noHideOnThisFocusLoss is set to true, so clicking outside does not close the bib.
-          // it('should close the bib when clicking outside the select element', async () => {
-          //   const el = await defaultFixture();
-          //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-          //   const trigger = dropdown.querySelector('[slot="trigger"]');
-
-          //   trigger.click();
-          //   await elementUpdated(el);
-          //   await expect(dropdown.isPopoverVisible).to.be.true;
-
-          //   // Click outside the select element
-          //   document.body.click();
-          //   await elementUpdated(el);
-
-          //   await expect(dropdown.isPopoverVisible).to.be.false;
-          // });
         });
 
         describe('Menu Option', () => {
