@@ -786,8 +786,16 @@ export class AuroCombobox extends AuroElement {
   /**
    * Processes hidden state of all menu options and determines if there are any available options not hidden.
    * @private
-   * @param {object} [root0={}] - Optional flag bag.
-   * @param {boolean} [root0.preferComboboxValue=false] - When true, a match on `this.value` wins the tie-break over `this.input.value` (used by handleSlotChange on mount / re-mount).
+   * @param {object} [options={}] - Optional flag bag.
+   * @param {boolean} [options.preferComboboxValue=false] - When true,
+   *   handleMenuOptions matches the selected option against `this.value`
+   *   first instead of `this.input.value`. Needed on mount and re-mount
+   *   because under `persistInput` the consumer's typedValue prop can drift
+   *   from the framework value (Svelte `{#key}` re-mount after a swap, or
+   *   SPA preselect after route change) and the old input-first match would
+   *   then pick the stale text. Only handleSlotChange passes this; typing
+   *   and clearing paths keep the input-first match so user clears aren't
+   *   undone.
    * @returns {void}
    */
   handleMenuOptions({ preferComboboxValue = false } = {}) {
@@ -815,16 +823,17 @@ export class AuroCombobox extends AuroElement {
     // `this.value` when it matches a menu option. Covers SPA preselect and
     // consumer swap patterns (e.g. Svelte `{#key}` re-mount) where
     // `this.value` is authoritative but `this.input.value` may be empty or
-    // carry stale typed text from another field. Do NOT enable this in the
-    // event-driven path — user clears would be undone by re-syncing to the
-    // previous combobox.value.
-    const valueMatches = preferComboboxValue &&
-      this.value &&
-      this.menu.options &&
-      this.menu.options.some((opt) => opt.value === this.value);
-    const matchValue = valueMatches ? this.value : this.input.value;
-    if (matchValue && this.menu.options && this.menu.options.some((opt) => opt.value === matchValue)) {
-      this.setMenuValue(matchValue);
+    // carry stale typed text from another field. Event-driven callers do
+    // not pass the flag, otherwise user clears would be undone by
+    // re-syncing to the previous combobox.value.
+    if (preferComboboxValue &&
+        this.value &&
+        this.menu.options?.some((opt) => opt.value === this.value)) {
+      this.setMenuValue(this.value);
+      this.syncValuesAndStates();
+    } else if (this.input.value &&
+        this.menu.options?.some((opt) => opt.value === this.input.value)) {
+      this.setMenuValue(this.input.value);
       this.syncValuesAndStates();
     }
 
@@ -1260,15 +1269,19 @@ export class AuroCombobox extends AuroElement {
       this.optionActive = evt.detail;
 
       if (this.input) {
-        // Defer to after this optionActive assignment flushes through Lit:
-        // the template binds `.a11yActivedescendant` on the trigger input,
-        // which propagates to auro-input.updated() → setAttribute(
-        // 'aria-activedescendant', id) on the internal <input>. That
-        // setAttribute call clears the reflected ariaActiveDescendantElement
-        // property, so setting the ref first (synchronously here) gets
-        // clobbered. Awaiting updateComplete lets the attribute write finish
-        // first; the element reference then sticks and screen readers can
-        // cross the shadow-DOM boundary to the auro-menuoption in light DOM.
+        // setActiveDescendant runs after Lit's update finishes because the
+        // template's `.a11yActivedescendant` binding calls setAttribute on
+        // the internal <input> in auro-input.updated(), which clears the
+        // reflected ariaActiveDescendantElement property. Setting the ref
+        // synchronously here would get overwritten by that attribute write.
+        // Awaiting updateComplete lets the attribute write finish first,
+        // then the ref sticks and screen readers can cross the shadow-DOM
+        // boundary to the auro-menuoption in light DOM.
+        //
+        // The equality check covers the async gap: this.optionActive can
+        // change before the callback runs (user arrowed elsewhere, or the
+        // menu closed and cleared it to null), so we bail if the target
+        // no longer matches to avoid reinstating a stale ref.
         const targetOption = this.optionActive;
         this.updateComplete.then(() => {
           if (this.input && this.optionActive === targetOption) {
