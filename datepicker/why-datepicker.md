@@ -4,11 +4,11 @@
 <p>Native date inputs vary widely across browsers and platforms, with inconsistent screen reader announcements, keyboard behavior, and focus management.</p>
 <p><code>auro-datepicker</code> provides:</p>
 <ul>
-<li><strong>Full keyboard navigation</strong> — Arrow keys move between days, months, and years. Enter and Space select a date. Escape closes the calendar. The <code>aria-activedescendant</code> pattern keeps DOM focus on the calendar grid wrapper while visually indicating the active cell, so screen readers stay in sync without duplicate announcements during rapid navigation.</li>
+<li><strong>Full keyboard navigation</strong> — Arrow keys move between days, months, and years. Enter and Space select a date. Escape closes the calendar. DOM focus stays on the calendar grid wrapper while an imperatively-tracked active cell is announced through a debounced <code>aria-live</code> region, so screen readers stay in sync without duplicate announcements during rapid navigation.</li>
 <li><strong>Rich ARIA semantics</strong> — Every cell is labeled with its full date, day-of-week, and contextual state (e.g. "selected", "today", "unavailable", "range start", "in range"). Screen reader users hear meaningful announcements, not just numbers.</li>
 <li><strong>Live region announcements</strong> — Month changes are announced via <code>aria-live</code> so assistive technology users know the visible month has changed.</li>
 <li><strong>Reduced motion support</strong> — Scrolling and transitions respect <code>prefers-reduced-motion</code>.</li>
-<li><strong>Focus management</strong> — Opening the calendar moves focus to the calendar grid wrapper, with <code>aria-activedescendant</code> pointing to the active date cell. Closing it returns focus to the trigger input. The fullscreen dialog uses <code>showModal()</code> for native inert-background behavior, while the desktop modal traps focus within the bib.</li>
+<li><strong>Focus management</strong> — Opening the calendar moves focus to the calendar grid wrapper; the initial active date cell is marked imperatively and announced via the <code>aria-live</code> region. Closing returns focus to the trigger input. The fullscreen dialog uses <code>showModal()</code> for native inert-background behavior, while the desktop modal traps focus within the bib.</li>
 </ul>
 <p>By contrast, native <code>&lt;input type="date"&gt;</code> delegates all of this to the browser, and the result differs significantly between Chrome, Safari, and Firefox — often with no keyboard navigation of the calendar grid at all on some platforms.</p>
 <auro-header level="2" id="dateRangeSelection">Date range selection</auro-header>
