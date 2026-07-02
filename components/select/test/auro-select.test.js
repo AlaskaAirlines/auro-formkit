@@ -2383,9 +2383,8 @@ function runTest(mobileView) {
         const menu = el.querySelector('auro-menu');
         const labelSlot = el.querySelector('[slot="label"]');
 
-        if (labelSlot && menu.hasAttribute('aria-label')) {
-          expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
-        }
+        expect(labelSlot, 'label slot should be present').to.exist;
+        expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
       });
 
       it('updates menu aria-label and dropdown bibDialogLabel when label text mutates at runtime', async () => {
@@ -4483,7 +4482,7 @@ function runTest(mobileView) {
           el.updateActiveOptionBasedOnKey('n');
           await elementUpdated(el);
 
-          await expect(el.menu.optionActive === undefined || el.menu.optionActive === null).to.be.true;
+          await expect(el.menu.optionActive).to.not.exist;
         });
 
         it('should not mutate the buffer when all options are disabled', async () => {
