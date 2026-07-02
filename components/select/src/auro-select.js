@@ -896,6 +896,15 @@ export class AuroSelect extends AuroElement {
       if (this.menu.optionSelected !== undefined) {
         return;
       }
+      // Skip when the select is already cleared (valueless click with no
+      // prior selection): value/optionSelected are already empty and there
+      // is no stale trigger text to refresh, so updateDisplayedValue would
+      // just churn the DOM and request a needless dropdown re-render.
+      const hasStaleState = this.value !== undefined ||
+        (this.multiSelect ? this.optionSelected?.length > 0 : this.optionSelected !== undefined);
+      if (!hasStaleState) {
+        return;
+      }
       this.value = undefined;
       this.optionSelected = this.multiSelect ? [] : undefined;
       // The trigger label is rendered imperatively into #value, so a property
