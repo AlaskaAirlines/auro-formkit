@@ -1327,6 +1327,13 @@ export class AuroSelect extends AuroElement {
     }
 
     if (changedProperties.has('value')) {
+      // A value change ends the current interaction — whether it came from a
+      // user commit, programmatic assignment, or reset(). Clear the buffer so
+      // a stale prefix does not concatenate onto the next keystroke while the
+      // host still has focus (the blur listener would otherwise be the only
+      // focus-retained clear point, and hideBib() below does not blur).
+      this._clearTypeaheadBuffer();
+
       this.setMenuValue(this.value);
 
       this._updateNativeSelect();
@@ -1382,6 +1389,9 @@ export class AuroSelect extends AuroElement {
    * @returns {void}
    */
   reset() {
+    // Defense-in-depth: updated()'s value-change branch also clears, but
+    // reset-to-same-value (e.g. undefined → undefined) skips that path.
+    this._clearTypeaheadBuffer();
     this.menu.reset();
     this.validation.reset(this);
   }
