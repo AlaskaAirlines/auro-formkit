@@ -156,10 +156,17 @@ export class AuroCalendar extends RangeDatepicker {
    */
   set disabledDays(value) {
     const oldValue = this._disabledDays;
-    if (Array.isArray(value) && value.length > 0) {
+    // Coerce non-arrays to `[]`. Consumers occasionally pass `null`
+    // (Lit's Array attribute converter returns null for a missing/empty
+    // attribute) or misuse the API; downstream code in
+    // `auro-calendar-cell.isEnabled` calls `.findIndex()` on this value
+    // without an Array.isArray guard, so a truthy non-array would throw
+    // at render.
+    const coerced = Array.isArray(value) ? value : [];
+    if (coerced.length > 0) {
       this._warnDisabledDaysDeprecated();
     }
-    this._disabledDays = value;
+    this._disabledDays = coerced;
     // `disabledDays` is a Lit `@property({ type: Array })` on the
     // RangeDatepicker base class; Lit's generated setter (which we've
     // overridden here to insert the warning) is what normally invalidates
