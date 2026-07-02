@@ -1429,8 +1429,13 @@ export class AuroSelect extends AuroElement {
     // Hidden native <select> has no `multiple` attribute, so any change it fires
     // is a single raw value — applying it in multiSelect mode would collapse the
     // JSON-array `value` shape. Bfcache/autofill can reach this on a name-bearing
-    // form control even with aria-hidden/tabindex=-1.
-    if (this.multiSelect) return;
+    // form control even with aria-hidden/tabindex=-1, so revert to the expected
+    // mirror (formattedValue[0]) rather than letting the native select drift and
+    // silently submit the autofilled scalar under `name`.
+    if (this.multiSelect) {
+      this._updateNativeSelect();
+      return;
+    }
 
     const selectedOption = event.target.options[event.target.selectedIndex];
     if (!selectedOption) return;
