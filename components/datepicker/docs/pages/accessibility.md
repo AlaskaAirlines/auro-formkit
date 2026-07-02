@@ -38,11 +38,11 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | Attribute | Applied to | Description |
 |---|---|---|
 | `role="grid"` | Calendar table | Identifies the calendar as a grid. The month heading is rendered as visible text adjacent to the grid but is excluded from the accessibility tree (announcements are handled via the live region described below). |
-| `role="rowgroup"` | Body group | Groups the week rows. The day-of-week header row is `aria-hidden="true"` (see below). |
+| `role="rowgroup"` | Body group | Groups the week rows. |
 | `role="row"` | Week row | Groups each week of date cells. |
-| Day-of-week header | Day-of-week row | Rendered as visible `<abbr>` elements with the full day name in the `title` attribute, but the row is `aria-hidden="true"` since the per-cell accessible name already includes the weekday name. |
+| `role="columnheader"` | Day-of-week header | Each weekday cell in the header row exposes the abbreviated day name as visible text and the full localized day name via `aria-label` (e.g. `aria-label="Sunday"`). |
 | `role="gridcell"` | In-range date cell, active-descendant proxy | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and a visually-hidden text label. A proxy `<span>` inside the calendar grid wrapper mirrors the active cell's ARIA attributes for `aria-activedescendant`. |
-| `role="presentation"` | Out-of-range date cell | Cells outside the valid min/max range. Also receive `aria-hidden="true"` and `tabindex="-1"` to remove them from both the accessibility tree and the tab order. |
+| Out-of-range date cell | Cells outside the valid min/max range | The button uses the native `disabled` attribute (spec-compliant way to express "not actionable" on a `<button>`) and is filtered out of keyboard navigation. The host cell drops its `role` and `aria-label` so assistive tech does not browse into it — no `aria-hidden` or `role="presentation"` is applied. |
 | `aria-disabled="true"` | Blackout date cell | Cells matching the `blackout` dates list. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label includes ", unavailable" to communicate that the date cannot be selected. |
 | `aria-selected` | Date cell button | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
 | Accessible name | Date cell button | Provided via visually-hidden text content (not an `aria-label` attribute). Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus any date slot content (e.g. prices), the range position label (e.g., "range start"), and availability status (", unavailable" for blackout dates). |

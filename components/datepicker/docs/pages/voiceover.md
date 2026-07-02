@@ -51,7 +51,7 @@
   <li><em>"current date"</em> for today's date (via <code>aria-current="date"</code>)</li>
   <li>Selection state: <em>"selected"</em> or not (via <code>aria-selected</code>)</li>
 </ul>
-<p>Out-of-range cells (outside min/max bounds) are completely hidden from VoiceOver with <code>aria-hidden="true"</code>.</p>
+<p>Out-of-range cells (outside min/max bounds) use the native <code>disabled</code> attribute on their button and drop <code>role</code>/<code>aria-label</code> on the host, so arrow-key navigation skips them and VoiceOver does not browse into them.</p>
 
 <auro-header level="3" id="voiceOverDateSelection">Date Selection</auro-header>
 <p>When a date is selected, an <code>aria-live="assertive"</code> region announces the selected date (e.g. <em>"Thursday, May 14, 2026"</em>). For range datepickers, both the start and end selections are announced.</p>
