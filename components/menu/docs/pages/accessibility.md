@@ -19,9 +19,9 @@
         <auro-header level="2" id="keyboardInteraction">Keyboard Interaction</auro-header>
         <p>The menu supports full keyboard navigation:</p>
         <ul>
-          <li><strong>Arrow Down / Arrow Up:</strong> Moves focus between options.</li>
-          <li><strong>Enter / Space:</strong> Selects the currently focused option.</li>
-          <li><strong>Home / End:</strong> Moves focus to the first or last option.</li>
+          <li><strong>Arrow Down / Arrow Up:</strong> Moves the active option.</li>
+          <li><strong>Enter:</strong> Selects the currently active option.</li>
+          <li><strong>Tab:</strong> Selects the currently active option and moves focus out of the menu.</li>
         </ul>
         <p>See the <auro-hyperlink href="keyboardBehavior">Keyboard Behavior</auro-hyperlink> page for full details.</p>
       </section>
