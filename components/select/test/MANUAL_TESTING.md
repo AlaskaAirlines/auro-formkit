@@ -58,11 +58,11 @@
 - [ ] ⇥ with no active option — verify the dialog closes and focus moves to the next focusable element after the select
 - [ ] ⇥ with an active option — verify the option is selected in single-select or toggled in multi-select, the dialog closes, and focus moves to the next focusable element after the select
 - [ ] Shift + ⇥ with an active option — verify the option is selected in single-select or toggled in multi-select, the dialog closes, and focus moves to the previous focusable element before the select
-- [ ] `Home` / `End` — verify the active option moves to the first / last enabled option
+- [ ] `Home` / `End` — verify the active option moves to the first / last active option
 
 ## Type-ahead / Type-to-search
 
-- [ ] With bib closed, type letters that match an option prefix (e.g., "ba") — verify the bib opens and the first matching enabled option becomes active
+- [ ] With bib closed, type letters that match an option prefix (e.g., "ba") — verify the bib opens and the first matching active option becomes active
 - [ ] With bib closed, type letters that match no option (e.g., "zzz") — verify the bib stays closed
 - [ ] With bib open, type the same letter repeatedly (e.g., "a", "a", "a") — verify the active option cycles through options starting with that letter
 - [ ] With bib open, type a multi-letter prefix (e.g., "app") — verify the first option whose text starts with the buffer becomes active (prefix match, not cycle)

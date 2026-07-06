@@ -35,7 +35,7 @@
   <p>In some cases it is necessary to preset the value of the component as part of the initial render.</p>
   <auro-header level="4" id="us3a">Single Select</auro-header>
   <p>When a value is preset, the matching option in the menu will be marked as both <code>active</code> and <code>selected</code>.</p>
-  <p>If a preset value is defined that does not match any enabled option, the value is reset to <code>undefined</code>.</p>
+  <p>If a preset value is defined that does not match any option, the value is reset to <code>undefined</code>. (Value matching is not filtered by <code>disabled</code>, <code>hidden</code>, or <code>static</code> — a value that matches such an option is still applied.)</p>
   <auro-header level="4" id="us3b">Multi Select</auro-header>
   <p>When configured for multi-select, the preset value may include multiple options. The first selected option will also be marked <code>active</code>.</p>
   <p>If one or more preset values do not match any option they will be discarded. If no preset values match any option, the value is reset to <code>undefined</code>.</p>

@@ -2739,7 +2739,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the last enabled option', async () => {
+          it('should jump to the last active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -2797,7 +2797,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the last enabled option', async () => {
+          it('should jump to the last active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -2855,7 +2855,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the last enabled option', async () => {
+          it('should jump to the last active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -2925,7 +2925,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the first enabled option', async () => {
+          it('should jump to the first active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -2964,7 +2964,7 @@ function runTest(mobileView) {
             el.showBib();
             await elementUpdated(el);
 
-            // Move away from the first enabled option
+            // Move away from the first active option
             el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             await elementUpdated(el);
 
@@ -2991,7 +2991,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the first enabled option', async () => {
+          it('should jump to the first active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -3030,7 +3030,7 @@ function runTest(mobileView) {
             el.showBib();
             await elementUpdated(el);
 
-            // Move away from the first enabled option
+            // Move away from the first active option
             el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             await elementUpdated(el);
 
@@ -3057,7 +3057,7 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should jump to the first enabled option', async () => {
+          it('should jump to the first active option', async () => {
             const el = await defaultFixture();
 
             await elementUpdated(el);
@@ -3096,7 +3096,7 @@ function runTest(mobileView) {
             el.showBib();
             await elementUpdated(el);
 
-            // Move away from the first enabled option
+            // Move away from the first active option
             el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             await elementUpdated(el);
 
@@ -3112,7 +3112,7 @@ function runTest(mobileView) {
       });
 
       describe('End', () => {
-        it('should move to the last enabled option while expanded', async () => {
+        it('should move to the last active option while expanded', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -3181,7 +3181,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should open the bib and move to the last enabled option while collapsed', async () => {
+        it('should open the bib and move to the last active option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -3540,7 +3540,7 @@ function runTest(mobileView) {
       });
 
       describe('Home', () => {
-        it('should move to the first enabled option while expanded', async () => {
+        it('should move to the first active option while expanded', async () => {
           const el = await defaultFixture();
 
           el.showBib();
@@ -3613,7 +3613,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should open the bib and move to the first enabled option while collapsed', async () => {
+        it('should open the bib and move to the first active option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -4593,7 +4593,7 @@ function runTest(mobileView) {
           expect(el._typeaheadTimeout).to.equal(null);
         });
 
-        it('should leave Space as a bib toggle when there are no enabled options', async () => {
+        it('should leave Space as a bib toggle when there are no active options', async () => {
           const el = await fixture(html`
             <auro-select>
               <span slot="bib.fullscreen.headline">Bib Headline</span>
