@@ -170,7 +170,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements.
+       * The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s.
        */
       optionSelected: {
         // Allow HTMLElement, HTMLElement[] arrays and undefined

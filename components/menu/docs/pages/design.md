@@ -22,7 +22,7 @@
         <auro-header level="2" id="shapeSizeLayout">Shape | Size | Layout Support</auro-header>
         <p>The <code>auro-menu</code> component supports the <code>shape</code> and <code>size</code> feature set. The component defaults to <code>shape="box"</code> and <code>size="sm"</code>. The <code>layout</code> attribute is not supported by this component.</p>
         <auro-header level="3" id="size">Size</auro-header>
-        <p>Use the <code>size</code> attribute to change the size of menu options. Supported values are <code>sm</code> (default) and <code>md</code>.</p>
+        <p>Use the <code>size</code> attribute to change the size of menu options. Supported values are <code>xs</code>, <code>sm</code> (default), <code>md</code>, <code>lg</code>, and <code>xl</code>.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/size.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
