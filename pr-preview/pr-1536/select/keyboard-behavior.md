@@ -32,7 +32,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyboard-behavior/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyboard-behavior/keyEvents.md -->
 <div class="note">
-<p><strong>Note:</strong> When the bib is displayed as a fullscreen dialog (see <code>fullscreenBreakpoint</code>), focus moves to the dialog's close button rather than remaining on the trigger. Keyboard navigation of options still works the same way because <code>aria-activedescendant</code> tracks the active option across the shadow-root boundary. The "Key capture element" column below indicates where keys are received (via the keyboard strategy) — this is not necessarily where visible focus is under fullscreen. An "active option" is one that is not <code>disabled</code>, <code>hidden</code>, or <code>static</code> — these are always skipped during navigation and type-ahead matching.</p>
+<p><strong>Note:</strong> The "Focused element" column below indicates the initial <code>event.target</code> — the element that has DOM focus when the key is pressed. The keyboard strategy listener itself is attached to the <code>&lt;auro-select&gt;</code> host in popover mode (or to the native <code>&lt;dialog&gt;</code> in fullscreen mode) and receives events via bubbling. When the bib is displayed as a fullscreen dialog (see <code>fullscreenBreakpoint</code>), focus moves to the dialog's close button rather than remaining on the trigger; keyboard navigation of options still works the same way because <code>aria-activedescendant</code> tracks the active option across the shadow-root boundary. An "active option" is one that is not <code>disabled</code>, <code>hidden</code>, or <code>static</code> — these are always skipped during navigation and type-ahead matching.</p>
 </div>
 <table>
 <thead>
@@ -40,7 +40,7 @@
 <th>Key</th>
 <th>Modifier</th>
 <th>Current State</th>
-<th>Key capture element</th>
+<th>Focused element</th>
 <th>Behavior</th>
 </tr>
 </thead>
