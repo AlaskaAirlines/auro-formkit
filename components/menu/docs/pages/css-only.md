@@ -74,11 +74,15 @@
 
 <auro-header level="3">Arrow-key navigation</auro-header>
 
-<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Home</code>, <code>End</code>, <code>Enter</code>, and <code>Space</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model — you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
+<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model — you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
 
-<auro-header level="3">Type-ahead search</auro-header>
+<auro-header level="3">matchWord highlighting</auro-header>
 
-<p><code>auro-menu</code> supports a <code>matchword</code> attribute that highlights matched substrings within option labels, and the listbox supports type-ahead focus jumping. Plain HTML provides neither — both behaviors must be implemented manually with string matching and DOM manipulation.</p>
+<p><code>auro-menu</code> supports a <code>matchWord</code> attribute that highlights matched substrings within option labels — used by <code>auro-combobox</code> to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
+
+<auro-header level="3">Type-ahead navigation</auro-header>
+
+<p>Type-ahead — jumping the active option to whichever entry starts with the letters the user typed — is <strong>not</strong> handled by <code>auro-menu</code> itself. It is provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
 
 <auro-header level="3">Nested submenu support</auro-header>
 
@@ -147,9 +151,14 @@
       <td>Built-in</td>
     </tr>
     <tr>
-      <td>Type-ahead and <code>matchword</code> highlighting</td>
+      <td><code>matchWord</code> highlighting</td>
       <td>Not supported</td>
-      <td>Built-in via <code>matchword</code></td>
+      <td>Built-in via <code>matchWord</code></td>
+    </tr>
+    <tr>
+      <td>Type-ahead navigation</td>
+      <td>Not supported</td>
+      <td>Provided by parent <code>auro-select</code> / <code>auro-combobox</code></td>
     </tr>
     <tr>
       <td>Nested submenus</td>

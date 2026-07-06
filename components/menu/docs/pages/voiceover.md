@@ -24,7 +24,7 @@
 <div class="note"><strong>Note:</strong> <code>&lt;auro-menuoption&gt;</code> is not directly focusable — <code>tabindex="-1"</code> keeps it out of the tab order. In a select or combobox context, focus stays on the parent trigger and the active option is pointed at via <code>aria-activedescendant</code> (using <code>ariaActiveDescendantElement</code> to cross the shadow-root boundary).</div>
 
 <auro-header level="3" id="voiceOverSelection">Selection</auro-header>
-<p>When an option is selected via Enter or Space:</p>
+<p>When an option is selected via Enter (or Tab, which selects and moves focus out of the menu):</p>
 <ul>
   <li>VoiceOver announces the option label followed by <em>"selected"</em></li>
   <li>In multi-select mode, previously selected options remain selected and their state is preserved</li>
@@ -34,8 +34,8 @@
 <ol>
   <li><strong>Enter the menu:</strong> Focus moves into the listbox; VoiceOver announces role and item count</li>
   <li><strong>Navigate options:</strong> Use Arrow Down/Up keys; VoiceOver announces each option's label, role, and position</li>
-  <li><strong>Select an option:</strong> Press Enter or Space; VoiceOver confirms the selection</li>
-  <li><strong>Exit:</strong> Tab out of the menu or press Escape (when used within a dropdown context)</li>
+  <li><strong>Select an option:</strong> Press Enter; VoiceOver confirms the selection</li>
+  <li><strong>Exit:</strong> Tab out of the menu (Tab also selects the active option). When the menu is used inside a dropdown context, the parent handles Escape.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverNestedMenus">Nested Menus</auro-header>

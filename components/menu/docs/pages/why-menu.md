@@ -9,7 +9,7 @@
 <p><code>auro-menu</code> provides:</p>
 
 <ul>
-  <li><strong>Keyboard navigation</strong> — Arrow keys move between options, Enter selects, Escape cancels, Home/End jump to the first and last options.</li>
+  <li><strong>Keyboard navigation</strong> — Arrow Up/Down move the active option; Enter selects it; Tab selects and moves focus out of the menu.</li>
   <li><strong>Active option tracking</strong> — The currently highlighted option is tracked programmatically, enabling <code>aria-activedescendant</code> patterns in parent components like <code>auro-select</code> and <code>auro-combobox</code>.</li>
   <li><strong>Multi-select semantics</strong> — When <code>multiSelect</code> is enabled, <code>aria-multiselectable</code> is set on the menu.</li>
   <li><strong>Loading state</strong> — <code>aria-busy</code> is set during loading, with customizable loading icon and text slots.</li>
@@ -115,7 +115,7 @@
     <tr>
       <td>Keyboard navigation</td>
       <td>Browser-dependent</td>
-      <td>Full arrow/Enter/Escape/Home/End</td>
+      <td>Arrow Up/Down, Enter, Tab</td>
     </tr>
     <tr>
       <td>Composable primitive</td>
