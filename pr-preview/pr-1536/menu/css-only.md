@@ -67,11 +67,11 @@
 <auro-header level="3">ARIA roles and live announcements</auro-header>
 <p><code>auro-menu</code> automatically applies <code>role="listbox"</code>, <code>aria-multiselectable</code>, <code>aria-busy</code> during loading, and per-option <code>role="option"</code> with <code>aria-selected</code> and <code>aria-disabled</code>. Plain HTML requires you to author every one of these attributes by hand and keep them in sync with state — and to add any additional live-region announcements yourself.</p>
 <auro-header level="3">Value emission and events</auro-header>
-<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, <code>auroMenu-deselectPrevented</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
+<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
 <auro-header level="3">Multi-select with array value</auro-header>
 <p><code>auro-menu</code> supports <code>multiselect</code>, exposing the selection as a JSON-stringified array via <code>value</code> and as an array of elements via <code>optionSelected</code>. With plain HTML, you must track multiple selections yourself, manage the <code>aria-multiselectable</code> attribute, and serialize the result manually.</p>
-<auro-header level="3">Allow-deselect behavior</auro-header>
-<p><code>auro-menu</code> supports an <code>allowDeselect</code> attribute that lets a user click an already-selected option to clear it in single-select mode, with a <code>auroMenu-deselectPrevented</code> event when the operation is blocked. Native listboxes do not have a deselect concept; you must implement and gate the behavior yourself.</p>
+<auro-header level="3">Multi-select deselect</auro-header>
+<p>In multi-select mode, clicking an already-selected option toggles it off. Native listboxes have no built-in deselect concept for individual options; you must implement the toggle behavior and update <code>aria-selected</code> yourself.</p>
 <auro-header level="3">Select-by-value and reset</auro-header>
 <p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (including the <code>selectAllMatchingOptions</code> option for multi-select) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
 <auro-header level="3">Loading state</auro-header>
@@ -136,9 +136,9 @@
 <td><code>multiselect</code> + <code>value</code></td>
 </tr>
 <tr>
-<td>Allow-deselect behavior</td>
+<td>Multi-select deselect</td>
 <td>Manual</td>
-<td><code>allowDeselect</code> attribute</td>
+<td>Click-to-toggle built in</td>
 </tr>
 <tr>
 <td>Select-by-value and reset</td>

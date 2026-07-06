@@ -24,7 +24,7 @@
 <ul>
 <li>Checkmark indicators for each selected option</li>
 <li>A <code>value</code> that returns a JSON-stringified array of selections</li>
-<li><code>allowDeselect</code> to toggle selections off</li>
+<li>Click-to-toggle behavior that deselects an already-selected option</li>
 <li><code>selectAllMatchingOptions</code> for bulk selection operations</li>
 <li><code>clearSelection()</code> and <code>reset()</code> methods for programmatic control</li>
 </ul>
@@ -96,9 +96,9 @@
 <td>Foundation for select and combobox</td>
 </tr>
 <tr>
-<td>Deselect support</td>
-<td>No</td>
-<td><code>allowDeselect</code> attribute</td>
+<td>Multi-select deselect</td>
+<td>Ctrl+click list box</td>
+<td>Click-to-toggle in multi-select</td>
 </tr>
 </tbody>
 </table>
