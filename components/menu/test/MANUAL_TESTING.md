@@ -252,7 +252,7 @@ Turn VoiceOver on and verify each announcement. Expected wording is spec'd in [`
 
 ### Public Methods / Getters
 
-- [ ] Call `reset()` — verify the menu returns to its initial selection state (`value` / `optionSelected` cleared) and `auroMenu-selectValueReset` fires
+- [ ] Call `reset()` — verify the menu returns to its initial state (selections cleared, no option active) and `auroMenu-selectValueReset` fires
 - [ ] Call `updateActiveOption(2)` (index) — verify the option at that index becomes active
 - [ ] Call `updateActiveOption(optionEl)` (option element reference) — verify that option becomes active
 - [ ] Call `selectByValue('foo')` — verify the option with `value="foo"` becomes selected

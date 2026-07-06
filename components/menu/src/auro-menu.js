@@ -740,6 +740,11 @@ export class AuroMenu extends AuroElement {
     this.optionSelected = undefined;
     this._index = -1;
 
+    // Clear active option state so a follow-up open/navigation starts fresh
+    // rather than reusing a stale reference from before the reset.
+    this.items?.forEach((item) => item.classList.remove('active'));
+    this.optionActive = undefined;
+
     // Reset UI state
     this.updateItemsState(new Map([
       [
