@@ -1,0 +1,91 @@
+<auro-header level="1" id="overview">Menu - Keyboard Behavior</auro-header>
+<div class="contentWrapper">
+<div class="mainContent">
+<div class="scrollWrapper">
+<auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
+<p>The <code>&lt;auro-menu&gt;</code> component does not participate in the <code>tabindex</code> sequence directly. Keyboard navigation is managed by the parent component (e.g., <code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>) through their keyboard strategy classes.</p>
+<auro-header level="2" id="keyEvents">Key Events</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
+<!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
+<div class="note">
+<p><strong>Note:</strong> <code>&lt;auro-menu&gt;</code> handles the keys below directly on its own element via a <code>keydown</code> listener. When the menu is used inside <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, the parent component also captures keys on its trigger and calls the same menu methods (<code>navigateOptions()</code>, <code>makeSelection()</code>). Keys not listed below (<code>Home</code>, <code>End</code>, <code>Escape</code>, type-ahead) are handled by the parent — see the <code>&lt;auro-select&gt;</code> and <code>&lt;auro-combobox&gt;</code> keyboard behavior docs.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Current State</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="5">ArrowDown</td>
+<td>No option is active</td>
+<td>The first enabled option becomes active.</td>
+</tr>
+<tr>
+<td>An option is active, followed by enabled options</td>
+<td>Advances the active option to the next enabled option. Disabled, <code>hidden</code>, and <code>static</code> options are skipped, as are <code>&lt;hr&gt;</code> dividers.</td>
+</tr>
+<tr>
+<td>The last enabled option is active</td>
+<td>Wraps to the first enabled option.</td>
+</tr>
+<tr>
+<td>Menu has no options or all options are non-interactive</td>
+<td>No option becomes active; no <code>auroMenu-activatedOption</code> event fires.</td>
+</tr>
+<tr>
+<td>Menu is in <code>loading</code> state</td>
+<td>The rendered loading placeholder is inert (marked <code>disabled</code>) and is not part of <code>items</code>, so it cannot become active.</td>
+</tr>
+<tr>
+<td rowspan="4">ArrowUp</td>
+<td>No option is active</td>
+<td>The last enabled option becomes active.</td>
+</tr>
+<tr>
+<td>An option is active, preceded by enabled options</td>
+<td>Advances the active option to the previous enabled option. Non-interactive options and <code>&lt;hr&gt;</code> dividers are skipped.</td>
+</tr>
+<tr>
+<td>The first enabled option is active</td>
+<td>Wraps to the last enabled option.</td>
+</tr>
+<tr>
+<td>Menu has no options or all options are non-interactive</td>
+<td>No option becomes active.</td>
+</tr>
+<tr>
+<td rowspan="4">Enter</td>
+<td>Single-select, active option is not currently selected</td>
+<td>The active option is selected. Any previous selection is cleared. <code>auroMenu-selectedOption</code> fires.</td>
+</tr>
+<tr>
+<td>Single-select, active option is already selected</td>
+<td>No selection change, but <code>auroMenu-selectedOption</code> still fires so the parent can react (for example, close the dropdown).</td>
+</tr>
+<tr>
+<td>Multi-select</td>
+<td>The active option toggles selected. Other selections are preserved.</td>
+</tr>
+<tr>
+<td>Active option is disabled, hidden, or static</td>
+<td>Selection is a no-op.</td>
+</tr>
+<tr>
+<td rowspan="2">Tab</td>
+<td>An option is active</td>
+<td>The active option is selected (same behavior as <code>Enter</code>).<div class="note"><strong>Note:</strong> <code>Tab</code> does not <code>preventDefault</code>, so focus continues to the next element in the tabindex sequence after selection.</div></td>
+</tr>
+<tr>
+<td>No option is active</td>
+<td>Focus moves to the next tabbable element; no selection change.</td>
+</tr>
+</tbody>
+</table>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</div>
+</div>
