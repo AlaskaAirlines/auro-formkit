@@ -23,7 +23,7 @@
           <li><strong>Enter:</strong> Selects the currently active option.</li>
           <li><strong>Tab:</strong> Selects the currently active option and moves focus out of the menu.</li>
         </ul>
-        <p>See the <auro-hyperlink href="keyboardBehavior">Keyboard Behavior</auro-hyperlink> page for full details.</p>
+        <p>See the <auro-hyperlink href="keyboard-behavior">Keyboard Behavior</auro-hyperlink> page for full details.</p>
       </section>
       <section>
         <auro-header level="2" id="modifierKeys">Modifier Keys</auro-header>
