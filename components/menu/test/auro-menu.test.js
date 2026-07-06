@@ -2135,6 +2135,38 @@ function runFullTest(mobileView) {
 
         expect(menu._index).to.equal(initialIndex);
       });
+
+      it('should advance the active option when an ArrowDown keydown is dispatched directly', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+        const options = getOptions(menu);
+        await elementUpdated(menu);
+
+        expect(menu.optionActive, 'menu should start with no active option').to.be.undefined;
+        expect(menu._index, 'menu should start with _index at -1').to.equal(-1);
+
+        menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+        await elementUpdated(menu);
+
+        expect(menu.optionActive).to.equal(options[0]);
+        expect(menu._index).to.equal(0);
+      });
+
+      it('should wrap the active option to the last entry when an ArrowUp keydown is dispatched with nothing active', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+        const options = getOptions(menu);
+        await elementUpdated(menu);
+
+        expect(menu.optionActive, 'menu should start with no active option').to.be.undefined;
+        expect(menu._index, 'menu should start with _index at -1').to.equal(-1);
+
+        menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }));
+        await elementUpdated(menu);
+
+        expect(menu.optionActive).to.equal(options[options.length - 1]);
+        expect(menu._index).to.equal(options.length - 1);
+      });
     });
   });
 
