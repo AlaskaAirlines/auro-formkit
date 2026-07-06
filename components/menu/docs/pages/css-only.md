@@ -68,9 +68,9 @@
 
 <p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-menu</code>, the following functionality built into the <code>auro-menu</code> and <code>auro-menuoption</code> web components is <strong>not available</strong> when using plain HTML:</p>
 
-<auro-header level="3">Roving tabindex</auro-header>
+<auro-header level="3">Active-option tracking</auro-header>
 
-<p><code>auro-menu</code> manages a roving <code>tabindex</code> so that only the currently active option is in the tab order, and focus moves between options without leaving the menu. With plain HTML, you must implement the roving-tabindex pattern yourself by maintaining the <code>tabindex="0"</code>/<code>tabindex="-1"</code> state across all options on every focus and key event.</p>
+<p><code>auro-menu</code> keeps focus on the menu element itself and tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving focus between options. This is the aria-activedescendant-style pattern. With plain HTML, you must pick one focus model — either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code>, or <code>aria-activedescendant</code> on the container — and wire up the DOM writes yourself on every key event.</p>
 
 <auro-header level="3">Arrow-key navigation</auro-header>
 
@@ -86,11 +86,11 @@
 
 <auro-header level="3">Nested submenu support</auro-header>
 
-<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, computes indentation per level, and propagates the shared menu service down the tree. With plain HTML, you must apply nested ARIA roles and indentation manually, and there is no built-in coordination of focus or selection between parent and child lists.</p>
+<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. Each nested menu maintains its own selection state — the root menu's <code>value</code> and <code>optionSelected</code> are not updated when an option inside a nested menu is selected. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
 
 <auro-header level="3">Selection state coordination</auro-header>
 
-<p><code>auro-menu</code> coordinates the selected option(s) through an internal <code>MenuService</code> that keeps <code>optionSelected</code>, <code>value</code>, and each option's <code>aria-selected</code> state in sync. With native HTML, you must update <code>aria-selected</code> on every option yourself on each change and manage your own source of truth for the selected value.</p>
+<p><code>auro-menu</code> keeps <code>optionSelected</code>, <code>value</code>, and each option's <code>aria-selected</code> state in sync internally. With native HTML, you must update <code>aria-selected</code> on every option yourself on each change and manage your own source of truth for the selected value.</p>
 
 <auro-header level="3">ARIA roles and live announcements</auro-header>
 
@@ -110,7 +110,7 @@
 
 <auro-header level="3">Select-by-value and reset</auro-header>
 
-<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (including the <code>selectAllMatchingOptions</code> option for multi-select) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
+<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (accepting a JSON-stringified array in multi-select mode) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
 
 <auro-header level="3">Loading state</auro-header>
 
@@ -141,9 +141,9 @@
       <td>Built-in</td>
     </tr>
     <tr>
-      <td>Roving tabindex</td>
-      <td>Manual</td>
-      <td>Built-in</td>
+      <td>Active-option tracking</td>
+      <td>Manual (roving tabindex or <code>aria-activedescendant</code>)</td>
+      <td>Built-in (<code>active</code> class on the current option)</td>
     </tr>
     <tr>
       <td>Arrow-key navigation</td>
@@ -168,7 +168,7 @@
     <tr>
       <td>Selection state coordination</td>
       <td>Manual <code>aria-selected</code> sync</td>
-      <td>Centralized via menu service</td>
+      <td>Coordinated internally</td>
     </tr>
     <tr>
       <td>ARIA roles and <code>aria-busy</code></td>
