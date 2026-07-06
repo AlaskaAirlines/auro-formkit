@@ -635,6 +635,61 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
   }
 &lt;/style&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/complex.js -->
+<pre class="language-js"><code class="language-js">/* eslint-disable jsdoc/require-jsdoc */
+​
+/**
+ * Wires the trip-type radio group in the complex booking example to the
+ * travel-dates datepicker. Choosing "One way" removes the datepicker's `range`
+ * attribute (a single departure date, no return); "Round trip" restores it.
+ *
+ * This also demonstrates a form-level behavior: because `auro-form` tracks its
+ * fields and reads a `range` datepicker via `.values` (and a single-date picker
+ * via `.value`), the collected `travelDates` entry changes shape to match the
+ * selected trip type — a `[departure, return]` array for round trip, a single
+ * date string for one way.
+ */
+export async function complexExample() {
+  await customElements.whenDefined('auro-form');
+​
+  const form = document.querySelector('#tripForm');
+  if (!form) {
+    throw new Error('complexExample: #tripForm not yet rendered');
+  }
+​
+  const output = document.querySelector('#tripFormOutput');
+  if (!output) {
+    throw new Error('complexExample: #tripFormOutput not yet rendered');
+  }
+​
+  await form.updateComplete;
+​
+  const tripType = form.querySelector('auro-radio-group[name="tripType"]');
+  const datepicker = form.querySelector('auro-datepicker[name="travelDates"]');
+​
+  if (!tripType || !datepicker) {
+    throw new Error('complexExample: trip-type radio group or datepicker not found');
+  }
+​
+  const syncDatepickerToTripType = () =&gt; {
+    if (tripType.value === 'oneway') {
+      datepicker.removeAttribute('range');
+    } else {
+      datepicker.setAttribute('range', '');
+    }
+  };
+​
+  // Reflect the initial selection (Round trip) on load, then keep in sync.
+  syncDatepickerToTripType();
+  tripType.addEventListener('input', syncDatepickerToTripType);
+​
+  // Display the collected form value on submit, mirroring the Disabled Fields example.
+  form.addEventListener('submit', (event) =&gt; {
+    output.textContent = JSON.stringify(event.detail.value, null, 2);
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 </section>
 <section>
