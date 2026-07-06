@@ -8,7 +8,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
 <div class="note">
-<p><strong>Note:</strong> <code>&lt;auro-menu&gt;</code> handles the keys below directly on its own element via a <code>keydown</code> listener. When the menu is used inside <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, the parent component also captures keys on its trigger and calls the same menu methods (<code>navigateOptions()</code>, <code>makeSelection()</code>). Keys not listed below (<code>Home</code>, <code>End</code>, <code>Escape</code>, type-ahead) are handled by the parent — see the <code>&lt;auro-select&gt;</code> and <code>&lt;auro-combobox&gt;</code> keyboard behavior docs.</p>
+<p><strong>Note:</strong> <code>&lt;auro-menu&gt;</code> handles the keys below directly on its own element via a <code>keydown</code> listener. When the menu is used inside <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, the parent component also captures keys on its trigger and calls the same menu methods (<code>navigateOptions()</code>, <code>makeSelection()</code>). Keys not listed below (<code>Home</code>, <code>End</code>, <code>Escape</code>, type-ahead) are handled by the parent — see the <code>&lt;auro-select&gt;</code> and <code>&lt;auro-combobox&gt;</code> keyboard behavior docs. An "interactive option" is one that is not <code>disabled</code>, <code>hidden</code>, or <code>static</code> — these are always skipped during navigation and selection, along with <code>&lt;hr&gt;</code> dividers.</p>
 </div>
 <table>
 <thead>
@@ -22,15 +22,15 @@
 <tr>
 <td rowspan="5">ArrowDown</td>
 <td>No option is active</td>
-<td>The first enabled option becomes active.</td>
+<td>The first interactive option becomes active.</td>
 </tr>
 <tr>
-<td>An option is active, followed by enabled options</td>
-<td>Advances the active option to the next enabled option. Disabled, <code>hidden</code>, and <code>static</code> options are skipped, as are <code>&lt;hr&gt;</code> dividers.</td>
+<td>An option is active, followed by interactive options</td>
+<td>Advances the active option to the next interactive option.</td>
 </tr>
 <tr>
-<td>The last enabled option is active</td>
-<td>Wraps to the first enabled option.</td>
+<td>The last interactive option is active</td>
+<td>Wraps to the first interactive option.</td>
 </tr>
 <tr>
 <td>Menu has no options or all options are non-interactive</td>
@@ -43,15 +43,15 @@
 <tr>
 <td rowspan="4">ArrowUp</td>
 <td>No option is active</td>
-<td>The last enabled option becomes active.</td>
+<td>The last interactive option becomes active.</td>
 </tr>
 <tr>
-<td>An option is active, preceded by enabled options</td>
-<td>Advances the active option to the previous enabled option. Non-interactive options and <code>&lt;hr&gt;</code> dividers are skipped.</td>
+<td>An option is active, preceded by interactive options</td>
+<td>Advances the active option to the previous interactive option.</td>
 </tr>
 <tr>
-<td>The first enabled option is active</td>
-<td>Wraps to the last enabled option.</td>
+<td>The first interactive option is active</td>
+<td>Wraps to the last interactive option.</td>
 </tr>
 <tr>
 <td>Menu has no options or all options are non-interactive</td>

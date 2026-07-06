@@ -32,7 +32,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyboard-behavior/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyboard-behavior/keyEvents.md -->
 <div class="note">
-<p><strong>Note:</strong> When the bib is displayed as a fullscreen dialog (see <code>fullscreenBreakpoint</code>), focus moves to the dialog's close button rather than remaining on the trigger. Keyboard navigation of options still works the same way because <code>aria-activedescendant</code> tracks the active option across the shadow-root boundary. In the table below, "Trigger element" is where keys are captured; the visual focus target may differ under fullscreen.</p>
+<p><strong>Note:</strong> When the bib is displayed as a fullscreen dialog (see <code>fullscreenBreakpoint</code>), focus moves to the dialog's close button rather than remaining on the trigger. Keyboard navigation of options still works the same way because <code>aria-activedescendant</code> tracks the active option across the shadow-root boundary. The "Key capture element" column below indicates where keys are received (via the keyboard strategy) — this is not necessarily where visible focus is under fullscreen. An "active option" is one that is not <code>disabled</code>, <code>hidden</code>, or <code>static</code> — these are always skipped during navigation and type-ahead matching.</p>
 </div>
 <table>
 <thead>
@@ -40,7 +40,7 @@
 <th>Key</th>
 <th>Modifier</th>
 <th>Current State</th>
-<th>Focus Element</th>
+<th>Key capture element</th>
 <th>Behavior</th>
 </tr>
 </thead>
@@ -56,7 +56,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the next enabled option in the list. Disabled, <code>hidden</code>, and <code>static</code> options are skipped. If the current <code>active</code> option is the last enabled option, the active state wraps to the first enabled option.
+            Advances the <code>active</code> option to the next active option in the list. If the current <code>active</code> option is the last active option, the active state wraps to the first active option.
 </td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the last enabled option in the list.
+            Advances the <code>active</code> option to the last active option in the list.
 </td>
 </tr>
 <tr>
@@ -87,7 +87,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the last enabled option in the list.
+            Advances the <code>active</code> option to the last active option in the list.
 </td>
 </tr>
 <tr>
@@ -105,7 +105,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the last enabled option in the list.
+            Advances the <code>active</code> option to the last active option in the list.
 </td>
 </tr>
 <tr>
@@ -119,7 +119,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the previous enabled option in the list. Disabled, <code>hidden</code>, and <code>static</code> options are skipped. If the current <code>active</code> option is the first enabled option, the active state wraps to the last enabled option.
+            Advances the <code>active</code> option to the previous active option in the list. If the current <code>active</code> option is the first active option, the active state wraps to the last active option.
 </td>
 </tr>
 <tr>
@@ -137,7 +137,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the first enabled option in the list.
+            Advances the <code>active</code> option to the first active option in the list.
 </td>
 </tr>
 <tr>
@@ -150,7 +150,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the first enabled option in the list.
+            Advances the <code>active</code> option to the first active option in the list.
 </td>
 </tr>
 <tr>
@@ -168,7 +168,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the first enabled option in the list.
+            Advances the <code>active</code> option to the first active option in the list.
 </td>
 </tr>
 <tr>
@@ -177,14 +177,14 @@
 <td>Collapsed</td>
 <td>Trigger element</td>
 <td>
-            Opens the bib and advances the <code>active</code> option to the last enabled option in the list.
+            Opens the bib and advances the <code>active</code> option to the last active option in the list.
 </td>
 </tr>
 <tr>
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the last enabled option in the list.
+            Advances the <code>active</code> option to the last active option in the list.
 </td>
 </tr>
 <tr>
@@ -237,14 +237,14 @@
 <td>Collapsed</td>
 <td>Trigger element</td>
 <td>
-            Opens the bib and advances the <code>active</code> option to the first enabled option in the list.
+            Opens the bib and advances the <code>active</code> option to the first active option in the list.
 </td>
 </tr>
 <tr>
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the first enabled option in the list.
+            Advances the <code>active</code> option to the first active option in the list.
 </td>
 </tr>
 <tr>
@@ -273,7 +273,7 @@
 <td>Collapsed or Expanded, type-ahead buffer active</td>
 <td>Trigger element</td>
 <td>
-            Extends the type-ahead buffer with a space character. The <code>active</code> option advances if the buffer matches an enabled option; the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+            Extends the type-ahead buffer with a space character. The <code>active</code> option advances if the buffer matches an active option; the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
 </td>
 </tr>
 <tr>
@@ -289,7 +289,7 @@
 <td>Collapsed or Expanded</td>
 <td>Trigger element</td>
 <td>
-            Extends the type-ahead buffer. When the buffer matches an enabled option's displayed text, the <code>active</code> option advances to that option and the bib opens if it was collapsed. A keystroke that does not match any option leaves the bib state unchanged. Repeated keystrokes within <code>typeaheadTimeoutMs</code> (default 500&nbsp;ms) extend the buffer; pressing the same character repeatedly cycles through matching options. Keys chorded with <code>Ctrl</code>, <code>Meta</code>, or <code>Alt</code> are ignored so browser and OS shortcuts do not leak into the buffer. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+            Extends the type-ahead buffer. When the buffer matches an active option's displayed text, the <code>active</code> option advances to that option and the bib opens if it was collapsed. A keystroke that does not match any option leaves the bib state unchanged. Repeated keystrokes within <code>typeaheadTimeoutMs</code> (default 500&nbsp;ms) extend the buffer; pressing the same character repeatedly cycles through matching options. Keys chorded with <code>Ctrl</code>, <code>Meta</code>, or <code>Alt</code> are ignored so browser and OS shortcuts do not leak into the buffer. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
 </td>
 </tr>
 </tbody>
