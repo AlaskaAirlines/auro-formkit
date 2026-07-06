@@ -31,7 +31,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="complexForm">Complex Form</auro-header>
-        <p>A more complex form layout with multiple element types, nested containers, and a submit/cancel button group.</p>
+        <p>A realistic booking form that exercises every form element <code>auro-form</code> manages — <code>auro-input</code>, <code>auro-select</code>, <code>auro-combobox</code>, a range <code>auro-datepicker</code>, <code>auro-counter-group</code>, <code>auro-radio-group</code>, and <code>auro-checkbox-group</code> — arranged with nested containers and a reset/submit button group.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/complex.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -39,6 +39,8 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.js) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>

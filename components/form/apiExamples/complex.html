@@ -1,64 +1,174 @@
+<auro-form id="bookingForm" class="trip-form">
+  <!-- Cabin — auro-radio-group -->
+  <div class="form-section">
+    <auro-radio-group required name="cabin">
+      <span slot="legend">Cabin</span>
+      <auro-radio id="cabin-main" name="cabinChoice" label="Main" value="main" checked></auro-radio>
+      <auro-radio id="cabin-premium" name="cabinChoice" label="Premium" value="premium"></auro-radio>
+      <auro-radio id="cabin-first" name="cabinChoice" label="First class" value="first"></auro-radio>
+    </auro-radio-group>
+  </div>
+
+  <!-- Route — auro-select (from) + auro-combobox (to) -->
+  <div class="form-section">
+    <h4 class="section-heading">Where are you going?</h4>
+    <div class="field-row">
+      <auro-select required name="departureAirport">
+        <span slot="label">From</span>
+        <span slot="bib.fullscreen.headline">Choose a departure city</span>
+        <auro-menu>
+          <auro-menuoption value="SEA">Seattle (SEA)</auro-menuoption>
+          <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+          <auro-menuoption value="SFO">San Francisco (SFO)</auro-menuoption>
+          <auro-menuoption value="LAX">Los Angeles (LAX)</auro-menuoption>
+          <auro-menuoption value="ANC">Anchorage (ANC)</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+
+      <auro-combobox required name="destination">
+        <span slot="label">To</span>
+        <span slot="bib.fullscreen.headline">Search destinations</span>
+        <auro-menu>
+          <auro-menuoption value="HNL">Honolulu (HNL)</auro-menuoption>
+          <auro-menuoption value="OGG">Maui (OGG)</auro-menuoption>
+          <auro-menuoption value="JFK">New York (JFK)</auro-menuoption>
+          <auro-menuoption value="ORD">Chicago (ORD)</auro-menuoption>
+          <auro-menuoption value="DFW">Dallas–Fort Worth (DFW)</auro-menuoption>
+          <auro-menuoption static nomatch>No matching destinations</auro-menuoption>
+        </auro-menu>
+      </auro-combobox>
+    </div>
+  </div>
+
+  <!-- When & who — auro-datepicker (range) + auro-counter-group -->
+  <div class="form-section">
+    <h4 class="section-heading">When and who?</h4>
+    <div class="field-row">
+      <auro-datepicker required range name="travelDates">
+        <span slot="fromLabel">Departure</span>
+        <span slot="toLabel">Return</span>
+        <span slot="bib.fullscreen.fromLabel">Departure</span>
+        <span slot="bib.fullscreen.toLabel">Return</span>
+      </auro-datepicker>
+
+      <auro-counter-group isDropdown max="9" name="travelers">
+        <div slot="label">Travelers</div>
+        <span slot="bib.fullscreen.headline">Travelers</span>
+        <span slot="ariaLabel.bib.close">Close</span>
+        <auro-counter name="adults" min="1" max="9" value="1">
+          Adults
+          <span slot="description">Age 18+</span>
+        </auro-counter>
+        <auro-counter name="children" min="0" max="8" value="0">
+          Children
+          <span slot="description">Age 2–17</span>
+        </auro-counter>
+        <auro-counter name="infants" min="0" max="4" value="0">
+          Lap infants
+          <span slot="description">Under 2</span>
+        </auro-counter>
+      </auro-counter-group>
+    </div>
+  </div>
+
+  <!-- Lead traveler — auro-input -->
+  <div class="form-section">
+    <h4 class="section-heading">Lead traveler</h4>
+    <div class="field-row">
+      <auro-input id="first-name" name="firstName" required>
+        <span slot="label">First name</span>
+      </auro-input>
+
+      <auro-input id="last-name" name="lastName" required>
+        <span slot="label">Last name</span>
+      </auro-input>
+
+      <auro-input id="email" name="email" type="email" class="span-2" required>
+        <span slot="label">Email</span>
+        <span slot="helpText">We'll send your confirmation here.</span>
+      </auro-input>
+    </div>
+  </div>
+
+  <!-- Extras — auro-checkbox-group -->
+  <div class="form-section">
+    <auro-checkbox-group name="extras">
+      <span slot="legend">Add to your trip (optional)</span>
+      <auro-checkbox id="extra-bags" value="bags">First checked bag</auro-checkbox>
+      <auro-checkbox id="extra-insurance" value="insurance">Travel insurance</auro-checkbox>
+      <auro-checkbox id="extra-lounge" value="lounge">Alaska Lounge+ day pass</auro-checkbox>
+    </auro-checkbox-group>
+  </div>
+
+  <div class="form-actions">
+    <auro-button type="reset" variant="secondary">Reset</auro-button>
+    <auro-button type="submit">Search flights</auro-button>
+  </div>
+</auro-form>
+
+<output id="bookingFormOutput" aria-live="polite">Fill in the required fields and submit to see the collected form value. Notice the shapes each field contributes — <code>travelDates</code> as a two-item <code>[departure, return]</code> array, <code>travelers</code> as an object keyed by counter name, <code>extras</code> as an array, and <code>cabin</code> as the selected value.</output>
+
 <style>
-  .submitBlock {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-  .datepickerBlock {
-    margin-top: 1rem;
-  }
-  .complex-form {
+  #bookingFormOutput {
     display: block;
-    padding: 1rem;
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid #2a2a2a;
+    border-radius: 0.25rem;
+    background: #f5f5f5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+  }
+
+  .trip-form {
+    display: block;
+    padding: 1.5rem;
     border: 1px solid #2a2a2a;
     border-radius: 1rem;
   }
+
+  .trip-form .form-section {
+    margin-top: 1.5rem;
+  }
+
+  .trip-form .form-section:first-of-type {
+    margin-top: 0;
+  }
+
+  .trip-form .section-heading {
+    margin: 0 0 0.75rem;
+  }
+
+  .trip-form .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .trip-form .field-row + .field-row {
+    margin-top: 1rem;
+  }
+
+  .trip-form .span-2 {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 660px) {
+    .trip-form .field-row {
+      grid-template-columns: 1fr;
+    }
+
+    .trip-form .span-2 {
+      grid-column: span 1;
+    }
+  }
+
+  .trip-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
 </style>
-
-<auro-form class="complex-form">
-  <auro-input id="first-name" name="firstName" required>
-    <span slot="label">First Name</span>
-  </auro-input>
-
-  <br />
-
-  <auro-input id="last-name" name="lastName" required>
-    <span slot="label">Last Name</span>
-  </auro-input>
-  
-  <br />
-
-  <auro-input id="occupation" name="occupation" required>
-    <span slot="label">Occupation</span>
-  </auro-input>
-
-  <br />
-
-  <auro-input-two id="cool-fact" name="coolFact" required>
-    <span slot="label">Cool Fact</span>
-  </auro-input-two>
-
-  <div class="datepickerBlock">
-    <h4>Pick a cool date</h4>
-    <auro-datepicker id="date-example" name="dateExample" required>
-      <span slot="fromLabel">Choose a date</span>
-      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
-    </auro-datepicker>
-  </div>
-
-  <div class="datepickerBlock">
-    <h4>Pick a date range</h4>
-    <auro-datepicker id="date-range" name="dateRange" required range>
-      <span slot="fromLabel">Start</span>
-      <span slot="toLabel">End</span>
-      <span slot="bib.fullscreen.fromLabel">Start</span>
-      <span slot="bib.fullscreen.toLabel">End</span>
-    </auro-datepicker>
-  </div>
-
-  <div class="submitBlock">
-    <auro-button type="reset">Reset</auro-button>
-    <auro-button type="submit">Submit</auro-button>
-  </div>
-</auro-form>

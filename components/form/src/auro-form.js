@@ -14,7 +14,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /**
  * @typedef {Object} FormStateMember - The form state member.
- * @property {string | number | boolean | string[] | null} value - The value of the form element.
+ * @property {string | number | boolean | string[] | Record<string, number> | null} value - The value of the form element. Mirrors the child component's own `.value`, so the shape varies by element type (e.g. an array for `auro-checkbox-group`, an object keyed by counter name for `auro-counter-group`). A `range` `auro-datepicker` is the one form-specific case: its `.values` array is stored rather than its single `.value` string.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.
  * @property {boolean} disabled - Whether the form element is currently disabled. Cached from the live attribute via the MutationObserver in `connectedCallback` and refreshed from `_handleAttributeMutations`.
@@ -108,7 +108,7 @@ export class AuroForm extends LitElement {
      * `_setInitialState` can detect user edits as `current !== initial`,
      * matching HTML's `dirtyValueFlag` semantics.
      * @private
-     * @type {Record<string, string | number | boolean | string[] | null | undefined>}
+     * @type {Record<string, string | number | boolean | string[] | Record<string, number> | null | undefined>}
      */
     this._initialValues = {};
 
@@ -267,8 +267,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns the current values of all named form elements as a key-value object, keyed by each element's `name` attribute.
-   * @returns {Record<string, string | number | boolean | string[] | null>} The current form values.
+   * Returns the current values of all named, enabled form elements as a key-value object, keyed by each element's `name` attribute. Each value is the child component's own `.value`, so the shape depends on the element type — see that component's documentation for its exact shape (for example, `auro-checkbox-group` yields an array, `auro-counter-group` yields an object keyed by counter name, and `auro-select` with `multiSelect` yields a JSON-encoded string). The one form-specific exception is a `range` `auro-datepicker`, whose `.values` array (`[start, end]`) is stored instead of its single `.value` string.
+   * @returns {Record<string, string | number | boolean | string[] | Record<string, number> | null>} The current form values.
    */
   get value() {
     return Object.keys(this.formState).reduce((acc, key) => {
