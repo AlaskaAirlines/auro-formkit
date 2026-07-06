@@ -52,6 +52,8 @@
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.js) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>
       <section>
