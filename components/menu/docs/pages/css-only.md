@@ -94,15 +94,15 @@
 
 <auro-header level="3">Value emission and events</auro-header>
 
-<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, <code>auroMenu-deselectPrevented</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
+<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
 
 <auro-header level="3">Multi-select with array value</auro-header>
 
 <p><code>auro-menu</code> supports <code>multiselect</code>, exposing the selection as a JSON-stringified array via <code>value</code> and as an array of elements via <code>optionSelected</code>. With plain HTML, you must track multiple selections yourself, manage the <code>aria-multiselectable</code> attribute, and serialize the result manually.</p>
 
-<auro-header level="3">Allow-deselect behavior</auro-header>
+<auro-header level="3">Multi-select deselect</auro-header>
 
-<p><code>auro-menu</code> supports an <code>allowDeselect</code> attribute that lets a user click an already-selected option to clear it in single-select mode, with a <code>auroMenu-deselectPrevented</code> event when the operation is blocked. Native listboxes do not have a deselect concept; you must implement and gate the behavior yourself.</p>
+<p>In multi-select mode, clicking an already-selected option toggles it off. Native listboxes have no built-in deselect concept for individual options; you must implement the toggle behavior and update <code>aria-selected</code> yourself.</p>
 
 <auro-header level="3">Select-by-value and reset</auro-header>
 
@@ -177,9 +177,9 @@
       <td><code>multiselect</code> + <code>value</code></td>
     </tr>
     <tr>
-      <td>Allow-deselect behavior</td>
+      <td>Multi-select deselect</td>
       <td>Manual</td>
-      <td><code>allowDeselect</code> attribute</td>
+      <td>Click-to-toggle built in</td>
     </tr>
     <tr>
       <td>Select-by-value and reset</td>
