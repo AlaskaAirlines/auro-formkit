@@ -117,13 +117,14 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/complex.html) -->
 <!-- The below content is automatically added from ./../apiExamples/complex.html -->
-<auro-form id="tripForm" class="trip-form">
-<!-- Trip type — auro-radio-group -->
+<auro-form id="bookingForm" class="trip-form">
+<!-- Cabin — auro-radio-group -->
 <div class="form-section">
-<auro-radio-group required name="tripType">
-<span slot="legend">Trip type</span>
-<auro-radio id="trip-roundtrip" name="tripTypeChoice" label="Round trip" value="roundtrip" checked></auro-radio>
-<auro-radio id="trip-oneway" name="tripTypeChoice" label="One way" value="oneway"></auro-radio>
+<auro-radio-group required name="cabin">
+<span slot="legend">Cabin</span>
+<auro-radio id="cabin-main" name="cabinChoice" label="Main" value="main" checked></auro-radio>
+<auro-radio id="cabin-premium" name="cabinChoice" label="Premium" value="premium"></auro-radio>
+<auro-radio id="cabin-first" name="cabinChoice" label="First class" value="first"></auro-radio>
 </auro-radio-group>
 </div>
 <!-- Route — auro-select (from) + auro-combobox (to) -->
@@ -214,9 +215,9 @@
 <auro-button type="submit">Search flights</auro-button>
 </div>
 </auro-form>
-<output id="tripFormOutput" aria-live="polite">Fill in the required fields and submit to see the collected form value. Notice how <code>travelDates</code> is a two-item array for a round trip and a single string for one way, and how the optional <code>extras</code> come through as an array.</output>
+<output id="bookingFormOutput" aria-live="polite">Fill in the required fields and submit to see the collected form value. Notice the shapes each field contributes — <code>travelDates</code> as a two-item <code>[departure, return]</code> array, <code>travelers</code> as an object keyed by counter name, <code>extras</code> as an array, and <code>cabin</code> as the selected value.</output>
 <style>
-          #tripFormOutput {
+          #bookingFormOutput {
             display: block;
             margin-top: 2rem;
             padding: 1rem 1.25rem;
@@ -285,13 +286,14 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/complex.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/complex.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-form id="tripForm" class="trip-form"&gt;
-  &lt;!-- Trip type — auro-radio-group --&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-form id="bookingForm" class="trip-form"&gt;
+  &lt;!-- Cabin — auro-radio-group --&gt;
   &lt;div class="form-section"&gt;
-    &lt;auro-radio-group required name="tripType"&gt;
-      &lt;span slot="legend"&gt;Trip type&lt;/span&gt;
-      &lt;auro-radio id="trip-roundtrip" name="tripTypeChoice" label="Round trip" value="roundtrip" checked&gt;&lt;/auro-radio&gt;
-      &lt;auro-radio id="trip-oneway" name="tripTypeChoice" label="One way" value="oneway"&gt;&lt;/auro-radio&gt;
+    &lt;auro-radio-group required name="cabin"&gt;
+      &lt;span slot="legend"&gt;Cabin&lt;/span&gt;
+      &lt;auro-radio id="cabin-main" name="cabinChoice" label="Main" value="main" checked&gt;&lt;/auro-radio&gt;
+      &lt;auro-radio id="cabin-premium" name="cabinChoice" label="Premium" value="premium"&gt;&lt;/auro-radio&gt;
+      &lt;auro-radio id="cabin-first" name="cabinChoice" label="First class" value="first"&gt;&lt;/auro-radio&gt;
     &lt;/auro-radio-group&gt;
   &lt;/div&gt;
   &lt;!-- Route — auro-select (from) + auro-combobox (to) --&gt;
@@ -382,9 +384,9 @@
     &lt;auro-button type="submit"&gt;Search flights&lt;/auro-button&gt;
   &lt;/div&gt;
 &lt;/auro-form&gt;
-&lt;output id="tripFormOutput" aria-live="polite"&gt;Fill in the required fields and submit to see the collected form value. Notice how &lt;code&gt;travelDates&lt;/code&gt; is a two-item array for a round trip and a single string for one way, and how the optional &lt;code&gt;extras&lt;/code&gt; come through as an array.&lt;/output&gt;
+&lt;output id="bookingFormOutput" aria-live="polite"&gt;Fill in the required fields and submit to see the collected form value. Notice the shapes each field contributes — &lt;code&gt;travelDates&lt;/code&gt; as a two-item &lt;code&gt;[departure, return]&lt;/code&gt; array, &lt;code&gt;travelers&lt;/code&gt; as an object keyed by counter name, &lt;code&gt;extras&lt;/code&gt; as an array, and &lt;code&gt;cabin&lt;/code&gt; as the selected value.&lt;/output&gt;
 &lt;style&gt;
-  #tripFormOutput {
+  #bookingFormOutput {
     display: block;
     margin-top: 2rem;
     padding: 1rem 1.25rem;
@@ -453,51 +455,26 @@
 <pre class="language-js"><code class="language-js">/* eslint-disable jsdoc/require-jsdoc */
 ​
 /**
- * Wires the trip-type radio group in the complex booking example to the
- * travel-dates datepicker. Choosing "One way" removes the datepicker's `range`
- * attribute (a single departure date, no return); "Round trip" restores it.
- *
- * This also demonstrates a form-level behavior: because `auro-form` tracks its
- * fields and reads a `range` datepicker via `.values` (and a single-date picker
- * via `.value`), the collected `travelDates` entry changes shape to match the
- * selected trip type — a `[departure, return]` array for round trip, a single
- * date string for one way.
+ * Displays the collected value of the complex booking form on submit, mirroring
+ * the Disabled Fields example. Every field in this form — including the cabin
+ * radio group — is collected into `form.value` automatically by `auro-form`; no
+ * per-field wiring is needed.
  */
 export async function complexExample() {
   await customElements.whenDefined('auro-form');
 ​
-  const form = document.querySelector('#tripForm');
+  const form = document.querySelector('#bookingForm');
   if (!form) {
-    throw new Error('complexExample: #tripForm not yet rendered');
+    throw new Error('complexExample: #bookingForm not yet rendered');
   }
 ​
-  const output = document.querySelector('#tripFormOutput');
+  const output = document.querySelector('#bookingFormOutput');
   if (!output) {
-    throw new Error('complexExample: #tripFormOutput not yet rendered');
+    throw new Error('complexExample: #bookingFormOutput not yet rendered');
   }
 ​
   await form.updateComplete;
 ​
-  const tripType = form.querySelector('auro-radio-group[name="tripType"]');
-  const datepicker = form.querySelector('auro-datepicker[name="travelDates"]');
-​
-  if (!tripType || !datepicker) {
-    throw new Error('complexExample: trip-type radio group or datepicker not found');
-  }
-​
-  const syncDatepickerToTripType = () =&gt; {
-    if (tripType.value === 'oneway') {
-      datepicker.removeAttribute('range');
-    } else {
-      datepicker.setAttribute('range', '');
-    }
-  };
-​
-  // Reflect the initial selection (Round trip) on load, then keep in sync.
-  syncDatepickerToTripType();
-  tripType.addEventListener('input', syncDatepickerToTripType);
-​
-  // Display the collected form value on submit, mirroring the Disabled Fields example.
   form.addEventListener('submit', (event) =&gt; {
     output.textContent = JSON.stringify(event.detail.value, null, 2);
   });
