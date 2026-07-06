@@ -38,7 +38,6 @@
   <li>Checkmark indicators for each selected option</li>
   <li>A <code>value</code> that returns a JSON-stringified array of selections</li>
   <li>Click-to-toggle behavior that deselects an already-selected option</li>
-  <li><code>selectAllMatchingOptions</code> for bulk selection operations</li>
   <li><code>clearSelection()</code> and <code>reset()</code> methods for programmatic control</li>
 </ul>
 
