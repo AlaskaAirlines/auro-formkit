@@ -1614,6 +1614,28 @@ function runFullTest(mobileView) {
         expect(menu.value).to.equal(undefined);
         expect(menu.optionSelected).to.equal(undefined);
       });
+
+      it('should clear optionActive and remove the .active class on reset()', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        // Activate an option via keyboard navigation
+        menu.navigateOptions('down');
+        await elementUpdated(menu);
+
+        // Verify active state is set
+        expect(menu.optionActive).to.not.equal(undefined);
+        const activatedOption = menu.optionActive;
+        expect(activatedOption.classList.contains('active')).to.be.true;
+
+        // Reset
+        menu.reset();
+        await elementUpdated(menu);
+
+        // Active state should be fully cleared alongside the selection state
+        expect(menu.optionActive).to.equal(undefined);
+        expect(activatedOption.classList.contains('active')).to.be.false;
+      });
     });
 
     describe('resetShapeClasses', () => {
