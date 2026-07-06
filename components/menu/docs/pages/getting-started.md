@@ -22,8 +22,8 @@
       <auro-anchorlink fluid href="#options" class="level2 body-xs">options</auro-anchorlink>
       <auro-anchorlink fluid href="#index" class="level2 body-xs">index</auro-anchorlink>
       <auro-anchorlink fluid href="#functions">Functions</auro-anchorlink>
-      <auro-anchorlink fluid href="#makeSelection" class="level2 body-xs">makeSelection()</auro-anchorlink>
       <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
+      <auro-anchorlink fluid href="#selectByValue" class="level2 body-xs">selectByValue()</auro-anchorlink>
       <auro-anchorlink fluid href="#updateActiveOption" class="level2 body-xs">updateActiveOption()</auro-anchorlink>
       <auro-anchorlink fluid href="#navigateOptions" class="level2 body-xs">navigateOptions()</auro-anchorlink>
     </auro-nav>
@@ -68,14 +68,14 @@
       <section>
         <auro-header level="2" id="functions">Functions</auro-header>
         <p>The following public methods are available on the <code>&lt;auro-menu&gt;</code> element.</p>
-        <auro-header level="3" id="makeSelection">makeSelection()</auro-header>
-        <p>Selects the currently active menu option. This is the programmatic equivalent of clicking on an option or pressing Enter while an option is focused.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
         <p>Resets the menu to its initial state, clearing all selected options and restoring the value to <code>undefined</code>.</p>
-        <auro-header level="3" id="updateActiveOption">updateActiveOption(option)</auro-header>
-        <p>Sets the specified <code>&lt;auro-menuoption&gt;</code> element as the currently active (highlighted) option.</p>
+        <auro-header level="3" id="selectByValue">selectByValue(value)</auro-header>
+        <p>Selects the option(s) whose <code>value</code> matches the argument. Accepts a string in single-select mode or an array of strings in multi-select mode; passing <code>undefined</code>, <code>null</code>, an empty string, or an empty array clears the selection.</p>
+        <auro-header level="3" id="updateActiveOption">updateActiveOption(indexOrOption)</auro-header>
+        <p>Sets the specified option as the currently active (highlighted) option. Accepts either a numeric index into <code>options</code> or an <code>&lt;auro-menuoption&gt;</code> element reference.</p>
         <auro-header level="3" id="navigateOptions">navigateOptions(direction)</auro-header>
-        <p>Moves the highlight to the next or previous option. Accepts <code>'up'</code> or <code>'down'</code> as the direction parameter.</p>
+        <p>Moves the active option to the next or previous option. Accepts <code>'up'</code> or <code>'down'</code> as the direction parameter.</p>
       </section>
     </div>
   </div>
