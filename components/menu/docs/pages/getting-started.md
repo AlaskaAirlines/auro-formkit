@@ -70,6 +70,15 @@
         <p>The following public methods are available on the <code>&lt;auro-menu&gt;</code> element.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
         <p>Resets the menu to its initial state, clearing all selected options and restoring the value to <code>undefined</code>.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="selectByValue">selectByValue(value)</auro-header>
         <p>Selects the option(s) whose <code>value</code> matches the argument. Accepts a string in single-select mode or an array of strings in multi-select mode; passing <code>undefined</code>, <code>null</code>, an empty string, or an empty array clears the selection.</p>
         <auro-header level="3" id="updateActiveOption">updateActiveOption(indexOrOption)</auro-header>
