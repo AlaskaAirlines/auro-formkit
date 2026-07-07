@@ -36,8 +36,8 @@
 - [ ] ↑ — verify the active option moves to the previous active option
 - [ ] ↓ at the last active option — verify it wraps to the first active option
 - [ ] ↑ at the first active option — verify it wraps to the last active option
-- [ ] `Alt`/`Ctrl`/`Meta` + ↓ — verify the active option jumps to the last active option
-- [ ] `Alt`/`Ctrl`/`Meta` + ↑ — verify the active option jumps to the first active option
+- [ ] `Alt`/`Ctrl` + ↓ — verify the active option jumps to the last active option
+- [ ] `Alt`/`Ctrl` + ↑ — verify the active option jumps to the first active option
 - [ ] `Home` — verify the active option moves to the first active option
 - [ ] `End` — verify the active option moves to the last active option
 - [ ] ↵ on an active option (single-select) — verify it selects the option, closes the bib, and returns focus to the trigger

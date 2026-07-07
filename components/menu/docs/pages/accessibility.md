@@ -26,6 +26,11 @@
         <p>See the <auro-hyperlink href="keyboardBehavior">Keyboard Behavior</auro-hyperlink> page for full details.</p>
       </section>
       <section>
+        <auro-header level="2" id="modifierKeys">Modifier Keys</auro-header>
+        <p>The <strong>Meta</strong> key (Command on macOS, Windows/Super elsewhere) is intentionally not used as a modifier for menu keyboard shortcuts. On Windows, Linux, and ChromeOS, the operating system intercepts <code>Meta</code> + Arrow combinations for window management (e.g. window snapping) before the browser receives the event, so any shortcut bound to <code>Meta</code> + Arrow would work only on macOS and silently fail on other platforms.</p>
+        <p>To jump to the first or last option in a way that works uniformly across platforms, use <strong>Home</strong> and <strong>End</strong>, which follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/" target="_blank">WAI-ARIA Listbox pattern</a>.</p>
+      </section>
+      <section>
         <auro-header level="2" id="multiselect">Multi-Select</auro-header>
         <p>When the <code>multiselect</code> attribute is set, <code>aria-multiselectable="true"</code> is applied to the menu, allowing multiple options to be selected. Each option's <code>aria-selected</code> attribute reflects its individual selection state.</p>
       </section>

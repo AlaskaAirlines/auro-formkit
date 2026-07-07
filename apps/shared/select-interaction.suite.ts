@@ -147,15 +147,6 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Grapes');
       });
 
-      test('Meta+ArrowDown jumps to the last option', async ({ page }) => {
-        await openBib(page, 'default');
-        await waitForBibOpen(page, 'default');
-        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
-
-        await page.keyboard.press('Meta+ArrowDown');
-        await expect.poll(() => activeOptionValue(page, 'default')).toBe('Grapes');
-      });
-
       test('Alt+ArrowUp jumps to the first option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
@@ -166,18 +157,6 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         await page.keyboard.press('ArrowDown');
 
         await page.keyboard.press('Alt+ArrowUp');
-        await expect.poll(() => activeOptionValue(page, 'default')).toBe('Apples');
-      });
-
-      test('Meta+ArrowUp jumps to the first option', async ({ page }) => {
-        await openBib(page, 'default');
-        await waitForBibOpen(page, 'default');
-        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
-
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('ArrowDown');
-
-        await page.keyboard.press('Meta+ArrowUp');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Apples');
       });
 
@@ -223,15 +202,6 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
 
         await page.keyboard.press('End');
         // Should skip disabled 'Grapes' and land on 'Bananas'
-        await expect.poll(() => activeOptionValue(page, 'disabled-last')).toBe('Bananas');
-      });
-
-      test('Meta+ArrowDown skips disabled last option', async ({ page }) => {
-        await openBib(page, 'disabled-last');
-        await waitForBibOpen(page, 'disabled-last');
-        await expect.poll(() => activeOptionValue(page, 'disabled-last'), { timeout: 5_000 }).not.toBeNull();
-
-        await page.keyboard.press('Meta+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'disabled-last')).toBe('Bananas');
       });
 
