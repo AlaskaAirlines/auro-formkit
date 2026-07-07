@@ -2401,6 +2401,25 @@ function runFullTest(mobileView) {
 
         await expect(el._pendingMenuValueSync).to.be.false;
       });
+
+      // Screen-reader announcement fires when a programmatic value has no
+      // matching option. The announcement is routed through the
+      // auroMenu-selectValueFailure listener which reads this.value, so the
+      // value setter (not setMenuValue) is the path that produces the
+      // announcement.
+      it('should announce "No matching option" to screen readers when value has no match', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.value = 'NotAnOption';
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+        await expect(liveRegion).to.exist;
+        await expect(liveRegion.textContent).to.include('No matching option for NotAnOption');
+      });
     });
 
     describe('reset', () => {
@@ -3923,6 +3942,28 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
 
+      // Tab with no matching option should not commit a menu selection.
+      // The bib is already closed once availableOptions goes to zero, so
+      // this guards against a future regression where Tab would silently
+      // commit a stale active option. (In suggestion mode the free-typed
+      // text may become the value — the guard is that no menu option was
+      // selected.)
+      it('should not select a menu option when the input has no matching options', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        setInputValue(el, 'zzzzzz');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        await sendKeys({ press: 'Tab' });
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.not.be.ok;
+        await expect(el.menu.optionSelected).to.not.be.ok;
+      });
+
       describe('Shift', () => {
         it('should make a selection and close the bib', async () => {
           const el = await defaultFixture(mobileView);
@@ -3990,6 +4031,57 @@ function runFullTest(mobileView) {
       }
     });
 
+    // Space is a plain printable character — it enters a space into the
+    // input and (like any other character) drives
+    // handleTriggerInputValueChange → showBib(). Guards against a future
+    // regression where Space would be swallowed or repurposed to toggle
+    // the bib.
+    describe('Space', () => {
+      it('should enter a space character into the input and open the bib after prior matching input', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        await sendKeys({ press: 'Space' });
+        await elementUpdated(el);
+
+        const activeInput = mobileView ? el.inputInBib : el.input;
+        await expect(activeInput.value.endsWith(' ')).to.be.true;
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should not select the highlighted option in the open state', async () => {
+        const el = await defaultFixture(mobileView);
+        const options = el.querySelectorAll('auro-menuoption');
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        await sendKeys({ press: 'Space' });
+        await elementUpdated(el);
+
+        // Space should not have committed the highlighted option — the
+        // matching menu option's value must not become the combobox value.
+        await expect(el.menu.optionSelected).to.not.be.ok;
+        await expect(el.value).to.not.equal(options[0].getAttribute('value'));
+      });
+    });
+
     describe('Escape', () => {
       it('should close the bib without making a selection', async () => {
         const el = await defaultFixture(mobileView);
@@ -4039,6 +4131,36 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      // Escape restores focus to the trigger input after closing the bib.
+      // Regression guard for the fullscreen path where focus could get
+      // parked on the dialog's close button.
+      it('should restore focus to the trigger input after closing the bib', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true
+        }));
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+        await expect(el.shadowRoot.activeElement).to.equal(el.input);
       });
 
       if (!mobileView) {

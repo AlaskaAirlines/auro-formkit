@@ -2,7 +2,7 @@
 
 ## Mouse Interactions
 
-[ ] Click the trigger input — verify the bib opens (if options exist with typeahead) and the input receives focus
+[ ] Click the trigger input — verify the input receives focus. Typing a character opens the bib when at least one option matches; if no options match, the bib opens showing the `nomatch` option (when provided) or remains closed if no `nomatch` option is slotted.
 [ ] Type text in the input — verify options filter in real time based on input
 [ ] Click a menu option — verify it becomes selected, the bib closes, and the trigger displays the selected value
 [ ] Click the clear button (X) — verify the input value clears, options reset, and the clear button disappears
@@ -20,10 +20,10 @@
 ## Keyboard Interactions — Desktop (Popup Closed)
 
 [ ] Tab to the combobox trigger — verify the input receives visible focus
-[ ] Arrow Down — verify the bib opens and visual focus moves to the first option
-[ ] Arrow Up — verify the bib opens and visual focus moves to the last option
-[ ] Enter — verify the bib toggles open state if input has value
-[ ] Space — verify the bib toggles open
+[ ] Arrow Down — verify the bib opens (visual focus does not yet move; a second Arrow Down moves visual focus to the first option)
+[ ] Arrow Up — verify the bib opens (visual focus does not move to any option until a subsequent Arrow Up/Down or End is pressed)
+[ ] Enter — verify the bib opens if the input has a matching value
+[ ] Space — verify a space character is entered into the input; like any typed character it opens the bib (showing filtered options or the `nomatch` option)
 [ ] Type characters — verify the bib opens (if matching options exist) and options filter
 
 ## Keyboard Interactions — Desktop (Popup Open)
@@ -52,7 +52,7 @@
 [ ] Enter on a highlighted option — verify it selects, closes the dialog, and returns focus to the trigger
 [ ] Escape — verify the dialog closes without selecting and focus returns to the trigger
 [ ] Tab (focus on input, clear button visible) — verify focus moves to the clear button
-[ ] Tab (focus on clear button, option highlighted) — verify the highlighted option is selected, the dialog closes, and focus returns to the trigger
+[ ] Tab (focus on clear button, option highlighted) — verify the dialog does NOT auto-select the highlighted option; the browser handles Tab natively within the clear button's shadow DOM (no selection, no dialog close from this handler)
 [ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the dialog closes, and focus moves to the previous element on the page (note: Shift+Tab behavior in fullscreen dialog may be inconsistent across browsers and may require custom handling for proper focus management)
 [ ] Shift+Tab (no matching option) - verify the focus moves to the previous element without selecting an option and the dialog closes
 
@@ -81,8 +81,8 @@
 [ ] Read value after user selects an option — verify it matches the selected option's value
 
 ### `typedValue` / `inputValue`
-[ ] Type text into the input — verify typedValue reflects what was typed
-[ ] Read inputValue — verify it returns the current input element value
+[ ] Set `typedValue` at mount time — verify the value pre-populates the input on first render (note: `typedValue` is a mount-time initial-value only; it is not updated as the user types)
+[ ] Type text into the input — verify `inputValue` (getter) reflects what was typed and an `inputValue` event fires with the new value in `event.detail.value`
 
 ### `placeholder`
 [ ] Set placeholder — verify it displays in the input when empty
