@@ -6,6 +6,7 @@ import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroDatePicker } from '@aurodesignsystem/auro-datepicker';
 import { disabledExample } from '../apiExamples/disabled.js';
 import { disableAfterEditExample } from '../apiExamples/disabled-after-edit.js';
+import { complexExample } from '../apiExamples/complex.js';
 
 AuroInput.register('input-two');
 AuroDatePicker.register();
@@ -18,6 +19,7 @@ export async function initExamples(initCount) {
   try {
     await disabledExample();
     await disableAfterEditExample();
+    await complexExample();
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {
