@@ -10,7 +10,10 @@
       <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
       <auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
       <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
+      <auro-anchorlink fluid href="#static" class="level2 body-xs">Static Options</auro-anchorlink>
       <auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match Word</auro-anchorlink>
+      <auro-anchorlink fluid href="#persistent" class="level2 body-xs">Persistent Option</auro-anchorlink>
+      <auro-anchorlink fluid href="#nomatch" class="level2 body-xs">No Match Placeholder</auro-anchorlink>
       <auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
       <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
@@ -83,6 +86,17 @@
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/hr.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="static">Static Options</auro-header>
+        <p>Add the <code>static</code> attribute to an <code>auro-menuoption</code> to make it non-interactive — the option renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers or informational rows inside a menu.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/static.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/static.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="matchWord">Match Word</auro-header>
         <p>Set the <code>matchWord</code> property to a string, and any option whose text contains that substring will render the matching portion visually highlighted. Typically driven by an input's <code>keyup</code> handler to power real-time filtering — this is the mechanism <code>&lt;auro-combobox&gt;</code> uses to highlight matches as the user types.</p>
         <div class="exampleWrapper">
@@ -92,6 +106,28 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-word.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="persistent">Persistent Option</auro-header>
+        <p>Add the <code>persistent</code> attribute to an <code>auro-menuoption</code> to opt it out of <code>matchWord</code> highlighting. The option remains fully interactive but its label is never rewritten — useful for utility rows like "Add new…" that should render identically regardless of the current filter string.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persistent.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/persistent.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="nomatch">No Match Placeholder</auro-header>
+        <p>Mark an option with the <code>nomatch</code> attribute to designate it as the placeholder shown when no other options match the user's input. When paired with <code>&lt;auro-combobox&gt;</code>, the combobox toggles the <code>hidden</code> attribute on this option automatically based on filter results.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nomatch.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nomatch.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="nestedMenu">Nested Menu</auro-header>

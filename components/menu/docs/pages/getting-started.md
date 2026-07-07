@@ -26,6 +26,9 @@
       <auro-anchorlink fluid href="#selectByValue" class="level2 body-xs">selectByValue()</auro-anchorlink>
       <auro-anchorlink fluid href="#updateActiveOption" class="level2 body-xs">updateActiveOption()</auro-anchorlink>
       <auro-anchorlink fluid href="#navigateOptions" class="level2 body-xs">navigateOptions()</auro-anchorlink>
+      <auro-anchorlink fluid href="#events">Events</auro-anchorlink>
+      <auro-anchorlink fluid href="#eventList" class="level2 body-xs">Event List</auro-anchorlink>
+      <auro-anchorlink fluid href="#eventAttribute" class="level2 body-xs">Option event attribute</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -81,10 +84,51 @@
         </auro-accordion>
         <auro-header level="3" id="selectByValue">selectByValue(value)</auro-header>
         <p>Selects the option(s) whose <code>value</code> matches the argument. Accepts a string in single-select mode or an array of strings in multi-select mode; passing <code>undefined</code>, <code>null</code>, an empty string, or an empty array clears the selection.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/select-by-value.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/select-by-value.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="updateActiveOption">updateActiveOption(indexOrOption)</auro-header>
         <p>Sets the specified option as the currently active (highlighted) option. Accepts either a numeric index into <code>options</code> or an <code>&lt;auro-menuoption&gt;</code> element reference.</p>
         <auro-header level="3" id="navigateOptions">navigateOptions(direction)</auro-header>
         <p>Moves the active option to the next or previous option. Accepts <code>'up'</code> or <code>'down'</code> as the direction parameter.</p>
+      </section>
+      <section>
+        <auro-header level="2" id="events">Events</auro-header>
+        <p>The <code>&lt;auro-menu&gt;</code> element dispatches custom events that consumers can subscribe to via <code>addEventListener</code>. The example below wires listeners for the full event set and logs each firing.</p>
+        <auro-header level="3" id="eventList">Event List</auro-header>
+        <ul>
+          <li><code>auroMenu-selectedOption</code> — a new selection has been made.</li>
+          <li><code>auroMenu-activatedOption</code> — the active (highlighted) option changed via keyboard or hover.</li>
+          <li><code>auroMenu-optionsChange</code> — the set of available options was updated (e.g., after a slot change).</li>
+          <li><code>auroMenu-selectValueReset</code> — the menu's <code>value</code> was reset via <code>reset()</code>.</li>
+          <li><code>auroMenu-selectValueFailure</code> — a call to <code>selectByValue()</code> found no matching option.</li>
+        </ul>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/events.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/events.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="eventAttribute">Option event attribute</auro-header>
+        <p>Attach an <code>event</code> attribute to any <code>auro-menuoption</code> to dispatch a named custom event from the menu when that option is selected. The generic <code>auroMenu-customEventFired</code> event is also dispatched on every firing — its <code>detail.option</code> references the option that triggered it, so a single listener can route on the <code>event</code> attribute value.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/event-attribute.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/event-attribute.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
       </section>
     </div>
   </div>
