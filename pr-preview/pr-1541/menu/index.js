@@ -26,21 +26,22 @@ const examples = [
   auroMenuSelectByValueExample
 ];
 
-export function initExamples(initCount) {
+export function initExamples(pending, initCount) {
+  pending = pending || examples.slice();
   initCount = initCount || 0;
-  let anyFailed = false;
+  const stillPending = [];
 
-  for (const fn of examples) {
+  for (const fn of pending) {
     try {
       fn();
     } catch (err) {
-      anyFailed = true;
+      stillPending.push(fn);
     }
   }
 
-  if (anyFailed && initCount <= 20) {
+  if (stillPending.length && initCount <= 20) {
     setTimeout(() => {
-      initExamples(initCount + 1);
+      initExamples(stillPending, initCount + 1);
     }, 100);
   }
 }
