@@ -250,7 +250,7 @@
         </auro-accordion>
         <auro-header level="3" id="disableComponent">Disable Component</auro-header>
         <p>The entire component may be disabled. When disabled, the component will render to reflect the state, may not receive focus nor react to any key or pointer events.</p>
-        <p>When the component is disabled and part of a form, the components value is still included in the form submission.</p>
+        <p>When the component is disabled and part of a form, the component's value is not included in the form submission (matching native HTML behavior for disabled form controls).</p>
         <p class="note">
         <strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
         </p>
