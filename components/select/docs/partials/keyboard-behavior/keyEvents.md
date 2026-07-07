@@ -24,7 +24,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the next active option in the list. If the current <code>active</code> option is the last active option, the active state wraps to the first active option.
+        Advances the <code>focused</code> option to the next enabled option in the list. If the current <code>focused</code> option is the last enabled option, selection wraps to the first enabled option.
       </td>
     </tr>
     <tr>
@@ -37,7 +37,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the last active option in the list.
+        Advances the <code>focused</code> option to the last enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -55,7 +55,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the last active option in the list.
+        Advances the <code>focused</code> option to the last enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -69,7 +69,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the previous active option in the list. If the current <code>active</code> option is the first active option, the active state wraps to the last active option.
+        Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
       </td>
     </tr>
     <tr>
@@ -82,7 +82,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the first active option in the list.
+        Advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -100,7 +100,7 @@
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the first active option in the list.
+        Advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -109,14 +109,14 @@
       <td>Collapsed</td>
       <td>Trigger element</td>
       <td>
-        Opens the bib and advances the <code>active</code> option to the last active option in the list.
+        Opens the bib and advances the <code>focused</code> option to the last enabled option in the list.
       </td>
     </tr>
     <tr>
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the last active option in the list.
+        Advances the <code>focused</code> option to the last enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -169,14 +169,14 @@
       <td>Collapsed</td>
       <td>Trigger element</td>
       <td>
-        Opens the bib and advances the <code>active</code> option to the first active option in the list.
+        Opens the bib and advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>
       <td>Expanded</td>
       <td>Trigger element</td>
       <td>
-        Advances the <code>active</code> option to the first active option in the list.
+        Advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -221,7 +221,7 @@
       <td>Collapsed or Expanded</td>
       <td>Trigger element</td>
       <td>
-        Extends the type-ahead buffer. When the buffer matches an active option's displayed text, the <code>active</code> option advances to that option and the bib opens if it was collapsed. A keystroke that does not match any option leaves the bib state unchanged. Repeated keystrokes within <code>typeaheadTimeoutMs</code> (default 500&nbsp;ms) extend the buffer; pressing the same character repeatedly cycles through matching options. Keys chorded with <code>Ctrl</code>, <code>Meta</code>, or <code>Alt</code> are ignored so browser and OS shortcuts do not leak into the buffer. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+        Extends the type-ahead buffer. When the buffer matches an enabled option's displayed text, the <code>focused</code> option advances to that option and the bib opens if it was collapsed. A keystroke that does not match any option leaves the bib state unchanged. Repeated keystrokes within <code>typeaheadTimeoutMs</code> (default 500&nbsp;ms) extend the buffer; pressing the same character repeatedly cycles through matching options. Keys chorded with <code>Ctrl</code>, <code>Meta</code>, or <code>Alt</code> are ignored so browser and OS shortcuts do not leak into the buffer. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
       </td>
     </tr>
   </tbody>
