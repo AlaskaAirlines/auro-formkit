@@ -70,7 +70,7 @@
 
 <auro-header level="3">Active-option tracking</auro-header>
 
-<p><code>auro-menu</code> keeps focus on the menu element itself and tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving focus between options. This is the aria-activedescendant-style pattern. With plain HTML, you must pick one focus model — either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code>, or <code>aria-activedescendant</code> on the container — and wire up the DOM writes yourself on every key event.</p>
+<p><code>auro-menu</code> tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving DOM focus between options. In typical integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), focus remains on the parent trigger/input and <code>aria-activedescendant</code> points at the active option; if you make <code>&lt;auro-menu&gt;</code> focusable (e.g., <code>tabindex="0"</code>), the same active-option model applies while focus is on the menu host. With plain HTML, you must pick one focus model — either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code>, or <code>aria-activedescendant</code> on the container — and wire up the DOM writes yourself on every key event.</p>
 
 <auro-header level="3">Arrow-key navigation</auro-header>
 
