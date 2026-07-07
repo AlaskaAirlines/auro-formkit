@@ -6,7 +6,7 @@ export const selectKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
     evt.preventDefault();
     if (ctx.isExpanded) {
-      if (evt.altKey || evt.ctrlKey || evt.metaKey) {
+      if (evt.altKey || evt.ctrlKey) {
         // navigate to last enabled option
         selectKeyboardStrategy.End(component, evt, ctx);
       } else {
@@ -20,7 +20,7 @@ export const selectKeyboardStrategy = {
   ArrowUp(component, evt, ctx) {
     evt.preventDefault();
     if (ctx.isExpanded) {
-      if (evt.altKey || evt.ctrlKey || evt.metaKey) {
+      if (evt.altKey || evt.ctrlKey) {
         // navigate to first enabled option
         selectKeyboardStrategy.Home(component, evt, ctx);
       } else {

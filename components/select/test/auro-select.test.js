@@ -2724,64 +2724,6 @@ function runTest(mobileView) {
           await expect(dropdown.isPopoverVisible).to.be.true;
         });
 
-        describe('Meta', () => {
-          it('should open the bib when collapsed', async () => {
-            const el = await defaultFixture();
-
-            await elementUpdated(el);
-
-            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-            await expect(dropdown.isPopoverVisible).to.be.false;
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(dropdown.isPopoverVisible).to.be.true;
-          });
-
-          it('should jump to the last enabled option', async () => {
-            const el = await defaultFixture();
-
-            await elementUpdated(el);
-            el.showBib();
-            await elementUpdated(el);
-
-            const menu = el.querySelector('auro-menu');
-            const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(el.optionActive === lastOption).to.equal(true);
-          });
-
-          it('should skip disabled options', async () => {
-            const el = await fixture(html`
-              <auro-select>
-                <span slot="bib.fullscreen.headline">Bib Headline</span>
-                <span slot="label">Name</span>
-                <auro-menu>
-                  <auro-menuoption value="Stops">Stops</auro-menuoption>
-                  <auro-menuoption value="Price">Price</auro-menuoption>
-                  <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
-                </auro-menu>
-              </auro-select>
-            `);
-
-            await elementUpdated(el);
-            el.showBib();
-            await elementUpdated(el);
-
-            const menu = el.querySelector('auro-menu');
-            const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(el.optionActive === lastEnabledOption).to.equal(true);
-          });
-        });
-
         describe('Alt', () => {
           it('should open the bib when collapsed', async () => {
             const el = await defaultFixture();
@@ -2910,72 +2852,6 @@ function runTest(mobileView) {
           await elementUpdated(el);
 
           await expect(dropdown.isPopoverVisible).to.be.true;
-        });
-
-        describe('Meta', () => {
-          it('should open the bib when collapsed', async () => {
-            const el = await defaultFixture();
-
-            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-            await expect(dropdown.isPopoverVisible).to.be.false;
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(dropdown.isPopoverVisible).to.be.true;
-          });
-
-          it('should jump to the first enabled option', async () => {
-            const el = await defaultFixture();
-
-            await elementUpdated(el);
-            el.showBib();
-            await elementUpdated(el);
-
-            // Move away from first option
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            await elementUpdated(el);
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            await elementUpdated(el);
-
-            const menu = el.querySelector('auro-menu');
-            const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(el.optionActive === firstOption).to.equal(true);
-          });
-
-          it('should skip disabled options', async () => {
-            const el = await fixture(html`
-              <auro-select>
-                <span slot="bib.fullscreen.headline">Bib Headline</span>
-                <span slot="label">Name</span>
-                <auro-menu>
-                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
-                  <auro-menuoption value="Price">Price</auro-menuoption>
-                  <auro-menuoption value="Duration">Duration</auro-menuoption>
-                </auro-menu>
-              </auro-select>
-            `);
-
-            await elementUpdated(el);
-            el.showBib();
-            await elementUpdated(el);
-
-            // Move away from the first enabled option
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            await elementUpdated(el);
-
-            const menu = el.querySelector('auro-menu');
-            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(el.optionActive === firstEnabledOption).to.equal(true);
-          });
         });
 
         describe('Alt', () => {
