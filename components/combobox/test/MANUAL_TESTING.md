@@ -34,12 +34,14 @@
 [ ] Arrow Up at the first option — verify it wraps to the last option
 [ ] Home — verify visual focus moves to the first option
 [ ] End — verify visual focus moves to the last option
-[ ] Enter on a highlighted option — verify it selects the option, closes the bib, and returns focus to the trigger
+[ ] Enter on a highlighted option — verify it selects the option, closes the bib, and focus moves to the clear button
 [ ] Escape — verify the bib closes without selecting, focus returns to the trigger input
-[ ] Space - verify it does NOT select the highlighted option but does type a space character into the input (note: this may require custom handling to prevent default spacebar behavior from selecting an option when the bib is open)
+[x] Space - verify it does NOT select the highlighted option but does type a space character into the input
 [ ] Tab (option highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the clear button
 [ ] Tab (no matching option) - verify the focus moves to the next element without selecting an option and the bib closes
-[ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the previous element on the page.
+[ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the bib closes, and focus lands on the clear button. Pressing Shift+Tab a second time moves focus to the input, and a third time moves focus to the previous element on the page.
+
+> **Intended behavior (tracked in [AB#1590650](https://dev.azure.com/itsals/E_Retain_Content/_boards/board/t/Auro%20Design%20System/Stories?workitem=1590650)):** a single Shift+Tab should select the highlighted option, close the bib, and move focus directly to the previous focusable element on the page — symmetric with Tab. When that change lands, this row should be updated to verify the single-keypress exit.
 [ ] Shift+Tab (no matching option) - verify the focus moves to the previous element without selecting an option and the bib closes
 [ ] Continue typing while options are highlighted — verify the filter updates and option highlight adjusts
 

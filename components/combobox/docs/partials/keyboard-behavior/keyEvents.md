@@ -158,10 +158,7 @@
         </div>
       </td>
       <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-        <div class="note">
-          <strong>Note:</strong> the bib will <strong>NOT</strong> close and the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.
-        </div>
+        The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the <strong>clear button</strong> in the component trigger. A subsequent Shift+Tab moves focus back to the input, and another Shift+Tab exits the component to the previous focusable element on the page.
       </td>
     </tr>
   </tbody>
