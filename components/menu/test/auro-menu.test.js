@@ -176,22 +176,6 @@ function runFullTest(mobileView) {
       expect(el.value).to.not.equal('option 1');
     });
 
-    // This test should pass but fails due to a bug
-    // it('should render pre-selected option when selected attribute is set', async () => {
-    //   const el = await fixture(html`
-    //     <auro-menu aria-label="test">
-    //       <auro-menuoption value="option 1">option 1</auro-menuoption>
-    //       <auro-menuoption value="option 2" selected>option 2</auro-menuoption>
-    //     </auro-menu>
-    //   `);
-    //   await elementUpdated(el);
-
-    //   const selectedOption = el.querySelector('auro-menuoption[selected]');
-    //   expect(selectedOption).to.exist;
-    //   expect(selectedOption.value).to.equal('option 2');
-    //   expect(el.value).to.equal('option 2');
-    // });
-
     it('should apply role="group" on a nested menu', async () => {
       const el = await nestedMenuFixture();
       const nestedMenu = el.querySelector('auro-menu auro-menu');

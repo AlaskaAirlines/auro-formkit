@@ -66,7 +66,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | `layout`      |               |           | `string`  |         |                                                  |
 | `noCheckmark` | `noCheckmark` |           | `boolean` | false   |                                                  |
 | `noMatch`     | `nomatch`     |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox<br />when the user's input does not match any available options. |
-| `selected`    | `selected`    |           | `boolean` | false   |                                                  |
+| `selected`    | `selected`    |           | `boolean` | false   | **Deprecated.** Use the `value` attribute on `auro-menu` to set the selected option when the menu renders (or call `menu.selectByValue(value)` programmatically). Support for the child-level `selected` attribute will be removed in a future major release. |
 | `value`       | `value`       |           | `string`  |         |                                                  |
 
 ## Methods

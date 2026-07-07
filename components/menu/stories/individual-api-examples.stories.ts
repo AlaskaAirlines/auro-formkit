@@ -99,7 +99,6 @@ export const MatchWord = stories.MatchWord;
 export const MultiSelect = stories.MultiSelect;
 export const NestedMenu = stories.NestedMenu;
 export const Nocheckmark = stories.Nocheckmark;
-export const Preselect = stories.Preselect;
 export const Reset = stories.Reset;
 export const RestrictedWidth = stories.RestrictedWidth;
 export const PresetValue = stories.PresetValue;
