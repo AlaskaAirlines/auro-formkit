@@ -987,6 +987,24 @@ function runFullTest(mobileView) {
 
         expect(menu.querySelector('auro-menu auro-menuoption')).to.exist;
       });
+
+      it('should skip persistent options when applying matchWord highlighting', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="apple">apple</auro-menuoption>
+            <auro-menuoption value="add" persistent>add apple</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        el.matchWord = 'app';
+        await elementUpdated(el);
+
+        const [normal, persistent] = el.querySelectorAll('auro-menuoption');
+        expect(normal.innerHTML).to.include('<strong');
+        expect(persistent.innerHTML).to.not.include('<strong');
+        expect(persistent.textContent.trim()).to.equal('add apple');
+      });
     });
 
     describe('multiSelect', () => {

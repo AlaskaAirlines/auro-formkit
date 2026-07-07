@@ -56,6 +56,7 @@ export class AuroMenuOption extends AuroElement {
     this.noCheckmark = false;
     this.disabled = false;
     this.noMatch = false;
+    this.persistent = false;
 
     /**
      * @private
@@ -116,6 +117,12 @@ export class AuroMenuOption extends AuroElement {
         type: Boolean,
         reflect: true,
         attribute: 'nomatch'
+      },
+
+      /** When true, this option is excluded from `matchWord` DOM rewriting — useful for utility rows (e.g., "Add new…") that must render identically regardless of the current filter. */
+      persistent: {
+        type: Boolean,
+        reflect: true
       },
     };
   }
