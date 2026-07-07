@@ -9,6 +9,7 @@
       <auro-anchorlink fluid href="#restrictedWidth" class="level2 body-xs">Restricted Width</auro-anchorlink>
       <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
       <auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
+      <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
       <auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
       <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
@@ -68,6 +69,17 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nocheckmark.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="dividers">Dividers</auro-header>
+        <p>Insert standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers are non-interactive and are skipped during keyboard navigation.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/hr.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/hr.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
