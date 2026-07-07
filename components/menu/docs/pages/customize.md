@@ -10,6 +10,7 @@
       <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
       <auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
       <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
+      <auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match Word</auro-anchorlink>
       <auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
       <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
@@ -81,6 +82,17 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/hr.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="matchWord">Match Word</auro-header>
+        <p>Set the <code>matchWord</code> property to a string, and any option whose text contains that substring will render the matching portion visually highlighted. Typically driven by an input's <code>keyup</code> handler to power real-time filtering — this is the mechanism <code>&lt;auro-combobox&gt;</code> uses to highlight matches as the user types.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-word.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-word.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="nestedMenu">Nested Menu</auro-header>

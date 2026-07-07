@@ -48,7 +48,7 @@
 <p><code>auro-menu</code> supports:</p>
 
 <ul>
-  <li><code>matchWord</code> to highlight matching portions of option text as the user types (used by <code>auro-combobox</code> for real-time filtering)</li>
+  <li><auro-hyperlink href="customize#matchWord"><code>matchWord</code></auro-hyperlink> to highlight matching portions of option text as the user types (used by <code>auro-combobox</code> for real-time filtering)</li>
   <li>Programmatic <code>navigateOptions(direction)</code> for keyboard-driven traversal</li>
 </ul>
 
