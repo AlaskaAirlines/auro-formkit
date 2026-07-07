@@ -20,7 +20,6 @@
       <auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-Select</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset Value (Multi)</auro-anchorlink>
-      <auro-anchorlink fluid href="#preselect" class="level2 body-xs">Pre-Selected</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -184,17 +183,6 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preset-value-multiselect.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </auro-accordion>
-        <auro-header level="3" id="preselect">Pre-Selected</auro-header>
-        <p>Use the <code>selected</code> attribute on <code>auro-menuoption</code> to pre-select an option when the menu renders.</p>
-        <div class="exampleWrapper">
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preselect.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </div>
-        <auro-accordion alignRight>
-        <span slot="trigger">See code</span>
-        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preselect.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>

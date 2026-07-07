@@ -77,6 +77,12 @@ export class AuroMenuOption extends AuroElement {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * **Deprecated.** Use the `value` attribute on `auro-menu` to set the selected option when the menu renders (or call `menu.selectByValue(value)` programmatically). Support for the child-level `selected` attribute will be removed in a future major release.
+       *
+       * @deprecated Use the `value` attribute on `auro-menu` instead.
+       */
       selected: {
         type: Boolean,
         reflect: true
