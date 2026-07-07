@@ -101,7 +101,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-            Advances the <code>active</code> option to the previous active option in the list. If the current <code>active</code> option is the first active option, the active state wraps to the last active option.
+            Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
 </td>
 </tr>
 <tr>
