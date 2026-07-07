@@ -4,18 +4,21 @@
 <auro-header level="3" id="voiceOverMenuContainer">Menu Container</auro-header>
 <p>When focus enters the menu, VoiceOver announces:</p>
 <ol>
-<li><strong>Role:</strong> <em>"list box"</em></li>
+<li><strong>Role:</strong> <em>"list box"</em> — set on the root <code>&lt;auro-menu&gt;</code>; nested menus use <code>role="group"</code> with <code>aria-label="submenu"</code>.</li>
 <li><strong>Item count:</strong> The number of visible options (e.g., <em>"5 items"</em>)</li>
+<li><strong>Multi-select:</strong> When <code>multiSelect</code> is set on the root menu, <code>aria-multiselectable="true"</code> is exposed so VoiceOver announces the listbox as multi-selectable.</li>
+<li><strong>Loading:</strong> While <code>loading</code> is set, <code>aria-busy="true"</code> is exposed so VoiceOver signals that the option set is not yet stable.</li>
 </ol>
 <auro-header level="3" id="voiceOverMenuOptions">Menu Options</auro-header>
-<p>Each <code>auro-menuoption</code> announces the following when focused:</p>
+<p>Each <code>auro-menuoption</code> announces the following when the parent field points at it (via <code>aria-activedescendant</code>) or when the user reads through the listbox:</p>
 <ol>
 <li><strong>Label:</strong> The option's text content</li>
 <li><strong>Role:</strong> <em>"option"</em></li>
-<li><strong>Position:</strong> Position in the list (e.g., <em>"3 of 5"</em>)</li>
-<li><strong>Selected state:</strong> <em>"selected"</em> if the option is currently selected</li>
-<li><strong>Disabled state:</strong> <em>"dimmed"</em> if the option is disabled</li>
+<li><strong>Position:</strong> Position in the list (e.g., <em>"3 of 5"</em>) — when the menu is used inside <code>&lt;auro-select&gt;</code> (or another host that stamps them), each option receives <code>aria-setsize</code> and <code>aria-posinset</code>. Standalone <code>&lt;auro-menu&gt;</code> does not set these attributes itself; positional announcements outside a select/combobox host rely on VoiceOver's own listbox item count.</li>
+<li><strong>Selected state:</strong> <em>"selected"</em> if <code>aria-selected="true"</code> is set on the option</li>
+<li><strong>Disabled state:</strong> <em>"dimmed"</em> if <code>aria-disabled="true"</code> is set on the option</li>
 </ol>
+<div class="note"><strong>Note:</strong> <code>&lt;auro-menuoption&gt;</code> is not directly focusable — <code>tabindex="-1"</code> keeps it out of the tab order. In a select or combobox context, focus stays on the parent trigger and the active option is pointed at via <code>aria-activedescendant</code> (using <code>ariaActiveDescendantElement</code> to cross the shadow-root boundary).</div>
 <auro-header level="3" id="voiceOverSelection">Selection</auro-header>
 <p>When an option is selected via Enter or Space:</p>
 <ul>
