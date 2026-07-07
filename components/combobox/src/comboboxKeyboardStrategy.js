@@ -142,6 +142,23 @@ export const comboboxKeyboardStrategy = {
   },
 
   Tab(component, evt, ctx) {
+    // Runs for both Tab and Shift+Tab.
+    //
+    // Current behavior:
+    //   Tab       — select the active option, close the bib, and (in fullscreen
+    //               modal mode only) explicitly move focus to the trigger's
+    //               clear button. In desktop popover mode the browser's native
+    //               tab traversal takes focus forward from the input.
+    //   Shift+Tab — select the active option and close the bib. Focus then
+    //               lands on the trigger's clear button as a byproduct of the
+    //               shadow-DOM tab order, so keyboard users must press
+    //               Shift+Tab three times to exit the component (clear button
+    //               → input → previous element on the page).
+    //
+    // Intended behavior for Shift+Tab (per team decision, tracked in
+    // AB#1590650): a single Shift+Tab should select the active option, close
+    // the bib, and move focus directly to the previous focusable element on
+    // the page — symmetric with Tab.
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
       // When the clear button is focused, Tab events do not bubble out of
       // its shadow DOM, so this handler only fires when the clear button
