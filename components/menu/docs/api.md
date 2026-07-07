@@ -66,7 +66,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | `layout`      |               |           | `string`  |         |                                                  |
 | `noCheckmark` | `noCheckmark` |           | `boolean` | false   |                                                  |
 | `noMatch`     | `nomatch`     |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox<br />when the user's input does not match any available options. |
-| `persistent`  | `persistent`  |           | `boolean` | false   | When true, this option is excluded from `matchWord` DOM rewriting. The option remains<br />fully interactive but its label is never rewritten to highlight matched substrings —<br />useful for utility rows (e.g., "Add new…") that should render identically regardless<br />of the current filter string. |
+| `persistent`  | `persistent`  |           | `boolean` | false   | When true, this option is excluded from `matchWord` DOM rewriting — useful for utility rows (e.g., "Add new…") that must render identically regardless of the current filter. |
 | `selected`    | `selected`    |           | `boolean` | false   | **Deprecated.** Use the `value` attribute on `auro-menu` to set the selected option when the menu renders (or call `menu.selectByValue(value)` programmatically). Support for the child-level `selected` attribute will be removed in a future major release. |
 | `value`       | `value`       |           | `string`  |         |                                                  |
 
