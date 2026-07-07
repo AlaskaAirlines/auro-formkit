@@ -338,6 +338,45 @@
 - [ ] At the fullscreen breakpoint, open the dialog and select/deselect an option in multi-select — verify the screen reader hears the announcement (the live region is routed into the bib's shadow root because everything outside the `<dialog>` is inert)
 - [ ] At desktop (popover) sizes, verify the same announcements come from the host component's shadow root live region
 
+### VoiceOver (macOS + iOS)
+
+Turn VoiceOver on and verify each announcement. Expected wording is spec'd in [`../docs/pages/voiceover.md`](../docs/pages/voiceover.md).
+
+#### Trigger focus
+
+- [ ] Focus the trigger — verify VO announces *"[label], [current value or 'no selection'], combo box"*, plus the *"collapsed"* / *"expanded"* state and any of *"required"*, *"dimmed"* (if disabled), or *"has auto complete"* that apply
+- [ ] Wait for the pause after the initial focus announcement — verify the `helpText` slot content is announced
+- [ ] Focus the trigger with `multiSelect` set — verify the role announced is still *"combo box"* (regression check: not *"list box"*, not *"pop-up button"*). `aria-multiselectable="true"` lives on the internal menu, not the trigger.
+
+#### Opening and navigating
+
+- [ ] Open the bib — verify VO announces the currently active option: *"[label], [state]"*
+- [ ] Navigate options — verify VO announces *"[label], [N] of [M]"* with *"selected"* or *"dimmed"* appended as applicable
+- [ ] Add or remove options dynamically while VO is reading — verify the *"N of M"* count updates on the next read (backed by re-stamped `aria-setsize` / `aria-posinset`)
+
+#### Single-select selection
+
+- [ ] Press ↵ on an active option — verify VO announces *"selected"* for the option, the bib closes, and VO announces *"collapsed"* for the state change
+- [ ] After close, refocus the trigger — verify the new value is included in the focus announcement
+
+#### Multi-select
+
+- [ ] Toggle-select an option — verify VO announces *"[label], selected"* (only the toggled option, not the full list)
+- [ ] Toggle-deselect a previously selected option — verify VO announces *"[label], not selected"* (regression check: the wording is *"not selected"*, not *"unselected"*)
+- [ ] Rapidly toggle multiple options — verify each add/remove announcement is heard; the *"collapsed"* announcement should not override them (announcements are delayed ~300 ms for this reason)
+
+#### Invalid state
+
+- [ ] Trigger an invalid state (e.g., blur a `required` empty select) — verify VO announces the error message immediately via the alert-role help text; it does not wait for the next focus
+- [ ] Refocus the trigger while invalid — verify the error message is included in the trigger's focus announcement. VO does **not** announce *"invalid data"* / *"invalid entry"* as a state hint, because the trigger does not carry `aria-invalid`
+
+#### Fullscreen (mobile)
+
+- [ ] Open the select at the mobile breakpoint — verify focus lands on the Close button, announced with the accessible name from the `ariaLabel.bib.close` slot
+- [ ] While the dialog is open, inspect the trigger — verify `inert` is set on it, so VO cannot reach the trigger until the dialog closes
+- [ ] On iOS VoiceOver, perform the two-finger scrub gesture (Z shape) — verify the dialog closes without selection and focus returns to the trigger
+- [ ] Select an option in the dialog — verify the dialog closes, `inert` is removed from the trigger, and focus returns to the trigger with the new value announced
+
 ## Slots
 
 - [ ] Set custom content in the `label` slot — verify it renders as the select label

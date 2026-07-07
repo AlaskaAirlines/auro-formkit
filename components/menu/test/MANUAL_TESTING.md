@@ -217,6 +217,22 @@ See [keyboard-behavior.md](../docs/pages/keyboard-behavior.md) for the full key/
 - [ ] Toggle `multiSelect` at runtime on the root menu — verify `aria-multiselectable="true"` is added when true and removed when false
 - [ ] Verify the top-level `<auro-menu>` has a `root` attribute in the DOM inspector; nested menus do not
 
+### VoiceOver (macOS + iOS)
+
+Turn VoiceOver on and verify each announcement. Expected wording is spec'd in [`../docs/pages/voiceover.md`](../docs/pages/voiceover.md).
+
+- [ ] Focus lands in the root menu — verify VO announces *"list box, [N] items"* (e.g., *"list box, 5 items"*)
+- [ ] Set `multiSelect` on the root menu — verify VO announces the container as multi-selectable (backed by `aria-multiselectable="true"`)
+- [ ] Set `loading` — verify VO signals *"busy"* (backed by `aria-busy="true"`); clear `loading` — verify the busy state drops
+- [ ] Navigate options with VO+↓ / VO+↑ (macOS) or swipe (iOS) — verify each option announces *"[label], option, [N] of [M]"*
+- [ ] Land on a selected option — verify *"selected"* is appended
+- [ ] Land on a disabled option — verify *"dimmed"* is appended
+- [ ] Drive the active option past `disabled`, `hidden`, or `static` options — verify VO does not announce them as active (they are skipped)
+- [ ] Select an option with ↵ — verify the label followed by *"selected"* is announced
+- [ ] Nest a child `<auro-menu>` inside an `<auro-menuoption>` and enter it — verify VO announces *"group, submenu"* (nested menus use `role="group"` with `aria-label="submenu"`)
+- [ ] Within a nested menu, verify position announcements are relative to the nested list (e.g., *"1 of 3"*, not the parent's count)
+- [ ] When the menu is hosted by `<auro-select>` or `<auro-combobox>`, navigate options — verify VO announces the active option even though focus stays on the parent trigger in a different shadow root (backed by `ariaActiveDescendantElement`)
+
 ### Nested menus
 
 - [ ] Nest a child `<auro-menu>` inside an `<auro-menuoption>` — verify in the inspector:
