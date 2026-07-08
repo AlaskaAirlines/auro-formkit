@@ -34,7 +34,7 @@ export function initExamples(pending, initCount) {
   for (const fn of pending) {
     try {
       fn();
-    } catch (err) {
+    } catch {
       stillPending.push(fn);
     }
   }
