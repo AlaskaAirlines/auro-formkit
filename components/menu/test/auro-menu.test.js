@@ -1281,6 +1281,29 @@ function runFullTest(mobileView) {
         expect(menu.currentLabel).to.include(',');
       });
 
+      it('reconciles value to the selectable set when a multiSelect value mixes in a non-selectable option', async () => {
+        const el = await multiSelectFixture();
+        const menu = el.querySelector('auro-menu');
+        await elementUpdated(menu);
+
+        // option4 is disabled; a programmatic value that mixes it with a selectable option
+        // must drop the rejected entry so value/formattedValue stays in sync with optionSelected.
+        menu.value = '["option1","option4"]';
+        await elementUpdated(menu);
+
+        expect(menu.optionSelected).to.have.length(1);
+        expect(menu.optionSelected[0].value).to.equal('option1');
+        expect(menu.formattedValue).to.deep.equal(['option1']);
+
+        // A follow-on selection must build on the reconciled value, not resurrect the dropped entry.
+        menu.index = 1;
+        menu.makeSelection();
+        await elementUpdated(menu);
+
+        expect(menu.formattedValue).to.deep.equal(['option1', 'option2']);
+        expect(menu.optionSelected.map((opt) => opt.value)).to.deep.equal(['option1', 'option2']);
+      });
+
       it('a malformed JSON value that starts with "[" is preserved as-is and does not crash', async () => {
         const el = await multiSelectFixture();
         const menu = el.querySelector('auro-menu');
