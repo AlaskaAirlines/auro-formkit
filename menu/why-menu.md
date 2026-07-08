@@ -4,7 +4,7 @@
 <p>Custom list implementations often fail to provide correct ARIA semantics, keyboard navigation, or screen reader announcements.</p>
 <p><code>auro-menu</code> provides:</p>
 <ul>
-<li><strong>Keyboard navigation</strong> — Arrow keys move between options, Enter selects, Escape cancels, Home/End jump to the first and last options.</li>
+<li><strong>Keyboard navigation</strong> — Arrow Up/Down move the active option; Enter selects it; Tab selects and moves focus out of the menu.</li>
 <li><strong>Active option tracking</strong> — The currently highlighted option is tracked programmatically, enabling <code>aria-activedescendant</code> patterns in parent components like <code>auro-select</code> and <code>auro-combobox</code>.</li>
 <li><strong>Multi-select semantics</strong> — When <code>multiSelect</code> is enabled, <code>aria-multiselectable</code> is set on the menu.</li>
 <li><strong>Loading state</strong> — <code>aria-busy</code> is set during loading, with customizable loading icon and text slots.</li>
@@ -24,15 +24,14 @@
 <ul>
 <li>Checkmark indicators for each selected option</li>
 <li>A <code>value</code> that returns a JSON-stringified array of selections</li>
-<li><code>allowDeselect</code> to toggle selections off</li>
-<li><code>selectAllMatchingOptions</code> for bulk selection operations</li>
-<li><code>clearSelection()</code> and <code>reset()</code> methods for programmatic control</li>
+<li>Click-to-toggle behavior that deselects an already-selected option</li>
+<li><code>reset()</code> method for programmatic control</li>
 </ul>
 <auro-header level="2" id="searchAndFiltering">Search and filtering</auro-header>
 <p>Native menus have no concept of filtering or highlighting matched text.</p>
 <p><code>auro-menu</code> supports:</p>
 <ul>
-<li><code>matchWord</code> to highlight matching portions of option text as the user types (used by <code>auro-combobox</code> for real-time filtering)</li>
+<li><auro-hyperlink href="customize#matchWord"><code>matchWord</code></auro-hyperlink> to highlight matching portions of option text as the user types (used by <code>auro-combobox</code> for real-time filtering)</li>
 <li>Programmatic <code>navigateOptions(direction)</code> for keyboard-driven traversal</li>
 </ul>
 <auro-header level="2" id="loadingState">Loading state</auro-header>
@@ -88,7 +87,7 @@
 <tr>
 <td>Keyboard navigation</td>
 <td>Browser-dependent</td>
-<td>Full arrow/Enter/Escape/Home/End</td>
+<td>Arrow Up/Down, Enter, Tab</td>
 </tr>
 <tr>
 <td>Composable primitive</td>
@@ -96,9 +95,9 @@
 <td>Foundation for select and combobox</td>
 </tr>
 <tr>
-<td>Deselect support</td>
-<td>No</td>
-<td><code>allowDeselect</code> attribute</td>
+<td>Multi-select deselect</td>
+<td>Ctrl+click list box</td>
+<td>Click-to-toggle in multi-select</td>
 </tr>
 </tbody>
 </table>
