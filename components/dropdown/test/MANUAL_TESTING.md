@@ -128,7 +128,7 @@ Consumers may replace the default bib by placing an explicit `<auro-dropdownbib>
 
 ### 1.8 Container Composition
 
-- [ ] Place `<auro-dropdown>` inside an `<auro-dialog>` — verify the bib escapes the dialog's overflow clipping (viewport-relative positioning via `contain: '';` override) and opens/closes without leaking Escape to the parent dialog
+- [ ] Place `<auro-dropdown>` inside an `<auro-dialog>` — verify the bib escapes the dialog's overflow clipping (viewport-relative positioning by clearing the host's `contain` style) and opens/closes without leaking Escape to the parent dialog
 - [ ] Place inside an `<auro-drawer>` — verify the same
 
 ---
