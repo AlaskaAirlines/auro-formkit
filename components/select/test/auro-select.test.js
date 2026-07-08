@@ -3728,6 +3728,33 @@ function runTest(mobileView) {
           await elementUpdated(el);
           expect(el.typeaheadBuffer).to.equal('a');
         });
+
+        // Shift is intentionally NOT in the ignore list (only Ctrl/Meta/Alt are),
+        // so a Shift+letter — the normal way to type an uppercase character —
+        // still feeds typeahead. The uppercase key is lowercased into the buffer
+        // and matched case-insensitively against option textContent.
+        it('should feed typeahead on Shift+letter — uppercase key matches case-insensitively', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Shift+B arrives as an uppercase 'B' in evt.key.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'B', shiftKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('b');
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('banana');
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Banana');
+        });
       });
 
       describe('Tab', () => {
