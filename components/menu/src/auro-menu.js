@@ -392,6 +392,11 @@ export class AuroMenu extends AuroElement {
         this.initItems();
       }
 
+      // Set when reconciliation reassigns `value` below. That reassignment schedules a
+      // second updated() cycle, so the `event`-attribute dispatch is deferred to that
+      // cycle to avoid firing option custom events twice on the same selection.
+      let valueReconciled = false;
+
       // Handle null/undefined/empty case — empty/whitespace strings clear selection
       // consistently with selectByValue(''), and avoid downstream `.includes('')` matches.
       if (this.value === undefined || this.value === null || (typeof this.value === 'string' && this.value.trim() === '')) {
@@ -418,6 +423,7 @@ export class AuroMenu extends AuroElement {
           if (rejectedValues.length > 0) {
             const reconciled = valueArray.filter((val) => !rejectedValues.includes(val));
             this.value = reconciled.length > 0 ? JSON.stringify(reconciled) : undefined;
+            valueReconciled = true;
           }
         } else {
           // In single-select mode, this.value should be a string. Reject
@@ -469,8 +475,9 @@ export class AuroMenu extends AuroElement {
         ]
       ]));
 
-      // Notify of changes
-      if (this.optionSelected !== undefined) {
+      // Notify of changes. Skip when reconciliation just reassigned `value`: the
+      // follow-on update cycle re-runs this branch and fires the events exactly once.
+      if (this.optionSelected !== undefined && !valueReconciled) {
         const selected = Array.isArray(this.optionSelected) ? this.optionSelected : [this.optionSelected];
         selected.forEach((opt) => {
           if (opt.hasAttribute('event')) {
