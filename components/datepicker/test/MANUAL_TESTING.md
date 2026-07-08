@@ -14,9 +14,7 @@ Unless otherwise noted, each configuration test should be run in both **single d
 - [ ] Preset `value="2026-07-15"` — verify the input renders the formatted date and the calendar highlights that date on open
 - [ ] Preset `value=""` — verify the input renders empty
 - [ ] Programmatically update `value` after render — verify the input, calendar highlight, and `centralDate` all update
-- [ ] Set `value` to an invalid string — verify it is not accepted (input stays empty / no crash)
-- [ ] Read `value` after user selection — verify it matches the ISO (`YYYY-MM-DD`) form of the selected date
-- [ ] Verify `valueObject` getter returns a `Date` for a valid `value`, and `undefined` for empty/invalid
+- [ ] Set `value` to an invalid string — verify `valueObject` becomes `undefined`, the calendar does not highlight/select a date, and the component does not throw (the input may reflect the raw string)
 
 #### `valueEnd` (range mode)
 - [ ] Preset `valueEnd="2026-07-20"` with `value="2026-07-15"` and `range` — verify both inputs render and the calendar shows the range highlighted
