@@ -54,26 +54,28 @@
 &lt;/ul&gt;</code></pre>
 <auro-header level="2">What you lose without auro-menu</auro-header>
 <p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-menu</code>, the following functionality built into the <code>auro-menu</code> and <code>auro-menuoption</code> web components is <strong>not available</strong> when using plain HTML:</p>
-<auro-header level="3">Roving tabindex</auro-header>
-<p><code>auro-menu</code> manages a roving <code>tabindex</code> so that only the currently active option is in the tab order, and focus moves between options without leaving the menu. With plain HTML, you must implement the roving-tabindex pattern yourself by maintaining the <code>tabindex="0"</code>/<code>tabindex="-1"</code> state across all options on every focus and key event.</p>
+<auro-header level="3">Active-option tracking</auro-header>
+<p><code>auro-menu</code> tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving DOM focus between options. In typical integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), focus remains on the parent trigger/input and <code>aria-activedescendant</code> points at the active option; if you make <code>&lt;auro-menu&gt;</code> focusable (e.g., <code>tabindex="0"</code>), the same active-option model applies while focus is on the menu host. With plain HTML, you must pick one focus model — either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code>, or <code>aria-activedescendant</code> on the container — and wire up the DOM writes yourself on every key event.</p>
 <auro-header level="3">Arrow-key navigation</auro-header>
-<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Home</code>, <code>End</code>, <code>Enter</code>, and <code>Space</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model — you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
-<auro-header level="3">Type-ahead search</auro-header>
-<p><code>auro-menu</code> supports a <code>matchword</code> attribute that highlights matched substrings within option labels, and the listbox supports type-ahead focus jumping. Plain HTML provides neither — both behaviors must be implemented manually with string matching and DOM manipulation.</p>
+<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model — you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
+<auro-header level="3">matchWord highlighting</auro-header>
+<p><code>auro-menu</code> supports a <code>matchWord</code> attribute that highlights matched substrings within option labels — used by <code>auro-combobox</code> to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
+<auro-header level="3">Type-ahead navigation</auro-header>
+<p>Type-ahead — jumping the active option to whichever entry starts with the letters the user typed — is <strong>not</strong> handled by <code>auro-menu</code> itself. It is provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
 <auro-header level="3">Nested submenu support</auro-header>
-<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, computes indentation per level, and propagates the shared menu service down the tree. With plain HTML, you must apply nested ARIA roles and indentation manually, and there is no built-in coordination of focus or selection between parent and child lists.</p>
+<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. The root menu treats all descendant options as a single flat list, so selecting an option inside a nested menu updates the root menu's <code>value</code> and <code>optionSelected</code> — the root always owns the selection state. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
 <auro-header level="3">Selection state coordination</auro-header>
-<p><code>auro-menu</code> coordinates the selected option(s) through an internal <code>MenuService</code> that keeps <code>optionSelected</code>, <code>value</code>, and each option's <code>aria-selected</code> state in sync. With native HTML, you must update <code>aria-selected</code> on every option yourself on each change and manage your own source of truth for the selected value.</p>
+<p><code>auro-menu</code> keeps <code>optionSelected</code>, <code>value</code>, and each option's <code>aria-selected</code> state in sync internally. With native HTML, you must update <code>aria-selected</code> on every option yourself on each change and manage your own source of truth for the selected value.</p>
 <auro-header level="3">ARIA roles and live announcements</auro-header>
 <p><code>auro-menu</code> automatically applies <code>role="listbox"</code>, <code>aria-multiselectable</code>, <code>aria-busy</code> during loading, and per-option <code>role="option"</code> with <code>aria-selected</code> and <code>aria-disabled</code>. Plain HTML requires you to author every one of these attributes by hand and keep them in sync with state — and to add any additional live-region announcements yourself.</p>
 <auro-header level="3">Value emission and events</auro-header>
-<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, <code>auroMenu-deselectPrevented</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
+<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
 <auro-header level="3">Multi-select with array value</auro-header>
 <p><code>auro-menu</code> supports <code>multiselect</code>, exposing the selection as a JSON-stringified array via <code>value</code> and as an array of elements via <code>optionSelected</code>. With plain HTML, you must track multiple selections yourself, manage the <code>aria-multiselectable</code> attribute, and serialize the result manually.</p>
-<auro-header level="3">Allow-deselect behavior</auro-header>
-<p><code>auro-menu</code> supports an <code>allowDeselect</code> attribute that lets a user click an already-selected option to clear it in single-select mode, with a <code>auroMenu-deselectPrevented</code> event when the operation is blocked. Native listboxes do not have a deselect concept; you must implement and gate the behavior yourself.</p>
+<auro-header level="3">Multi-select deselect</auro-header>
+<p>In multi-select mode, clicking an already-selected option toggles it off. Native listboxes have no built-in deselect concept for individual options; you must implement the toggle behavior and update <code>aria-selected</code> yourself.</p>
 <auro-header level="3">Select-by-value and reset</auro-header>
-<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (including the <code>selectAllMatchingOptions</code> option for multi-select) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
+<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (accepting a JSON-stringified array in multi-select mode) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
 <auro-header level="3">Loading state</auro-header>
 <p><code>auro-menu</code> renders a built-in loading placeholder via <code>loadingIcon</code> and <code>loadingText</code> slots, sets <code>aria-busy</code>, and emits <code>auroMenu-loadingChange</code> when the loading attribute toggles. With plain HTML, you must render a placeholder, manage <code>aria-busy</code>, and signal loading transitions yourself.</p>
 <auro-header level="3">Shape and size variants</auro-header>
@@ -96,9 +98,9 @@
 <td>Built-in</td>
 </tr>
 <tr>
-<td>Roving tabindex</td>
-<td>Manual</td>
-<td>Built-in</td>
+<td>Active-option tracking</td>
+<td>Manual (roving tabindex or <code>aria-activedescendant</code>)</td>
+<td>Built-in (<code>active</code> class on the current option)</td>
 </tr>
 <tr>
 <td>Arrow-key navigation</td>
@@ -106,9 +108,14 @@
 <td>Built-in</td>
 </tr>
 <tr>
-<td>Type-ahead and <code>matchword</code> highlighting</td>
+<td><code>matchWord</code> highlighting</td>
 <td>Not supported</td>
-<td>Built-in via <code>matchword</code></td>
+<td>Built-in via <code>matchWord</code></td>
+</tr>
+<tr>
+<td>Type-ahead navigation</td>
+<td>Not supported</td>
+<td>Provided by parent <code>auro-select</code> / <code>auro-combobox</code></td>
 </tr>
 <tr>
 <td>Nested submenus</td>
@@ -118,7 +125,7 @@
 <tr>
 <td>Selection state coordination</td>
 <td>Manual <code>aria-selected</code> sync</td>
-<td>Centralized via menu service</td>
+<td>Coordinated internally</td>
 </tr>
 <tr>
 <td>ARIA roles and <code>aria-busy</code></td>
@@ -136,9 +143,9 @@
 <td><code>multiselect</code> + <code>value</code></td>
 </tr>
 <tr>
-<td>Allow-deselect behavior</td>
+<td>Multi-select deselect</td>
 <td>Manual</td>
-<td><code>allowDeselect</code> attribute</td>
+<td>Click-to-toggle built in</td>
 </tr>
 <tr>
 <td>Select-by-value and reset</td>
