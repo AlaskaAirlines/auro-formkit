@@ -22,10 +22,13 @@
 <auro-anchorlink fluid href="#options" class="level2 body-xs">options</auro-anchorlink>
 <auro-anchorlink fluid href="#index" class="level2 body-xs">index</auro-anchorlink>
 <auro-anchorlink fluid href="#functions">Functions</auro-anchorlink>
-<auro-anchorlink fluid href="#makeSelection" class="level2 body-xs">makeSelection()</auro-anchorlink>
 <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
+<auro-anchorlink fluid href="#selectByValue" class="level2 body-xs">selectByValue()</auro-anchorlink>
 <auro-anchorlink fluid href="#updateActiveOption" class="level2 body-xs">updateActiveOption()</auro-anchorlink>
 <auro-anchorlink fluid href="#navigateOptions" class="level2 body-xs">navigateOptions()</auro-anchorlink>
+<auro-anchorlink fluid href="#events">Events</auro-anchorlink>
+<auro-anchorlink fluid href="#eventList" class="level2 body-xs">Event List</auro-anchorlink>
+<auro-anchorlink fluid href="#eventAttribute" class="level2 body-xs">Option event attribute</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -293,7 +296,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="2" id="stateManagement">State Management</auro-header>
 <p>The following properties reflect the current state of the menu and can be accessed via JavaScript.</p>
 <auro-header level="3" id="value">value</auro-header>
-<p>Gets or sets the selected value. In multi-select mode, this is a JSON stringified array of selected option values (e.g., <code>'["stops","duration"]'</code>).</p>
+<p>Gets or sets the selected value. In multi-select mode, this is a JSON stringified array of selected option values (e.g., <code>'["stops","duration"]'</code>). If the value matches an option marked <code>disabled</code> or <code>static</code>, the selection is cleared (<code>optionSelected</code> becomes <code>undefined</code>) and <code>auroMenu-selectValueFailure</code> is dispatched. <code>hidden</code> options remain selectable by value.</p>
 <auro-header level="3" id="optionSelected">optionSelected</auro-header>
 <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected. When <code>multiSelect</code> is enabled, returns an array of selected elements.</p>
 <auro-header level="3" id="optionActive">optionActive</auro-header>
@@ -308,14 +311,148 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <section>
 <auro-header level="2" id="functions">Functions</auro-header>
 <p>The following public methods are available on the <code>&lt;auro-menu&gt;</code> element.</p>
-<auro-header level="3" id="makeSelection">makeSelection()</auro-header>
-<p>Selects the currently active menu option. This is the programmatic equivalent of clicking on an option or pressing Enter while an option is focused.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
 <p>Resets the menu to its initial state, clearing all selected options and restoring the value to <code>undefined</code>.</p>
-<auro-header level="3" id="updateActiveOption">updateActiveOption(option)</auro-header>
-<p>Sets the specified <code>&lt;auro-menuoption&gt;</code> element as the currently active (highlighted) option.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset.html -->
+<auro-menu id="resetExample" value="duration">
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+<br/><br/>
+<auro-button id="resetExampleBtn">RESET</auro-button>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu id="resetExample" value="duration"&gt;
+  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;
+&lt;br/&gt;&lt;br/&gt;
+&lt;auro-button id="resetExampleBtn"&gt;RESET&lt;/auro-button&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="selectByValue">selectByValue(value)</auro-header>
+<p>Selects the option(s) whose <code>value</code> matches the argument. Accepts a string in single-select mode or an array of strings in multi-select mode; passing <code>undefined</code>, <code>null</code>, an empty string, or an empty array clears the selection.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/select-by-value.html) -->
+<!-- The below content is automatically added from ./../apiExamples/select-by-value.html -->
+<auro-menu id="selectByValueMenu">
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+<br />
+<auro-button id="selectByValueStops">Select "Stops"</auro-button>
+<auro-button id="selectByValueDuration">Select "Duration"</auro-button>
+<auro-button id="selectByValueClear">Clear selection</auro-button>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/select-by-value.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/select-by-value.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu id="selectByValueMenu"&gt;
+  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;
+&lt;br /&gt;
+&lt;auro-button id="selectByValueStops"&gt;Select "Stops"&lt;/auro-button&gt;
+&lt;auro-button id="selectByValueDuration"&gt;Select "Duration"&lt;/auro-button&gt;
+&lt;auro-button id="selectByValueClear"&gt;Clear selection&lt;/auro-button&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="updateActiveOption">updateActiveOption(indexOrOption)</auro-header>
+<p>Sets the specified option as the currently active (highlighted) option. Accepts either a numeric index into <code>options</code> or an <code>&lt;auro-menuoption&gt;</code> element reference.</p>
 <auro-header level="3" id="navigateOptions">navigateOptions(direction)</auro-header>
-<p>Moves the highlight to the next or previous option. Accepts <code>'up'</code> or <code>'down'</code> as the direction parameter.</p>
+<p>Moves the active option to the next or previous option. Accepts <code>'up'</code> or <code>'down'</code> as the direction parameter.</p>
+</section>
+<section>
+<auro-header level="2" id="events">Events</auro-header>
+<p>The <code>&lt;auro-menu&gt;</code> element dispatches custom events that consumers can subscribe to via <code>addEventListener</code>. The example below wires listeners for the full event set and logs each firing.</p>
+<auro-header level="3" id="eventList">Event List</auro-header>
+<ul>
+<li><code>auroMenu-selectedOption</code> — a new selection has been made.</li>
+<li><code>auroMenu-activatedOption</code> — the active (highlighted) option changed via keyboard or hover.</li>
+<li><code>auroMenu-optionsChange</code> — the set of available options was updated (e.g., after a slot change).</li>
+<li><code>auroMenu-selectValueReset</code> — the menu's <code>value</code> was reset via <code>reset()</code>.</li>
+<li><code>auroMenu-selectValueFailure</code> — a value selection (via <code>selectByValue()</code>, the <code>value</code> attribute, or setting the <code>value</code> property) found no matching selectable option. This includes values that match an option marked <code>disabled</code> or <code>static</code>, which are never selectable.</li>
+</ul>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/events.html) -->
+<!-- The below content is automatically added from ./../apiExamples/events.html -->
+<auro-menu id="eventsExampleMenu">
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+<br />
+<auro-button id="eventsExampleReset">reset()</auro-button>
+<auro-button id="eventsExampleBadValue">selectByValue("nonexistent")</auro-button>
+<auro-button id="eventsExampleClearLog">Clear log</auro-button>
+        <pre id="eventsExampleLog" style="max-height: 200px; overflow: auto; padding: var(--ds-size-100, 8px); background: var(--ds-color-container-secondary, #f5f5f5); border-radius: 4px;">(interact with the menu above)</pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/events.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/events.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu id="eventsExampleMenu"&gt;
+  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;
+&lt;br /&gt;
+&lt;auro-button id="eventsExampleReset"&gt;reset()&lt;/auro-button&gt;
+&lt;auro-button id="eventsExampleBadValue"&gt;selectByValue("nonexistent")&lt;/auro-button&gt;
+&lt;auro-button id="eventsExampleClearLog"&gt;Clear log&lt;/auro-button&gt;
+&lt;pre id="eventsExampleLog" style="max-height: 200px; overflow: auto; padding: var(--ds-size-100, 8px); background: var(--ds-color-container-secondary, #f5f5f5); border-radius: 4px;"&gt;(interact with the menu above)&lt;/pre&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="eventAttribute">Option event attribute</auro-header>
+<p>Attach an <code>event</code> attribute to any <code>auro-menuoption</code> to dispatch a named custom event from the menu when that option is selected. The generic <code>auroMenu-customEventFired</code> event is also dispatched on every firing — its <code>detail.option</code> references the option that triggered it, so a single listener can route on the <code>event</code> attribute value.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/event-attribute.html) -->
+<!-- The below content is automatically added from ./../apiExamples/event-attribute.html -->
+<auro-menu id="eventAttrExample">
+<auro-menuoption value="search" event="custom-flight-search">Search flights</auro-menuoption>
+<auro-menuoption value="clear" event="custom-clear-filters">Clear filters</auro-menuoption>
+<auro-menuoption value="save" event="custom-save-preferences">Save preferences</auro-menuoption>
+</auro-menu>
+<p>Last custom event: <output id="eventAttrOutput">(none)</output></p>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/event-attribute.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/event-attribute.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu id="eventAttrExample"&gt;
+  &lt;auro-menuoption value="search" event="custom-flight-search"&gt;Search flights&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="clear" event="custom-clear-filters"&gt;Clear filters&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="save" event="custom-save-preferences"&gt;Save preferences&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;
+&lt;p&gt;Last custom event: &lt;output id="eventAttrOutput"&gt;(none)&lt;/output&gt;&lt;/p&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 </section>
 </div>
 </div>

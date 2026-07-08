@@ -796,7 +796,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/typeahead.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/typeahead.md -->
 <p>Type-ahead lets a guest jump to an option by typing. As keys are pressed, the active option advances to the first enabled option whose <strong>displayed text</strong> starts with the buffered keystrokes — following the <auro-hyperlink href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">WAI-ARIA Listbox pattern</auro-hyperlink>, and mirroring native HTML <code>&lt;select&gt;</code> behavior. Matching uses the rendered text rather than the <code>value</code> attribute.</p>
-<p>The <code>typeaheadTimeoutMs</code> attribute (default <code>500</code>) controls how long the buffer persists between keystrokes. Repeating the same character cycles through every enabled option starting with it; disabled options are skipped.</p>
+<p>The <code>typeaheadTimeoutMs</code> attribute (default <code>500</code>) controls how long the buffer persists between keystrokes. Repeating the same character cycles through every enabled option starting with it; <code>disabled</code>, <code>hidden</code>, and <code>static</code> options are skipped.</p>
 <div class="note">
 <strong>Note:</strong> The <kbd>Space</kbd> key is context-sensitive. When the type-ahead buffer is empty it toggles the bib open or closed, matching the rest of <code>&lt;auro-select&gt;</code>. When the buffer is active it extends the buffer instead, so multi-word options such as "San Francisco" can be matched by typing <kbd>s</kbd>, <kbd>a</kbd>, <kbd>n</kbd>, <kbd>Space</kbd>, <kbd>f</kbd>.
 </div>
@@ -864,7 +864,7 @@
 </auro-accordion>
 <auro-header level="3" id="disableComponent">Disable Component</auro-header>
 <p>The entire component may be disabled. When disabled, the component will render to reflect the state, may not receive focus nor react to any key or pointer events.</p>
-<p>When the component is disabled and part of a form, the components value is still included in the form submission.</p>
+<p>When the component is disabled and part of a form, the component's value is not included in the form submission (matching native HTML behavior for disabled form controls).</p>
 <p class="note">
 <strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
 </p>
@@ -906,6 +906,9 @@
 <auro-header level="3" id="disableOptions">Disable Option(s)</auro-header>
 <p>The component may be rendered with one or more <code>disabled</code> options. When navigating the list of options with the keyboard or assistive technology to mark the next or previous option as active, disabled options will be skipped, jumping to the next enabled option.</p>
 <p>While using the pointer to mark options as active, hovering over disabled options will be ignored and the previous active option will remain active.</p>
+<p class="note">
+<strong>Note:</strong> Setting the component <code>value</code> to one that matches a <code>disabled</code> or <code>static</code> option — whether via the <code>value</code> attribute or programmatic assignment (e.g. <code>el.value = 'x'</code>) — is rejected: <code>value</code> and <code>optionSelected</code> are cleared to <code>undefined</code>. A value matching a <code>hidden</code> option is still applied.
+</p>
 <p class="note">
 <strong>Note:</strong> If the currently <code>selected</code> option is marked as <code>disabled</code>, the component value is reset to <code>undefined</code> and the component validation workflow is performed (e.g., if the component instance is <code>required</code> it will set <code>validity="valueMissing".</code>).
 </p>
