@@ -169,7 +169,7 @@ export class AuroMenu extends AuroElement {
        */
       optionActive: {
         type: Object,
-        attribute: 'optionactive'
+        attribute: false
       },
 
       /**
