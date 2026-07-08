@@ -35,7 +35,7 @@ Unless otherwise noted, each configuration test should be run in both **single d
 #### `range`
 - [ ] Set `range` — verify two inputs (from/to) render, with a divider between them
 - [ ] Unset `range` — verify only the single from input renders
-- [ ] Toggle `range` at runtime — verify inputs re-render and existing `value`/`valueEnd` behave correctly BLOCKED: currently fails by pre-existing issue that will not block v6 release https://itsals.visualstudio.com/E_Retain_Content/_workitems/edit/1592215
+- [ ] Toggle `range` at runtime — verify inputs re-render and existing `value`/`valueEnd` behave correctly. **Known issue:** currently fails (does not block v6). Tracking: [1592215](https://itsals.visualstudio.com/E_Retain_Content/_workitems/edit/1592215)
 
 #### `layout`
 - [ ] `layout="classic"` (default) — verify the standard input rendering
