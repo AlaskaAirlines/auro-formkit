@@ -1176,8 +1176,12 @@ export class AuroDatePicker extends AuroElement {
         // Show the month containing the selected date (or today) instead of
         // whichever month the user last navigated to. Route through
         // updateCentralDate so centralDate stays first-of-month.
+        // calendarFocusDate wins over value so consumers who set it explicitly
+        // get their chosen initial month even when a value is also preset.
         // Respect consumer-provided centralDate/calendarStartDate if no value is set.
-        if (this.valueObject) {
+        if (this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.calendarFocusDateObject);
+        } else if (this.valueObject) {
           this.calendarRenderUtil.updateCentralDate(this, this.value);
         } else if (!this.centralDate && !this.calendarStartDate && !this.minDate) {
           this.calendarRenderUtil.updateCentralDate(this, new Date());
@@ -1718,10 +1722,6 @@ export class AuroDatePicker extends AuroElement {
       }
     }
 
-    if (changedProperties.has('calendarFocusDate')) {
-      this.handleFocusDateChange();
-    }
-
     if (changedProperties.has('calendarStartDate')) {
       this.calendar.setAttribute('calendarStartDate', this.calendarStartDate || '');
     }
@@ -1842,6 +1842,13 @@ export class AuroDatePicker extends AuroElement {
 
       this.validate();
       this.setHasValue();
+    }
+
+    // Run focus-date handling AFTER value/valueEnd so that when a consumer sets
+    // calendarFocusDate together with value, the focus date wins for the visible
+    // month instead of being overwritten by the value branch's updateCentralDate.
+    if (changedProperties.has('calendarFocusDate')) {
+      this.handleFocusDateChange();
     }
 
     if (changedProperties.has('error')) {

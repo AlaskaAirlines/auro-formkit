@@ -13,6 +13,7 @@
     <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
     <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
     <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
+    <auro-anchorlink fluid href="#calendarFocusDate" class="level2 body-xs">Calendar Focus Date</auro-anchorlink>
     <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
     <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
     <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
@@ -120,6 +121,17 @@
 </section>
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
+<auro-header level="3" id="calendarFocusDate">Calendar Focus Date</auro-header>
+<p>Use the <code>calendarFocusDate</code> attribute to control which month the calendar first renders. When set alongside <code>value</code> and <code>valueEnd</code>, <code>calendarFocusDate</code> takes precedence for the visible month.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/calendar-focus-date.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/calendar-focus-date.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="customValidation">Custom Validation</auro-header>
 <p>Use the <code>validity</code> attribute with a custom error message to provide specific feedback.</p>
 <div class="exampleWrapper">
