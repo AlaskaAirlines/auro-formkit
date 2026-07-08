@@ -345,8 +345,8 @@ Unless otherwise noted, each configuration test should be run in both **single d
 - [ ] `validate(true)` — verify forced validation runs immediately even without user interaction (fires `auroFormElement-validated`)
 - [ ] `hasError` getter — verify it returns `true` for any non-valid validity, `false` otherwise
 - [ ] After `reset()` — verify validity clears and inputs are empty
-- [ ] After `resetInputs()` — verify input values clear but validity state is preserved
-- [ ] After `clear()` — verify input values are emptied (via `resetInputs()`)
+- [ ] After `resetInputs()` — verify input values clear; note: this calls `auro-input.reset()` internally, which also clears each input’s validity state
+- [ ] After `clear()` — verify input values are emptied (via `resetInputs()`), and input-level validity state is cleared
 
 ---
 
