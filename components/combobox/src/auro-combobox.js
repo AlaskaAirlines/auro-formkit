@@ -1626,6 +1626,12 @@ export class AuroCombobox extends AuroElement {
     this.value = undefined;
     this.typedValue = undefined;
     this.input.value = undefined;
+    // Fullscreen bib mounts a second auro-input that holds the user-facing
+    // native <input> on mobile; clearing only the trigger leaves stale text
+    // there when the bib is reopened after reset.
+    if (this.inputInBib) {
+      this.inputInBib.value = undefined;
+    }
     this.menu.value = undefined;
     this.validation.reset(this);
     this.touched = false;

@@ -2466,6 +2466,57 @@ function runFullTest(mobileView) {
         await expect(el.optionSelected).to.be.undefined;
         await expect(el.touched).to.be.false;
       });
+
+      it('should clear the inner native input element value', async () => {
+        const el = await presetValueFixture(mobileView);
+        await elementUpdated(el);
+
+        await expect(el.input.inputElement.value).to.equal('Apples');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.value).to.be.undefined;
+        await expect(el.input.inputElement.value).to.equal('');
+      });
+
+      it('should clear the inner native input element value after typing without selection', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        setInputValue(el, 'App');
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.inputElement.value).to.equal('App');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.value).to.be.undefined;
+        await expect(el.input.inputElement.value).to.equal('');
+      });
+
+      it('should also clear the inputInBib native input value in mobile fullscreen', async () => {
+        if (!mobileView) {
+          return;
+        }
+        const el = await presetValueFixture(mobileView);
+        await elementUpdated(el);
+
+        await expect(el.inputInBib).to.exist;
+        await expect(el.inputInBib.value).to.equal('Apples');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+        await el.inputInBib.updateComplete;
+
+        await expect(el.inputInBib.value).to.be.undefined;
+        await expect(el.inputInBib.inputElement.value).to.equal('');
+      });
     });
 
     describe('clear', () => {
