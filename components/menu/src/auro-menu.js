@@ -174,7 +174,8 @@ export class AuroMenu extends AuroElement {
        */
       optionSelected: {
         // Allow HTMLElement, HTMLElement[] arrays and undefined
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
