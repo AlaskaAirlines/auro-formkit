@@ -163,16 +163,14 @@
 [ ] Verify the trigger has role="combobox" and appropriate ARIA attributes
 [ ] Verify aria-expanded reflects bib open/closed state
 [ ] Verify aria-activedescendant tracks the currently highlighted option
-[ ] Verify screen reader announces the selected value
+[ ] Verify screen reader announces the selected value. **Known issue ([AB#1593691](https://dev.azure.com/itsals/E_Retain_Content/_boards/board/t/Auro%20Design%20System/Stories?workitem=1593691)):** the "${value}, selected" live-region announcement currently gets clobbered because focus jumps to the clear button on selection (contradicting the docs). SR users hear no confirmation of the selection they just made.
 [ ] Verify screen reader announces required state
 [ ] Verify error messages are announced
 [ ] Verify disabled state is announced
 [ ] Verify the clear button has an accessible label (ariaLabel.input.clear slot)
 [ ] Verify the fullscreen close button has an accessible label (ariaLabel.bib.close slot)
-[ ] Verify focus management when opening/closing the bib/dialog
 [ ] Verify focus trapping in fullscreen dialog mode
-[ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
-[ ] Verify focus indicators are clearly visible
+[ ] Tab through the combobox with the keyboard — verify a visible focus ring appears on the trigger input and the clear button, and Arrow keys visibly highlight the currently active menu option
 
 ## Slots
 
