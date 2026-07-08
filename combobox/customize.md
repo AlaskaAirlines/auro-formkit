@@ -669,7 +669,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="inputType">Input Type</auro-header>
-<p>When defined, the <code>auro-input</code> in the combobox trigger will use the defined <code>type</code>. Use the <code>triggerIcon</code> attribute to provide context to the user about the expected input type.</p>
+<p>When defined, the <code>auro-input</code> in the combobox trigger will use the defined <code>type</code>. Use the <code>triggerIcon</code> attribute to provide context to the user about the expected input type. Icon rendering is currently limited to <code>type="credit-card"</code>; <code>triggerIcon</code> without a supported type propagates the attribute but does not render a visible icon.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/type_credit-card.html) -->
 <!-- The below content is automatically added from ./../apiExamples/type_credit-card.html -->
