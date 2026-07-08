@@ -601,6 +601,29 @@ function runFullTest(mobileView) {
         await expect(el.centralDateObject.getFullYear()).to.equal(2024);
       });
 
+      // Verify calendarFocusDate wins over value/valueEnd when the dropdown opens on a range datepicker.
+      // Desktop-only: on mobile/fullscreen the visible month is driven by scroll position, not the first rendered month.
+      if (!mobileView) {
+        it('should render at the calendarFocusDate month on dropdown open when range value and valueEnd are preset', async () => {
+          const el = await fixture(html`
+            <auro-datepicker range value="2026-06-15" valueEnd="2026-06-22" calendarFocusDate="2026-12-01"></auro-datepicker>
+          `);
+
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          await dropdown.querySelector('[auro-input]').click();
+          await expect(dropdown.isPopoverVisible).to.be.true;
+          await elementUpdated(calendar.shadowRoot);
+          await nextFrame();
+
+          const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+          await expect(calendarMonth.getAttribute('month')).to.equal('12'); // December
+          await expect(calendarMonth.getAttribute('year')).to.equal('2026');
+        });
+      }
+
     });
 
     describe('calendarStartDate', () => {
