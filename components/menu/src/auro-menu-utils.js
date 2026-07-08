@@ -44,6 +44,18 @@ export function arrayConverter(value) {
 }
 
 /**
+ * Serializes a multi-select value array back into the String `value` property.
+ * An empty (or missing) array collapses to `undefined` so an emptied selection
+ * clears `value` rather than reflecting a `"[]"` attribute.
+ * @private
+ * @param {Array<string>|undefined} values - The selected values.
+ * @returns {string|undefined} JSON string of the values, or undefined when empty.
+ */
+export function serializeMultiSelectValue(values) {
+  return values && values.length > 0 ? JSON.stringify(values) : undefined;
+}
+
+/**
  * Compare two arrays for equality.
  * @private
  * @param {Array} arr1 - First array to compare.
