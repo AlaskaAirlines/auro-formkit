@@ -13,7 +13,6 @@
 <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#calendarFocusDate" class="level2 body-xs">Calendar Focus Date</auro-anchorlink>
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
 <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
@@ -832,34 +831,6 @@
 </section>
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
-<auro-header level="3" id="calendarFocusDate">Calendar Focus Date</auro-header>
-<p>Use the <code>calendarFocusDate</code> attribute to control which month the calendar first renders. When set alongside <code>value</code> and <code>valueEnd</code>, <code>calendarFocusDate</code> takes precedence for the visible month.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/calendar-focus-date.html) -->
-<!-- The below content is automatically added from ./../apiExamples/calendar-focus-date.html -->
-<auro-datepicker range value="2026-06-15" valueEnd="2026-06-22" calendarFocusDate="2026-12-01">
-<span slot="bib.fullscreen.headline">calendarFocusDate Example</span>
-<span slot="fromLabel">Departure</span>
-<span slot="toLabel">Return</span>
-<span slot="bib.fullscreen.fromLabel">Departure</span>
-<span slot="bib.fullscreen.toLabel">Return</span>
-</auro-datepicker>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/calendar-focus-date.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/calendar-focus-date.html -->
-
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker range value="2026-06-15" valueEnd="2026-06-22" calendarFocusDate="2026-12-01"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;calendarFocusDate Example&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
-  &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
-&lt;/auro-datepicker&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
 <auro-header level="3" id="customValidation">Custom Validation</auro-header>
 <p>Use the <code>validity</code> attribute with a custom error message to provide specific feedback.</p>
 <div class="exampleWrapper">
