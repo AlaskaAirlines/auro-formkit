@@ -16,7 +16,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import {
   isOptionInteractive,
   isSelectableByValue,
-  dispatchMenuEvent
+  dispatchMenuEvent,
+  serializeMultiSelectValue
 } from './auro-menu-utils.js';
 import { classMap } from "lit/directives/class-map.js";
 
@@ -422,7 +423,7 @@ export class AuroMenu extends AuroElement {
             : [];
           if (rejectedValues.length > 0) {
             const reconciled = valueArray.filter((val) => !rejectedValues.includes(val));
-            this.value = reconciled.length > 0 ? JSON.stringify(reconciled) : undefined;
+            this.value = serializeMultiSelectValue(reconciled);
             valueReconciled = true;
           }
         } else {
@@ -690,7 +691,7 @@ export class AuroMenu extends AuroElement {
       const currentSelected = this.optionSelected || [];
 
       if (!currentValue.includes(option.value)) {
-        this.value = JSON.stringify([
+        this.value = serializeMultiSelectValue([
           ...currentValue,
           option.value
         ]);
@@ -716,15 +717,9 @@ export class AuroMenu extends AuroElement {
    */
   handleDeselectState(option) {
     if (this.multiSelect) {
-      // Remove this option from array
+      // Remove this option from array; an empty result collapses `value` to undefined.
       const newFormattedValue = (this.formattedValue || []).filter((val) => val !== option.value);
-
-      // If array is empty after removal, set back to undefined
-      if (newFormattedValue && newFormattedValue.length === 0) {
-        this.value = undefined;
-      } else {
-        this.value = JSON.stringify(newFormattedValue);
-      }
+      this.value = serializeMultiSelectValue(newFormattedValue);
 
       this.optionSelected = this.optionSelected.filter((val) => val !== option);
       if (this.optionSelected.length === 0) {
