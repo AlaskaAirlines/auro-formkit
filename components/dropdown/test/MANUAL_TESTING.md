@@ -14,7 +14,7 @@ Unless otherwise noted, verify each configuration path in both **desktop** (floa
 - [ ] Set plain text or a non-focusable element (e.g. `<div>Trigger</div>`) — verify the internal trigger wrapper receives `tabindex="0"`, `role="button"` (from `a11yRole`), and `aria-expanded`/`aria-controls` reflecting bib state
 - [ ] Set focusable content (e.g. `<auro-button>` or `<auro-input>`) in the trigger slot — verify the internal wrapper strips its `tabindex`, `role`, `aria-expanded`, `aria-controls`, `aria-labelledby`, and `aria-autocomplete` so the consumer element owns a11y
 - [ ] With focusable trigger content, focus the inner element — verify `focus`/`blur` events are duplicated to the trigger wrapper (so parent focus tracking works)
-- [ ] Change trigger content dynamically at runtime — verify `handleTriggerContentSlotChange` re-detects focusable vs. non-focusable content and reapplies tabindex/roles accordingly
+- [ ] Replace the assigned trigger slot content at runtime (e.g. swap `<div>Trigger</div>` ↔ `<auro-button>Trigger</auro-button>`) — verify `handleTriggerContentSlotChange` re-detects focusable vs. non-focusable content and reapplies tabindex/roles accordingly
 - [ ] Empty trigger content — verify `hasTriggerContent` is `false` and default rendering degrades gracefully
 
 
