@@ -83,6 +83,20 @@ export function isOptionInteractive(option) {
 }
 
 /**
+ * Validates if an option may be selected by matching a programmatic value.
+ * Unlike `isOptionInteractive`, `hidden` is allowed: the combobox toggles
+ * `hidden` as its type-ahead filter, so a filtered-out option is still a
+ * valid programmatic selection. Only disabled and static options — which are
+ * never selectable — are rejected.
+ * @param {HTMLElement} option - The option to check.
+ * @returns {boolean} True if option can be selected by value.
+ */
+export function isSelectableByValue(option) {
+  return !option.hasAttribute('disabled') &&
+         !option.hasAttribute('static');
+}
+
+/**
  * Helper method to dispatch custom events.
  * @param {HTMLElement} element - Element to dispatch event from.
  * @param {string} eventName - Name of the event to dispatch.

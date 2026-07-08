@@ -8,6 +8,8 @@ import {
   shiftTabFixture,
   shiftTabDisabledFirstFixture,
   defaultFixture,
+  disabledOptionFixture,
+  presetDisabledValueFixture,
   nestedMenuFixture,
   presetValueFixture,
   checkmarkFixture,
@@ -2400,6 +2402,34 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         await expect(el._pendingMenuValueSync).to.be.false;
+      });
+    });
+
+    describe('programmatic value against a disabled option', () => {
+      it('clears value and optionSelected when the value matches a disabled option', async () => {
+        const el = await disabledOptionFixture(mobileView);
+        await elementUpdated(el);
+
+        // 'Oranges' is disabled — the menu rejects the match and dispatches
+        // auroMenu-selectValueFailure, which the combobox turns into a cleared
+        // selection rather than pinning a non-selectable option.
+        el.value = 'Oranges';
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.value).to.be.undefined;
+        await expect(el.optionSelected).to.be.undefined;
+      });
+
+      it('clears a preset value supplied at mount when it matches a disabled option', async () => {
+        const el = await presetDisabledValueFixture(mobileView);
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.value).to.be.undefined;
+        await expect(el.optionSelected).to.be.undefined;
       });
     });
 
