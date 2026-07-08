@@ -1304,6 +1304,33 @@ function runFullTest(mobileView) {
         expect(menu.optionSelected.map((opt) => opt.value)).to.deep.equal(['option1', 'option2']);
       });
 
+      it('fires an option custom event only once when reconciliation reassigns the value', async () => {
+        const el = await fixture(html`
+          <div>
+            <auro-menu multiSelect aria-label="test">
+              <auro-menuoption value="option1" event="uniqueEventName">Option 1</auro-menuoption>
+              <auro-menuoption value="option2">Option 2</auro-menuoption>
+              <auro-menuoption disabled value="option4">Option 4</auro-menuoption>
+            </auro-menu>
+          </div>
+        `);
+        const menu = el.querySelector('auro-menu');
+        await elementUpdated(menu);
+
+        let count = 0;
+        menu.addEventListener('auroMenu-customEventFired', () => count++);
+
+        // option4 is disabled, so setting a value mixing it with the event-bearing option1
+        // triggers reconciliation, which reassigns `value` and schedules a second update cycle.
+        menu.value = '["option1","option4"]';
+        await elementUpdated(menu);
+        // Let the reconciliation-induced follow-on cycle flush.
+        await elementUpdated(menu);
+
+        expect(menu.formattedValue).to.deep.equal(['option1']);
+        expect(count).to.equal(1);
+      });
+
       it('a malformed JSON value that starts with "[" is preserved as-is and does not crash', async () => {
         const el = await multiSelectFixture();
         const menu = el.querySelector('auro-menu');
