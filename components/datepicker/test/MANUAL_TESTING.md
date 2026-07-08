@@ -368,7 +368,7 @@ Unless otherwise noted, each configuration test should be run in both **single d
 - [ ] `hideBib()` — verify the calendar bib closes (no-op if already closed)
 - [ ] `blur()` — verify the datepicker blurs and the bib is hidden
 - [ ] `reset()` — verify inputs clear AND validation state resets
-- [ ] `resetInputs()` — verify inputs clear WITHOUT touching validation state
+- [ ] `resetInputs()` — verify inputs clear AND each input’s validity state resets (calls `auro-input.reset()` internally)
 - [ ] `clear()` — verify inputs clear (equivalent to `resetInputs()`)
 - [ ] `validate()` — verify validation runs
 
