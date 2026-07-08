@@ -39,7 +39,7 @@ The `auro-combobox` element provides users with a way to select an option from a
 | `type`                                | `type`                                |           | `string`                                         |                  | Applies the defined value as the type attribute on `auro-input`. |
 | `typedValue`                          | `typedValue`                          |           | `string`                                         |                  | Specifies the value of the input element within the combobox. |
 | `validity`                            | `validity`                            |           | `string`                                         |                  | Specifies the `validityState` this element is in. |
-| `value`                               | `value`                               |           | `string`                                         |                  | Value selected for the dropdown menu.            |
+| `value`                               | `value`                               |           | `string`                                         |                  | Value selected for the dropdown menu. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` and `optionSelected` are cleared to `undefined`. `hidden` options (including those filtered out by type-ahead) remain selectable by value. |
 
 ## Methods
 

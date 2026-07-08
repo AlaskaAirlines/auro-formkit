@@ -6,7 +6,7 @@ import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-class
 import '../src/registered.js';
 
 const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
-import { arrayConverter, arraysAreEqual, isOptionInteractive } from '../src/auro-menu-utils.js';
+import { arrayConverter, arraysAreEqual, isOptionInteractive, isSelectableByValue } from '../src/auro-menu-utils.js';
 import {
   defaultFixture,
   noninteractiveOptionsFixture,
@@ -1795,6 +1795,104 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('programmatic value matching against non-selectable options', () => {
+      it('does not select a disabled option set by value, and fires selectValueFailure', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="a">A</auro-menuoption>
+            <auro-menuoption disabled value="b">B</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        let fired = false;
+        el.addEventListener('auroMenu-selectValueFailure', () => { fired = true; });
+
+        el.value = 'b';
+        await elementUpdated(el);
+
+        expect(el.optionSelected).to.be.undefined;
+        expect(fired).to.be.true;
+      });
+
+      it('does not select a static option set by value, and fires selectValueFailure', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="a">A</auro-menuoption>
+            <auro-menuoption static value="b">B</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        let fired = false;
+        el.addEventListener('auroMenu-selectValueFailure', () => { fired = true; });
+
+        el.value = 'b';
+        await elementUpdated(el);
+
+        expect(el.optionSelected).to.be.undefined;
+        expect(fired).to.be.true;
+      });
+
+      it('excludes a disabled option from a multi-select value set', async () => {
+        const el = await fixture(html`
+          <auro-menu multiSelect aria-label="test">
+            <auro-menuoption value="a">A</auro-menuoption>
+            <auro-menuoption disabled value="b">B</auro-menuoption>
+            <auro-menuoption value="c">C</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        el.value = '["a","b","c"]';
+        await elementUpdated(el);
+
+        const selectedValues = getOptions(el)
+          .filter((opt) => opt.hasAttribute('selected'))
+          .map((opt) => opt.value);
+        expect(selectedValues).to.eql(['a', 'c']);
+      });
+
+      // Guards the deliberate deviation from isOptionInteractive: the combobox
+      // toggles `hidden` as its type-ahead filter, so a filtered-out option must
+      // stay selectable by a programmatic value. Reverting to an isActive-style
+      // check (which excludes hidden) would break combobox value-setting.
+      it('still selects a hidden option set by value', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="a">A</auro-menuoption>
+            <auro-menuoption hidden value="b">B</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        let fired = false;
+        el.addEventListener('auroMenu-selectValueFailure', () => { fired = true; });
+
+        el.value = 'b';
+        await elementUpdated(el);
+
+        expect(fired, 'hidden options must remain selectable by value').to.be.false;
+        expect(el.optionSelected).to.exist;
+        expect(el.optionSelected.value).to.equal('b');
+      });
+
+      // Mount-time preset: the value is supplied as an attribute before the
+      // menu upgrades, so matching runs against options that already exist on
+      // first render. A disabled preset must not be pinned as the selection.
+      it('does not select a disabled option supplied as a preset value at mount', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test" value="b">
+            <auro-menuoption value="a">A</auro-menuoption>
+            <auro-menuoption disabled value="b">B</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        expect(el.optionSelected).to.be.undefined;
+      });
+    });
+
     describe('auroMenu-selectValueReset', () => {
       it('should fire when reset() is called', async () => {
         const el = await defaultFixture();
@@ -2235,6 +2333,29 @@ function runFullTest(mobileView) {
       const opt = document.createElement('auro-menuoption');
       opt.setAttribute('static', '');
       expect(isOptionInteractive(opt)).to.be.false;
+    });
+
+    it('isSelectableByValue should return true for an enabled option', () => {
+      const opt = document.createElement('auro-menuoption');
+      expect(isSelectableByValue(opt)).to.be.true;
+    });
+
+    it('isSelectableByValue should return true for a hidden option (filter state, still selectable by value)', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('hidden', '');
+      expect(isSelectableByValue(opt)).to.be.true;
+    });
+
+    it('isSelectableByValue should return false for a disabled option', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('disabled', '');
+      expect(isSelectableByValue(opt)).to.be.false;
+    });
+
+    it('isSelectableByValue should return false for a static option', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('static', '');
+      expect(isSelectableByValue(opt)).to.be.false;
     });
   });
 

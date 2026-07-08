@@ -56,7 +56,7 @@
         <auro-header level="2" id="stateManagement">State Management</auro-header>
         <p>The following properties reflect the current state of the menu and can be accessed via JavaScript.</p>
         <auro-header level="3" id="value">value</auro-header>
-        <p>Gets or sets the selected value. In multi-select mode, this is a JSON stringified array of selected option values (e.g., <code>'["stops","duration"]'</code>).</p>
+        <p>Gets or sets the selected value. In multi-select mode, this is a JSON stringified array of selected option values (e.g., <code>'["stops","duration"]'</code>). If the value matches an option marked <code>disabled</code> or <code>static</code>, the selection is cleared (<code>optionSelected</code> becomes <code>undefined</code>) and <code>auroMenu-selectValueFailure</code> is dispatched. <code>hidden</code> options remain selectable by value.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
         <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected. When <code>multiSelect</code> is enabled, returns an array of selected elements.</p>
         <auro-header level="3" id="optionActive">optionActive</auro-header>
@@ -107,7 +107,7 @@
           <li><code>auroMenu-activatedOption</code> — the active (highlighted) option changed via keyboard or hover.</li>
           <li><code>auroMenu-optionsChange</code> — the set of available options was updated (e.g., after a slot change).</li>
           <li><code>auroMenu-selectValueReset</code> — the menu's <code>value</code> was reset via <code>reset()</code>.</li>
-          <li><code>auroMenu-selectValueFailure</code> — a call to <code>selectByValue()</code> found no matching option.</li>
+          <li><code>auroMenu-selectValueFailure</code> — a value selection (via <code>selectByValue()</code>, the <code>value</code> attribute, or setting the <code>value</code> property) found no matching selectable option. This includes values that match an option marked <code>disabled</code> or <code>static</code>, which are never selectable.</li>
         </ul>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/events.html) -->

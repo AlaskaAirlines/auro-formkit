@@ -57,6 +57,7 @@
 <auro-header level="3" id="presetValue">Preset the value</auro-header>
 <p>In some cases it is necessary to preset the value of the component as part of the initial render.</p>
 <p>When a value is preset, the matching option in the menu will be marked as both <code>active</code> and <code>selected</code>, and the input will display the corresponding text.</p>
+<p>If a preset value matches an option marked <code>disabled</code> or <code>static</code>, the selection is rejected: <code>value</code> and <code>optionSelected</code> are cleared to <code>undefined</code>. A value that matches a <code>hidden</code> option is still applied.</p>
 <p>If a preset value does not match any option, the component value is preserved and displayed in the input, but no menu option will be marked as selected. In suggestion mode, this value is treated as valid freeform input. In filter mode, the value will fail validation if the component is <code>required</code>.</p>
 <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
 <p>The component supports the use of <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> configuration through HTML attributes.</p>

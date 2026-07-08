@@ -15,6 +15,7 @@ import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import {
   isOptionInteractive,
+  isSelectableByValue,
   dispatchMenuEvent
 } from './auro-menu-utils.js';
 import { classMap } from "lit/directives/class-map.js";
@@ -180,6 +181,7 @@ export class AuroMenu extends AuroElement {
 
       /**
        * The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.
+       * The value must match a selectable option. Options marked `disabled` or `static` are not selectable by value: if the value matches one, the selection is cleared (`optionSelected` becomes `undefined`) and `auroMenu-selectValueFailure` is dispatched. `hidden` options remain selectable by value.
        */
       value: {
         type: String,
@@ -303,7 +305,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Selects options by value.
+   * Selects options by value. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is cleared and `auroMenu-selectValueFailure` is dispatched. `hidden` options remain selectable. Passing `undefined`, `null`, an empty string, or an empty array clears the selection without dispatching a failure.
    * @param {string|string[]|undefined|null} value - The value(s) to select.
    * @public
    */
@@ -400,11 +402,17 @@ export class AuroMenu extends AuroElement {
           // Defensive default: `formattedValue` can be undefined for unexpected value types,
           // and calling `.includes` on undefined would throw during reconciliation.
           const valueArray = this.formattedValue || [];
-          const matchingOptions = this.items ? this.items.filter((item) => valueArray.includes(item.value)) : [];
+          const matchingOptions = this.items ? this.items.filter((item) => isSelectableByValue(item) && valueArray.includes(item.value)) : [];
           newSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
         } else {
-          // In single-select mode, this.value should be a string
-          const matchingOption = this.items ? this.items.find((item) => item.value === this.value) : undefined;
+          // In single-select mode, this.value should be a string. Reject
+          // disabled/static options so a programmatic value pointing at a
+          // non-selectable option falls through to the no-match path below
+          // (dispatching auroMenu-selectValueFailure) instead of pinning it.
+          // `hidden` is intentionally NOT excluded: the combobox toggles
+          // `hidden` as its type-ahead filter, so a filtered-out option is
+          // still a valid programmatic selection.
+          const matchingOption = this.items ? this.items.find((item) => isSelectableByValue(item) && item.value === this.value) : undefined;
 
           if (matchingOption) {
             newSelected = matchingOption;

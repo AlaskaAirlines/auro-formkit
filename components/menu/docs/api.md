@@ -20,7 +20,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `options`               |                | readonly  | `HTMLElement[]`       |             |                                                  |
 | `selectedOption`        |                | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | `selectedOptions`       |                | readonly  | `HTMLElement[]`       |             | Gets the currently selected options as an array. |
-| `value`                 | `value`        |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
+| `value`                 | `value`        |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.<br />The value must match a selectable option. Options marked `disabled` or `static` are not selectable by value: if the value matches one, the selection is cleared (`optionSelected` becomes `undefined`) and `auroMenu-selectValueFailure` is dispatched. `hidden` options remain selectable by value. |
 
 ## Methods
 
@@ -28,7 +28,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 |----------------------|--------------------------------------------------|--------------------------------------------------|
 | `navigateOptions`    | `(direction: string): void`                      | Navigates through options using keyboard.<br /><br />**direction**: 'up' or 'down'. |
 | `reset`              | `(): void`                                       | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
-| `selectByValue`      | `(value: string \| string[] \| null \| undefined): void` | Selects options by value.<br /><br />**value**: The value(s) to select. |
+| `selectByValue`      | `(value: string \| string[] \| null \| undefined): void` | Selects options by value. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is cleared and `auroMenu-selectValueFailure` is dispatched. `hidden` options remain selectable. Passing `undefined`, `null`, an empty string, or an empty array clears the selection without dispatching a failure.<br /><br />**value**: The value(s) to select. |
 | `updateActiveOption` | `(indexOrOption: number \| HTMLElement): void`   | Updates the active option state and dispatches events.<br />Accepts either a numeric index or an HTMLElement option.<br /><br />**indexOrOption**: Index of the option or the option element to make active. |
 
 ## Events

@@ -503,7 +503,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Value selected for the dropdown menu.
+       * Value selected for the dropdown menu. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` and `optionSelected` are cleared to `undefined`. `hidden` options (including those filtered out by type-ahead) remain selectable by value.
        */
       value: {
         type: String
