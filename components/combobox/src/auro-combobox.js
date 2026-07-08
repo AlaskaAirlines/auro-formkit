@@ -470,6 +470,8 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * If set, the `icon` attribute will be applied to the trigger `auro-input` element.
+       * Icon rendering is currently limited to `type="credit-card"`. Setting `triggerIcon`
+       * without a supported `type` propagates the attribute but does not render a visible icon.
        */
       triggerIcon: {
         type: Boolean,
