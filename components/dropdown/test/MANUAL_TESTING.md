@@ -214,7 +214,7 @@ Consumers can slot focusable content (e.g. `<auro-input>`, `<auro-button>`) into
 
 - [ ] With default `a11yRole="button"` — verify screen reader announces "button" and the trigger label; expanded state is conveyed by the button pattern
 - [ ] With `a11yRole="combobox"` — verify screen reader announces "combobox", "has popup listbox", and the expanded state (`aria-expanded`)
-- [ ] Open the bib — verify the `<dialog>` element is announced (with `dialogLabel` via `aria-labelledby` if provided)
+- [ ] Open the bib — verify the `<dialog>` element is announced (with `bibDialogLabel` via `aria-labelledby` if provided)
 - [ ] Close the bib — verify the bib content is no longer reachable by AT
 - [ ] With `desktopModal`, verify VoiceOver cannot swipe to sibling content outside the dropdown host (inert siblings)
 - [ ] In fullscreen, verify VoiceOver cannot swipe to content behind the fullscreen `<dialog>` (native `showModal()` behavior)
