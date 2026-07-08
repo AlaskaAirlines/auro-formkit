@@ -10,12 +10,12 @@
 <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
 <auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
 <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
+<auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
+<auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#static" class="level2 body-xs">Static Options</auro-anchorlink>
 <auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match Word</auro-anchorlink>
 <auro-anchorlink fluid href="#persistent" class="level2 body-xs">Persistent Option</auro-anchorlink>
 <auro-anchorlink fluid href="#nomatch" class="level2 body-xs">No Match Placeholder</auro-anchorlink>
-<auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
-<auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
 <auro-anchorlink fluid href="#disabledMenu" class="level2 body-xs">Disabled Menu</auro-anchorlink>
 <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
@@ -324,6 +324,86 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
+<p>Nest additional <code>auro-menu</code> elements inside the default slot to create sub-menus. Each nested menu maintains its own selection state.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested-menu.html) -->
+<!-- The below content is automatically added from ./../apiExamples/nested-menu.html -->
+<auro-menu id="alpha">
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<hr>
+<auro-menu id="beta">
+<auro-menuoption value="apples">Apples</auro-menuoption>
+<auro-menuoption value="oranges">Oranges</auro-menuoption>
+<auro-menuoption value="pears">Pears</auro-menuoption>
+<auro-menuoption value="grapes">Grapes</auro-menuoption>
+<auro-menuoption value="kiwi">Kiwi</auro-menuoption>
+<hr>
+<auro-menu id="charlie">
+<auro-menuoption value="person">Person</auro-menuoption>
+<auro-menuoption value="woman">Woman</auro-menuoption>
+<auro-menuoption value="man">Man</auro-menuoption>
+<auro-menuoption value="camera">Camera</auro-menuoption>
+<auro-menuoption value="tv">TV</auro-menuoption>
+</auro-menu>
+</auro-menu>
+<hr>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+<hr>
+<auro-menu id="delta">
+<auro-menuoption value="cars">Cars</auro-menuoption>
+<auro-menuoption value="trucks">Trucks</auro-menuoption>
+<auro-menuoption value="boats">Boats</auro-menuoption>
+<auro-menuoption value="planes">Planes</auro-menuoption>
+<auro-menuoption value="motorcycles">Motorcycles</auro-menuoption>
+</auro-menu>
+</auro-menu>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested-menu.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/nested-menu.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu id="alpha"&gt;
+  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+  &lt;hr&gt;
+  &lt;auro-menu id="beta"&gt;
+    &lt;auro-menuoption value="apples"&gt;Apples&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="oranges"&gt;Oranges&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="pears"&gt;Pears&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="grapes"&gt;Grapes&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="kiwi"&gt;Kiwi&lt;/auro-menuoption&gt;
+    &lt;hr&gt;
+    &lt;auro-menu id="charlie"&gt;
+      &lt;auro-menuoption value="person"&gt;Person&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="woman"&gt;Woman&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="man"&gt;Man&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="camera"&gt;Camera&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="tv"&gt;TV&lt;/auro-menuoption&gt;
+    &lt;/auro-menu&gt;
+  &lt;/auro-menu&gt;
+  &lt;hr&gt;
+  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+  &lt;hr&gt;
+  &lt;auro-menu id="delta"&gt;
+    &lt;auro-menuoption value="cars"&gt;Cars&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="trucks"&gt;Trucks&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="boats"&gt;Boats&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="planes"&gt;Planes&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="motorcycles"&gt;Motorcycles&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-menu&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+</section>
+<section>
+<auro-header level="2" id="customBehavior">Behavior</auro-header>
 <auro-header level="3" id="static">Static Options</auro-header>
 <p>Add the <code>static</code> attribute to an <code>auro-menuoption</code> to make it non-interactive — the option renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers or informational rows inside a menu.</p>
 <div class="exampleWrapper">
@@ -462,86 +542,6 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
-<p>Nest additional <code>auro-menu</code> elements inside the default slot to create sub-menus. Each nested menu maintains its own selection state.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested-menu.html) -->
-<!-- The below content is automatically added from ./../apiExamples/nested-menu.html -->
-<auro-menu id="alpha">
-<auro-menuoption value="stops">Stops</auro-menuoption>
-<auro-menuoption value="price">Price</auro-menuoption>
-<auro-menuoption value="duration">Duration</auro-menuoption>
-<hr>
-<auro-menu id="beta">
-<auro-menuoption value="apples">Apples</auro-menuoption>
-<auro-menuoption value="oranges">Oranges</auro-menuoption>
-<auro-menuoption value="pears">Pears</auro-menuoption>
-<auro-menuoption value="grapes">Grapes</auro-menuoption>
-<auro-menuoption value="kiwi">Kiwi</auro-menuoption>
-<hr>
-<auro-menu id="charlie">
-<auro-menuoption value="person">Person</auro-menuoption>
-<auro-menuoption value="woman">Woman</auro-menuoption>
-<auro-menuoption value="man">Man</auro-menuoption>
-<auro-menuoption value="camera">Camera</auro-menuoption>
-<auro-menuoption value="tv">TV</auro-menuoption>
-</auro-menu>
-</auro-menu>
-<hr>
-<auro-menuoption value="departure">Departure</auro-menuoption>
-<auro-menuoption value="arrival">Arrival</auro-menuoption>
-<hr>
-<auro-menu id="delta">
-<auro-menuoption value="cars">Cars</auro-menuoption>
-<auro-menuoption value="trucks">Trucks</auro-menuoption>
-<auro-menuoption value="boats">Boats</auro-menuoption>
-<auro-menuoption value="planes">Planes</auro-menuoption>
-<auro-menuoption value="motorcycles">Motorcycles</auro-menuoption>
-</auro-menu>
-</auro-menu>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested-menu.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/nested-menu.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-menu id="alpha"&gt;
-  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
-  &lt;hr&gt;
-  &lt;auro-menu id="beta"&gt;
-    &lt;auro-menuoption value="apples"&gt;Apples&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="oranges"&gt;Oranges&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="pears"&gt;Pears&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="grapes"&gt;Grapes&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="kiwi"&gt;Kiwi&lt;/auro-menuoption&gt;
-    &lt;hr&gt;
-    &lt;auro-menu id="charlie"&gt;
-      &lt;auro-menuoption value="person"&gt;Person&lt;/auro-menuoption&gt;
-      &lt;auro-menuoption value="woman"&gt;Woman&lt;/auro-menuoption&gt;
-      &lt;auro-menuoption value="man"&gt;Man&lt;/auro-menuoption&gt;
-      &lt;auro-menuoption value="camera"&gt;Camera&lt;/auro-menuoption&gt;
-      &lt;auro-menuoption value="tv"&gt;TV&lt;/auro-menuoption&gt;
-    &lt;/auro-menu&gt;
-  &lt;/auro-menu&gt;
-  &lt;hr&gt;
-  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
-  &lt;hr&gt;
-  &lt;auro-menu id="delta"&gt;
-    &lt;auro-menuoption value="cars"&gt;Cars&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="trucks"&gt;Trucks&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="boats"&gt;Boats&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="planes"&gt;Planes&lt;/auro-menuoption&gt;
-    &lt;auro-menuoption value="motorcycles"&gt;Motorcycles&lt;/auro-menuoption&gt;
-  &lt;/auro-menu&gt;
-&lt;/auro-menu&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-</section>
-<section>
-<auro-header level="2" id="customBehavior">Behavior</auro-header>
 <auro-header level="3" id="disabled">Disabled Options</auro-header>
 <p>Use the <code>disabled</code> attribute on <code>auro-menuoption</code> to prevent interaction with specific options.</p>
 <div class="exampleWrapper">
