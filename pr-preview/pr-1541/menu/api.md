@@ -7,23 +7,23 @@ The `auro-menu` element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                | Attribute      | Modifiers | Type                  | Default     | Description                                      |
-|-------------------------|----------------|-----------|-----------------------|-------------|--------------------------------------------------|
-| `currentLabel`          |                | readonly  | `string`              |             |                                                  |
-| `disabled`              | `disabled`     |           | `boolean`             |             | When true, the entire menu and all options are disabled. |
-| `hasLoadingPlaceholder` |                | readonly  | `boolean`             |             | Getter for loading placeholder state.            |
-| `index`                 |                |           | `number`              |             |                                                  |
-| `layout`                |                |           | `string`              |             |                                                  |
-| `loading`               | `loading`      |           | `boolean`             | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`             | `matchword`    |           | `string`              | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`           | `multiselect`  |           | `boolean`             | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`           | `nocheckmark`  |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          | `optionactive` |           | `object`              | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        |                |           | `object`              | "undefined" | The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s. |
-| `options`               |                | readonly  | `HTMLElement[]`       |             |                                                  |
-| `selectedOption`        |                | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
-| `selectedOptions`       |                | readonly  | `HTMLElement[]`       |             | Gets the currently selected options as an array. |
-| `value`                 | `value`        |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.<br />Options marked `disabled` or `static` are not selectable by value; `hidden` options remain selectable. In single-select mode, if the value matches a non-selectable option the selection is cleared (`optionSelected` becomes `undefined`) and `auroMenu-selectValueFailure` is dispatched. In multi-select mode, non-selectable entries are dropped from the value and the remaining selectable entries are selected; `auroMenu-selectValueFailure` is dispatched only when none of the entries match a selectable option. |
+| Property                | Attribute     | Modifiers | Type                  | Default     | Description                                      |
+|-------------------------|---------------|-----------|-----------------------|-------------|--------------------------------------------------|
+| `currentLabel`          |               | readonly  | `string`              |             |                                                  |
+| `disabled`              | `disabled`    |           | `boolean`             |             | When true, the entire menu and all options are disabled. |
+| `hasLoadingPlaceholder` |               | readonly  | `boolean`             |             | Getter for loading placeholder state.            |
+| `index`                 |               |           | `number`              |             |                                                  |
+| `layout`                |               |           | `string`              |             |                                                  |
+| `loading`               | `loading`     |           | `boolean`             | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`             | `matchword`   |           | `string`              | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`           | `multiselect` |           | `boolean`             | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`           | `nocheckmark` |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
+| `optionActive`          |               |           | `object`              | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`        |               |           | `object`              | "undefined" | The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s. |
+| `options`               |               | readonly  | `HTMLElement[]`       |             |                                                  |
+| `selectedOption`        |               | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
+| `selectedOptions`       |               | readonly  | `HTMLElement[]`       |             | Gets the currently selected options as an array. |
+| `value`                 | `value`       |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.<br />Options marked `disabled` or `static` are not selectable by value; `hidden` options remain selectable. In single-select mode, if the value matches a non-selectable option the selection is cleared (`optionSelected` becomes `undefined`) and `auroMenu-selectValueFailure` is dispatched. In multi-select mode, non-selectable entries are dropped from the value and the remaining selectable entries are selected; `auroMenu-selectValueFailure` is dispatched only when none of the entries match a selectable option. |
 
 ## Methods
 
