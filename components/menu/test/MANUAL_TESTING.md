@@ -189,7 +189,7 @@ See [keyboard-behavior.md](../docs/pages/keyboard-behavior.md) for the full key/
 #### `optionSelected` (public reactive property)
 - [ ] Read `menu.optionSelected` after a selection — verify it returns the selected `HTMLElement` (single-select) or an array of elements (multi-select), or `undefined` when nothing is selected
 
-#### `optionActive` (public reactive property, attribute: `optionactive`)
+#### `optionActive` (public reactive property)
 - [ ] Read `menu.optionActive` while an option is active — verify it returns the currently active option element
 
 ### Events
