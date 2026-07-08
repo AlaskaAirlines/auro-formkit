@@ -36,7 +36,7 @@
 [ ] End — verify visual focus moves to the last option
 [ ] Enter on a highlighted option — verify it selects the option, closes the bib, and focus returns to the trigger input
 [ ] Escape — verify the bib closes without selecting, focus returns to the trigger input
-[x] Space - verify it does NOT select the highlighted option but does type a space character into the input
+[ ] Space - verify it does NOT select the highlighted option but does type a space character into the input
 [ ] Tab (option highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the clear button
 [ ] Tab (no matching option) - verify the focus moves to the next element without selecting an option and the bib closes
 [ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the bib closes, and focus lands on the clear button. Pressing Shift+Tab a second time moves focus to the input, and a third time moves focus to the previous element on the page.
