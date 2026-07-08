@@ -140,7 +140,7 @@ Consumers may replace the default bib by placing an explicit `<auro-dropdownbib>
 - [ ] Click the trigger — verify the bib opens
 - [ ] Click the trigger again — verify the bib closes (toggle behavior; suppressed if `noToggle` is set)
 - [ ] Click inside the bib content — verify the bib stays open
-- [ ] Click outside the bib and outside the trigger — verify the bib closes (unless `noHideOnThisFocusLoss`)
+- [ ] Click outside the bib and outside the trigger — verify the bib closes
 - [ ] Click a `disabled` trigger — verify nothing happens (no `auroDropdown-triggerClick` event, no bib open)
 - [ ] Click with `disableEventShow` set — verify the bib does not open but `auroDropdown-triggerClick` still fires
 - [ ] With `desktopModal`, click inside the modal bib — verify focus/click stays within; click outside is blocked by inert siblings
