@@ -466,7 +466,7 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Value selected for the component. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` and `optionSelected` are cleared to `undefined`. `hidden` options remain selectable by value.
+       * Value selected for the component. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable by value.
        */
       value: {
         type: String,
@@ -1287,7 +1287,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Sets the selected value by matching it against the menu options. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is rejected and `value`/`optionSelected` are cleared to `undefined`. `hidden` options remain selectable.
+   * Sets the selected value by matching it against the menu options. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is rejected and `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable.
    * @param {string} value - The value to match against the menu options.
    */
   setMenuValue(value) {
