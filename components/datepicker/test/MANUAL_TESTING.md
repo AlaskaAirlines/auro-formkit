@@ -125,7 +125,7 @@ Unless otherwise noted, each configuration test should be run in both **single d
 - [ ] Type a value — verify the placeholder disappears
 
 #### Range labels (screen-reader strings)
-- Execute the steps in this section for both these two scenarios:
+- Execute the steps in this section for both scenarios:
 - [ ] `value` is set, `valueEnd` is not set
     - [ ] Set `rangeLabelStart` — verify screen reader announces these on start cells
     - [ ] Set `rangeLabelEnd` — verify screen reader announces these on end cells
