@@ -86,7 +86,7 @@
 
 <auro-header level="3">Nested submenu support</auro-header>
 
-<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. Each nested menu maintains its own selection state — the root menu's <code>value</code> and <code>optionSelected</code> are not updated when an option inside a nested menu is selected. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
+<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. The root menu treats all descendant options as a single flat list, so selecting an option inside a nested menu updates the root menu's <code>value</code> and <code>optionSelected</code> — the root always owns the selection state. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
 
 <auro-header level="3">Selection state coordination</auro-header>
 

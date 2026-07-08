@@ -184,6 +184,19 @@ function runFullTest(mobileView) {
       expect(nestedMenu.getAttribute('role')).to.equal('group');
     });
 
+    it('should update the root menu value/optionSelected when a nested option is clicked', async () => {
+      const el = await nestedMenuFixture();
+      const rootMenu = el.querySelector('auro-menu');
+      const nestedOption = el.querySelector('auro-menu auro-menu auro-menuoption');
+
+      // Click bubbles (composed) past the nested menu (rootMenu === false) to the root's handleMouseSelect.
+      nestedOption.click();
+      await elementUpdated(rootMenu);
+
+      expect(rootMenu.optionSelected).to.equal(nestedOption);
+      expect(rootMenu.value).to.equal('option a');
+    });
+
     describe('multiSelect', () => {
       it('should allow multiple options to be selected in multiSelect mode', async () => {
         const el = await multiSelectFixture();
