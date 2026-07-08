@@ -27,6 +27,7 @@ let menuOptionIdCounter = 0;
  * The `auro-menuoption` element provides users a way to define a menu option.
  * @customElement auro-menuoption
  *
+ * @attr {Boolean} static - When present, marks the option as non-interactive — it renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers, informational rows inside a menu, or attaching event listeners.
  * @slot default - The default slot for the menu option text.
  *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
