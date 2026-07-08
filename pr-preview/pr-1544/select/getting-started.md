@@ -390,7 +390,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="3" id="validity">validity</auro-header>
 <p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>"valid"</code>, <code>"valueMissing"</code>, and <code>"customError"</code>.</p>
 <auro-header level="3" id="value">value</auro-header>
-<p>Gets or sets the selected value of the select. When set programmatically, the component will attempt to match and select the corresponding menu option.</p>
+<p>Gets or sets the selected value of the select. When set programmatically, the component will attempt to match and select the corresponding menu option. If the value matches an option marked <code>disabled</code> or <code>static</code>, the selection is rejected and <code>value</code> is cleared to <code>undefined</code>. <code>hidden</code> options remain selectable by value.</p>
 </section>
 <section>
 <auro-header level="2" id="publicFunctions">Functions</auro-header>

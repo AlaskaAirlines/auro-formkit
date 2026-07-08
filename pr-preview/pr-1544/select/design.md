@@ -340,19 +340,19 @@
 <span slot="helpText">Help Text</span>
 <auro-menu nocheckmark>
 <auro-menuoption value="flights">
-<auro-icon category="terminal" name="plane-diag-stroke" customColor></auro-icon> Flights
+<auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights
 </auro-menuoption>
 <auro-menuoption value="cars">
-<auro-icon category="destination" name="car-rental-stroke" customColor></auro-icon> Cars
+<auro-icon category="destination" name="car-rental-stroke" customcolor></auro-icon> Cars
 </auro-menuoption>
 <auro-menuoption value="hotels">
-<auro-icon category="destination" name="hotel-stroke" customColor></auro-icon> Hotels
+<auro-icon category="destination" name="hotel-stroke" customcolor></auro-icon> Hotels
 </auro-menuoption>
 <auro-menuoption value="packages">
-<auro-icon category="shop" name="gift-stroke" customColor></auro-icon> Packages
+<auro-icon category="shop" name="gift-stroke" customcolor></auro-icon> Packages
 </auro-menuoption>
 <auro-menuoption value="cruises">
-<auro-icon category="in-flight" name="boarding" customColor></auro-icon> Cruises
+<auro-icon category="in-flight" name="boarding" customcolor></auro-icon> Cruises
 </auro-menuoption>
 </auro-menu>
 </auro-select>
@@ -368,19 +368,19 @@
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
   &lt;auro-menu nocheckmark&gt;
     &lt;auro-menuoption value="flights"&gt;
-      &lt;auro-icon category="terminal" name="plane-diag-stroke" customColor&gt;&lt;/auro-icon&gt; Flights
+      &lt;auro-icon category="terminal" name="plane-diag-stroke" customcolor&gt;&lt;/auro-icon&gt; Flights
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="cars"&gt;
-      &lt;auro-icon category="destination" name="car-rental-stroke" customColor&gt;&lt;/auro-icon&gt; Cars
+      &lt;auro-icon category="destination" name="car-rental-stroke" customcolor&gt;&lt;/auro-icon&gt; Cars
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="hotels"&gt;
-      &lt;auro-icon category="destination" name="hotel-stroke" customColor&gt;&lt;/auro-icon&gt; Hotels
+      &lt;auro-icon category="destination" name="hotel-stroke" customcolor&gt;&lt;/auro-icon&gt; Hotels
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="packages"&gt;
-      &lt;auro-icon category="shop" name="gift-stroke" customColor&gt;&lt;/auro-icon&gt; Packages
+      &lt;auro-icon category="shop" name="gift-stroke" customcolor&gt;&lt;/auro-icon&gt; Packages
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="cruises"&gt;
-      &lt;auro-icon category="in-flight" name="boarding" customColor&gt;&lt;/auro-icon&gt; Cruises
+      &lt;auro-icon category="in-flight" name="boarding" customcolor&gt;&lt;/auro-icon&gt; Cruises
     &lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
