@@ -265,7 +265,7 @@ Unless otherwise noted, each configuration test should be run in both **single d
 - [ ] Tab through when a value is present — verify the clear button receives focus after the input
 - [ ] Enter/Space on the trigger (not the clear button) — verify the bib opens and focus moves into the calendar grid with `aria-activedescendant` pointing at the active cell
 - [ ] Enter/Space on the clear button — verify the value clears and focus returns to the input (does NOT open the bib)
-- [ ] Enter/Space with Ctrl/Meta/Alt modifier — verify it does NOT open the bib (chorded keys are ignored)
+- [ ] Enter/Space with Ctrl/Meta/Alt modifier — verify it opens the bib (modifiers are not currently special-cased)
 - [ ] Escape on the trigger — verify nothing happens if the bib is closed
 
 #### Direct typing
