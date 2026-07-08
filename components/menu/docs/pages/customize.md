@@ -10,12 +10,12 @@
       <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
       <auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
       <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
+      <auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
+      <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#static" class="level2 body-xs">Static Options</auro-anchorlink>
       <auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match Word</auro-anchorlink>
       <auro-anchorlink fluid href="#persistent" class="level2 body-xs">Persistent Option</auro-anchorlink>
       <auro-anchorlink fluid href="#nomatch" class="level2 body-xs">No Match Placeholder</auro-anchorlink>
-      <auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
-      <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
       <auro-anchorlink fluid href="#disabledMenu" class="level2 body-xs">Disabled Menu</auro-anchorlink>
       <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
@@ -86,6 +86,20 @@
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/hr.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
+        <p>Nest additional <code>auro-menu</code> elements inside the default slot to create sub-menus. Each nested menu maintains its own selection state.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested-menu.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested-menu.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+      </section>
+      <section>
+        <auro-header level="2" id="customBehavior">Behavior</auro-header>
         <auro-header level="3" id="static">Static Options</auro-header>
         <p>Add the <code>static</code> attribute to an <code>auro-menuoption</code> to make it non-interactive — the option renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers or informational rows inside a menu.</p>
         <div class="exampleWrapper">
@@ -130,20 +144,6 @@
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nomatch.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
-        <p>Nest additional <code>auro-menu</code> elements inside the default slot to create sub-menus. Each nested menu maintains its own selection state.</p>
-        <div class="exampleWrapper">
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested-menu.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </div>
-        <auro-accordion alignRight>
-        <span slot="trigger">See code</span>
-        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested-menu.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </auro-accordion>
-      </section>
-      <section>
-        <auro-header level="2" id="customBehavior">Behavior</auro-header>
         <auro-header level="3" id="disabled">Disabled Options</auro-header>
         <p>Use the <code>disabled</code> attribute on <code>auro-menuoption</code> to prevent interaction with specific options.</p>
         <div class="exampleWrapper">
