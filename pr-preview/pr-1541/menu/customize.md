@@ -810,7 +810,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="presetValue">Preset Value</auro-header>
-<p>Use the <code>value</code> attribute on <code>auro-menu</code> to set the selected option when the menu renders.</p>
+<p>Use the <code>value</code> attribute on <code>auro-menu</code> to set the selected option when the menu renders. The value must match a selectable option; if it matches an option marked <code>disabled</code> or <code>static</code>, no option is selected and <code>auroMenu-selectValueFailure</code> is dispatched.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preset-value.html) -->
 <!-- The below content is automatically added from ./../apiExamples/preset-value.html -->
