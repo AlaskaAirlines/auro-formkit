@@ -56,6 +56,12 @@ The `auro-menu` element provides users a way to select from a list of options.
 
 The `auro-menuoption` element provides users a way to define a menu option.
 
+## Attributes
+
+| Attribute | Type      | Description                                      |
+|-----------|-----------|--------------------------------------------------|
+| `static`  | `Boolean` | When present, marks the option as non-interactive — it renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers, informational rows inside a menu, or attaching event listeners. |
+
 ## Properties
 
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
