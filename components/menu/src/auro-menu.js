@@ -164,6 +164,7 @@ export class AuroMenu extends AuroElement {
 
       /**
        * Specifies the current active menuOption.
+       * @readonly
        */
       optionActive: {
         type: Object,
@@ -172,6 +173,7 @@ export class AuroMenu extends AuroElement {
 
       /**
        * The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s.
+       * @readonly
        */
       optionSelected: {
         // Allow HTMLElement, HTMLElement[] arrays and undefined
