@@ -915,6 +915,18 @@ export class AuroDropdown extends AuroElement {
             }
           });
         } else {
+          // Chrome-only guard: when the bib is elevated to the top layer via
+          // showPopover() (auro-dropdownBib.js), :focus-within does not
+          // propagate to the shadow host reliably in Chromium, so
+          // AuroFloatingUI.handleFocusLoss misreads a focus move into the bib
+          // as focus leaving the dropdown and closes it. Mirror the
+          // desktopModal defense: suppress focus-loss dismissal while the
+          // FocusTrap owns focus. Escape, outside-click, and trigger-blur
+          // still close the bib through other paths.
+          this._priorNoHide = this.noHideOnThisFocusLoss;
+          this._noHideOverridden = true;
+          this.noHideOnThisFocusLoss = true;
+
           // Normal desktop: use FocusTrap on the bib element.
           // Defer focusFirstElement to the next frame because the popover
           // is positioned asynchronously by Floating UI — calling focus()
