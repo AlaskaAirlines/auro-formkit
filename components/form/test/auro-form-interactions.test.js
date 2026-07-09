@@ -307,6 +307,69 @@ function runFullTest(mobileView) {
 
       await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
     });
+
+    it('emits submit with detail.value containing single-select value', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+
+      select.value = 'stops';
+      await elementUpdated(select);
+      await elementUpdated(form);
+
+      const submitPromise = oneEvent(form, 'submit');
+      form.submit();
+      const submitEvent = await submitPromise;
+
+      await expect(submitEvent.detail.value.selectExample).to.equal('stops');
+    });
+
+    it('emits submit with detail.value containing multi-select value', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+      select.multiSelect = true;
+      await elementUpdated(select);
+
+      select.value = ['stops', 'price'];
+      await elementUpdated(select);
+      await elementUpdated(form);
+
+      const submitPromise = oneEvent(form, 'submit');
+      form.submit();
+      const submitEvent = await submitPromise;
+
+      await expect(submitEvent.detail.value.selectExample).to.equal(JSON.stringify(['stops', 'price']));
+    });
+
+    it('exposes preset select value on form.value at initial render', async () => {
+      const form = await fixture(html`
+        <auro-form>
+          <auro-select name="selectExample" value="stops">
+            <auro-menu>
+              <auro-menuoption value="stops">Stops</auro-menuoption>
+              <auro-menuoption value="price">Price</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        </auro-form>
+      `);
+      const [select] = form._elements;
+      await elementUpdated(select);
+      await elementUpdated(form);
+
+      await expect(form.value.selectExample).to.equal('stops');
+    });
+
+    it('fires change on form when select value changes programmatically', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+
+      const changePromise = oneEvent(form, 'change');
+      select.value = 'stops';
+      const changeEvent = await changePromise;
+
+      await expect(changeEvent).to.exist;
+      await elementUpdated(form);
+      await expect(form.value.selectExample).to.equal('stops');
+    });
   });
 }
 
