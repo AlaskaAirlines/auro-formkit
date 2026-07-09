@@ -1,12 +1,13 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef, no-unused-expressions */
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, oneEvent, waitUntil } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
+import '../../form/src/registered.js';
 import {
   defaultFixture,
   emphasizedFixture,
@@ -4619,6 +4620,121 @@ function runTest(mobileView) {
           // Selection state is unchanged — type-ahead must not toggle checks in multiselect
           expect([...(el.optionSelected || [])]).to.deep.equal(previouslySelected);
         });
+      });
+    });
+
+    describe('auro-form integration', () => {
+      const formFixture = (opts = {}) => fixture(html`
+        <auro-form>
+          <auro-select name="fruit" ?required=${Boolean(opts.required)}>
+            <span slot="label">Fruit</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+          <button type="submit">Submit</button>
+          <button type="reset">Reset</button>
+        </auro-form>
+      `);
+
+      it('clears selection and resets validation when <button type="reset"> is clicked', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await expect(select.value).to.equal('Oranges');
+
+        select.validate(true);
+        await elementUpdated(select);
+        await expect(select.getAttribute('validity')).to.equal('valid');
+
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        await resetEventPromise;
+        await elementUpdated(select);
+
+        await expect(select.value).to.be.undefined;
+        // reset() clears validity to undefined and re-runs non-forced validation,
+        // which short-circuits on the untouched empty value — so the reflected
+        // attribute should be removed entirely, not just != 'valueMissing'.
+        await expect(select.getAttribute('validity')).to.be.null;
+      });
+
+      it('blocks submit when required select is empty', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        let submitFired = false;
+        form.addEventListener('submit', () => { submitFired = true; });
+
+        // Drive submit() directly so we can await the async validation chain.
+        await form.submit();
+        await elementUpdated(select);
+
+        await expect(submitFired).to.be.false;
+      });
+
+      it('dispatches reset event with detail.previousValue when reset button is clicked', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        const resetEvent = await resetEventPromise;
+
+        await expect(resetEvent.detail.previousValue).to.exist;
+        await expect(resetEvent.detail.previousValue.fruit).to.equal('Oranges');
+      });
+
+      it('removes disabled select from form.value at runtime', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Apples';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.value.fruit).to.equal('Apples');
+
+        select.setAttribute('disabled', '');
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        await expect(form.value).to.not.have.key('fruit');
+      });
+
+      it('re-keys form.value when select name changes at runtime', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.value.fruit).to.equal('Oranges');
+
+        select.setAttribute('name', 'produce');
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        await expect(form.value).to.not.have.key('fruit');
+        await expect(form.value.produce).to.equal('Oranges');
       });
     });
   });
