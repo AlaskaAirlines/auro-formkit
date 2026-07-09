@@ -138,7 +138,63 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 <div class="accordion-content">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
-The `<auro-datepicker>` custom element is compatible with React. See the auro-formkit README for general [React integration guidance](https://github.com/AuroDesignSystem/auro-formkit#react).
+React 19 includes <auro-hyperlink href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</auro-hyperlink>, so <code>&lt;auro-datepicker&gt;</code> works directly in JSX without any wrapper library.
+
+<auro-header level="3" id="reactImport">Import the Component</auro-header>
+Import and register the component at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+
+<pre class="language-js"><code class="language-js">import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+​
+AuroDatePicker.register('[custom]-datepicker');</code></pre>
+
+<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
+
+<pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+​
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      '[custom]-datepicker': React.HTMLAttributes&lt;AuroDatePicker&gt; &amp; Partial&lt;AuroDatePicker&gt;;
+    }
+  }
+}</code></pre>
+
+<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+Auro components emit native <code>CustomEvent</code>s. Use a <code>ref</code> to attach event listeners in a <code>useEffect</code>:
+
+<pre class="language-js"><code class="language-js">import { useRef, useEffect } from 'react';
+​
+function MyDatePicker() {
+  const datepickerRef = useRef&lt;HTMLElement&gt;(null);
+​
+  useEffect(() =&gt; {
+    const el = datepickerRef.current;
+    if (!el) return;
+​
+    const handleInput = (event: Event) =&gt; {
+      console.log('Selected date:', (event as CustomEvent&lt;string&gt;).detail);
+    };
+​
+    el.addEventListener('input', handleInput);
+    return () =&gt; el.removeEventListener('input', handleInput);
+  }, []);
+​
+  return (
+    &lt;custom-datepicker ref={datepickerRef}&gt;
+      &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+    &lt;/custom-datepicker&gt;
+  );
+}</code></pre>
+
+<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"</code> so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
@@ -147,7 +203,67 @@ The `<auro-datepicker>` custom element is compatible with React. See the auro-fo
 <div class="accordion-content">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
-The `<auro-datepicker>` custom element is compatible with Svelte. See the auro-formkit README for general [Svelte integration guidance](https://github.com/AuroDesignSystem/auro-formkit#svelte).
+Svelte has <auro-hyperlink href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</auro-hyperlink>, so <code>&lt;auro-datepicker&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+
+<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+Import and register the component in the <code>&lt;script&gt;</code> block:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+​
+  AuroDatePicker.register('[custom]-datepicker');
+&lt;/script&gt;</code></pre>
+
+<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+Use `<auro-datepicker>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+​
+  AuroDatePicker.register('[custom]-datepicker');
+​
+  let datepickerValue = $state&lt;string&gt;('');
+&lt;/script&gt;
+&lt;custom-datepicker value={datepickerValue}&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+&lt;/custom-datepicker&gt;</code></pre>
+
+<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
+Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for <code>&lt;auro-datepicker&gt;</code> props in templates, add the following to a <code>.d.ts</code> file in your project (e.g. <code>src/auro-elements.d.ts</code>):
+
+<pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+​
+declare namespace svelteHTML {
+  interface IntrinsicElements {
+    '[custom]-datepicker': Partial&lt;AuroDatePicker&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroDatePicker&gt;;
+  }
+}</code></pre>
+
+This enables prop hinting for attributes like <code>value</code>, <code>range</code>, <code>disabled</code>, and others directly in Svelte templates.
+
+<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  let value = $state('');
+​
+  function handleInput(e: Event) {
+    value = (e as CustomEvent&lt;string&gt;).detail;
+  }
+&lt;/script&gt;
+&lt;custom-datepicker oninput={handleInput}&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+&lt;/custom-datepicker&gt;
+&lt;p&gt;Selected: {value}&lt;/p&gt;</code></pre>
+
+<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"</code> so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
