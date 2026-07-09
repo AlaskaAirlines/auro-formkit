@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import { navigateArrow } from '@aurodesignsystem/utils';
+import { doubleRaf, navigateArrow } from '@aurodesignsystem/utils';
+import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 /**
  * Returns the clear button element from the active input's shadow
@@ -41,6 +42,51 @@ function reconcileMenuIndex(menu) {
     if (idx >= 0) {
       menu._index = idx;
     }
+  }
+}
+
+/**
+ * Commit the highlighted option and close the bib.
+ * @param {Element} component - The auro-combobox host element.
+ */
+function selectAndClose(component) {
+  reconcileMenuIndex(component.menu);
+  component.menu.makeSelection();
+  component.hideBib();
+}
+
+/**
+ * Return the tab stop that comes before `component` in page tab order,
+ * skipping any display:none entries the walker doesn't filter itself.
+ * @param {Element} component - The auro-combobox host element.
+ * @returns {Element|null}
+ */
+function getPreviousTabStop(component) {
+  const tabStops = getFocusableElements(component.ownerDocument.body);
+  const componentIndex = tabStops.indexOf(component);
+  for (let index = componentIndex - 1; index >= 0; index -= 1) {
+    if (tabStops[index].offsetParent !== null) {
+      return tabStops[index];
+    }
+  }
+  return null;
+}
+
+/**
+ * Commit the highlighted option, close the bib, and move focus to the tab
+ * stop before the combobox — the Shift+Tab exit path (AB#1592239).
+ * @param {Element} component - The auro-combobox host element.
+ */
+function selectAndExitBackward(component) {
+  const previousTabStop = getPreviousTabStop(component);
+
+  // Opts this selection out of setClearBtnFocus so the focus move below
+  // isn't clobbered. Consumed by auro-combobox's selection listener.
+  component._suppressClearBtnFocusOnSelection = true;
+  selectAndClose(component);
+
+  if (previousTabStop) {
+    doubleRaf(() => previousTabStop.focus());
   }
 }
 
@@ -142,36 +188,17 @@ export const comboboxKeyboardStrategy = {
   },
 
   Tab(component, evt, ctx) {
-    // Runs for both Tab and Shift+Tab.
-    //
-    // Current behavior:
-    //   Tab       — select the active option, close the bib, and (in fullscreen
-    //               modal mode only) explicitly move focus to the trigger's
-    //               clear button. In desktop popover mode the browser's native
-    //               tab traversal takes focus forward from the input.
-    //   Shift+Tab — select the active option and close the bib. Focus then
-    //               lands on the trigger's clear button as a byproduct of the
-    //               shadow-DOM tab order, so keyboard users must press
-    //               Shift+Tab three times to exit the component (clear button
-    //               → input → previous element on the page).
-    //
-    // Intended behavior for Shift+Tab (per team decision, tracked in
-    // AB#1590650): a single Shift+Tab should select the active option, close
-    // the bib, and move focus directly to the previous focusable element on
-    // the page — symmetric with Tab.
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
-      // When the clear button is focused, Tab events do not bubble out of
-      // its shadow DOM, so this handler only fires when the clear button
-      // is NOT focused. In that case, select the active option and close.
-      reconcileMenuIndex(component.menu);
-      component.menu.makeSelection();
-      component.hideBib();
+      if (evt.shiftKey) {
+        evt.preventDefault();
+        selectAndExitBackward(component);
+        return;
+      }
 
-      // In fullscreen modal mode, closing the dialog does not
-      // automatically restores focus to the input. In the tab case,
-      // Explicitly move focus to the trigger's clear button so the
-      // user can continues tabbing through the page normally.
-      if (ctx.isModal && !evt.shiftKey) {
+      selectAndClose(component);
+
+      if (ctx.isModal) {
+        // Fullscreen close does not automatically restore focus to the input.
         component.setClearBtnFocus();
       }
     }

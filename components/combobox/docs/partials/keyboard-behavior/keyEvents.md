@@ -158,7 +158,7 @@
         </div>
       </td>
       <td>
-        The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the <strong>clear button</strong> in the component trigger. A subsequent Shift+Tab moves focus back to the input, and another Shift+Tab exits the component to the previous focusable element on the page.
+        The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the previous focusable element on the page.
       </td>
     </tr>
   </tbody>

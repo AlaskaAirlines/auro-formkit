@@ -1219,8 +1219,11 @@ export class AuroCombobox extends AuroElement {
         // do not close while typing in suggestion mode with no value selected, to allow freeform input
         this.hideBib();
 
-        // Move focus to the clear button when the user makes a selection.
-        if (!isEcho && this.menu.value !== undefined) {
+        // Move focus to the clear button when the user makes a selection,
+        // unless the Shift+Tab handler opted this selection out.
+        if (this._suppressClearBtnFocusOnSelection) {
+          this._suppressClearBtnFocusOnSelection = false;
+        } else if (!isEcho && this.menu.value !== undefined) {
           this.setClearBtnFocus();
         }
 
