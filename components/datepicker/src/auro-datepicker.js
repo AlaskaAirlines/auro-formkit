@@ -1173,12 +1173,11 @@ export class AuroDatePicker extends AuroElement {
         // what centralDate renders, causing all cells to have tabindex="-1".
         this.calendar.activeCellDate = null;
 
-        // Show the month containing the selected date (or today) instead of
-        // whichever month the user last navigated to. Route through
-        // updateCentralDate so centralDate stays first-of-month.
-        // calendarFocusDate wins over value so consumers who set it explicitly
-        // get their chosen initial month even when a value is also preset.
-        // Respect consumer-provided centralDate/calendarStartDate if no value is set.
+        // On open, reset the visible month to a predictable source rather than
+        // whichever month the user last navigated to. Route through updateCentralDate
+        // so centralDate stays first-of-month.
+        // Priority: calendarFocusDate (when valid) -> value (when set) -> today (when neither is set).
+        // Respect consumer-provided centralDate/calendarStartDate/minDate when neither calendarFocusDate nor value is set.
         if (this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate)) {
           this.calendarRenderUtil.updateCentralDate(this, this.calendarFocusDateObject);
         } else if (this.valueObject) {
