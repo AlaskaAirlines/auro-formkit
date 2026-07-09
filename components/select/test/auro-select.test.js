@@ -4883,13 +4883,14 @@ function runTest(mobileView) {
       // #6 — Setting disabled=true while the bib is open. The current
       // architecture propagates `disabled` to the underlying auro-dropdown as
       // an attribute (see performUpdate at auro-select.js:1240) and applies
-      // the `is-disabled` host class. That guards subsequent open/close
-      // toggles in auro-dropdown's floater layer — a follow-up hide() becomes
-      // a no-op — so the observable contract from the select's side is that
-      // (a) the disabled attribute is reflected onto the dropdown, and (b) the
-      // is-disabled class is set on the host, which the styles use to render
-      // the trigger non-interactive.
-      it('setting disabled=true while bib open propagates disabled state to dropdown and host', async () => {
+      // the `is-disabled` class on the internal #dropdownLabel via
+      // commonLabelClasses. That guards subsequent open/close toggles in
+      // auro-dropdown's floater layer — a follow-up hide() becomes a no-op —
+      // so the observable contract from the select's side is that (a) the
+      // disabled attribute is reflected onto the dropdown, and (b) the
+      // is-disabled class is set on #dropdownLabel, which the styles use to
+      // render the trigger non-interactive.
+      it('setting disabled=true while bib open propagates disabled state to dropdown and dropdownLabel', async () => {
         const el = await defaultFixture();
         await elementUpdated(el);
 
@@ -4901,7 +4902,9 @@ function runTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.dropdown.hasAttribute('disabled'), 'disabled must propagate to auro-dropdown').to.be.true;
-        expect(el.classList.contains('is-disabled') || el.shadowRoot.querySelector('.is-disabled'), 'is-disabled class must be applied to render the trigger non-interactive').to.exist;
+        const dropdownLabel = el.shadowRoot.querySelector('#dropdownLabel');
+        expect(dropdownLabel, '#dropdownLabel must exist').to.exist;
+        expect(dropdownLabel.classList.contains('is-disabled'), 'is-disabled class must be applied on #dropdownLabel to render the trigger non-interactive').to.be.true;
       });
 
       // #7 — Full roundtrip of trigger.inert as the bib transitions between
