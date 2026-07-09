@@ -9675,6 +9675,41 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
+      // Regression: with desktopModal, the datepicker inerts #trigger while the
+      // bib is open. Inert also blocks pointer events, so a click on the visible
+      // trigger area falls through to the wrapper next to #trigger and the
+      // floater's window click-outside handler previously misread this as an
+      // outside click and closed the bib. handleClick now stops propagation for
+      // clicks whose coordinates land inside the trigger's bounds.
+      it('should keep the bib open when a click lands inside the inert trigger bounds', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
+
+        el.dropdown.desktopModal = true;
+        el.dropdown.show();
+        await elementUpdated(el);
+        await nextFrame();
+
+        // Confirm we're in the desktopModal-inert path this test guards against.
+        await expect(el.dropdown.trigger.inert).to.be.true;
+
+        // setTimeout(0) inside the floater installs its window click-outside
+        // listener; wait a tick so the listener is live for this test.
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const rect = el.dropdown.trigger.getBoundingClientRect();
+        el.dispatchEvent(new MouseEvent('click', {
+          bubbles: true,
+          composed: true,
+          clientX: rect.left + (rect.width / 2),
+          clientY: rect.top + (rect.height / 2),
+        }));
+
+        await nextFrame();
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
       // Verify click sets the correct dateFrom value when a date is clicked on the calendar.
       it('should set the correct dateFrom value when a date is clicked on the calendar', async () => {
         const el = await fixture(html`

@@ -50,7 +50,7 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
   let value = $state('');
 
   function handleInput(e: Event) {
-    value = (e.target as HTMLElement & { value: string }).value;
+    value = (e as CustomEvent<string>).detail;
   }
 </script>
 <custom-datepicker oninput={handleInput}>
