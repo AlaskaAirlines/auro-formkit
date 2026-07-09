@@ -11,6 +11,7 @@
       <auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
       <auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
       <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
+      <auro-anchorlink fluid href="#customBibWidth" class="level2 body-xs">Custom Bib Width</auro-anchorlink>
       <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
       <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
       <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
@@ -105,6 +106,17 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/noflip.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="customBibWidth">Custom Bib Width</auro-header>
+        <p>By default the bib's width matches the trigger. To set a specific width, style the <code>dropdownSize</code> CSS shadow part.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-bib-width.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-bib-width.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="breakpoint">Fullscreen Breakpoint</auro-header>

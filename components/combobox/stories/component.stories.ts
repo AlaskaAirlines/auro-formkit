@@ -753,6 +753,53 @@ export const ComboboxInverseDisabled: Story = {
   `,
 };
 
+// ─── customBibWidth sets bib to a specific width ────────────────────────────
+export const ComboboxCustomBibWidth: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox id="customBibWidthStory">
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Departure Airport</span>
+  <span slot="label">From</span>
+  <auro-menu>
+    <auro-menuoption value="SEA">Seattle, WA (SEA-Seattle/Tacoma Intl.)</auro-menuoption>
+    <auro-menuoption value="PDX">Portland, OR (PDX-Portland Intl.)</auro-menuoption>
+    <auro-menuoption value="SFO">San Francisco, CA (SFO-San Francisco Intl.)</auro-menuoption>
+    <auro-menuoption value="LAX">Los Angeles, CA (LAX-Los Angeles Intl.)</auro-menuoption>
+    <auro-menuoption value="JFK">New York, NY (JFK-John F. Kennedy Intl.)</auro-menuoption>
+    <auro-menuoption value="ORD">Chicago, IL (ORD-Chicago O'Hare Intl.)</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+<style>
+  #customBibWidthStory::part(dropdownSize) {
+    width: 400px;
+  }
+</style>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // dropdownSize part must be exposed so consumers can style bib width
+    const exportparts = el.dropdown.getAttribute('exportparts') || '';
+    await expect(exportparts).toContain('size:dropdownSize');
+
+    // Open the bib
+    setInputValue(el, 's');
+    await new Promise((r) => setTimeout(r, 100));
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Bib content should reflect the ::part(dropdownSize) width
+    const bibEl = el.dropdown.bibElement.value;
+    const container = bibEl.shadowRoot.querySelector('.container') as HTMLElement;
+    await waitUntil(() => container.getBoundingClientRect().width >= 399);
+    await expect(container.getBoundingClientRect().width).toBeGreaterThanOrEqual(399);
+  },
+};
+
 // ─── Inverse error ───────────────────────────────────────────────────────────
 export const ComboboxInverseError: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],

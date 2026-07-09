@@ -3172,6 +3172,19 @@ function runFullTest(mobileView) {
       // Should not throw — getClearBtn returns null, isClearBtnFocused returns false
       comboboxKeyboardStrategy.ArrowDown(el, mockEvt, ctx);
     });
+
+    // ─── customBibWidth applies dropdown width ───────────────────────
+    it('should apply customBibWidth to dropdown', async () => {
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      el.customBibWidth = '400px';
+      el.configureDropdown();
+      await elementUpdated(el);
+
+      await expect(dropdown.dropdownWidth).to.equal('400px');
+    });
   });
 
   describe('A11Y', () => {

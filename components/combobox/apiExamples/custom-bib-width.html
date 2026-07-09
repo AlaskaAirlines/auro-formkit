@@ -1,0 +1,20 @@
+<auro-combobox id="customBibWidthExample">
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Departure Airport</span>
+  <span slot="label">From</span>
+  <auro-menu>
+    <auro-menuoption value="SEA">Seattle, WA (SEA-Seattle/Tacoma Intl.)</auro-menuoption>
+    <auro-menuoption value="PDX">Portland, OR (PDX-Portland Intl.)</auro-menuoption>
+    <auro-menuoption value="SFO">San Francisco, CA (SFO-San Francisco Intl.)</auro-menuoption>
+    <auro-menuoption value="LAX">Los Angeles, CA (LAX-Los Angeles Intl.)</auro-menuoption>
+    <auro-menuoption value="JFK">New York, NY (JFK-John F. Kennedy Intl.)</auro-menuoption>
+    <auro-menuoption value="ORD">Chicago, IL (ORD-Chicago O'Hare Intl.)</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+
+<style>
+  #customBibWidthExample::part(dropdownSize) {
+    width: 400px;
+  }
+</style>
