@@ -4821,6 +4821,7 @@ function runTest(mobileView) {
         // must survive an empty menu).
         el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
         await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.false;
         // Typeahead buffer must remain empty so Space kept its toggle semantics.
         expect(el.typeaheadBuffer).to.equal('');
       });
