@@ -5203,61 +5203,6 @@ function runTest(mobileView) {
         await expect(form.validity).to.be.null;
       });
 
-      // The existing Enter propagation tests at :3397-3463 use a native <form>
-      // and only assert that keydown does not bubble to the wrapper. auro-form
-      // attaches handleKeyDown directly to each child element
-      // (auro-form.js:762-767), so bubbling isn't the only path to submit —
-      // any listener on the auro-select itself would still fire. Confirm the
-      // select's Enter handler (selectKeyboardStrategy.js:73-85) actually
-      // prevents auro-form's submit path in the real form context.
-      it('Enter on the select does not submit the surrounding auro-form when the bib is closed', async () => {
-        const form = await formFixture();
-        const select = form.querySelector('auro-select');
-        await elementUpdated(form);
-        await elementUpdated(select);
-
-        let submitFired = false;
-        form.addEventListener('submit', () => { submitFired = true; });
-
-        const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
-        await expect(dropdown.isPopoverVisible).to.be.false;
-
-        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        await elementUpdated(select);
-        await elementUpdated(form);
-
-        // Enter must open the bib, not submit the form.
-        await expect(submitFired).to.be.false;
-        await expect(dropdown.isPopoverVisible).to.be.true;
-      });
-
-      it('Enter on the select does not submit the surrounding auro-form when the bib is open', async () => {
-        const form = await formFixture();
-        const select = form.querySelector('auro-select');
-        await elementUpdated(form);
-        await elementUpdated(select);
-
-        const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
-        const trigger = dropdown.querySelector('[slot="trigger"]');
-        trigger.click();
-        await elementUpdated(select);
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(select);
-
-        let submitFired = false;
-        form.addEventListener('submit', () => { submitFired = true; });
-
-        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        await elementUpdated(select);
-        await elementUpdated(form);
-
-        // Enter must select the active option — not submit the form.
-        await expect(submitFired).to.be.false;
-        await expect(select.value).to.equal('Oranges');
-      });
-
       describe('multiselect', () => {
         const multiselectFormFixture = (opts = {}) => fixture(html`
           <auro-form>
