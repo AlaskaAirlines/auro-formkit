@@ -5034,6 +5034,7 @@ function runTest(mobileView) {
         <auro-form>
           <auro-select name="fruit" ?required=${Boolean(opts.required)}>
             <span slot="label">Fruit</span>
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
             <auro-menu>
               <auro-menuoption value="Apples">Apples</auro-menuoption>
               <auro-menuoption value="Oranges">Oranges</auro-menuoption>
@@ -5141,6 +5142,226 @@ function runTest(mobileView) {
 
         await expect(form.value).to.not.have.key('fruit');
         await expect(form.value.produce).to.equal('Oranges');
+      });
+
+      // The empty-required negative test at :5074-5088 only proves submit is
+      // blocked; a broken "always block" implementation would still pass it.
+      // Complement with a positive path: a filled valid required select must
+      // reach the submit dispatch with the value in detail.value.fruit.
+      it('dispatches submit with detail.value.fruit when a required select has a valid value', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        const submitEventPromise = oneEvent(form, 'submit');
+        await form.submit();
+        const submitEvent = await submitEventPromise;
+
+        await expect(submitEvent.detail).to.exist;
+        await expect(submitEvent.detail.value.fruit).to.equal('Oranges');
+      });
+
+      // form.validity is a public contract on auro-form (auro-form.js:404-420):
+      // null in the initial state, 'valid' / 'invalid' after interaction.
+      // Existing coverage only checks the select's own validity attribute — not
+      // the form-level rollup that consumers gate submit buttons on.
+      it('form.validity transitions from null → valid → invalid → null across interactions', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        // Fresh required form, nothing touched — validity is null.
+        await expect(form.validity).to.be.null;
+
+        // Fill it → form is valid.
+        select.value = 'Apples';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.equal('valid');
+
+        // Force-validate on empty → form is invalid.
+        select.value = undefined;
+        await elementUpdated(select);
+        select.validate(true);
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.equal('invalid');
+
+        // Reset returns to initial state → validity back to null.
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        await resetEventPromise;
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.be.null;
+      });
+
+      // The existing Enter propagation tests at :3397-3463 use a native <form>
+      // and only assert that keydown does not bubble to the wrapper. auro-form
+      // attaches handleKeyDown directly to each child element
+      // (auro-form.js:762-767), so bubbling isn't the only path to submit —
+      // any listener on the auro-select itself would still fire. Confirm the
+      // select's Enter handler (selectKeyboardStrategy.js:73-85) actually
+      // prevents auro-form's submit path in the real form context.
+      it('Enter on the select does not submit the surrounding auro-form when the bib is closed', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        let submitFired = false;
+        form.addEventListener('submit', () => { submitFired = true; });
+
+        const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
+        await expect(dropdown.isPopoverVisible).to.be.false;
+
+        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        // Enter must open the bib, not submit the form.
+        await expect(submitFired).to.be.false;
+        await expect(dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('Enter on the select does not submit the surrounding auro-form when the bib is open', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+        trigger.click();
+        await elementUpdated(select);
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(select);
+
+        let submitFired = false;
+        form.addEventListener('submit', () => { submitFired = true; });
+
+        select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        // Enter must select the active option — not submit the form.
+        await expect(submitFired).to.be.false;
+        await expect(select.value).to.equal('Oranges');
+      });
+
+      describe('multiselect', () => {
+        const multiselectFormFixture = (opts = {}) => fixture(html`
+          <auro-form>
+            <auro-select multiselect name="fruit" ?required=${Boolean(opts.required)}>
+              <span slot="label">Fruit</span>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+                <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </auro-form>
+        `);
+
+        // auro-form.value reads select.value directly (auro-form.js:273-284),
+        // so a multiselect select stores its JSON-encoded array under the
+        // element's name. The native <select> mirror in auro-select.js:1465-1504
+        // only reflects the FIRST selection — form.value must not silently pick
+        // that up in place of the real multiselect payload.
+        it('form.value carries the full multiselect payload as a JSON-encoded array', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          const menu = select.querySelector('auro-menu');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          menu.querySelector('auro-menuoption[value="Apples"]').click();
+          await elementUpdated(select);
+          await elementUpdated(menu);
+          await new Promise((r) => setTimeout(r, 0));
+          menu.querySelector('auro-menuoption[value="Bananas"]').click();
+          await elementUpdated(select);
+          await elementUpdated(menu);
+          await new Promise((r) => setTimeout(r, 0));
+          await elementUpdated(form);
+
+          expect(form.value).to.have.key('fruit');
+          const parsed = JSON.parse(form.value.fruit);
+          expect(parsed).to.include('Apples');
+          expect(parsed).to.include('Bananas');
+          expect(parsed).to.have.length(2);
+        });
+
+        it('dispatches submit with the full multiselect payload in detail.value.fruit', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Apples', 'Oranges']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          const submitEventPromise = oneEvent(form, 'submit');
+          await form.submit();
+          const submitEvent = await submitEventPromise;
+
+          const parsed = JSON.parse(submitEvent.detail.value.fruit);
+          expect(parsed).to.include('Apples');
+          expect(parsed).to.include('Oranges');
+          expect(parsed).to.have.length(2);
+        });
+
+        it('reset event previousValue.fruit carries the full multiselect payload', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Oranges', 'Bananas']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          const resetBtn = form.querySelector('button[type="reset"]');
+          const resetEventPromise = oneEvent(form, 'reset');
+          resetBtn.click();
+          const resetEvent = await resetEventPromise;
+
+          expect(resetEvent.detail.previousValue).to.exist;
+          const parsed = JSON.parse(resetEvent.detail.previousValue.fruit);
+          expect(parsed).to.include('Oranges');
+          expect(parsed).to.include('Bananas');
+        });
+
+        it('removes disabled multiselect from form.value at runtime', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Apples']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+          expect(form.value).to.have.key('fruit');
+
+          select.setAttribute('disabled', '');
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          expect(form.value).to.not.have.key('fruit');
+        });
       });
     });
   });
