@@ -1958,9 +1958,27 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   handleClick(event) {
+    const path = event.composedPath();
+    const [initTarget] = path;
+    const pathIncludesBib = path.includes(this.dropdown?.bibContent);
 
-    // Get the initial target of the click event
-    const [initTarget] = event.composedPath();
+    // When desktopModal is open, the datepicker marks the dropdown's #trigger
+    // element inert to keep AT and Tab off the input. Inert also blocks pointer
+    // events, so a click on the visible trigger area passes through to the
+    // wrapper <div> that sits alongside #trigger in the dropdown's shadow root.
+    // composedPath() then no longer contains #trigger, and the floater's
+    // window-level click-outside handler treats the click as an outside click
+    // and closes the bib. Suppress that misdetection here: if the click lands
+    // inside the trigger's bounds and outside the bib, stop propagation before
+    // it reaches the window listener.
+    if (this.dropdown?.isPopoverVisible && !pathIncludesBib) {
+      const triggerRect = this.dropdown.trigger?.getBoundingClientRect();
+      if (triggerRect &&
+          event.clientX >= triggerRect.left && event.clientX <= triggerRect.right &&
+          event.clientY >= triggerRect.top && event.clientY <= triggerRect.bottom) {
+        event.stopPropagation();
+      }
+    }
 
     // Determine if the current layout requires special handling
     const layoutRequiresHandling = ['snowflake'].includes(this.layout);
@@ -1969,7 +1987,7 @@ export class AuroDatePicker extends AuroElement {
     const targetIsInput = initTarget.tagName === 'INPUT';
     const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
 
-    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !event.composedPath().includes(this.dropdown.bibContent)) {
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !pathIncludesBib) {
       // Focus the first input
       this.inputList[0].focus();
     }

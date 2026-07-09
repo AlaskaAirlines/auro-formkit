@@ -37,8 +37,8 @@ function MyDatePicker() {
     const el = datepickerRef.current;
     if (!el) return;
 
-    const handleInput = () => {
-      console.log('Selected date:', (el as any).value);
+    const handleInput = (event: Event) => {
+      console.log('Selected date:', (event as CustomEvent<string>).detail);
     };
 
     el.addEventListener('input', handleInput);
