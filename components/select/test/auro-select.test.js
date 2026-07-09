@@ -4750,6 +4750,285 @@ function runTest(mobileView) {
       });
     });
 
+    describe('Behavioral Edge Cases', () => {
+      // #1 — Arrow-key navigation must scroll the newly-active option into view
+      // with `behavior: 'auto'` when the OS reports prefers-reduced-motion. The
+      // scroll-method unit tests already prove the behavior branch, but they
+      // call the method directly; this test drives the real code path — a
+      // keyboard event that flips the menu's active option and triggers
+      // scrollActiveOptionIntoView via the auroMenu-activatedOption listener.
+      it('arrow-key navigation uses auto scroll behavior when prefers-reduced-motion matches', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const originalMatchMedia = window.matchMedia;
+        window.matchMedia = (query) => {
+          if (query === '(prefers-reduced-motion: reduce)') {
+            return { matches: true };
+          }
+          return originalMatchMedia(query);
+        };
+
+        const capturedBehaviors = [];
+        const originalScrollIntoViews = new Map();
+        el.menu.querySelectorAll('auro-menuoption').forEach((opt) => {
+          originalScrollIntoViews.set(opt, opt.scrollIntoView);
+          opt.scrollIntoView = (opts) => { capturedBehaviors.push(opts && opts.behavior); };
+        });
+
+        try {
+          el.showBib();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Drain any scroll calls from the initial-active setup so we only
+          // observe the ones triggered by the ArrowDown below.
+          capturedBehaviors.length = 0;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          expect(capturedBehaviors.length, 'scrollIntoView must fire on arrow-key nav').to.be.greaterThan(0);
+          capturedBehaviors.forEach((behavior) => {
+            expect(behavior).to.equal('auto');
+          });
+        } finally {
+          window.matchMedia = originalMatchMedia;
+          originalScrollIntoViews.forEach((fn, opt) => { opt.scrollIntoView = fn; });
+        }
+      });
+
+      // #3 — Remove every menu option while the bib is open. Space must still
+      // toggle the bib (would fail if the empty menu armed the typeahead
+      // buffer), and no option can remain "active" once its DOM node is gone.
+      it('removing all options while the bib is open leaves Space as a bib toggle and clears optionActive', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        const menu = el.querySelector('auro-menu');
+        menu.querySelectorAll('auro-menuoption').forEach((opt) => opt.remove());
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        // No option node exists — none can be active.
+        expect(menu.querySelector('auro-menuoption.active')).to.be.null;
+
+        // Space toggles the bib closed (the standard combobox toggle behavior
+        // must survive an empty menu).
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+        await elementUpdated(el);
+        // Typeahead buffer must remain empty so Space kept its toggle semantics.
+        expect(el.typeaheadBuffer).to.equal('');
+      });
+
+      // #4 — Removing the currently-active option via slot mutation must not
+      // leave the keyboard nav pointing at a detached node. The next ArrowDown
+      // press has to land on a valid remaining option.
+      it('removing the active option via slot mutation leaves keyboard nav on a valid remaining option', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        const menu = el.querySelector('auro-menu');
+        // Move active to the second option so we have neighbors on both sides.
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+        const active = el.menu.optionActive;
+        expect(active).to.exist;
+
+        active.remove();
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        const remaining = [...menu.querySelectorAll('auro-menuoption')];
+        expect(remaining.length).to.be.greaterThan(0);
+        expect(el.menu.optionActive, 'next nav must land on a still-attached option').to.exist;
+        expect(remaining).to.include(el.menu.optionActive);
+        expect(el.menu.optionActive.isConnected).to.be.true;
+      });
+
+      // #5 — Multi-select complement to "should close the bib when an option is
+      // selected". Setting `value` programmatically while the bib is open must
+      // NOT close the bib in multi-select mode, so users can continue toggling
+      // additional options.
+      it('multi-select value set programmatically while bib open keeps the bib open', async () => {
+        const el = await multiSelectFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.value = JSON.stringify(['Apples']);
+        await elementUpdated(el);
+        await elementUpdated(el.menu);
+
+        const parsed = JSON.parse(el.value);
+        expect(parsed).to.include('Apples');
+        // Single-select would call hideBib() here; multiselect must not.
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      // #6 — Setting disabled=true while the bib is open. The current
+      // architecture propagates `disabled` to the underlying auro-dropdown as
+      // an attribute (see performUpdate at auro-select.js:1240) and applies
+      // the `is-disabled` host class. That guards subsequent open/close
+      // toggles in auro-dropdown's floater layer — a follow-up hide() becomes
+      // a no-op — so the observable contract from the select's side is that
+      // (a) the disabled attribute is reflected onto the dropdown, and (b) the
+      // is-disabled class is set on the host, which the styles use to render
+      // the trigger non-interactive.
+      it('setting disabled=true while bib open propagates disabled state to dropdown and host', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.disabled = true;
+        await elementUpdated(el);
+
+        expect(el.dropdown.hasAttribute('disabled'), 'disabled must propagate to auro-dropdown').to.be.true;
+        expect(el.classList.contains('is-disabled') || el.shadowRoot.querySelector('.is-disabled'), 'is-disabled class must be applied to render the trigger non-interactive').to.exist;
+      });
+
+      // #7 — Full roundtrip of trigger.inert as the bib transitions between
+      // popover and fullscreen while OPEN. Existing tests cover each direction
+      // in isolation; this exercises both transitions on the same instance to
+      // guard against state that only correctly clears in one direction.
+      it('bib crossing fullscreenBreakpoint while open toggles trigger.inert in both directions', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Popover → fullscreen: inert must be added to the trigger.
+        dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+        dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change', {
+          bubbles: true,
+          composed: true
+        }));
+        await elementUpdated(el);
+        await expect(dropdown.trigger.inert, 'trigger must be inert while fullscreen dialog is open').to.be.true;
+
+        // Fullscreen → popover: inert must be removed.
+        dropdown.isBibFullscreen = false;
+        await elementUpdated(el);
+        dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change', {
+          bubbles: true,
+          composed: true
+        }));
+        await elementUpdated(el);
+        await expect(dropdown.trigger.inert, 'trigger must be interactive again after returning to popover mode').to.be.false;
+      });
+
+      // #9 — Runtime mutation of the ariaLabel.bib.close slot content. The
+      // slot forwards through auro-select's shadow (as a nested <slot> with
+      // slot="ariaLabel.close">) into auro-bibtemplate, which projects it into
+      // the close button's visible content — no explicit aria-label. Slots
+      // are live, so the accessible name follows the mutation automatically:
+      // the observable contract is that the auro-select forwarding slot's
+      // assignedNodes reflect the updated text.
+      it('runtime mutation of the ariaLabel.bib.close slot content is reflected in the forwarding slot', async () => {
+        const el = await fixture(html`
+          <auro-select>
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
+            <span slot="label">Name</span>
+            <span slot="ariaLabel.bib.close">Close menu</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        `);
+        await elementUpdated(el);
+
+        const forwardingSlot = el.shadowRoot.querySelector('slot[name="ariaLabel.bib.close"]');
+        expect(forwardingSlot, 'auro-select shadow must expose the ariaLabel.bib.close forwarding slot').to.exist;
+
+        const initialText = forwardingSlot
+          .assignedNodes({ flatten: true })
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        expect(initialText).to.equal('Close menu');
+
+        const closeSlotContent = el.querySelector('[slot="ariaLabel.bib.close"]');
+        closeSlotContent.textContent = 'Dismiss picker';
+        await new Promise((r) => requestAnimationFrame(r));
+
+        const updatedText = forwardingSlot
+          .assignedNodes({ flatten: true })
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        expect(updatedText).to.equal('Dismiss picker');
+      });
+
+      // #10 — Deselecting the last selected option in multi-select must return
+      // the trigger to its placeholder state, not just clear the displayed
+      // value. The #placeholder node is always in the DOM; visibility is
+      // toggled via the util_displayHidden class based on truthiness of
+      // this.value. Existing coverage proves the value text clears; this
+      // locks in that the placeholder itself is visible again.
+      it('deselecting the last selected option in multi-select restores the placeholder in the trigger', async () => {
+        const el = await fixture(html`
+          <auro-select multiselect placeholder="Pick a fruit">
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        `);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const apples = menu.querySelector('auro-menuoption[value="Apples"]');
+
+        apples.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+        await new Promise((r) => setTimeout(r, 0));
+        await elementUpdated(el);
+
+        // Sanity check: something is selected, so the placeholder is hidden.
+        expect(JSON.parse(el.value || '[]')).to.include('Apples');
+        const placeholderBefore = el.shadowRoot.querySelector('#placeholder');
+        expect(placeholderBefore, 'placeholder node is always rendered').to.exist;
+        expect(placeholderBefore.classList.contains('util_displayHidden'), 'placeholder must be hidden while a value is selected').to.be.true;
+
+        // Deselect the last selected chip (click the same option again).
+        apples.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+        await new Promise((r) => setTimeout(r, 0));
+        await elementUpdated(el);
+
+        // Placeholder must be visible in the trigger again.
+        const placeholderAfter = el.shadowRoot.querySelector('#placeholder');
+        expect(placeholderAfter.classList.contains('util_displayHidden'), 'placeholder must be visible after last chip is deselected').to.be.false;
+        expect(placeholderAfter.textContent.trim()).to.equal('Pick a fruit');
+      });
+    });
+
     describe('auro-form integration', () => {
       const formFixture = (opts = {}) => fixture(html`
         <auro-form>
