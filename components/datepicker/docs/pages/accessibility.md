@@ -5,7 +5,7 @@
 
 The `auro-datepicker` component is built on top of `auro-dropdown` and `auro-input`, combining their accessibility features with a calendar interface. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
 
-For keyboard interaction details, see the <a href="./keyboard-behavior.html">Keyboard Behavior</a> page.
+For keyboard interaction details, see the <auro-hyperlink href="keyboard-behavior">Keyboard Behavior</auro-hyperlink> page.
 
 <auro-header level="2" id="ariaRolesAndAttributes">ARIA Roles and Attributes</auro-header>
 
