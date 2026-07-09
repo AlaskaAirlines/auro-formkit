@@ -815,6 +815,24 @@ function runTest(mobileView) {
           await expect(el.getAttribute('validity')).to.equal('valueMissing');
         });
 
+        it('should clear valueMissing error after selecting a value following blur', async () => {
+          const el = await requiredFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new Event('focusin'));
+          await elementUpdated(el);
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valid');
+        });
+
       });
 
       describe('setCustomValidity', () => {
