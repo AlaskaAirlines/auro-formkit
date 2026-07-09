@@ -1961,6 +1961,7 @@ export class AuroDatePicker extends AuroElement {
     const path = event.composedPath();
     const [initTarget] = path;
     const pathIncludesBib = path.includes(this.dropdown?.bibContent);
+    const triggerIsInert = this.dropdown?.trigger?.inert;
 
     // When desktopModal is open, the datepicker marks the dropdown's #trigger
     // element inert to keep AT and Tab off the input. Inert also blocks pointer
@@ -1971,7 +1972,7 @@ export class AuroDatePicker extends AuroElement {
     // and closes the bib. Suppress that misdetection here: if the click lands
     // inside the trigger's bounds and outside the bib, stop propagation before
     // it reaches the window listener.
-    if (this.dropdown?.isPopoverVisible && !pathIncludesBib) {
+    if (this.dropdown?.isPopoverVisible && triggerIsInert && !pathIncludesBib) {
       const triggerRect = this.dropdown.trigger?.getBoundingClientRect();
       if (triggerRect &&
           event.clientX >= triggerRect.left && event.clientX <= triggerRect.right &&
