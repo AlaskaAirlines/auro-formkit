@@ -56,6 +56,25 @@ function selectAndClose(component) {
 }
 
 /**
+ * Whether `el` is currently visible enough to receive focus. Prefers the
+ * browser's `checkVisibility()` (Chrome/Safari; Firefox behind a flag until
+ * recently); otherwise combines a display/visibility check with an
+ * ancestor-hidden probe that keeps position:fixed elements visible.
+ * @param {Element} el - The element to test.
+ * @returns {boolean}
+ */
+function isVisibleForFocus(el) {
+  if (typeof el.checkVisibility === 'function') {
+    return el.checkVisibility();
+  }
+  const style = el.ownerDocument.defaultView.getComputedStyle(el);
+  if (style.display === 'none' || style.visibility === 'hidden') {
+    return false;
+  }
+  return el.offsetParent !== null || style.position === 'fixed';
+}
+
+/**
  * Return the tab stop that comes before `component` in page tab order,
  * skipping any hidden entries the walker doesn't filter itself.
  * @param {Element} component - The auro-combobox host element.
@@ -65,7 +84,7 @@ function getPreviousTabStop(component) {
   const tabStops = getFocusableElements(component.ownerDocument.body);
   const componentIndex = tabStops.indexOf(component);
   for (let index = componentIndex - 1; index >= 0; index -= 1) {
-    if (tabStops[index].checkVisibility()) {
+    if (isVisibleForFocus(tabStops[index])) {
       return tabStops[index];
     }
   }
@@ -85,9 +104,15 @@ function selectAndExitBackward(component) {
   const previousTabStop = getPreviousTabStop(component);
 
   // Opts this selection out of setClearBtnFocus so the focus move below
-  // isn't clobbered. Consumed by auro-combobox's selection listener.
+  // isn't clobbered. Consumed by auro-combobox's selection listener; also
+  // cleared via microtask in case makeSelection is a no-op and the listener
+  // never fires (microtasks run before the next user event, so this can't
+  // leak into an unrelated selection).
   component._suppressClearBtnFocusOnSelection = true;
   selectAndClose(component);
+  queueMicrotask(() => {
+    component._suppressClearBtnFocusOnSelection = false;
+  });
 
   if (!previousTabStop) {
     return false;
