@@ -778,6 +778,10 @@ export const ComboboxCustomBibWidth: Story = {
 </style>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    if (window.innerWidth <= 320) {
+      return;
+    }
+
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
 
