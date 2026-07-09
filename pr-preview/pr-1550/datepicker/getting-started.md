@@ -172,8 +172,8 @@ function MyDatePicker() {
     const el = datepickerRef.current;
     if (!el) return;
 ​
-    const handleInput = () =&gt; {
-      console.log('Selected date:', (el as any).value);
+    const handleInput = (event: Event) =&gt; {
+      console.log('Selected date:', (event as CustomEvent&lt;string&gt;).detail);
     };
 ​
     el.addEventListener('input', handleInput);
@@ -247,8 +247,8 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   let value = $state('');
 ​
-  function handleInput(e: CustomEvent&lt;string&gt;) {
-    value = e.detail;
+  function handleInput(e: Event) {
+    value = (e as CustomEvent&lt;string&gt;).detail;
   }
 &lt;/script&gt;
 &lt;custom-datepicker oninput={handleInput}&gt;
