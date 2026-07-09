@@ -4,7 +4,7 @@
 <div class="scrollWrapper">
 The `auro-radio` component follows native HTML radio button semantics. This page documents the ARIA attributes, screen reader behavior, and other accessibility features built into the component.
 
-For keyboard interaction details, see the <a href="./keyboard-behavior.html">Keyboard Behavior</a> page.
+For keyboard interaction details, see the <auro-hyperlink href="keyboard-behavior">Keyboard Behavior</auro-hyperlink> page.
 
 <auro-header level="2" id="ariaRolesAndAttributes">ARIA Roles and Attributes</auro-header>
 <auro-header level="3" id="radioGroup">Radio Group</auro-header>
