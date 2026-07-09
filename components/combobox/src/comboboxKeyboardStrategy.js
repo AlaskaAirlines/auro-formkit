@@ -57,7 +57,7 @@ function selectAndClose(component) {
 
 /**
  * Return the tab stop that comes before `component` in page tab order,
- * skipping any display:none entries the walker doesn't filter itself.
+ * skipping any hidden entries the walker doesn't filter itself.
  * @param {Element} component - The auro-combobox host element.
  * @returns {Element|null}
  */
@@ -65,7 +65,7 @@ function getPreviousTabStop(component) {
   const tabStops = getFocusableElements(component.ownerDocument.body);
   const componentIndex = tabStops.indexOf(component);
   for (let index = componentIndex - 1; index >= 0; index -= 1) {
-    if (tabStops[index].offsetParent !== null) {
+    if (tabStops[index].checkVisibility()) {
       return tabStops[index];
     }
   }
@@ -75,7 +75,11 @@ function getPreviousTabStop(component) {
 /**
  * Commit the highlighted option, close the bib, and move focus to the tab
  * stop before the combobox — the Shift+Tab exit path (AB#1592239).
+ * Returns true when this function moved focus and the caller should
+ * preventDefault; false when no previous tab stop was found and the browser's
+ * native traversal should run.
  * @param {Element} component - The auro-combobox host element.
+ * @returns {boolean}
  */
 function selectAndExitBackward(component) {
   const previousTabStop = getPreviousTabStop(component);
@@ -85,9 +89,11 @@ function selectAndExitBackward(component) {
   component._suppressClearBtnFocusOnSelection = true;
   selectAndClose(component);
 
-  if (previousTabStop) {
-    doubleRaf(() => previousTabStop.focus());
+  if (!previousTabStop) {
+    return false;
   }
+  doubleRaf(() => previousTabStop.focus());
+  return true;
 }
 
 export const comboboxKeyboardStrategy = {
@@ -190,8 +196,9 @@ export const comboboxKeyboardStrategy = {
   Tab(component, evt, ctx) {
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
       if (evt.shiftKey) {
-        evt.preventDefault();
-        selectAndExitBackward(component);
+        if (selectAndExitBackward(component)) {
+          evt.preventDefault();
+        }
         return;
       }
 
