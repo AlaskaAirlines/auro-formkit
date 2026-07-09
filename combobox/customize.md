@@ -11,6 +11,7 @@
 <auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
 <auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
 <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
+<auro-anchorlink fluid href="#customBibWidth" class="level2 body-xs">Custom Bib Width</auro-anchorlink>
 <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
 <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
@@ -377,6 +378,57 @@
     &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="customBibWidth">Custom Bib Width</auro-header>
+<p>By default the bib's width matches the trigger. To set a specific width, style the <code>dropdownSize</code> CSS shadow part.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-bib-width.html) -->
+<!-- The below content is automatically added from ./../apiExamples/custom-bib-width.html -->
+<auro-combobox id="customBibWidthExample">
+<span slot="ariaLabel.bib.close">Close combobox</span>
+<span slot="ariaLabel.input.clear">Clear All</span>
+<span slot="bib.fullscreen.headline">Departure Airport</span>
+<span slot="label">From</span>
+<auro-menu>
+<auro-menuoption value="SEA">Seattle, WA (SEA-Seattle/Tacoma Intl.)</auro-menuoption>
+<auro-menuoption value="PDX">Portland, OR (PDX-Portland Intl.)</auro-menuoption>
+<auro-menuoption value="SFO">San Francisco, CA (SFO-San Francisco Intl.)</auro-menuoption>
+<auro-menuoption value="LAX">Los Angeles, CA (LAX-Los Angeles Intl.)</auro-menuoption>
+<auro-menuoption value="JFK">New York, NY (JFK-John F. Kennedy Intl.)</auro-menuoption>
+<auro-menuoption value="ORD">Chicago, IL (ORD-Chicago O'Hare Intl.)</auro-menuoption>
+</auro-menu>
+</auro-combobox>
+<style>
+            #customBibWidthExample::part(dropdownSize) {
+              width: 400px;
+            }
+</style>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-bib-width.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom-bib-width.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-combobox id="customBibWidthExample"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
+  &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Departure Airport&lt;/span&gt;
+  &lt;span slot="label"&gt;From&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="SEA"&gt;Seattle, WA (SEA-Seattle/Tacoma Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PDX"&gt;Portland, OR (PDX-Portland Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SFO"&gt;San Francisco, CA (SFO-San Francisco Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="LAX"&gt;Los Angeles, CA (LAX-Los Angeles Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="JFK"&gt;New York, NY (JFK-John F. Kennedy Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ORD"&gt;Chicago, IL (ORD-Chicago O'Hare Intl.)&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-combobox&gt;
+&lt;style&gt;
+  #customBibWidthExample::part(dropdownSize) {
+    width: 400px;
+  }
+&lt;/style&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="breakpoint">Fullscreen Breakpoint</auro-header>
