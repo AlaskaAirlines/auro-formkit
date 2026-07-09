@@ -3965,8 +3965,34 @@ function runFullTest(mobileView) {
       });
 
       describe('Shift', () => {
-        it('should make a selection and close the bib', async () => {
-          const el = await defaultFixture(mobileView);
+        it('should make a selection, close the bib, and move focus to the previous element on the page', async () => {
+          if (mobileView) {
+            await setViewport({
+              width: 500,
+              height: 800
+            });
+          } else {
+            await setViewport({
+              width: 800,
+              height: 800
+            });
+          }
+
+          const wrapper = await fixture(html`
+            <div>
+              <button id="before-combobox">Before</button>
+              <auro-combobox>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Apples" id="shift-tab-option-0">Apples</auro-menuoption>
+                  <auro-menuoption value="Oranges" id="shift-tab-option-1">Oranges</auro-menuoption>
+                </auro-menu>
+              </auro-combobox>
+            </div>
+          `);
+          const el = wrapper.querySelector('auro-combobox');
+          const beforeBtn = wrapper.querySelector('#before-combobox');
+          const options = el.querySelectorAll('auro-menuoption');
 
           el.focus();
           await elementUpdated(el);
@@ -3974,11 +4000,19 @@ function runFullTest(mobileView) {
           el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
+
           await sendKeys({ down: 'Shift' });
           await sendKeys({ press: 'Tab' });
           await sendKeys({ up: 'Shift' });
           await elementUpdated(el.dropdown);
+
+          // Wait for the doubleRaf-scheduled focus move in the strategy to run.
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          await elementUpdated(el);
+
           await expect(el.dropdown.isPopoverVisible).to.be.false;
+          await expect(el.value).to.equal(options[0].getAttribute('value'));
+          await expect(document.activeElement).to.equal(beforeBtn);
         });
       });
 
