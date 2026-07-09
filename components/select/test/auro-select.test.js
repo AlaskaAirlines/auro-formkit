@@ -2230,6 +2230,115 @@ function runTest(mobileView) {
         await expect(trigger.ariaActiveDescendantElement === firstOption).to.be.true;
       });
 
+      it('should apply role="listbox" to the menu', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        await elementUpdated(menu);
+        await expect(menu.getAttribute('role')).to.equal('listbox');
+      });
+
+      it('should apply role="option" to each menu option', async () => {
+        const el = await defaultFixture();
+        const options = el.querySelectorAll('auro-menuoption');
+
+        await elementUpdated(el);
+        expect(options.length).to.be.greaterThan(0);
+        options.forEach((option) => {
+          expect(option.getAttribute('role')).to.equal('option');
+        });
+      });
+
+      it('should toggle aria-expanded on the trigger from false to true and back to false', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+      });
+
+      it('should set trigger aria-controls to the bib element id', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+
+        const controlsId = trigger.getAttribute('aria-controls');
+        expect(controlsId).to.not.be.empty;
+
+        // The referenced element must live in the same shadow root as the trigger.
+        const bib = dropdown.shadowRoot.getElementById(controlsId);
+        expect(bib).to.exist;
+        expect(bib.id).to.equal(controlsId);
+      });
+
+      it('should set trigger aria-labelledby to the label element id', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+
+        const labelledById = trigger.getAttribute('aria-labelledby');
+        expect(labelledById).to.not.be.empty;
+
+        const labelEl = dropdown.shadowRoot.getElementById(labelledById);
+        expect(labelEl).to.exist;
+      });
+
+      it('should reflect the disabled state via aria-disabled on the trigger', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+        await expect(trigger.hasAttribute('aria-disabled')).to.be.false;
+
+        el.disabled = true;
+        await elementUpdated(el);
+        await elementUpdated(dropdown);
+        await expect(trigger.getAttribute('aria-disabled')).to.equal('true');
+
+        el.disabled = false;
+        await elementUpdated(el);
+        await elementUpdated(dropdown);
+        await expect(trigger.hasAttribute('aria-disabled')).to.be.false;
+      });
+
+      if (mobileView) {
+        it('should keep ariaActiveDescendantElement pointing at the activated option in fullscreen mode', async () => {
+          const el = await defaultFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          // Simulate fullscreen (resize observers don't fire in test env).
+          // In fullscreen, the trigger lives in select's shadow DOM while the
+          // options render inside the bib dialog — a different shadow root —
+          // so the element-reference binding must cross that boundary.
+          el.dropdown.isBibFullscreen = true;
+          await elementUpdated(el.dropdown);
+
+          el.menu.navigateOptions('down');
+          await elementUpdated(el);
+
+          const activeOption = el.menu.optionActive;
+          expect(activeOption).to.exist;
+          await expect(trigger.ariaActiveDescendantElement === activeOption).to.be.true;
+        });
+      }
+
       describe('announceToScreenReader', function() {
         this.timeout(5000);
 
