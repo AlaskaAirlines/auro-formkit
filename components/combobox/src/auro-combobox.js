@@ -999,7 +999,12 @@ export class AuroCombobox extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
-    // Exposes the CSS parts from the bibtemplate for styling
+    if (this.customBibWidth) {
+      this.dropdown.dropdownWidth = this.customBibWidth;
+    }
+
+    // Exposes the CSS parts from the dropdown and bibtemplate for styling
+    this.dropdown.exposeCssParts();
     this.bibtemplate.exposeCssParts();
 
     this.hideBib = this.hideBib.bind(this);
