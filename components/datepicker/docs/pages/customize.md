@@ -93,7 +93,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
-<p>See the <a href="./design.html">Design page</a> for a detailed breakdown.</p>
+<p>See the <auro-hyperlink href="design">Design page</auro-hyperlink> for a detailed breakdown.</p>
 </section>
 <section>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
