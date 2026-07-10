@@ -110,6 +110,14 @@ function runFullTest(mobileView) {
         el.decrement();
         await expect(el.value).to.equal(5);
       });
+
+      it('should become interactive again after disabled is removed', async () => {
+        const el = await fixture(html`<auro-counter disabled value="5">Counter</auro-counter>`);
+        el.removeAttribute('disabled');
+        await elementUpdated(el);
+        el.increment();
+        expect(el.value).to.equal(6);
+      });
     });
 
     describe('error', () => {
@@ -146,6 +154,20 @@ function runFullTest(mobileView) {
       it('should return true when value is equal to min', async () => {
         const el = await fixture(html`<auro-counter>Counter 1</auro-counter>`);
         expect(el.isIncrementDisabled(el.min)).to.be.true;
+      });
+
+      it('should not allow value below min on initialization', async () => {
+        const el = await fixture(html`<auro-counter min="2" value="0">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.be.equal(0);
+      });
+    });
+
+    describe('max', () => {
+      it('should not allow value to exceed max on initialization', async () => {
+        const el = await fixture(html`<auro-counter max="3" value="5">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.be.equal(5);
       });
     });
 
@@ -520,6 +542,17 @@ function runFullTest(mobileView) {
         decrementBtn.click();
 
         expect(el.value).to.equal(2);
+      });
+
+      it('should register each rapid click and increment value correctly', async () => {
+        const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+        const incrementBtn = el.shadowRoot.querySelector('[part="controlPlus"]');
+
+        incrementBtn.click();
+        incrementBtn.click();
+        incrementBtn.click();
+
+        expect(el.value).to.equal(3);
       });
     });
   });
