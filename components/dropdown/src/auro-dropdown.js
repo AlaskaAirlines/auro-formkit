@@ -11,7 +11,6 @@ import { createRef, ref } from "lit/directives/ref.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
-import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -683,7 +682,10 @@ export class AuroDropdown extends AuroElement {
     }
 
 
-    if (!this.isPopoverVisible) {
+    // On Tab-driven close (eventType "focusloss"), let focus advance naturally
+    // — restoring to the trigger would trap the user on this dropdown, forcing
+    // an extra Tab to move on. Escape and outside-click still restore.
+    if (!this.isPopoverVisible && eventType !== "focusloss") {
       // wait til the bib gets fully closed and rendered
       setTimeout(() => {
         // Skip if the bib re-opened, or if focus moved intentionally outside the dropdown (not to body).
@@ -915,27 +917,16 @@ export class AuroDropdown extends AuroElement {
             }
           });
         } else {
-          // Chrome-only guard: when the bib is elevated to the top layer via
-          // showPopover() (auro-dropdownBib.js), :focus-within does not
-          // propagate to the shadow host reliably in Chromium, so
-          // AuroFloatingUI.handleFocusLoss misreads a focus move into the bib
-          // as focus leaving the dropdown and closes it. Mirror the
-          // desktopModal defense: suppress focus-loss dismissal while the
-          // FocusTrap owns focus. Escape, outside-click, and trigger-blur
-          // still close the bib through other paths.
-          this._priorNoHide = this.noHideOnThisFocusLoss;
-          this._noHideOverridden = true;
-          this.noHideOnThisFocusLoss = true;
-
-          // Normal desktop: use FocusTrap on the bib element.
-          // Defer focusFirstElement to the next frame because the popover
-          // is positioned asynchronously by Floating UI — calling focus()
-          // synchronously here would target elements with zero dimensions
-          // and the focus call would be silently ignored.
-          this.focusTrap = new FocusTrap(this.bibContent);
+          // Normal desktop (non-modal): move initial focus into the bib but
+          // don't trap Tab. Tab should exit the bib and let the floater's
+          // handleFocusLoss close it, matching native <select>/<details>
+          // behavior. Deferred one frame because Floating UI positions the
+          // popover asynchronously — a synchronous focus() would target
+          // zero-dimension elements and be silently ignored.
           requestAnimationFrame(() => {
-            if (this.focusTrap) {
-              this.focusTrap.focusFirstElement();
+            const focusables = getFocusableElements(this.bibContent);
+            if (focusables.length) {
+              focusables[0].focus();
             }
           });
         }

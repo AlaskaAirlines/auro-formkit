@@ -109,7 +109,7 @@
     "@aurodesignsystem/auro-drawer": "^5.1.2",
     "@aurodesignsystem/auro-header": "^5.0.1",
     "@aurodesignsystem/auro-icon": "^9.2.0",
-    "@aurodesignsystem/auro-library": "^5.13.0",
+    "@aurodesignsystem/auro-library": "^5.13.1",
     "@aurodesignsystem/auro-loader": "^6.2.0",
     "@aurodesignsystem/auro-popover": "^6.0.3",
     "@aurodesignsystem/build-tools": "*",
