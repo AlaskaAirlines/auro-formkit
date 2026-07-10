@@ -338,6 +338,16 @@ function runFullTest(mobileView) {
         `);
         await expect(el.fullscreenBreakpoint).to.equal('sm');
       });
+
+      it('should accept "disabled" to prevent fullscreen at any viewport', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown fullscreenBreakpoint="disabled">
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.fullscreenBreakpoint).to.equal('disabled');
+        await expect(el.dropdown.fullscreenBreakpoint).to.equal('disabled');
+      });
     });
 
     describe('isDropdown', () => {
@@ -358,6 +368,18 @@ function runFullTest(mobileView) {
         `);
         await expect(el.isDropdown).to.be.true;
         await expect(el.dropdown).to.exist;
+      });
+
+      it('should render counters inline when isDropdown is removed', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.isDropdown).to.be.true;
+        el.removeAttribute('isDropdown');
+        await elementUpdated(el);
+        await expect(el.isDropdown).to.be.false;
       });
 
       // Regression guard: counter rows are slotted through multiple shadow roots,
@@ -1033,6 +1055,24 @@ function runFullTest(mobileView) {
   });
 
   describe('Mouse Behavior', () => {
+    describe('Trigger click', () => {
+      bibIt('should open the bib when the trigger is clicked', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter value="2">Counter 1</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+        trigger.click();
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+    });
+
     describe('Click', () => {
       bibIt('should increment the counter value when increment button is clicked', async () => {
         const el = await fixture(html`
@@ -1176,6 +1216,57 @@ function runFullTest(mobileView) {
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      if (!mobileView) {
+        bibIt('should close the bib when focus leaves the counter-group (Tab exit)', async () => {
+          const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter value="2">Counter 1</auro-counter>
+            <auro-counter value="3">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          const outside = document.createElement('button');
+          document.body.appendChild(outside);
+
+          el.dispatchEvent(new FocusEvent('focusout', {
+            bubbles: true,
+            composed: true,
+            relatedTarget: outside
+          }));
+          await elementUpdated(el);
+
+          outside.remove();
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+      }
+
+      bibIt('should not close the bib when focus moves between counters', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter value="2">Counter 1</auro-counter>
+            <auro-counter value="3">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+
+        el.dropdown.show();
+        await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        const [firstCounter, secondCounter] = el.counters;
+        firstCounter.dispatchEvent(new FocusEvent('focusout', {
+          bubbles: true,
+          composed: true,
+          relatedTarget: secondCounter
+        }));
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.true;
       });
     });
 

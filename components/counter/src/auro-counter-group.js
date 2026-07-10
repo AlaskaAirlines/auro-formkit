@@ -639,6 +639,19 @@ export class AuroCounterGroup extends AuroElement {
 
     if (this.isDropdown) {
       applyKeyboardStrategy(this, counterGroupKeyboardStrategy);
+
+      // noHideOnThisFocusLoss=true on the dropdown prevents handleFocusLoss from
+      // closing the bib when focus moves out via Tab. Close explicitly via focusout:
+      // if relatedTarget is outside the counter-group's light DOM, focus has left.
+      this.addEventListener('focusout', (event) => {
+        if (!this.dropdown?.isPopoverVisible || this.dropdown?.isBibFullscreen) {
+          return;
+        }
+        if (event.relatedTarget && this.contains(event.relatedTarget)) {
+          return;
+        }
+        this.hideBib();
+      });
     }
   }
 
