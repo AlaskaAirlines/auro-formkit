@@ -32,12 +32,15 @@ export default meta;
 type Story = StoryObj<AuroMenu & typeof args>;
 
 export const Menu: Story = {
+  args: {
+    value: 'new window',
+  },
   render: (args) =>
       template(
         args,
           html`
             <auro-menuoption value="new tab">New tab</auro-menuoption>
-            <auro-menuoption value="new window" selected>New window</auro-menuoption>
+            <auro-menuoption value="new window">New window</auro-menuoption>
             <auro-menuoption value="open file">Open file</auro-menuoption>
             <auro-menuoption value="open location">Open location</auro-menuoption>
             <hr>

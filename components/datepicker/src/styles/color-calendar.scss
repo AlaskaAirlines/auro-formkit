@@ -18,13 +18,17 @@
     --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   }
 
-  &:focus {
+  &:focus-visible {
     --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+
+    outline: 2px solid var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+    outline-offset: -2px;
   }
 
   &:active {
     --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-    
+    outline: 2px solid var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+    outline-offset: -2px;
     box-shadow: inset 0 0 0 1px var(--ds-auro-calendar-nav-btn-border-color);
   }
 }

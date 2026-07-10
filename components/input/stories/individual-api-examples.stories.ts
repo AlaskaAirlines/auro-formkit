@@ -3,8 +3,10 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
+import { html } from 'lit-html';
 import '../src/registered';
 import { AuroInput } from '../src/index';
+import { AuroInputUtil } from '../src/auro-input-util.js';
 
 AuroInput.register('custom-input');
 
@@ -56,6 +58,7 @@ export const Disabled = stories.Disabled;
 export const Email = stories.Email;
 export const Error = stories.Error;
 export const Format = stories.Format;
+export const FormatIsoValue = stories.FormatIsoValue;
 export const Inputmode = stories.Inputmode;
 export const MaxDate = stories.MaxDate;
 export const MaxLength = stories.MaxLength;
@@ -82,5 +85,12 @@ export const Tel = stories.Tel;
 export const ValidateOnInput = stories.ValidateOnInput;
 export const Value = stories.Value;
 export const YearMonthDay = stories.YearMonthDay;
+export const Locale = stories.Locale;
+export const LocaleSingle = stories.LocaleSingle;
+export const LocalizationLocale = stories.LocalizationLocale;
+export const LocalizationLocaleFormatted = stories.LocalizationLocaleFormatted;
+export const LocalizationLocaleInherited = stories.LocalizationLocaleInherited;
+export const LocalizationScreenreaderStrings = stories.LocalizationScreenreaderStrings;
+export const LocalizationVisibleStrings = stories.LocalizationVisibleStrings;
 export const Nested = stories.Nested;
 export const Simple = stories.Simple;

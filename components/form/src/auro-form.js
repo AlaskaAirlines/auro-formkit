@@ -1,6 +1,6 @@
-/* eslint-disable no-underscore-dangle, max-lines, object-property-newline */
+/* eslint-disable no-underscore-dangle, max-lines, object-property-newline, dot-location */
 
-// Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -14,10 +14,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /**
  * @typedef {Object} FormStateMember - The form state member.
- * @property {string | number | boolean | string[] | null} value - The value of the form element.
+ * @property {string | number | boolean | string[] | Record<string, number> | null} value - The value of the form element. Mirrors the child component's own `.value`, so the shape varies by element type (e.g. an array for `auro-checkbox-group`, an object keyed by counter name for `auro-counter-group`). A `range` `auro-datepicker` is the one form-specific case: its `.values` array is stored rather than its single `.value` string.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.
- * @property {HTMLElement} element - Whether the form element is required or not.
+ * @property {boolean} disabled - Whether the form element is currently disabled. Cached from the live attribute via the MutationObserver in `connectedCallback` and refreshed from `_handleAttributeMutations`.
  */
 
 /**
@@ -101,6 +101,31 @@ export class AuroForm extends LitElement {
      */
     this.mutationObservers = [];
 
+    /**
+     * Captured initial (default) value per field `name`. Populated on first
+     * sight of each name in `_addElementToState` and preserved across
+     * subsequent `initializeState` cycles (slot change, rename, reset) so
+     * `_setInitialState` can detect user edits as `current !== initial`,
+     * matching HTML's `dirtyValueFlag` semantics.
+     * @private
+     * @type {Record<string, string | number | boolean | string[] | Record<string, number> | null | undefined>}
+     */
+    this._initialValues = {};
+
+    // Single subtree observer that watches `disabled` and `name` attribute
+    // changes across all tracked form elements. The `name` watch is required:
+    // without it, renaming a tracked field at runtime leaves a stale key in
+    // `formState` that `_isNameDisabled` cannot resolve, so a renamed-but-
+    // disabled field would re-appear in `.value`.
+    /**
+     * @private
+     * @type {MutationObserver | null}
+     */
+    this._attributeObserver = null;
+
+    /** @private */
+    this._handleAttributeMutations = this._handleAttributeMutations.bind(this);
+
     // Bind listeners
     /** @private */
     this.reset = this.reset.bind(this);
@@ -170,6 +195,45 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Whether a given element is currently disabled. Disabled controls are excluded
+   * from submission, validity, and initial-state checks per the HTML spec
+   * (section 4.10.19.2 "Enabling and disabling form controls":
+   * https://www.w3.org/TR/2011/WD-html5-20110113/association-of-controls-and-forms.html).
+   *
+   * Implementation note: we deliberately read only the attribute. Every Auro
+   * form element in `formElementTags` declares `disabled` with `reflect: true`,
+   * so the attribute and property stay in sync. Reading the attribute also
+   * lets the MutationObserver in `connectedCallback` (which is filtered to
+   * `['disabled', 'name']`) be the single source of truth for re-renders.
+   * If a future form-element type ships without attribute reflection, expand
+   * this helper to also read `element.disabled`.
+   * @param {HTMLElement | undefined | null} element - The element to check.
+   * @returns {boolean}
+   * @private
+   */
+  _isDisabled(element) {
+    return Boolean(element?.hasAttribute('disabled'));
+  }
+
+  /**
+   * Whether the tracked form element registered under `name` is currently disabled.
+   * See `_isDisabled` for the HTML-spec rationale behind excluding disabled
+   * controls from form state.
+   *
+   * Reads a cached flag on `formState[name]` populated by `_addElementToState`
+   * at registration and refreshed by `_handleAttributeMutations` whenever the
+   * element's `disabled` attribute toggles. The cache is fed by the same
+   * `hasAttribute('disabled')` read as `_isDisabled`, so the "future form-element
+   * type without attribute reflection" caveat documented there applies here too.
+   * @param {string} name - The `name` attribute used to register the element.
+   * @returns {boolean}
+   * @private
+   */
+  _isNameDisabled(name) {
+    return Boolean(this.formState[name]?.disabled);
+  }
+
+  /**
    * Validates if an event is from a valid form element with a name.
    * @param {Event} event - The event to validate.
    * @returns {boolean} - True if event is valid for processing.
@@ -203,11 +267,15 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns the current values of all named form elements as a key-value object, keyed by each element's `name` attribute.
-   * @returns {Record<string, string | number | boolean | string[] | null>} The current form values.
+   * Returns the current values of all named, enabled form elements as a key-value object, keyed by each element's `name` attribute. Each value is the child component's own `.value`, so the shape depends on the element type — see that component's documentation for its exact shape (for example, `auro-checkbox-group` yields an array, `auro-counter-group` yields an object keyed by counter name, and `auro-select` with `multiSelect` yields a JSON-encoded string). The one form-specific exception is a `range` `auro-datepicker`, whose `.values` array (`[start, end]`) is stored instead of its single `.value` string.
+   * @returns {Record<string, string | number | boolean | string[] | Record<string, number> | null>} The current form values.
    */
   get value() {
     return Object.keys(this.formState).reduce((acc, key) => {
+      if (this._isNameDisabled(key)) {
+        return acc;
+      }
+
       acc[key] = this.formState[key].value;
       return acc;
     }, {});
@@ -232,22 +300,112 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Raw constraint-validation check. Returns `true` when no enabled field
+   * has a validity error. Unlike the public `validity` getter, this does
+   * NOT gate on `isInitialState` — callers that need to make a decision
+   * based on the actual constraint state (submit-button enablement, the
+   * internal `submit()` gate) read this so a pre-filled valid form is
+   * correctly recognized as submittable at first render.
+   * @returns {boolean}
+   * @private
+   */
+  _isFormValid() {
+    return !Object.keys(this.formState).some((key) => {
+      if (this._isNameDisabled(key)) {
+        return false;
+      }
+
+      const formKey = this.formState[key];
+      // `null` validity means "not yet validated" — auro-input doesn't
+      // re-validate on every keystroke, so validity stays `null` between
+      // input events until blur. Treating `null` as invalid disables Submit
+      // the moment a user types into any field, which is the wrong UX.
+      // We treat a field as invalid in two cases:
+      //   1. validity is known-bad (non-null, non-'valid')
+      //   2. it's `required` and structurally empty — `valueMissing` is
+      //      certain even without a validation pass.
+      // `submit()` calls `validate(true)` on every enabled field before
+      // reading `_isFormValid()`, so any not-yet-validated field that turns
+      // out to fail another constraint still blocks dispatch.
+      const knownInvalid = formKey.validity !== null && formKey.validity !== 'valid';
+      const requiredAndEmpty = formKey.required && this._normalizeEmpty(formKey.value) === null;
+      return knownInvalid || requiredAndEmpty;
+    });
+  }
+
+  /**
+   * Whether the reset button should be enabled. True when the form has
+   * diverged from its initial state (so the user can always return to
+   * defaults — even if the dirty value lives behind a now-disabled field),
+   * OR when any non-disabled field has a current value or captured initial
+   * value (covers pre-filled forms and user-cleared-back-to-empty cases).
+   * @returns {boolean}
+   * @private
+   */
+  _hasResetableState() {
+    // Form is dirty — always allow Reset, even if the dirt is on a field
+    // that has since been disabled. Without this branch, the user would
+    // have no UI path to return the form to its initial state.
+    if (!this._isInitialState) {
+      return true;
+    }
+
+    return Object.keys(this.formState).some((key) => {
+      if (this._isNameDisabled(key)) {
+        return false;
+      }
+      const current = this._normalizeEmpty(this.formState[key].value);
+      const initial = this._normalizeEmpty(this._initialValues[key]);
+      return current !== null || initial !== null;
+    });
+  }
+
+  /**
+   * Collapse empty representations to a single canonical `null`.
+   *
+   * `_addElementToState` captures `null` for a field that mounts without a
+   * `value` attribute (`element.value || element.getAttribute('value')` is
+   * falsy → resolves to `null`), but `sharedInputListener` later stores the
+   * raw `event.target.value` — which is `''` for a user-cleared text input.
+   * Without this normalization, backspacing back to empty would taint the
+   * form forever (`'' !== null`) and Reset would stay enabled with nothing
+   * to actually reset.
+   *
+   * `''`, `undefined`, and `[]` all collapse to `null`. The empty-array case
+   * covers checkbox-group, radio-group, and multiselect, where `[]` means
+   * "no selection" — semantically the same as `null`/`''`. Genuine values
+   * — including `0`, `false`, non-empty strings, and non-empty arrays —
+   * pass through unchanged so number, boolean, and populated multi-value
+   * fields still compare correctly.
+   * @param {*} value - Value to normalize.
+   * @returns {*}
+   * @private
+   */
+  _normalizeEmpty(value) {
+    if (value === '' || value === undefined) {
+      return null;
+    }
+    if (Array.isArray(value) && value.length === 0) {
+      return null;
+    }
+    return value;
+  }
+
+  /**
    * Infer validity status based on current formState.
+   *
+   * Validity stays `null` while the form is in its initial state — this is
+   * the "stay quiet until the user interacts" UX contract that consumers
+   * depend on to delay error indicators. Code that needs the raw
+   * constraint-validation result regardless of interaction (e.g.,
+   * submit-button enablement) should call `_isFormValid()` directly.
    * @private
    */
   _calculateValidity() {
     if (this.isInitialState) {
       this._validity = null;
     } else {
-      // go through validity states and return the first invalid state (if any)
-      const invalidKey = Object.keys(this.formState).
-        find((key) => {
-          const formKey = this.formState[key];
-          // these are NOT extra parens
-          // eslint-disable-next-line no-extra-parens
-          return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
-        });
-      this._validity = invalidKey ? 'invalid' : 'valid';
+      this._validity = this._isFormValid() ? 'valid' : 'invalid';
     }
   }
 
@@ -263,20 +421,38 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Determines whether the form is in its initial (untouched) state and updates `_isInitialState` accordingly.
+   * Determines whether the form is in its initial (untouched) state.
+   *
+   * A field is tainted if either:
+   *   - its value differs from the value captured on first render, OR
+   *   - its validity is failing (anything other than `null` or `'valid'`).
+   *
+   * Validity acts as a backup signal: it catches users who interact with a
+   * field without changing its value (e.g., focusing and blurring a required
+   * field). We skip `null` (not yet validated) and `'valid'` (the default
+   * after Auro's auto-validation on mount) because neither proves the user
+   * touched anything.
    * @returns {void}
    * @private
    */
   _setInitialState() {
-    const anyTainted = Object.keys(this.formState).some((key) => this.formState[key].validity !== null || this.formState[key].value !== null);
+    const anyTainted = Object.keys(this.formState).some((key) => {
+      // Normalize empty values so a freshly-captured `null` (no `value`
+      // attribute at mount) and a user-cleared `''` (input emptied via
+      // backspace) compare equal. Without this, backspacing back to an
+      // empty field leaves the form permanently tainted.
+      const initialValue = this._normalizeEmpty(this._initialValues[key]);
+      const currentValue = this._normalizeEmpty(this.formState[key].value);
+      const fieldValidity = this.formState[key].validity;
+      // eslint-disable-next-line no-extra-parens
+      return currentValue !== initialValue || (fieldValidity !== null && fieldValidity !== 'valid');
+    });
 
     this._isInitialState = !anyTainted;
-
-    this._resetElements.forEach((resetElement) => {
-      if (resetElement.hasAttribute("disabled")) {
-        resetElement.removeAttribute("disabled");
-      }
-    });
+    // Button state is owned by setDisabledStateOnButtons (called from updated()
+    // and reset()). Touching resetElement.disabled here causes a visible flicker
+    // in reset(), where the final setDisabledStateOnButtons is deferred behind
+    // an extra updateComplete.
   }
 
   /**
@@ -294,19 +470,19 @@ export class AuroForm extends LitElement {
    */
   setDisabledStateOnButtons() {
     this._resetElements.forEach((element) => {
-      if (this.isInitialState) {
-        element.setAttribute("disabled", "");
-      } else {
-        element.removeAttribute("disabled");
-      }
+      // Reset is meaningful whenever any non-disabled field has a current
+      // value OR a captured default value — i.e., whenever the click would
+      // either clear something or restore a default.
+      element.disabled = !this._hasResetableState();
     });
 
     this._submitElements.forEach((element) => {
-      if (this.isInitialState || this.validity !== "valid") {
-        element.setAttribute("disabled", "");
-      } else {
-        element.removeAttribute("disabled");
-      }
+      // Submit enablement reads raw validity (not the gated public getter)
+      // so a pre-filled valid form is submittable at first render — the
+      // public `validity` stays `null` during initial state to keep error
+      // indicators quiet until the user interacts, but the button decision
+      // bypasses that gate.
+      element.disabled = !this._isFormValid();
     });
   }
 
@@ -352,8 +528,17 @@ export class AuroForm extends LitElement {
       value: element.value || element.getAttribute('value'),
       validity: element.validity || null,
       required: element.hasAttribute('required'),
-      // element
+      disabled: element.hasAttribute('disabled'),
     };
+
+    // Capture the initial (default) value once per name. Use `in` rather
+    // than `??=` so a captured `null` (an empty field at first sight) is
+    // preserved across rename/slot/reset cycles — `??=` would treat the
+    // stored `null` as nullish and overwrite it with whatever value the
+    // field has now, defeating the `current !== initial` taint check.
+    if (!(targetName in this._initialValues)) {
+      this._initialValues[targetName] = this.formState[targetName].value;
+    }
 
     this._elements.push(element);
   }
@@ -390,6 +575,15 @@ export class AuroForm extends LitElement {
         this._resetElements.push(element);
       }
     });
+
+    // Drop captured initial values for fields that no longer exist in the form.
+    // Rename migration in _handleAttributeMutations has already re-keyed surviving
+    // fields, so anything left here is a field that was removed from the DOM.
+    for (const key of Object.keys(this._initialValues)) {
+      if (!(key in this.formState)) {
+        delete this._initialValues[key];
+      }
+    }
 
     this.dispatchEvent(new Event('change', {
       bubbles: true,
@@ -435,16 +629,21 @@ export class AuroForm extends LitElement {
    * @returns {Promise<void>}
    */
   async submit() {
-    // Force validation on ALL elements
-    this._elements.forEach((element) => {
-      element.validate(true);
-    });
+    // Force validation on all enabled elements. Disabled fields are skipped
+    // because disabled controls are not validated nor submitted per the HTML spec.
+    this._elements.
+      filter((element) => !this._isDisabled(element)).
+      forEach((element) => {
+        element.validate(true);
+      });
 
     // Wait for validation to complete and formState to update
     await this.updateComplete;
 
-    // Only dispatch submit event if form is valid
-    if (this.validity === 'valid') {
+    // Gate on raw constraint-validation rather than the public `validity`
+    // getter (which is `null` while in initial state). A pre-filled valid
+    // form should be submittable without a prior user edit.
+    if (this._isFormValid()) {
       this.dispatchEvent(new CustomEvent('submit', {
         bubbles: true,
         composed: true,
@@ -514,7 +713,14 @@ export class AuroForm extends LitElement {
       this._addElementToState(event.target);
     }
 
-    this.formState[targetName].validity = event.detail.validity;
+    // `auroFormElement-validated` can fire with `detail.validity === undefined`
+    // when auro-input's updated() lifecycle invokes `validate()` mid-edit but
+    // the validation framework's gating conditions (not focused, touched-or-
+    // has-value) aren't met — the dispatch still fires, just with the current
+    // (untouched) validity. Normalize to `null` so the rest of the form treats
+    // "no known status" identically whether it came from `_addElementToState`
+    // at mount or from this passthrough mid-typing.
+    this.formState[targetName].validity = event.detail.validity ?? null;
     this._calculateValidity();
     this.requestUpdate('formState');
   }
@@ -526,6 +732,11 @@ export class AuroForm extends LitElement {
    */
   handleKeyDown(event) {
     if (event.key === 'Enter' && this.isFormElement(event.target)) {
+      // Disabled controls do not submit a form natively.
+      if (this._isDisabled(event.target)) {
+        return;
+      }
+
       // Don't submit if it's a textarea (allow new lines)
       if (event.target.tagName.toLowerCase() === 'textarea' ||
           event.target.hasAttribute('textarea')) {
@@ -555,6 +766,121 @@ export class AuroForm extends LitElement {
       element.addEventListener('auroFormElement-validated', this.sharedValidationListener);
       element.addEventListener('keydown', this.handleKeyDown);
     });
+  }
+
+  /**
+   * Handle batched MutationObserver records for `disabled` and `name`
+   * attribute changes on tracked form elements. A `name` change invalidates
+   * the formState keying — we resolve it by re-initializing state. A `disabled`
+   * change simply needs a re-render (so `value` / `validity` getters re-evaluate)
+   * and a refresh of the submit/reset button enablement.
+   * @param {MutationRecord[]} mutations - The batched mutation records.
+   * @returns {void}
+   * @private
+   */
+  _handleAttributeMutations(mutations) {
+    // Only mutations on tracked FORM elements matter here. The same observer
+    // also sees attribute changes on the submit/reset buttons (which this
+    // component itself toggles via `setDisabledStateOnButtons`); reacting to
+    // those would create an infinite observer/update loop.
+    const relevant = mutations.filter((mutation) => this.isFormElement(mutation.target));
+    if (relevant.length === 0) {
+      return;
+    }
+
+    const renameMutations = relevant.filter((mutation) => mutation.attributeName === 'name');
+    if (renameMutations.length > 0) {
+      // Migrate each renamed field's captured initial value from the old key
+      // to the new key before `initializeState()` re-runs `_addElementToState`.
+      // Without this, the new-name lookup in `_initialValues` would miss, the
+      // field's current (possibly user-edited) value would be captured as the
+      // new initial, and the form would incorrectly flip back to its initial
+      // state. The old key would also leak in `_initialValues` indefinitely.
+      renameMutations.forEach((mutation) => {
+        const oldName = mutation.oldValue;
+        const newName = mutation.target.getAttribute('name');
+        if (!oldName || oldName === newName) {
+          return;
+        }
+        if (newName === null) {
+          // `name` attribute removed — field will fall out of formState on re-init.
+          // Drop its captured initial so it doesn't leak in _initialValues.
+          delete this._initialValues[oldName];
+          return;
+        }
+        if (oldName in this._initialValues) {
+          this._initialValues[newName] = this._initialValues[oldName];
+          delete this._initialValues[oldName];
+        }
+      });
+      // initializeState() rebuilds formState from scratch (re-keying any
+      // renamed element) and also dispatches `change` + refreshes button state.
+      // We also re-run _attachEventListeners() because elements that previously
+      // had no `name` were skipped by queryAuroElements() (which selects
+      // `[name]`) and therefore never received input/validation/keydown
+      // listeners. Re-attaching is safe — the listener-removal step inside
+      // _attachEventListeners() prevents duplicates on already-wired elements.
+      this.initializeState();
+      this._attachEventListeners();
+      return;
+    }
+
+    // Refresh the cached `disabled` flag on each affected formState entry
+    // before the re-render, so getters that read `_isNameDisabled` see the
+    // current attribute state in the same tick.
+    relevant
+      .filter((mutation) => mutation.attributeName === 'disabled')
+      .forEach((mutation) => {
+        const name = mutation.target.getAttribute('name');
+        if (name && this.formState[name]) {
+          this.formState[name].disabled = mutation.target.hasAttribute('disabled');
+        }
+      });
+
+    this.requestUpdate('formState');
+    this.setDisabledStateOnButtons();
+  }
+
+  /**
+   * @returns {void}
+   */
+  connectedCallback() {
+    super.connectedCallback();
+
+    // One observer rooted at the host catches `disabled` / `name` changes on
+    // any tracked form element (light-DOM children, including those nested in
+    // wrapper elements). Cheaper than allocating an observer per element and
+    // resilient to runtime DOM mutations.
+    if (!this._attributeObserver) {
+      this._attributeObserver = new MutationObserver(this._handleAttributeMutations);
+    }
+
+    this._attributeObserver.observe(this, {
+      attributes: true,
+      subtree: true,
+      attributeOldValue: true,
+      attributeFilter: [
+        'disabled',
+        'name'
+      ]
+    });
+  }
+
+  /**
+   * @returns {void}
+   */
+  disconnectedCallback() {
+    // Disconnect everything we own to avoid leaking observers (and the strong
+    // refs they hold to DOM nodes) past the form's lifetime.
+    this._attributeObserver?.disconnect();
+    this.mutationObservers.forEach((observer) => observer.disconnect());
+    this.mutationObservers = [];
+    // Intentionally do NOT clear _initialValues here. Slot-moves trigger a
+    // disconnect/reconnect cycle; clearing would cause the next initializeState
+    // to capture the user's edited values as the new "initial" and silently
+    // flip the form back to its initial state.
+
+    super.disconnectedCallback();
   }
 
   /**

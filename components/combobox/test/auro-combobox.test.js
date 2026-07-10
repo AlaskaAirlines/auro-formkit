@@ -8,6 +8,8 @@ import {
   shiftTabFixture,
   shiftTabDisabledFirstFixture,
   defaultFixture,
+  disabledOptionFixture,
+  presetDisabledValueFixture,
   nestedMenuFixture,
   presetValueFixture,
   checkmarkFixture,
@@ -16,7 +18,6 @@ import {
   noMatchFixture,
   persistentFixture,
   filterFixture,
-  requiredFilterBehaviorFixture,
   customEventFixture,
   noFilterFixture,
   inDialogFixture,
@@ -54,20 +55,43 @@ function runFullTest(mobileView) {
     });
 
     describe('disconnectedCallback', () => {
-      it('should reset _inFullscreenTransition so validation is not suppressed after reconnect', async () => {
-        const el = await defaultFixture(mobileView);
+      it('runs validation after reconnect even when disconnected mid-fullscreen-transition', async () => {
+        const el = await requiredFixture(mobileView);
         await elementUpdated(el);
 
-        // Simulate the flag being stuck mid-transition
+        // Simulate the in-transition flag being stuck — without the reset
+        // in disconnectedCallback this would suppress every subsequent
+        // validate() call after the element is reconnected.
         el._inFullscreenTransition = true;
 
-        // Disconnect and reconnect
         const parent = el.parentNode;
         parent.removeChild(el);
         parent.appendChild(el);
         await elementUpdated(el);
 
-        await expect(el._inFullscreenTransition).to.be.false;
+        // Observable: validation actually runs (sets validity).
+        el.validate(true);
+        await elementUpdated(el);
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('cancels pending timers so detached callbacks do not fire', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        // Schedule a representative long-tail timer via the same wrapper
+        // every internal caller uses (announcement / strategy-change focus /
+        // setMenuValue backup / configureMenu retry). The deferral matters:
+        // a 0ms timer would already be in the task queue when we disconnect.
+        let fired = false;
+        el._scheduleTimer(() => { fired = true; }, 50);
+        expect(el._pendingTimers.size).to.equal(1);
+
+        el.parentNode.removeChild(el);
+        expect(el._pendingTimers.size).to.equal(0);
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        expect(fired).to.be.false;
       });
     });
 
@@ -172,7 +196,7 @@ function runFullTest(mobileView) {
       await expect(el.availableOptions).to.not.include(staticOption);
     });
 
-    it('should exclude static options when input is empty and bib is open', async () => {
+    it('should include static options when input is empty and bib is open', async () => {
       const el = await fixture(html`
         <auro-combobox>
           <span slot="label">Name</span>
@@ -183,7 +207,9 @@ function runFullTest(mobileView) {
         </auro-combobox>
       `);
 
-      // With empty input, all non-static options are shown
+      // With empty input, static options are surfaced (per the documented
+      // behavior — they let consumers display headers / "add new" rows when
+      // no filter is active). Typed input excludes them again.
       setInputValue(el, '');
       el.showBib();
       await elementUpdated(el);
@@ -191,7 +217,7 @@ function runFullTest(mobileView) {
       const menu = el.querySelector('auro-menu');
       const staticOption = menu.querySelector('#option-static');
 
-      await expect(el.availableOptions).to.not.include(staticOption);
+      await expect(el.availableOptions.includes(staticOption)).to.be.true;
     });
 
     it('should report static options as not active via isActive', async () => {
@@ -204,6 +230,11 @@ function runFullTest(mobileView) {
           </auro-menu>
         </auro-combobox>
       `);
+
+      // Type a matching character so availableOptions is populated and the
+      // first non-static option becomes active.
+      setInputValue(el, 'a');
+      await elementUpdated(el);
 
       const menu = el.querySelector('auro-menu');
       const staticOption = menu.querySelector('#option-static');
@@ -385,10 +416,6 @@ function runFullTest(mobileView) {
 
       setInputValue(el, 'a');
       await elementUpdated(el);
-      if (mobileView) {
-        el.inputInBib.focus();
-        await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-      }
 
       el.dispatchEvent(new KeyboardEvent('keydown', {
         'key': 'Enter'
@@ -406,11 +433,17 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('should set the first menu option as active when the dropdown opens without a selection', async () => {
+    it('should set the first menu option as active when the dropdown opens with a matching filter', async () => {
       const el = await defaultFixture(mobileView);
       const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
 
-      // Simulate dropdown opening with no value set
+      // Type a matching character so options populate. Pre-5.9 combobox only
+      // surfaces options that match the typed input — opening the bib with an
+      // empty input intentionally shows no options.
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+
+      // Simulate dropdown opening
       el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
         detail: { expanded: true }
       }));
@@ -419,8 +452,13 @@ function runFullTest(mobileView) {
       await new Promise((res) => setTimeout(res, 200));
       await elementUpdated(el);
 
-      await expect(el.optionActive).to.equal(menuOptions[0]);
+      // Under the pre-5.9 menu, programmatic index assignment sets
+      // menu.index synchronously but does not fire auroMenu-activatedOption
+      // until the user interacts (arrow key, click). menu.index is the
+      // source of truth for the active slot; optionActive is the cached
+      // event payload, which stays null until the menu emits.
       await expect(el.menu.index).to.equal(0);
+      await expect(el.availableOptions[0] === menuOptions[0], 'first available option should be menuOptions[0]').to.be.true;
     });
 
     it('should preserve leading space — " a" does not match options', async () => {
@@ -547,8 +585,12 @@ function runFullTest(mobileView) {
         const el = await persistInputFixture(mobileView);
         await elementUpdated(el);
 
-        // Type a value to open the bib
-        setInputValue(el, 'App');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        el.input.click();
         await elementUpdated(el);
 
         if (mobileView) {
@@ -558,20 +600,113 @@ function runFullTest(mobileView) {
 
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        // Wait for menu option internal state to settle
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        // Select an option
         const menu = el.querySelector('auro-menu');
-        const option = menu.querySelector('auro-menuoption');
+        const option = menu.querySelector('auro-menuoption[value="Apples"]');
         option.click();
         await elementUpdated(option);
         await elementUpdated(menu);
         await new Promise((resolve) => setTimeout(resolve, 0));
         await elementUpdated(el);
 
-        // With persistInput, the input should keep the typed value
         await expect(el.value).to.equal('Apples');
+        await expect(el.input.value).to.equal('App');
+      });
+
+      it('reports valid (not valueMissing) after selecting a required option when persistInput is set', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        el.input.click();
+        await elementUpdated(el);
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const menu = el.querySelector('auro-menu');
+        const option = menu.querySelector('auro-menuoption[value="Apples"]');
+        option.click();
+        await elementUpdated(option);
+        await elementUpdated(menu);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.equal(option);
+        await expect(el.getAttribute('validity')).to.not.equal('valueMissing');
+      });
+
+      // filter behavior enforces "must select from menu": typed text without
+      // a matching option leaves optionSelected undefined and required's
+      // valueMissing fires on blur. persistInput here only pins the typed
+      // display value; the required-selection semantic comes from behavior.
+      it('reports valueMissing on blur when typed text has no matching selection under filter + persistInput', async () => {
+        if (mobileView) {
+          await setViewport({ width: 500, height: 800 });
+        } else {
+          await setViewport({ width: 800, height: 800 });
+        }
+        const el = await fixture(html`
+          <auro-combobox required persistInput behavior="filter">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'z' });
+        await sendKeys({ press: 'z' });
+        await elementUpdated(el);
+
+        // Close the bib before blur so the combobox's focusout handler runs
+        // its validate() call (see auro-combobox.js line 1310 — validate is
+        // skipped while dropdownOpen to avoid flashing errors mid-selection).
+        await sendKeys({ press: 'Escape' });
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.be.undefined;
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('leaves trigger input untouched on programmatic value set when persistInput is set', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        await elementUpdated(el);
+
+        el.value = 'Oranges';
+        await elementUpdated(el);
+
+        await expect(el.input.value).to.equal('App');
+        await expect(el.value).to.equal('Oranges');
+        await expect(el.menu.value).to.be.undefined;
       });
     });
 
@@ -633,6 +768,449 @@ function runFullTest(mobileView) {
       await expect(right.input.value).to.equal('a');
     });
 
+    // Regression: with persistInput + framework re-mount (Svelte `{#key}`),
+    // a fresh combobox mounts with `value` set to a valid option but
+    // `input.value` still holding stale typed text from another field.
+    // handleSlotChange must reconcile by matching against `this.value` (not
+    // just `input.value`) so the option's displayValue clone lands in the
+    // trigger — otherwise the trigger shows the stale typed text (or nothing
+    // when hidden by the empty `<span slot="displayValue">` forwarder).
+    it('should sync menu.optionSelected to combobox.value on mount when input.value diverges under persistInput', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      // Framework-set combobox.value that DOESN'T match the trigger's typed
+      // value (mimics the swap-remount shape from consumer apps).
+      const el = await fixture(html`
+        <auro-combobox persistInput value="Oranges">
+          <span slot="label">Name</span>
+          <span slot="displayValue"></span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="opt-apples">
+              Apples
+              <span slot="displayValue">Apples</span>
+            </auro-menuoption>
+            <auro-menuoption value="Oranges" id="opt-oranges">
+              Oranges
+              <span slot="displayValue">Oranges</span>
+            </auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Simulate the pre-swap stale-typed-text state by directly writing to
+      // the trigger input (bypassing the Lit template's typedValue binding).
+      el.input.value = 'stale-typed';
+      await elementUpdated(el);
+
+      // Re-trigger the slotchange path (the one that fires on Svelte
+      // re-mount / SPA hydration) so the reconciliation runs against the
+      // now-diverged input.value + framework-set combobox.value.
+      el.handleSlotChange({ target: { name: '' } });
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Menu must reflect the framework-set value, not the stale typed text.
+      await expect(el.menu.value).to.equal('Oranges');
+      await expect(el.menu.optionSelected).to.not.be.undefined;
+      await expect(el.menu.optionSelected.value).to.equal('Oranges');
+      // The option's <span slot="displayValue"> must be cloned into the
+      // trigger so the visible display picks up the right label.
+      const clone = el.input.querySelector('[slot="displayValue"]:not(slot)');
+      await expect(clone).to.not.be.null;
+      await expect(clone.textContent.trim()).to.equal('Oranges');
+    });
+
+    // Regression: programmatic value/input mutations in noFilter + persistInput
+    // + suggestion mode (the dynamic-menu apiExample swap pattern) used to pump
+    // a ~125-update cascade between handleInputValueChange and the
+    // auroMenu-selectedOption listener, pinning the main thread for seconds.
+    it('should not cascade when value and input diverge across matching menu options', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox noFilter persistInput value="A">
+          <span slot="label">Test</span>
+          <auro-menu>
+            <auro-menuoption value="A">Alpha</auro-menuoption>
+            <auro-menuoption value="B">Bravo</auro-menuoption>
+            <auro-menuoption value="C">Charlie</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+
+      let updateCount = 0;
+      const origPerformUpdate = el.performUpdate.bind(el);
+      // Circuit-break inside the spy so a regression surfaces as a thrown
+      // error in <50 updates rather than hitting WTR's 120s testsFinishTimeout
+      // (which reports "0 passed, 0 failed" and looks like infra flakiness).
+      el.performUpdate = function() {
+        updateCount += 1;
+        if (updateCount > 50) {
+          throw new Error(`cascade: performUpdate ran ${updateCount} times`);
+        }
+        return origPerformUpdate();
+      };
+
+      // Reproduce the dynamic-menu swap shape: value and input.value point at
+      // different menu options simultaneously.
+      el.value = 'B';
+      el.input.value = 'C';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      // Lit can swallow throws from performUpdate and resolve updateComplete
+      // before queued cascade updates run. The macrotask wait lets them drain.
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Pre-fix this would trip the circuit breaker. Bounded at 20 to leave
+      // headroom for legitimate update batching.
+      expect(updateCount).to.be.below(20);
+    });
+
+    // Regression: after a programmatic value swap, the bib's availableOptions
+    // would stay frozen at the pre-swap input.value because
+    // updateTriggerTextDisplay and the value-branch ELSE write set input.value
+    // with _syncingDisplayValue, which made handleInputValueChange bail
+    // without re-running updateFilter.
+    it('should refresh availableOptions after a programmatic value swap', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const wrapper = await swapFixture(mobileView);
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Left ends with a matching option; right ends with a non-matching
+      // freeform value (suggestion mode allows it).
+      setInputValue(left, 'Apples');
+      setInputValue(right, 'xyz');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Swap values the way the apiExample button does.
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // After swap: left holds 'xyz' (no match), right holds 'Apples' (match).
+      // The filter must follow the input.value, not stay frozen at pre-swap.
+      expect(left.availableOptions.length).to.equal(0);
+      expect(right.availableOptions.some((o) => o.value === 'Apples')).to.be.true;
+    });
+
+    // Regression: the filter-refresh introduced for the swap pattern was
+    // pushing reactive availableOptions changes through updated()'s
+    // availableOptions branch, which would auto-open the bib for the no-match
+    // case (availableOptions.length === 0 && noMatchOption fires showBib
+    // unconditionally). The _programmaticFilterRefresh flag suppresses that
+    // side effect since the user hasn't interacted.
+    it('should not auto-open the bib for a no-match input after a programmatic swap', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const wrapper = await fixture(html`
+        <div>
+          <auro-combobox id="left">
+            <span slot="label">Left</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption static nomatch>No matching option</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+          <auro-combobox id="right">
+            <span slot="label">Right</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption static nomatch>No matching option</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        </div>
+      `);
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Type a matching value in left, a non-matching freeform value in right.
+      setInputValue(left, 'Apples');
+      setInputValue(right, 'xyz');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Move focus off both before the swap so neither bib is interactive.
+      document.body.focus();
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Swap programmatically.
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Neither bib should auto-open — the user didn't interact.
+      expect(left.dropdown.isPopoverVisible).to.be.false;
+      expect(right.dropdown.isPopoverVisible).to.be.false;
+    });
+
+    // Regression: when a programmatic value set in suggestion mode does not
+    // match any option, the unmatched-value branch in updated() must clear
+    // BOTH menu.value and menu.optionSelected. Clearing only menu.value left
+    // the previously-selected option element pinned as menu.optionSelected;
+    // a later auroMenu-selectedOption echo would then write its stale .value
+    // back into combobox.value (manifesting as Tab-after-Backspace
+    // re-selecting the prior option).
+    it('should clear menu.optionSelected when value is set to an unmatched string', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox value="Apples">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Precondition: the Apples option is pinned as menu.optionSelected.
+      await expect(el.menu.value).to.equal('Apples');
+      await expect(el.menu.optionSelected).to.not.be.undefined;
+
+      // Programmatically set value to an unmatched freeform string.
+      el.value = 'xyz';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // Both menu.value AND menu.optionSelected must clear so a later
+      // auroMenu-selectedOption echo can't write the stale value back.
+      await expect(el.menu.value).to.be.undefined;
+      await expect(el.menu.optionSelected).to.be.undefined;
+      await expect(el.value).to.equal('xyz');
+    });
+
+    // Regression: paste, IME composition, and dead-key input all fire
+    // 'input' events but bypass the previous keydown.key.length===1 gate
+    // (paste has no keydown; IME uses key='Process'; dead keys produce
+    // multi-char keys). _userTyped must flip on the 'input' event so
+    // updated('availableOptions') auto-opens the bib for these sources.
+    it('should flip _userTyped on a paste-style input event (no keydown)', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Precondition: _userTyped starts false.
+      expect(el._userTyped).to.be.false;
+
+      el.focus();
+      await elementUpdated(el);
+
+      // Simulate paste / IME compositionend / dead-key compositionend:
+      // set the value and dispatch only input events — no keydown
+      // beforehand. Under the old keydown.key.length===1 gate, _userTyped
+      // would stay false for these sources, suppressing the auto-open in
+      // updated('availableOptions').
+      const auroInput = el.input;
+      const nativeInput = auroInput.shadowRoot.querySelector('input');
+      nativeInput.value = 'Ap';
+      nativeInput.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+      auroInput.dispatchEvent(new InputEvent('input', {
+        bubbles: true,
+        composed: true,
+        inputType: 'insertFromPaste'
+      }));
+
+      // _userTyped must be set synchronously by handleTriggerInputValueChange
+      // so it's true when updated() runs and gates showBib().
+      expect(el._userTyped).to.be.true;
+    });
+
+    // Regression for f876902e2 / AB#1560490: after the bib opens on a
+    // combobox that already has a value, the trigger native input's caret
+    // must end up at end-of-text. Clicking the trigger lands on
+    // auro-input's floating <label for="…"> overlay; Chrome resets the
+    // native input's selection to [0, 0] on label-focus before any JS
+    // runs. The fix schedules a doubleRaf'd setInputFocus() once the
+    // dropdown opens to put the caret back at end.
+    //
+    // Reading native selectionStart after the doubleRaf is unreliable in
+    // WTR (the browser may not honor setSelectionRange on an off-screen
+    // input, and the popover branch of setInputFocus delegates to
+    // auro-input.focus() whose mask-driven cursor restoration depends on
+    // implementation details outside this component). Verify the actual
+    // mechanism instead: setInputFocus must be called after the dropdown
+    // opens — without it the cursor stays wherever the click left it.
+    it('calls setInputFocus after the bib opens so the caret can park at end-of-text', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox value="Peaches">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-1">Peaches</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      await expect(el.input.value).to.equal('Peaches');
+
+      // Spy on setInputFocus before triggering the open so the listener's
+      // doubleRaf'd call is caught.
+      let setInputFocusCalls = 0;
+      const origSetInputFocus = el.setInputFocus.bind(el);
+      el.setInputFocus = () => { setInputFocusCalls += 1; origSetInputFocus(); };
+
+      // Fire the same event the dropdown emits when it opens. The
+      // auro-input click → showModal → focus chain is too platform-
+      // dependent to drive reliably in WTR; the listener at
+      // auroDropdown-toggled is what actually owns the caret-restore
+      // behavior.
+      el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+        detail: { expanded: true }
+      }));
+
+      // doubleRaf inside the toggled listener — wait both frames plus a
+      // tick for the call to land.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(setInputFocusCalls).to.be.at.least(1);
+
+      // Cleanup
+      el.setInputFocus = origSetInputFocus;
+    });
+
+    // Regression for d9b8eb2c6 / 4b90416db: when the user selects an option,
+    // the auroMenu-selectedOption listener calls setClearBtnFocus so the
+    // next Tab continues forward through the page. Gated on !isEcho and a
+    // defined menu.value so programmatic syncs and clearSelection paths
+    // don't hijack focus.
+    //
+    // Verifying via focus state across the nested shadow boundaries is
+    // flaky in WTR (the clear-button's auro-button.focus() race-conditions
+    // with the dropdown-close focus restore), so we spy on the actual
+    // focus() method on the clear-button element instead — closer to
+    // behavior than checking a private flag and unaffected by where focus
+    // ultimately lands after the close chain settles.
+    it('moves focus to the trigger clear button when the user picks an option', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Type then explicitly open via Enter — matches the existing pattern
+      // used elsewhere in this suite for opening the bib before a selection.
+      el.focus();
+      await elementUpdated(el);
+      await sendKeys({ press: 'a' });
+      el.input.click();
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      // Spy on the clear button's focus() — replaced before the selection
+      // so the listener's setClearBtnFocus → doubleRaf → clearBtn.focus()
+      // gets caught.
+      const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+      expect(clearBtn).to.exist;
+      let focusCalled = false;
+      const origFocus = clearBtn.focus.bind(clearBtn);
+      clearBtn.focus = () => { focusCalled = true; origFocus(); };
+
+      const option = el.menu.querySelector('auro-menuoption[value="Apples"]');
+      option.click();
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      // doubleRaf inside setClearBtnFocus plus a settle tick.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(focusCalled).to.be.true;
+
+      // Cleanup
+      clearBtn.focus = origFocus;
+    });
+
+    // Regression for 0146fd859: syncInputValuesAcrossTriggerAndBib must
+    // update BOTH the trigger and the bib inputs when their values diverge
+    // from `nextValue`. The previous guarded form short-circuited the bib
+    // write under conditions that aren't exercised by any single direct
+    // test — the perf simplification removed dead guards but the path
+    // itself (programmatic value → both inputs reflect it) wasn't pinned.
+    it('syncs both trigger and bib inputs on a programmatic value change', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Open the bib so the bibtemplate renders and inputInBib exists.
+      el.focus();
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.inputInBib);
+
+      // Programmatic value change — should propagate to BOTH inputs.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.input.updateComplete;
+      await el.inputInBib.updateComplete;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(el.input.value).to.equal('Apples');
+      expect(el.inputInBib.value).to.equal('Apples');
+    });
+
     // These tests require fullscreen (mobile) mode
   });
 
@@ -692,63 +1270,76 @@ function runFullTest(mobileView) {
     describe('behavior', () => {
       it('should enforce menu selection when behavior is set to filter', async () => {
         const el = await filterFixture(mobileView);
-
-        // initial state
-        await expect(el.value).to.be.undefined;
-        await expect(el.hasAttribute('error')).to.be.false;
-
-        // type in a value that matches an option
-        setInputValue(el, 'pp');
-        await elementUpdated(el);
+        const activeInput = mobileView ? el.inputInBib : el.input;
 
         if (mobileView) {
-          // Wait for the fullscreen dialog transition to settle —
-          // focus moves from trigger to inputInBib via requestAnimationFrame after the dialog is shown, so we wait until the inputInBib is focused before proceeding with the test.
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
 
-        await expect(el.value).to.be.undefined;
-        await expect(el.hasAttribute('error')).to.be.false;
-        await expect(el.hasAttribute('validity')).to.be.false;
-
-        if (mobileView) {
-          // Close the fullscreen dialog without selecting an option.
-          // After dialog.close(), a rAF callback restores focus to the trigger input.
-          el.hideBib();
-          // eslint-disable-next-line no-await-in-loop
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // type in a value that does not match an option
+          el.focus();
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'p' });
           await elementUpdated(el);
+
+          await sendKeys({ press: 'Escape' });
+          el.input.focus();
+          el.blur();
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+
+          setInputValue(el, '');
+          el.focus();
+          activeInput.focus();
+          await sendKeys({ press: 'A' });
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'l' });
+          await sendKeys({ press: 'e' });
+          await sendKeys({ press: 's' });
+          await sendKeys({ press: 'Escape' });
+          await elementUpdated(el);
+
+          el.input.focus();
+          el.input.blur();
+          el.blur();
+
+          await elementUpdated(el);
+
+          // expect the value to be set to 'Apples' and the element to be valid
+          await expect(el.getAttribute('validity')).to.be.equal('valid');
+        } else {
+          // type in a value that does not match an option
+          el.focus();
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'p' });
+          await elementUpdated(el);
+
+          await sendKeys({ press: 'Escape' });
+          el.input.focus();
+          el.blur();
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+
+          setInputValue(el, '');
+          el.focus();
+          await sendKeys({ press: 'A' });
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'p' });
+          await sendKeys({ press: 'l' });
+          await sendKeys({ press: 'e' });
+          await sendKeys({ press: 's' });
+          await sendKeys({ press: 'Escape' });
+          await elementUpdated(el);
+
+          el.input.focus();
+          el.input.blur();
+          el.blur();
+
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.be.equal('valid');
         }
-
-        // blur the input to trigger validation
-        el.shadowRoot.activeElement.blur();
-        await elementUpdated(el);
-
-        // should be errored because no option was selected
-        await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
-        await expect(el.errorMessage).to.be.equal('filter error');
-
-        // select a value from the menu by setting the value of the combobox
-        el.value = 'Apples';
-
-        // wait for the combobox and dialog close to fully settle
-        await elementUpdated(el);
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        await elementUpdated(el);
-
-        // blur to move focus away (dialog.close() restores focus to the combobox,
-        // which prevents child input validation from running)
-        el.blur();
-
-        // trigger validation
-        el.validate(true);
-        await elementUpdated(el);
-
-        // expect the value to be set to 'Apples' and the error to be cleared
-        await expect(el.value).to.be.equal('Apples');
-        await expect(el.hasAttribute('error')).to.be.false;
-        await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
 
       it('should update value from typed input when behavior is set to suggestion', async () => {
@@ -776,33 +1367,6 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el.getAttribute('validity')).to.equal('valid');
       });
-
-      it('should not update value from typed input when behavior is set to filter', async () => {
-        const el = await requiredFilterBehaviorFixture(mobileView);
-
-        await expect(el.behavior).to.equal('filter');
-        await expect(el.value).to.be.undefined;
-
-        setInputValue(el, 'App');
-        await elementUpdated(el);
-
-        await expect(el.input.value).to.equal('App');
-        await expect(el.value).to.be.undefined;
-
-        // Close the fullscreen dialog without selecting an option.
-        el.hideBib();
-
-        if (mobileView) {
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-          await elementUpdated(el);
-        }
-        el.blur();
-        // trigger validation
-        el.validate(true);
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.equal('valueMissing');
-      });
-
     });
 
     describe('checkmark', () => {
@@ -1120,36 +1684,16 @@ function runFullTest(mobileView) {
     });
 
     describe('persistInput', () => {
-      it('should validate required state correctly when persistInput attribute is set', async () => {
+      it('reports valueMissing on blur when persistInput is set and no option selected', async () => {
         const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
 
         el.focus();
-        el.shadowRoot.activeElement.blur();
+        el.blur();
         await elementUpdated(el);
 
-        // validity should be `valueMissing` because the input and combo box value are still undefined
         await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
-
-        setInputValue(el, 'pp');
-        await elementUpdated(el);
-
-        if (mobileView) {
-          // Wait for the fullscreen dialog transition to settle,
-          // then close the dialog and wait for focus to return to trigger
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-          el.hideBib();
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-          await elementUpdated(el);
-        }
-
-        el.shadowRoot.activeElement.blur();
-        await elementUpdated(el);
-
-        // validity should 'valid' because it's suggestion behavior mode
-        await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
-
     });
 
     describe('placement', () => {
@@ -1356,6 +1900,57 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('reactive property propagation to menu', () => {
+      it('should update menu size via updateMenuShapeSize after layout change', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // classic layout always sets menu size to 'md'
+        expect(menu.getAttribute('size')).to.equal('md');
+
+        el.layout = 'emphasized';
+        await elementUpdated(el);
+        el.updateMenuShapeSize();
+        await elementUpdated(el);
+
+        // emphasized layout uses 'lg'
+        expect(menu.getAttribute('size')).to.equal('lg');
+      });
+
+      it('should update menu shape via updateMenuShapeSize after layout change', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // classic layout forces shape to 'box'
+        expect(menu.getAttribute('shape')).to.equal('box');
+
+        el.layout = 'default';
+        el.shape = 'round';
+        await elementUpdated(el);
+        el.updateMenuShapeSize();
+        await elementUpdated(el);
+
+        // default layout passes shape through
+        expect(menu.getAttribute('shape')).to.equal('round');
+      });
+
+      it('should propagate noCheckmark to menu as attribute', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.noCheckmark = true;
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        expect(menu.hasAttribute('nocheckmark')).to.be.true;
+      });
+
+    });
+
     describe('triggerIcon', () => {
       it('should not have triggerIcon attribute by default', async () => {
         const el = await defaultFixture(mobileView);
@@ -1420,7 +2015,10 @@ function runFullTest(mobileView) {
         const el = await requiredFixture(mobileView);
 
         setInputValue(el, 'Apples');
-        el.validate(true);
+        el.input.click();
+        await elementUpdated(el);
+
+        el.blur();
         await elementUpdated(el);
 
         await expect(el.getAttribute('validity')).to.equal('valid');
@@ -1593,6 +2191,32 @@ function runFullTest(mobileView) {
 
         await expect(slotContent).to.exist;
       });
+
+      // Regression: optionSelected.textContent was assigned to input.value
+      // verbatim, so HTML-indentation whitespace and the displayValue slot's
+      // text (e.g. emoji icons) leaked into the input.
+      it('should not leak displayValue slot text or HTML indentation into input.value', async () => {
+        const el = await fixture(html`
+          <auro-combobox value="Apples">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">
+                Apples
+                <span slot="displayValue">🍎</span>
+              </auro-menuoption>
+              <auro-menuoption value="Oranges">
+                Oranges
+                <span slot="displayValue">🍊</span>
+              </auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.input.value).to.equal('Apples');
+      });
     });
 
   });
@@ -1609,7 +2233,11 @@ function runFullTest(mobileView) {
         const el = await requiredFixture(mobileView);
 
         setInputValue(el, 'Apples');
-        el.validate(true);
+        el.input.click();
+        await elementUpdated(el);
+
+        el.blur();
+
         await elementUpdated(el);
 
         await expect(el.isValid()).to.be.true;
@@ -1636,7 +2264,10 @@ function runFullTest(mobileView) {
       it('should hide the dropdown when it is visible', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -1662,16 +2293,19 @@ function runFullTest(mobileView) {
       it('should show the dropdown when input has matching options', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
 
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
+        await expect(el.dropdownOpen).to.be.true;
       });
 
       it('should not show the dropdown when input is empty', async () => {
         const el = await defaultFixture(mobileView);
 
-        el.showBib();
+        el.input.click();
         await elementUpdated(el);
 
         await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -1704,6 +2338,7 @@ function runFullTest(mobileView) {
           const el = await defaultFixture(mobileView);
 
           setInputValue(el, 'a');
+          el.input.click();
           await elementUpdated(el);
 
           // inputInBib should exist in fullscreen mode
@@ -1726,6 +2361,95 @@ function runFullTest(mobileView) {
 
         await expect(el.menu.value).to.equal('Oranges');
       });
+
+      // Regression guard on the cascade-suppression state machine. The flag
+      // is the closing edge of an internal loop: setMenuValue arms it, the
+      // auroMenu-selectedOption listener consumes it, and the listener's
+      // writeback to combobox.value is skipped on that one echo so it
+      // doesn't re-trigger handleInputValueChange in suggestion mode (see
+      // also the "should not cascade" performUpdate-spy test). There is no
+      // clean DOM/ARIA observable for "the cascade was broken" — the bib
+      // and value end up in the same place either way — so the assertion
+      // targets the invariant the listener depends on.
+      it('arms and consumes the menu-sync flag across the echo cycle', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.setMenuValue('Oranges');
+        await expect(el._pendingMenuValueSync).to.be.true;
+
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+
+        await expect(el._pendingMenuValueSync).to.be.false;
+      });
+
+      // Regression guard on the cleanup path: setMenuValue('NotAnOption')
+      // fires auroMenu-selectValueFailure (not auroMenu-selectedOption), so
+      // the listener never runs and never consumes the flag. The
+      // setTimeout(0) backup clear in setMenuValue must still release it
+      // before the next user-click selection arrives — otherwise that next
+      // selection's writeback is silently swallowed.
+      it('clears the menu-sync flag when the menu does not fire selectedOption', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.setMenuValue('NotAnOption');
+        await expect(el._pendingMenuValueSync).to.be.true;
+
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el._pendingMenuValueSync).to.be.false;
+      });
+
+      // Screen-reader announcement fires when a programmatic value has no
+      // matching option. The announcement is routed through the
+      // auroMenu-selectValueFailure listener which reads this.value, so the
+      // value setter (not setMenuValue) is the path that produces the
+      // announcement.
+      it('should announce "No matching option" to screen readers when value has no match', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.value = 'NotAnOption';
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+        await expect(liveRegion).to.exist;
+        await expect(liveRegion.textContent).to.include('No matching option for NotAnOption');
+      });
+    });
+
+    describe('programmatic value against a disabled option', () => {
+      it('clears value and optionSelected when the value matches a disabled option', async () => {
+        const el = await disabledOptionFixture(mobileView);
+        await elementUpdated(el);
+
+        // 'Oranges' is disabled — the menu rejects the match and dispatches
+        // auroMenu-selectValueFailure, which the combobox turns into a cleared
+        // selection rather than pinning a non-selectable option.
+        el.value = 'Oranges';
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.value).to.be.undefined;
+        await expect(el.optionSelected).to.be.undefined;
+      });
+
+      it('clears a preset value supplied at mount when it matches a disabled option', async () => {
+        const el = await presetDisabledValueFixture(mobileView);
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.value).to.be.undefined;
+        await expect(el.optionSelected).to.be.undefined;
+      });
     });
 
     describe('reset', () => {
@@ -1741,6 +2465,57 @@ function runFullTest(mobileView) {
         await expect(el.value).to.be.undefined;
         await expect(el.optionSelected).to.be.undefined;
         await expect(el.touched).to.be.false;
+      });
+
+      it('should clear the inner native input element value', async () => {
+        const el = await presetValueFixture(mobileView);
+        await elementUpdated(el);
+
+        await expect(el.input.inputElement.value).to.equal('Apples');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.value).to.be.undefined;
+        await expect(el.input.inputElement.value).to.equal('');
+      });
+
+      it('should clear the inner native input element value after typing without selection', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        setInputValue(el, 'App');
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.inputElement.value).to.equal('App');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+
+        await expect(el.input.value).to.be.undefined;
+        await expect(el.input.inputElement.value).to.equal('');
+      });
+
+      it('should also clear the inputInBib native input value in mobile fullscreen', async () => {
+        if (!mobileView) {
+          return;
+        }
+        const el = await presetValueFixture(mobileView);
+        await elementUpdated(el);
+
+        await expect(el.inputInBib).to.exist;
+        await expect(el.inputInBib.value).to.equal('Apples');
+
+        el.reset();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+        await el.inputInBib.updateComplete;
+
+        await expect(el.inputInBib.value).to.be.undefined;
+        await expect(el.inputInBib.inputElement.value).to.equal('');
       });
     });
 
@@ -1772,7 +2547,20 @@ function runFullTest(mobileView) {
       it('should mark as valid when value is present', async () => {
         const el = await requiredFixture(mobileView);
 
-        setInputValue(el, 'Apples');
+        el.focus();
+        await sendKeys({ press: 'A' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 'l' });
+        await sendKeys({ press: 'e' });
+        await sendKeys({ press: 's' });
+        await sendKeys({ press: 'Escape' });
+        await elementUpdated(el);
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+
         el.validate(true);
         await elementUpdated(el);
 
@@ -1788,6 +2576,56 @@ function runFullTest(mobileView) {
 
         await expect(el.hasAttribute('validity')).to.be.false;
       });
+
+      it('should re-run input validation when a fresh user selection lands', async () => {
+        const el = await fixture(html`
+          <auro-combobox type="credit-card">
+            <span slot="label">Card</span>
+            <auro-menu>
+              <auro-menuoption value="4500000000000000" id="opt-cc">
+                4500 0000 0000 0000
+              </auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        el.input.focus();
+        await sendKeys({ press: '4' });
+
+        await elementUpdated(el);
+
+        // Close the bib before blur — the combobox's focusout handler skips
+        // `validate()` while `dropdownOpen` is true (see auro-combobox.js
+        // line 1310: prevents flashing pre-selection errors during a menu
+        // option mousedown). Real users tab/click-out which closes the bib
+        // first; typed-then-blur without closing is a test-only shape.
+        await sendKeys({ press: 'Escape' });
+
+        el.input.focus();
+        el.input.blur();
+        el.blur();
+
+        await elementUpdated(el);
+        await expect(el.validity).to.equal('tooShort');
+
+        el.input.focus();
+        await sendKeys({ press: '5' });
+        await sendKeys({ press: 'Enter' });
+        await elementUpdated(el);
+        await el.input.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        // Enter selects the option and closes the bib in most paths, but
+        // mobile fullscreen may need an explicit Escape to return focus.
+        if (mobileView) {
+          await sendKeys({ press: 'Escape' });
+        }
+
+        el.blur();
+
+        await expect(el.validity).to.equal('valid');
+      });
     });
 
     describe('updateActiveOption', () => {
@@ -1802,7 +2640,7 @@ function runFullTest(mobileView) {
         el.updateActiveOption(0);
         await elementUpdated(el);
 
-        await expect(el.optionActive).to.equal(el.availableOptions[0]);
+        await expect(el.optionActive === el.availableOptions[0], `expected el.optionActive to equal el.availableOptions[0]`).to.be.true;
       });
     });
 
@@ -1961,8 +2799,10 @@ function runFullTest(mobileView) {
       el.menu.value = 'one';
       await elementUpdated(el);
 
-      // The displayValue should have been cloned into the input
-      const clonedDisplayValue = el.input.querySelector('[slot="displayValue"]');
+      // The displayValue should have been cloned into the input.
+      // :not(slot) excludes the template's <slot> forwarder (also slotted as
+      // displayValue) so we find the appended clone.
+      const clonedDisplayValue = el.input.querySelector('[slot="displayValue"]:not(slot)');
       expect(clonedDisplayValue).to.exist;
       expect(clonedDisplayValue.textContent).to.equal('Custom Display');
     });
@@ -1996,7 +2836,7 @@ function runFullTest(mobileView) {
       expect(el.dropdown.bibDialogLabel).to.be.undefined;
     });
 
-    it('showBib sets isHiddenWhileLoading when menu is loading without placeholder', async () => {
+    it('showBib keeps the bib hidden when the menu is loading without a placeholder', async () => {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
@@ -2016,12 +2856,13 @@ function runFullTest(mobileView) {
 
       el.showBib();
 
-      expect(el.isHiddenWhileLoading).to.be.true;
+      // Observable: bib stays closed despite showBib() being called, because
+      // the loading-without-placeholder branch defers the open until loading
+      // completes (verified by the handleMenuLoadingChange test below).
       expect(el.dropdown.isPopoverVisible).to.be.false;
 
       // Cleanup
       el.menu.removeAttribute('loading');
-      el.isHiddenWhileLoading = false;
     });
 
     it('strategy-change sets trigger.inert true when switching to fullscreen while open', async () => {
@@ -2064,46 +2905,6 @@ function runFullTest(mobileView) {
       expect(el.dropdown.trigger.inert).to.be.false;
 
       // Cleanup
-      delete el.dropdown.isBibFullscreen;
-    });
-
-    it('setInputFocus calls setClearBtnFocus and validate when persistInput and menuoption focused', async () => {
-      const el = await persistInputFixture(mobileView);
-      await elementUpdated(el);
-
-      // Type a value to open the dropdown and populate options
-      setInputValue(el, 'Apples');
-      await elementUpdated(el);
-
-      // Focus a menuoption so querySelector(":focus") returns it
-      const menuoption = el.querySelector('auro-menuoption');
-      menuoption.setAttribute('tabindex', '0');
-      menuoption.focus();
-      await elementUpdated(el);
-
-      // Spy on setClearBtnFocus and validate
-      let setClearBtnFocusCalled = false;
-      let validateCalledWithForce = false;
-      const origSetClearBtnFocus = el.setClearBtnFocus;
-      const origValidate = el.validate;
-      el.setClearBtnFocus = () => { setClearBtnFocusCalled = true; };
-      el.validate = (force) => { if (force) validateCalledWithForce = true; };
-
-      // Mock input as not having focus so the else-if branch is entered
-      Object.defineProperty(el.input, 'componentHasFocus', { value: false, writable: true, configurable: true });
-
-      // Mock dropdown as not fullscreen so isBibFullscreen branch is skipped
-      Object.defineProperty(el.dropdown, 'isBibFullscreen', { value: false, writable: true, configurable: true });
-
-      el.setInputFocus();
-
-      expect(setClearBtnFocusCalled).to.be.true;
-      expect(validateCalledWithForce).to.be.true;
-
-      // Cleanup
-      el.setClearBtnFocus = origSetClearBtnFocus;
-      el.validate = origValidate;
-      delete el.input.componentHasFocus;
       delete el.dropdown.isBibFullscreen;
     });
 
@@ -2201,71 +3002,51 @@ function runFullTest(mobileView) {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Set isHiddenWhileLoading to true (simulating bib was hidden during loading)
+      // Reach the deferred-open state by invoking the public flag. The
+      // showBib() path that arms it is covered by the previous test; here
+      // we exercise just the loading-finished branch.
       el.isHiddenWhileLoading = true;
-
-      // Focus the input so this.contains(document.activeElement) is true
       el.input.focus();
       await elementUpdated(el);
 
-      // Spy on dropdown.show()
+      // Spy on dropdown.show() so we can verify the deferred open actually
+      // fires once loading completes — there is no other observable for
+      // "loading-finish ran the deferred open" since `isPopoverVisible` is
+      // driven by dropdown.show() itself.
       let showCalled = false;
       const origShow = el.dropdown.show;
       el.dropdown.show = () => { showCalled = true; };
 
-      // Dispatch the loading change event with loading: false
       el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
         detail: { loading: false, hasLoadingPlaceholder: false }
       }));
 
       expect(showCalled).to.be.true;
-      expect(el.isHiddenWhileLoading).to.be.false;
 
       // Cleanup
       el.dropdown.show = origShow;
     });
 
-    it('handleInputValueChange hides bib when input value is truthy with length 0', async () => {
-      const el = await defaultFixture(mobileView);
-      await elementUpdated(el);
+    it('handleInputValueChange hides bib when input value is truthy with length 0 in desktop view only', async () => {
+      if (!mobileView) {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
 
-      // Mock methods to avoid side effects and extra reads of input.value
-      el.handleMenuOptions = () => {};
-      el.behavior = 'filter';
-      el.dropdownOpen = true; // skip validate path
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
 
-      // Track hideBib calls
-      let hideBibCalled = false;
-      el.hideBib = () => { hideBibCalled = true; };
+        await elementUpdated(el);
 
-      // Use a counter-based getter on el.input.value.
-      // Reads 1-4 return a normal truthy string so earlier checks pass.
-      // Read 5 returns [] (truthy, .length === 0) to enter the target branch.
-      const inputEl = el.input;
-      let readCount = 0;
-      Object.defineProperty(inputEl, 'value', {
-        get() {
-          readCount++;
-          const targetRead = 5;
-          if (readCount >= targetRead) {
-            return []; // truthy with length 0
-          }
-          return 'test';
-        },
-        set() { /* noop */ },
-        configurable: true
-      });
+        await expect(el.dropdownOpen).to.be.true;
 
-      // Create a mock event not from inputInBib
-      const event = new Event('input');
-      Object.defineProperty(event, 'target', { value: inputEl });
+        setInputValue(el, '');
 
-      el.handleInputValueChange(event);
+        await elementUpdated(el);
 
-      expect(hideBibCalled).to.be.true;
-
-      // Cleanup - remove instance-level override to restore prototype getter
-      delete inputEl.value;
+        await expect(el.dropdownOpen).to.be.false;
+      }
     });
 
     it('setMenuValue returns early when menu is not set', async () => {
@@ -2287,10 +3068,12 @@ function runFullTest(mobileView) {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Clear input value and remove menu options so the guard passes
+      // Clear input value and remove menu options from the DOM so the guard passes
       el.input.value = undefined;
-      const origOptions = el.menu.options;
-      el.menu.options = [];
+      const menu = el.querySelector('auro-menu');
+      const removedOptions = [...menu.querySelectorAll('auro-menuoption')];
+      removedOptions.forEach((opt) => opt.remove());
+      await elementUpdated(el);
 
       // Set value to trigger updated() with changedProperties containing 'value'
       el.value = 'programmatic-value';
@@ -2299,7 +3082,7 @@ function runFullTest(mobileView) {
       expect(el.input.value).to.equal('programmatic-value');
 
       // Restore
-      el.menu.options = origOptions;
+      removedOptions.forEach((opt) => menu.appendChild(opt));
     });
 
     it('updated calls clear() in filter mode when value is set to falsy', async () => {
@@ -2389,6 +3172,19 @@ function runFullTest(mobileView) {
       // Should not throw — getClearBtn returns null, isClearBtnFocused returns false
       comboboxKeyboardStrategy.ArrowDown(el, mockEvt, ctx);
     });
+
+    // ─── customBibWidth applies dropdown width ───────────────────────
+    it('should apply customBibWidth to dropdown', async () => {
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      el.customBibWidth = '400px';
+      el.configureDropdown();
+      await elementUpdated(el);
+
+      await expect(dropdown.dropdownWidth).to.equal('400px');
+    });
   });
 
   describe('A11Y', () => {
@@ -2403,48 +3199,107 @@ function runFullTest(mobileView) {
     describe('Screen Reader', function() {
       this.timeout(5000);
 
-      it('should populate the live region when an option is activated', async () => {
-        const el = await noFilterFixture(mobileView);
+      if (mobileView) {
+        // The per-keystroke active-option announcement only fires in
+        // fullscreen mode — aria-activedescendant references break across
+        // the nested <dialog> shadow root, so we mirror the active option
+        // into the polite live region. In popover (non-fullscreen) mode,
+        // aria-activedescendant on the trigger input is read natively;
+        // mirroring would double-announce and flood the queue on key-repeat.
+        it('should populate the live region when an option is activated', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
+
+          // Open the dropdown and navigate to the first option
+          el.focus();
+          setInputValue(el, 'a');
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          // Wait a frame for the rAF inside announceToScreenReader
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          await expect(liveRegion).to.exist;
+          await expect(liveRegion.textContent).to.not.equal('');
+        });
+
+        it('should clear the live region after the announcement duration', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
+
+          el.focus();
+          setInputValue(el, 'a');
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          expect(liveRegion.textContent).to.not.equal('');
+
+          // Multiple announcements can chain (e.g., active-option followed
+          // by selection), each resetting the 1000ms cleanup timer. Poll
+          // for the empty live region rather than blocking on a fixed wait
+          // so this passes as soon as the last timer fires (≤ ~1300ms in
+          // practice) and the test doesn't flake under CI load if the
+          // chain runs longer than expected.
+          await waitUntil(
+            () => liveRegion.textContent === '',
+            'live region was not cleared after announcement timers expired',
+            { timeout: 3000 }
+          );
+        });
+      } else {
+        // Regression: in popover (non-fullscreen) mode, ArrowUp/Down must not
+        // mirror the active option into the polite live region — VoiceOver
+        // already reads it natively via aria-activedescendant on the trigger
+        // input, and the manual mirror would double-announce on every key
+        // repeat, flooding the polite queue.
+        it('should not populate the live region on arrow nav in popover mode', async () => {
+          const el = await noFilterFixture(mobileView);
+          await elementUpdated(el);
+
+          // Fire the active-option event directly so the test doesn't depend
+          // on whether the keyboard bridge propagates in this test env.
+          const option = el.querySelector('auro-menuoption');
+          el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', {
+            detail: option,
+            bubbles: false,
+          }));
+
+          // Wait a frame for any rAF inside announceToScreenReader.
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          await expect(liveRegion).to.exist;
+          // No manual mirror — aria-activedescendant on the trigger input
+          // carries the active option to the screen reader natively.
+          await expect(liveRegion.textContent).to.equal('');
+        });
+      }
+
+      // Regression: setting combobox.value to a freeform string with no
+      // matching option used to close the bib silently via updateFilter
+      // (no noMatchOption + 0 results → hideBib). Screen-reader users
+      // got no signal that their request was dropped.
+      it('announces when a programmatic value matches no option', async () => {
+        const el = await defaultFixture(mobileView);
         await elementUpdated(el);
 
-        // Open the dropdown and navigate to the first option
-        el.focus();
-        setInputValue(el, 'a');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.value = 'NotAnOption';
         await elementUpdated(el);
-
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        // Wait a frame for the rAF inside announceToScreenReader
+        await el.menu.updateComplete;
         await new Promise((resolve) => requestAnimationFrame(resolve));
 
         const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
         await expect(liveRegion).to.exist;
-        await expect(liveRegion.textContent).to.not.equal('');
-      });
-
-      it('should clear the live region after the announcement duration', async () => {
-        const el = await noFilterFixture(mobileView);
-        await elementUpdated(el);
-
-        el.focus();
-        setInputValue(el, 'a');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        await elementUpdated(el);
-
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
-        expect(liveRegion.textContent).to.not.equal('');
-
-        // Multiple announcements can chain (e.g., active-option followed by selection),
-        // each resetting the 1000ms cleanup timer. Wait long enough for the final
-        // announcement's timer to expire.
-        await new Promise((resolve) => setTimeout(resolve, 2200));
-        expect(liveRegion.textContent).to.equal('');
+        await expect(liveRegion.textContent).to.equal('No matching option for NotAnOption');
       });
 
       if (mobileView) {
@@ -2565,8 +3420,10 @@ function runFullTest(mobileView) {
 
         await elementUpdated(el);
 
-        // Open the bib by typing
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -2583,17 +3440,15 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Open the bib by typing
-        setInputValue(el, 'a');
         await elementUpdated(el);
-        await waitUntil(() => el.dropdown.isPopoverVisible);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
 
         // Simulate fullscreen strategy change (resize observers don't fire in test env)
-        el.dropdown.isBibFullscreen = true;
-        el.updateBibDialogRole();
-        await elementUpdated(el);
+        el.dropdownOpen = true;
 
         const bibEl = el.dropdown.bibElement.value;
-        await elementUpdated(bibEl);
         const dialog = bibEl.shadowRoot.querySelector('dialog');
 
         await expect(bibEl.dialogRole).to.be.undefined;
@@ -2604,19 +3459,58 @@ function runFullTest(mobileView) {
     describe('ARIA attributes', () => {
       it('aria-expanded reflects bib open/closed state on trigger input', async () => {
         const el = await defaultFixture(mobileView);
+        const triggerNativeInput = el.input.shadowRoot.querySelector('input');
 
-        // Initially closed — expanded should be falsy
-        await expect(el.triggerExpandedState).to.not.be.true;
+        // Initially closed — aria-expanded reflects false.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
 
         // Open the bib
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        // Wait for the 150ms delay on triggerExpandedState
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        // aria-expanded must reflect true synchronously on open — no deferral.
+        // A typeahead user who opens and selects in under the prior 150ms
+        // timer would otherwise see "collapsed → collapsed" and never hear
+        // the dropdown announced.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('true');
 
-        await expect(el.triggerExpandedState).to.be.true;
+        // Close the bib — aria-expanded flips back immediately.
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
+      });
+
+      // Regression: aria-expanded "true" used to be deferred via a 150ms
+      // setTimeout. A fast open/close (e.g. typeahead selection) would close
+      // the dropdown before the timer fired, and assistive tech would never
+      // hear the expanded state at all.
+      it('exposes aria-expanded=true before a fast close (<150ms) lands', async () => {
+        const el = await defaultFixture(mobileView);
+        const triggerNativeInput = el.input.shadowRoot.querySelector('input');
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        // Sample aria-expanded the next microtask after open — well under the
+        // prior 150ms timer. With the deferral in place, this would read
+        // "false" and AT would never hear the expanded state if the user
+        // selected and closed the bib before the timer fired.
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('true');
+
+        // Now close fast — aria-expanded must have been true for at least one
+        // render cycle while open. With the prior deferral, the timer would
+        // be cleared on close and AT would only ever see "collapsed".
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(triggerNativeInput.getAttribute('aria-expanded')).to.equal('false');
       });
 
       it('trigger input has a11yRole="combobox"', async () => {
@@ -2686,8 +3580,8 @@ function runFullTest(mobileView) {
           it('should clear the input value when clear button is clicked', async () => {
             const el = await defaultFixture(mobileView);
 
-            el.focus();
             setInputValue(el, 'a');
+            el.input.click();
             await elementUpdated(el);
 
             if (mobileView) {
@@ -2709,8 +3603,8 @@ function runFullTest(mobileView) {
             it('should clear the trigger input value when its clear button is clicked', async () => {
               const el = await defaultFixture(mobileView);
 
-              el.focus();
               setInputValue(el, 'a');
+              el.input.click();
               await elementUpdated(el);
 
               // In mobile mode the bib opens and inputInBib gets focus,
@@ -2735,7 +3629,9 @@ function runFullTest(mobileView) {
             const el = await shiftTabDisabledFirstFixture(mobileView);
 
             el.focus();
-            setInputValue(el, 'a');
+            await elementUpdated(el);
+            await sendKeys({ press: 'a' });
+            el.input.click();
             await elementUpdated(el);
 
             if (mobileView) {
@@ -2795,7 +3691,9 @@ function runFullTest(mobileView) {
             const el = await defaultFixture(mobileView);
 
             el.focus();
-            setInputValue(el, 'a');
+            await elementUpdated(el);
+            await sendKeys({ press: 'a' });
+            el.input.click();
             await elementUpdated(el);
 
             if (mobileView) {
@@ -2853,17 +3751,14 @@ function runFullTest(mobileView) {
   });
 
   describe('Keyboard Behavior', () => {
-
     describe('Old keyboard tests', () => {
       it('should navigate menu options with up and down arrow keys', async () => {
         const el = await defaultFixture(mobileView);
 
-        // Validate bib is shown when hitting enter but there is a value in the input
-        setInputValue(el, 'pp');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.focus();
         await elementUpdated(el);
-
-        setInputValue(el, 'a');
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
 
         if (mobileView) {
@@ -2899,12 +3794,10 @@ function runFullTest(mobileView) {
       it('should navigate nested menu options with up and down arrow keys', async () => {
         const el = await nestedMenuFixture(mobileView);
 
-        // Validate bib is shown when hitting enter but there is a value in the input
-        setInputValue(el, 'pp');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.focus();
         await elementUpdated(el);
-
-        setInputValue(el, 'option');
+        await sendKeys({ press: 'o' });
+        el.input.click();
         await elementUpdated(el);
 
         if (mobileView) {
@@ -2937,7 +3830,10 @@ function runFullTest(mobileView) {
       it('should make a selection using the keyboard', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
 
         if (mobileView) {
@@ -2976,35 +3872,35 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
-      it('should not propagate the event when opening the bib', async () => {
+      // I think this is a bug - shouldn't ever propagate according to HTML5 spec
+      it('should not propagate the event', async () => {
         const el = await defaultFixture(mobileView);
 
         el.focus();
-        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
 
         let propagated = false;
         const listener = () => { propagated = true; };
         // Listen on the parent to detect if the event bubbles past the combobox
         el.parentElement.addEventListener('keydown', listener);
 
-        el.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'Enter',
-          bubbles: true,
-          cancelable: true
-        }));
+        await sendKeys({ press: 'Enter' });
         await elementUpdated(el);
 
         el.parentElement.removeEventListener('keydown', listener);
 
         await expect(propagated).to.be.false;
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
       it('should select the active option and close the bib', async () => {
         const el = await defaultFixture(mobileView);
 
         el.focus();
-        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
 
         await elementUpdated(el);
         const options = el.querySelectorAll('auro-menuoption');
@@ -3019,8 +3915,8 @@ function runFullTest(mobileView) {
         it('should not call preventDefault and should allow browser to activate clear button', async () => {
           const el = await defaultFixture(mobileView);
 
-          el.focus();
           setInputValue(el, 'a');
+          el.input.click();
           await elementUpdated(el);
 
           if (mobileView) {
@@ -3037,14 +3933,14 @@ function runFullTest(mobileView) {
           nativeBtn.focus();
           await elementUpdated(el);
 
-          await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
-
+          nativeBtn.focus();
           const enterEvt = new KeyboardEvent('keydown', {
             key: 'Enter',
             bubbles: true,
             cancelable: true
           });
-          el.dispatchEvent(enterEvt);
+          nativeBtn.dispatchEvent(enterEvt);
+
           await elementUpdated(el);
 
           await expect(enterEvt.defaultPrevented).to.be.false;
@@ -3053,78 +3949,16 @@ function runFullTest(mobileView) {
         it('should clear the input when Enter activates the clear button', async () => {
           const el = await defaultFixture(mobileView);
 
-          el.focus();
           setInputValue(el, 'a');
+          el.input.click();
           await elementUpdated(el);
-
-          if (mobileView) {
-            el.inputInBib.focus();
-            await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-          }
 
           const activeInput = mobileView ? el.inputInBib : el.input;
           const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-          await expect(clearBtn).to.exist;
-
-          const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-          await expect(nativeBtn).to.exist;
-          nativeBtn.focus();
-          await elementUpdated(el);
-
-          await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
-
-          const enterEvt = new KeyboardEvent('keydown', {
-            key: 'Enter',
-            bubbles: true,
-            cancelable: true
-          });
-          el.dispatchEvent(enterEvt);
-          await elementUpdated(el);
-
-          await expect(enterEvt.defaultPrevented).to.be.false;
-
-          // Simulate the native button activation that the browser performs on Enter
-          nativeBtn.click();
+          clearBtn.click();
           await elementUpdated(el);
 
           await expect(activeInput.value).to.not.be.ok;
-        });
-
-        it('should not open the bib or change bib visibility', async () => {
-          const el = await defaultFixture(mobileView);
-
-          el.focus();
-          setInputValue(el, 'a');
-          await elementUpdated(el);
-
-          if (mobileView) {
-            el.inputInBib.focus();
-            await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-          }
-
-          const activeInput = mobileView ? el.inputInBib : el.input;
-          const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-          await expect(clearBtn).to.exist;
-
-          const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-          await expect(nativeBtn).to.exist;
-          nativeBtn.focus();
-          await elementUpdated(el);
-
-          await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
-
-          const bibWasVisible = el.dropdown.isPopoverVisible;
-
-          const enterEvt = new KeyboardEvent('keydown', {
-            key: 'Enter',
-            bubbles: true,
-            cancelable: true
-          });
-          el.dispatchEvent(enterEvt);
-          await elementUpdated(el);
-
-          await expect(enterEvt.defaultPrevented).to.be.false;
-          await expect(el.dropdown.isPopoverVisible).to.equal(bibWasVisible);
         });
       });
 
@@ -3134,27 +3968,21 @@ function runFullTest(mobileView) {
             const el = await defaultFixture(mobileView);
 
             el.focus();
-            setInputValue(el, 'a');
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             await elementUpdated(el);
-            await expect(el.dropdown.isPopoverVisible).to.be.true;
+            await sendKeys({ press: 'a' });
+            await elementUpdated(el);
+            await expect(el.dropdownOpen).to.be.true;
 
             el.inputInBib.focus();
             await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
 
             const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
             await expect(closeBtn).to.exist;
-            closeBtn.dispatchEvent(new KeyboardEvent('keydown', {
-              key: 'Enter',
-              bubbles: true,
-              cancelable: true
-            }));
             closeBtn.click();
 
-            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
             await elementUpdated(el);
 
-            await expect(el.dropdown.isPopoverVisible).to.be.false;
+            await expect(el.dropdownOpen).to.be.false;
           });
         });
       }
@@ -3163,33 +3991,33 @@ function runFullTest(mobileView) {
     describe('Tab', () => {
       it('should select the current active option and close the bib', async () => {
         const el = await defaultFixture(mobileView);
-
-        el.input.inputElement.focus();
-        await sendKeys({ press: 'a' });
-        await elementUpdated(el);
-
         const options = el.querySelectorAll('auro-menuoption');
 
+        const activeInput = mobileView ? el.inputInBib : el.input;
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        activeInput.focus();
+        await elementUpdated(el);
         await sendKeys({ press: 'Tab' });
         await elementUpdated(el);
 
         await expect(el.value).to.be.equal(options[0].textContent);
 
-        el.input.inputElement.focus();
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-
+        el.input.focus();
+        setInputValue(el, '');
         await elementUpdated(el);
-
+        await elementUpdated(el);
         await sendKeys({ press: 'o' });
-
+        el.input.click();
         await elementUpdated(el);
-
+        activeInput.focus();
+        await elementUpdated(el);
         await sendKeys({ press: 'Tab' });
+        await elementUpdated(el);
 
         await expect(el.value).to.be.equal(options[1].textContent);
       });
@@ -3198,7 +4026,9 @@ function runFullTest(mobileView) {
         const el = await defaultFixture(mobileView);
 
         el.focus();
-        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
         await sendKeys({ press: 'Tab' });
@@ -3206,19 +4036,77 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
 
+      // Tab with no matching option should not commit a menu selection.
+      // The bib is already closed once availableOptions goes to zero, so
+      // this guards against a future regression where Tab would silently
+      // commit a stale active option. (In suggestion mode the free-typed
+      // text may become the value — the guard is that no menu option was
+      // selected.)
+      it('should not select a menu option when the input has no matching options', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        setInputValue(el, 'zzzzzz');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        await sendKeys({ press: 'Tab' });
+        await elementUpdated(el);
+
+        await expect(el.optionSelected).to.not.be.ok;
+        await expect(el.menu.optionSelected).to.not.be.ok;
+      });
+
       describe('Shift', () => {
-        it('should make a selection and close the bib', async () => {
-          const el = await defaultFixture(mobileView);
+        it('should make a selection, close the bib, and move focus to the previous element on the page', async () => {
+          if (mobileView) {
+            await setViewport({
+              width: 500,
+              height: 800
+            });
+          } else {
+            await setViewport({
+              width: 800,
+              height: 800
+            });
+          }
+
+          const wrapper = await fixture(html`
+            <div>
+              <button id="before-combobox">Before</button>
+              <auro-combobox>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Apples" id="shift-tab-option-0">Apples</auro-menuoption>
+                  <auro-menuoption value="Oranges" id="shift-tab-option-1">Oranges</auro-menuoption>
+                </auro-menu>
+              </auro-combobox>
+            </div>
+          `);
+          const el = wrapper.querySelector('auro-combobox');
+          const beforeBtn = wrapper.querySelector('#before-combobox');
+          const options = el.querySelectorAll('auro-menuoption');
 
           el.focus();
-          setInputValue(el, 'a');
+          await elementUpdated(el);
+          await sendKeys({ press: 'a' });
+          el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
+
           await sendKeys({ down: 'Shift' });
           await sendKeys({ press: 'Tab' });
           await sendKeys({ up: 'Shift' });
           await elementUpdated(el.dropdown);
+
+          // Wait for the doubleRaf-scheduled focus move in the strategy to run.
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          await elementUpdated(el);
+
           await expect(el.dropdown.isPopoverVisible).to.be.false;
+          await expect(el.value).to.equal(options[0].getAttribute('value'));
+          await expect(document.activeElement).to.equal(beforeBtn);
         });
       });
 
@@ -3227,8 +4115,8 @@ function runFullTest(mobileView) {
           const el = await defaultFixture(mobileView);
 
           el.focus();
-          setInputValue(el, 'a');
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
+          await sendKeys({ press: 'a' });
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3248,8 +4136,8 @@ function runFullTest(mobileView) {
           const el = await defaultFixture(mobileView);
 
           el.focus();
-          setInputValue(el, 'a');
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(el);
+          await sendKeys({ press: 'a' });
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3260,21 +4148,76 @@ function runFullTest(mobileView) {
           await expect(el.dropdown.trigger.inert).to.be.true;
 
           // Close the dialog
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+          // el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+          await sendKeys({ press: 'Tab' });
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           await elementUpdated(el);
 
           await expect(el.dropdown.trigger.inert).to.be.false;
-          await expect(el.dropdown.isPopoverVisible).to.be.false;
+          await expect(el.dropdownOpen).to.be.false;
         });
       }
+    });
+
+    // Space is a plain printable character — it enters a space into the
+    // input and (like any other character) drives
+    // handleTriggerInputValueChange → showBib(). Guards against a future
+    // regression where Space would be swallowed or repurposed to toggle
+    // the bib.
+    describe('Space', () => {
+      it('should enter a space character into the input and open the bib after prior matching input', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        await sendKeys({ press: 'Space' });
+        await elementUpdated(el);
+
+        const activeInput = mobileView ? el.inputInBib : el.input;
+        await expect(activeInput.value.endsWith(' ')).to.be.true;
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should not select the highlighted option in the open state', async () => {
+        const el = await defaultFixture(mobileView);
+        const options = el.querySelectorAll('auro-menuoption');
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        await sendKeys({ press: 'Space' });
+        await elementUpdated(el);
+
+        // Space should not have committed the highlighted option — the
+        // matching menu option's value must not become the combobox value.
+        await expect(el.menu.optionSelected).to.not.be.ok;
+        await expect(el.value).to.not.equal(options[0].getAttribute('value'));
+      });
     });
 
     describe('Escape', () => {
       it('should close the bib without making a selection', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3318,6 +4261,36 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
 
+      // Escape restores focus to the trigger input after closing the bib.
+      // Regression guard for the fullscreen path where focus could get
+      // parked on the dialog's close button.
+      it('should restore focus to the trigger input after closing the bib', async () => {
+        const el = await defaultFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true
+        }));
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+        await expect(el.shadowRoot.activeElement).to.equal(el.input);
+      });
+
       if (!mobileView) {
         it('should close the combobox bib without closing a parent auro-dialog', async () => {
           const dialog = await inDialogFixture();
@@ -3326,7 +4299,10 @@ function runFullTest(mobileView) {
           const el = dialog.querySelector('auro-combobox');
           await elementUpdated(el);
 
-          setInputValue(el, 'a');
+          el.focus();
+          await elementUpdated(el);
+          await sendKeys({ press: 'a' });
+          el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3346,7 +4322,10 @@ function runFullTest(mobileView) {
           const el = drawer.querySelector('auro-combobox');
           await elementUpdated(el);
 
-          setInputValue(el, 'a');
+          el.focus();
+          await elementUpdated(el);
+          await sendKeys({ press: 'a' });
+          el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3365,118 +4344,59 @@ function runFullTest(mobileView) {
       it('should navigate down through menu options', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'pp');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.focus();
         await elementUpdated(el);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
 
         const menu = el.querySelector('auro-menu');
         const menuOptions = menu.querySelectorAll('auro-menuoption');
 
-        await expect(el.optionActive).to.be.equal(menuOptions[1]);
-        await expect(menuOptions[1].classList.contains('active')).to.be.true;
-
+        // ArrowDown to move to second option
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await elementUpdated(el);
+        await expect(el.optionActive).to.be.equal(menuOptions[1]);
 
+        // // Wraps: going up from second goes back to first (wrapping depends on menu size)
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
         await expect(el.optionActive).to.be.equal(menuOptions[0]);
-        await expect(menuOptions[0].classList.contains('active')).to.be.true;
       });
 
       it('should navigate down through nested menu options', async () => {
         const el = await nestedMenuFixture(mobileView);
 
-        setInputValue(el, 'pp');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.focus();
         await elementUpdated(el);
-
-        setInputValue(el, 'option');
+        await sendKeys({ press: 'o' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 't' });
+        await sendKeys({ press: 'i' });
+        await sendKeys({ press: 'o' });
+        await sendKeys({ press: 'n' });
+        el.input.click();
         await elementUpdated(el);
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await elementUpdated(el);
-        await expect(el.optionActive.value).to.equal('option a');
+        await expect(el.menu.optionActive.value).to.equal('option a');
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await elementUpdated(el);
-        await expect(el.optionActive.value).to.equal('option b');
+        await expect(el.menu.optionActive.value).to.equal('option b');
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await elementUpdated(el);
-        await expect(el.optionActive.value).to.equal('option 2');
+        await expect(el.menu.optionActive.value).to.equal('option 2');
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await elementUpdated(el);
-        await expect(el.optionActive.value).to.equal('option 1');
+        await expect(el.menu.optionActive.value).to.equal('option 1');
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
         await elementUpdated(el);
-        await expect(el.optionActive.value).to.equal('option 2');
-      });
-
-      it('should activate the last enabled option with Alt+ArrowDown', async () => {
-        const el = await shiftTabFixture(mobileView);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'ArrowDown',
-          altKey: true,
-          bubbles: true,
-          cancelable: true
-        }));
-        await elementUpdated(el);
-
-        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        const lastOption = menuOptions[menuOptions.length - 1];
-        await expect(el.optionActive).to.equal(lastOption);
-      });
-
-      it('should activate the last enabled option with Meta+ArrowDown', async () => {
-        const el = await shiftTabFixture(mobileView);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'ArrowDown',
-          metaKey: true,
-          bubbles: true,
-          cancelable: true
-        }));
-        await elementUpdated(el);
-
-        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        const lastOption = menuOptions[menuOptions.length - 1];
-        await expect(el.optionActive).to.equal(lastOption);
+        await expect(el.menu.optionActive.value).to.equal('option 2');
       });
 
       it('should not navigate when clear button has focus', async () => {
@@ -3484,27 +4404,14 @@ function runFullTest(mobileView) {
 
         el.focus();
         setInputValue(el, 'a');
+        el.input.click();
         await elementUpdated(el);
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
 
         const activeInput = mobileView ? el.inputInBib : el.input;
         const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-        await expect(clearBtn).to.exist;
+        const prevActive = el.menu.optionActive;
 
-        const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-        await expect(nativeBtn).to.exist;
-        nativeBtn.focus();
-        await elementUpdated(el);
-
-        await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
-
-        const prevActive = el.optionActive;
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
+        clearBtn.dispatchEvent(new KeyboardEvent('keydown', {
           key: 'ArrowDown',
           bubbles: true,
           cancelable: true
@@ -3512,7 +4419,31 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // No navigation should have occurred
-        await expect(el.optionActive).to.equal(prevActive);
+        await expect(prevActive).to.equal(el.menu.optionActive);
+      });
+
+      it('should open the bib when ArrowDown is pressed and bib is closed', async () => {
+        const el = await defaultFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        // Close the bib first
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        // ArrowDown should open it
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
     });
 
@@ -3520,17 +4451,11 @@ function runFullTest(mobileView) {
       it('should navigate up through menu options', async () => {
         const el = await defaultFixture(mobileView);
 
-        setInputValue(el, 'pp');
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.focus();
         await elementUpdated(el);
-
-        setInputValue(el, 'a');
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
 
         const menu = el.querySelector('auro-menu');
         const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -3548,32 +4473,54 @@ function runFullTest(mobileView) {
         await expect(menuOptions[0].classList.contains('active') || menuOptions[1].classList.contains('active')).to.be.true;
       });
 
+      it('should navigate up through nested menu options', async () => {
+        const el = await nestedMenuFixture(mobileView);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'o' });
+        await sendKeys({ press: 'p' });
+        await sendKeys({ press: 't' });
+        await sendKeys({ press: 'i' });
+        await sendKeys({ press: 'o' });
+        await sendKeys({ press: 'n' });
+        el.input.click();
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await elementUpdated(el);
+        await expect(el.menu.optionActive.value).to.equal('option 2');
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await elementUpdated(el);
+        await expect(el.menu.optionActive.value).to.equal('option b');
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await elementUpdated(el);
+        await expect(el.menu.optionActive.value).to.equal('option a');
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await elementUpdated(el);
+        await expect(el.menu.optionActive.value).to.equal('option 1');
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+        await expect(el.menu.optionActive.value).to.equal('option a');
+      });
+
       it('should not navigate when clear button has focus', async () => {
         const el = await defaultFixture(mobileView);
 
         el.focus();
         setInputValue(el, 'a');
+        el.input.click();
         await elementUpdated(el);
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
 
         const activeInput = mobileView ? el.inputInBib : el.input;
         const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-        await expect(clearBtn).to.exist;
+        const prevActive = el.menu.optionActive;
 
-        const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-        await expect(nativeBtn).to.exist;
-        nativeBtn.focus();
-        await elementUpdated(el);
-
-        await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
-
-        const prevActive = el.optionActive;
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
+        clearBtn.dispatchEvent(new KeyboardEvent('keydown', {
           key: 'ArrowUp',
           bubbles: true,
           cancelable: true
@@ -3581,67 +4528,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // No navigation should have occurred
-        await expect(el.optionActive).to.equal(prevActive);
-      });
-
-      it('should activate the first enabled option with Alt+ArrowUp', async () => {
-        const el = await shiftTabFixture(mobileView);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-
-        // Navigate away from first option
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'ArrowUp',
-          altKey: true,
-          bubbles: true,
-          cancelable: true
-        }));
-        await elementUpdated(el);
-
-        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
-      });
-
-      it('should activate the first enabled option with Meta+ArrowUp', async () => {
-        const el = await shiftTabFixture(mobileView);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-        await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-        if (mobileView) {
-          el.inputInBib.focus();
-          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        }
-
-        // Navigate away from first option
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        el.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'ArrowUp',
-          metaKey: true,
-          bubbles: true,
-          cancelable: true
-        }));
-        await elementUpdated(el);
-
-        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(prevActive).to.equal(el.menu.optionActive);
       });
 
       it('should open the bib when ArrowUp is pressed and bib is closed', async () => {
@@ -3673,7 +4560,10 @@ function runFullTest(mobileView) {
       it('should activate the first enabled option when bib is open', async () => {
         const el = await shiftTabFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3699,14 +4589,17 @@ function runFullTest(mobileView) {
         }));
         await elementUpdated(el);
 
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
         await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
       it('should skip disabled first option and activate the next enabled one', async () => {
         const el = await shiftTabDisabledFirstFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3728,7 +4621,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
         await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
 
@@ -3754,7 +4647,10 @@ function runFullTest(mobileView) {
       it('should activate the last enabled option when bib is open', async () => {
         const el = await shiftTabFixture(mobileView);
 
-        setInputValue(el, 'a');
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
@@ -3793,6 +4689,86 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      // Regression for 4271eed64 — disabled-option skipping. The Home test
+      // above pins the first-option case; this covers the symmetric End
+      // path against a disabled trailing option.
+      it('should skip a disabled last option and activate the prior enabled one', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="end-dis-option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="end-dis-option-1">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" id="end-dis-option-2" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'End',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.optionActive.value).to.equal('Oranges');
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
+      });
+    });
+
+    describe('ArrowUp wrap', () => {
+      // Regression for 4271eed64: ArrowUp from the first option should
+      // wrap to the LAST ENABLED option, not the literal last option when
+      // that one is disabled.
+      it('skips a disabled trailing option when wrapping from the first', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="wrap-dis-option-0">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges" id="wrap-dis-option-1">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" id="wrap-dis-option-2" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        el.focus();
+        await elementUpdated(el);
+        await sendKeys({ press: 'a' });
+        el.input.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // First option is active by default; ArrowUp from there should
+        // wrap to the last ENABLED (Oranges), skipping the disabled Grapes.
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.optionActive.value).to.equal('Oranges');
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
     });
   });

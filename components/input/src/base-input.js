@@ -3,18 +3,17 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, dot-location, new-cap, curly, no-underscore-dangle */
+/* eslint-disable max-lines, new-cap, curly, no-underscore-dangle */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
-import { AuroInputUtilities } from "./utilities.js";
-
 import IMask from 'imask';
-
 import AuroFormValidation from '@aurodesignsystem/form-validation';
-
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import { AuroInputUtilities, getDateFormatFromLocale } from "./utilities.js";
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
+import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
 
 /**
  * Base class for auro-input component that provides core input functionality.
@@ -37,54 +36,19 @@ export default class BaseInput extends AuroElement {
   constructor() {
     super();
 
-    this._initializeDefaults();
-  }
-
-  /**
-   * Internal Defaults.
-   * @private
-   * @returns {void}
-   */
-  _initializeDefaults() {
+    // Single-source initialization. Alphabetized so duplicate or stale
+    // defaults are immediately obvious on a diff. Every field is assigned
+    // exactly once here (previously the constructor + the old
+    // `_initializePrivateDefaults` overlapped — both wrote ~14 of the same
+    // fields and double-allocated `util` and `validation`, discarding the
+    // first instance). `validation` is now allocated exactly once; `util`
+    // is seeded here with an en-US default and then rebuilt in
+    // `connectedCallback` once the consumer-resolved locale is available,
+    // so a parent (datepicker/combobox) calling `validate()` synchronously
+    // during its own update cycle sees a populated util instance.
     this.activeLabel = false;
-    this.appearance = "default";
-    this.icon = false;
-    this.disabled = false;
-    this.dvInputOnly = false;
-    this.hideLabelVisually = false;
-    this.max = undefined;
-    this.maxLength = undefined;
-    this.min = undefined;
-    this.minLength = undefined;
-    this.noValidate = false;
-    this.onDark = false;
-    this.required = false;
-    this.setCustomValidityForType = undefined;
 
-    /**
-     * @private
-     */
-    this.layout = 'classic';
-
-    /**
-     * @private
-     */
-    this.shape = 'classic';
-
-    /**
-     * @private
-     */
-    this.size = 'lg';
-
-    this.touched = false;
-    this.util = new AuroInputUtilities();
-    this.validation = new AuroFormValidation();
-    this.inputIconName = undefined;
-    this.showPassword = false;
-    this.validationCCLength = undefined;
-    this.hasValue = false;
-    this.label = 'Input label is undefined';
-
+    /** @private */
     this.allowedInputTypes = [
       "text",
       "number",
@@ -93,17 +57,9 @@ export default class BaseInput extends AuroElement {
       "credit-card",
       "tel"
     ];
+    this.appearance = "default";
 
-    /**
-     * Credit Card is not included as this caused cursor placement issues.
-     * The Safari issue.
-     */
-    this.setSelectionInputTypes = [
-      "text",
-      "password",
-      "email"
-    ];
-
+    /** @private */
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
       'dd/mm/yyyy': 'dateDDMMYYYY',
@@ -120,14 +76,64 @@ export default class BaseInput extends AuroElement {
       'dd/mm': 'dateDDMM',
       'mm/dd': 'dateMMDD'
     };
+    this.disabled = false;
 
-    const idLength = 36;
-    const idSubstrEnd = 8;
-    const idSubstrStart = 2;
+    /** @private */
+    this.domHandler = new DomHandler();
+    this.dvInputOnly = false;
+    this.hasValue = false;
+    this.hideLabelVisually = false;
+    this.icon = false;
 
-    this.uniqueId = Math.random()
-      .toString(idLength)
-      .substring(idSubstrStart, idSubstrEnd);
+    /** @private */
+    this.inputIconName = undefined;
+
+    /** @private */
+    this.label = 'Input label is undefined';
+    this.layout = 'classic';
+    this.locale = 'en-US';
+    this._format = undefined;
+
+    /** @private */
+    this._userSetFormat = false;
+    this.max = undefined;
+    this.maxLength = undefined;
+    this.min = undefined;
+    this.minLength = undefined;
+    this.noValidate = false;
+    this.onDark = false;
+    this.required = false;
+    this.setCustomValidityForType = undefined;
+    // Credit Card is intentionally excluded — its mask manages the cursor
+    // itself, and listing it here caused cursor placement issues in Safari.
+    /** @private */
+    this.setSelectionInputTypes = [
+      "text",
+      "password",
+      "email"
+    ];
+    this.shape = 'classic';
+
+    /** @private */
+    this.showPassword = false;
+    this.size = 'lg';
+    this.touched = false;
+
+    /** @private */
+    this.uniqueId = new UniqueId().create();
+
+    /** @private */
+    this.util = new AuroInputUtilities({
+      locale: this.locale,
+      format: this.format
+    });
+
+    /** @private */
+    this.validation = new AuroFormValidation();
+
+    /** @private */
+    this.validationCCLength = undefined;
+    this.value = undefined;
   }
 
   // function to define props used within the scope of this component
@@ -253,7 +259,8 @@ export default class BaseInput extends AuroElement {
        */
       format: {
         type: String,
-        reflect: true
+        reflect: true,
+        noAccessor: true
       },
 
       /**
@@ -325,7 +332,16 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       * Defines the locale of an element.
+       * Used for locale-specific formatting, such as date formats.
+       */
+      locale: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * The maximum value allowed. This only applies for inputs with a type of `number` and ISO format.
        */
       max: {
         type: String
@@ -341,7 +357,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The minimum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       * The minimum value allowed. This only applies for inputs with a type of `number` and ISO date format.
        */
       min: {
         type: String
@@ -449,6 +465,13 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * Custom help text message to display when validity = `patternMismatch`.
+       */
+      setCustomValidityPatternMismatch: {
+        type: String
+      },
+
+      /**
        * Custom help text message to display when validity = `rangeOverflow`.
        */
       setCustomValidityRangeOverflow: {
@@ -518,7 +541,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Populates the `type` attribute on the input.
-       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number'}
+       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
        * @default 'text'
        */
       type: {
@@ -543,6 +566,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
+       * For `date` type inputs using a full date format (year/month/day), the `value` should be ISO (YYYY-MM-DD). Partial date formats use the display format.
        */
       value: {
         type: String
@@ -550,10 +574,84 @@ export default class BaseInput extends AuroElement {
     };
   }
 
+  /**
+   * Read-only Date object representation of `value` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get valueObject() {
+    return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
+  }
+
+  /**
+   * Read-only Date object representation of `min` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get minObject() {
+    return this.min && dateFormatter.isValidDate(this.min) ? dateFormatter.stringToDateInstance(this.min) : undefined;
+  }
+
+  /**
+   * Read-only Date object representation of `max` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get maxObject() {
+    return this.max && dateFormatter.isValidDate(this.max) ? dateFormatter.stringToDateInstance(this.max) : undefined;
+  }
+
+  get format() {
+    return this._format;
+  }
+
+  /**
+   * Overrides LitElement's generated accessor so we can track whether the
+   * consumer explicitly set `format`. Locale-derived updates use
+   * `_setFormatFromLocale` instead, which skips this flag.
+   */
+  set format(value) {
+    const oldValue = this._format;
+    this._format = value ? value.toLowerCase() : value;
+    this._userSetFormat = Boolean(value);
+    this.requestUpdate('format', oldValue);
+  }
+
+  /**
+   * Sets format without marking it as user-set. Used by locale auto-derive
+   * so that a subsequent locale change can still update the format.
+   * @private
+   * @param {string} value
+   */
+  _setFormatFromLocale(value) {
+    const oldValue = this._format;
+    this._format = value ? value.toLowerCase() : value;
+    this.requestUpdate('format', oldValue);
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
+    // Mark for query selectors when registered under a versioned tag (e.g. inside
+    // a datepicker/combobox). Must run before parent components call validate() on
+    // their inner inputs — the validation framework matches via tag-or-attribute,
+    // and parents trigger validation during their own updated() cycle, which can
+    // precede this input's firstUpdated().
+    if (this.tagName.toLowerCase() !== 'auro-input' && !this.hasAttribute('auro-input')) {
+      this.setAttribute('auro-input', '');
+    }
+
+    this.locale = this.domHandler.getLocale(this);
     notifyOnLangChange(this);
+
+    // Pre-compute lengthForType and date-object fields so a parent (e.g. datepicker)
+    // calling our validate() synchronously during its own updated() cycle sees
+    // populated values. Without this, range validation silently no-ops because
+    // `max.length === lengthForType` fails when lengthForType is still undefined.
+    // Rebuild util here (constructor seeded with en-US default) so configureDataForType's
+    // locale-derived format lookup uses the actual locale just resolved above.
+    this.util = new AuroInputUtilities({
+      locale: this.locale,
+      format: this.format
+    });
+    this.configureDataForType();
   }
 
   disconnectedCallback() {
@@ -573,15 +671,7 @@ export default class BaseInput extends AuroElement {
       this.wrapperElement.addEventListener('click', this.handleClick);
     }
 
-    // add attribute for query selectors when auro-input is registered under a custom name
-    if (this.tagName.toLowerCase() !== 'auro-input') {
-      this.setAttribute('auro-input', true);
-    }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
-
-    if (this.format) {
-      this.format = this.format.toLowerCase();
-    }
 
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
@@ -590,6 +680,7 @@ export default class BaseInput extends AuroElement {
 
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
+    this.configureDataForType();
   }
 
   /**
@@ -625,6 +716,12 @@ export default class BaseInput extends AuroElement {
             return;
           }
 
+          // While configureAutoFormatting is running, imask's internal updateControl
+          // writes el.value to align display with the masked value. A synthetic input
+          // event from that write would re-enter handleInput → processCreditCard mid-setup
+          // and clobber a Lit value that was just pushed by the parent combobox.
+          if (component._configuringMask) return;
+
           // If all guard clauses are passed, dispatch the event
           const inputEvent = new InputEvent('input', {
             bubbles: true,
@@ -641,6 +738,7 @@ export default class BaseInput extends AuroElement {
 
   /**
    * @private
+   * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
    * @returns {void} Sets the default help text for the input.
    */
   setCustomHelpTextMessage() {
@@ -658,6 +756,13 @@ export default class BaseInput extends AuroElement {
 
     if (typeToI18n.includes(this.type)) {
       this.setCustomValidityForType = i18n(this.lang, this.type);
+    // COVERAGE: this `else if` branch is unreachable in WTR. connectedCallback
+    // (L682) calls configureDataForType, which at L1266-1268 assigns
+    // `this.format = this.util.getDateMaskFromLocale().toLowerCase()` for any
+    // type=date input whose `format` attribute is unset. That runs before
+    // firstUpdated invokes setCustomHelpTextMessage, so `!this.format` is
+    // always false here. Retained as a defensive fallback; the whole function
+    // is @deprecated per AB#1557296 and slated for removal.
     } else if (!this.format && this.type === 'date') {
       this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
     } else if (this.dateFormatMap[this.format]) {
@@ -670,11 +775,25 @@ export default class BaseInput extends AuroElement {
    * @param {Map<string, any>} changedProperties - Keys are the names of changed properties, values are the corresponding previous values.
    * @returns {void}
    */
+  // eslint-disable-next-line complexity
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if (changedProperties.has('format')) {
-      this.configureAutoFormatting();
+    // When locale changes, auto-derive format unless the consumer explicitly set one.
+    if (changedProperties.has('locale') && !changedProperties.has('format') && this.type === 'date') {
+      if (!this._userSetFormat) {
+        this._setFormatFromLocale(getDateFormatFromLocale(this.locale));
+      }
+    }
+
+    if (changedProperties.has('format') || changedProperties.has('locale')) {
+      this.util = new AuroInputUtilities({
+        locale: this.locale,
+        format: this.format
+      });
+      if (changedProperties.has('format')) {
+        this.configureAutoFormatting();
+      }
     }
 
     if (this.type === 'password') {
@@ -710,17 +829,43 @@ export default class BaseInput extends AuroElement {
         this.hasValue = false;
       }
 
-      if (this.value !== this.inputElement.value) {
+      let formattedValue = this.value;
+      if (this.type === 'date') {
+        const formattedDate = this.util.toFormattedValue(this.valueObject, this.format);
+        if (!formattedDate) {
+          // if user entered unrecognized date format that cannot be parsed into a Date object,
+          // keep the raw value in the input so they can edit it instead of overwriting with an empty string
+          formattedValue = this.value;
+        } else {
+          formattedValue = formattedDate;
+        }
+      }
+
+      if (formattedValue !== this.inputElement.value) {
         this.skipNextProgrammaticInputEvent = true;
-        if (this.value) {
-          this.inputElement.value = this.value;
+        if (this.maskInstance && this.type !== 'date') {
+          // Route through the mask so its _value and el.value stay in lock-step
+          // (set value calls updateControl which writes el.value = displayValue).
+          // Writing el.value directly leaves the mask thinking displayValue is
+          // stale; _saveSelection on the next focus/click then warns. Date is
+          // excluded because its formattedValue can be raw ISO when the calendar
+          // is invalid, and re-masking through mm/dd/yyyy would truncate it and
+          // flip validity from patternMismatch to tooShort.
+          this.maskInstance.value = formattedValue || '';
+        } else if (formattedValue) {
+          this.inputElement.value = formattedValue;
         } else {
           this.inputElement.value = '';
         }
 
         if (!this.shadowRoot.contains(this.getActiveElement())) {
-          this.validation.validate(this);
+          this.validate();
         }
+      } else if (this.value && !this.valueObject) {
+        // invalid format or date value
+        // run validate to update validity and error message
+
+        this.validate();
       }
 
       this.notifyValueChanged();
@@ -753,43 +898,80 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   configureAutoFormatting() {
-    if (this.maskInstance) {
-      this.maskInstance.destroy();
-    }
+    // _configuringMask gates two things: external re-entry into this method
+    // while setup is mid-flight (from property changes that call back here),
+    // and the accept/complete listeners below — both need to ignore the mask
+    // events fired by our own value-restore step.
+    if (this._configuringMask) return;
+    this._configuringMask = true;
+    try {
+      // Destroy any prior mask so IMask can attach fresh under the new format.
+      // Null the reference too — if the new maskOptions.mask is falsy (e.g.
+      // type switched from credit-card to text) the IMask() reassignment
+      // below is skipped, and downstream writes at line ~823 would otherwise
+      // route through the destroyed instance.
+      if (this.maskInstance) {
+        this.maskInstance.destroy();
+        this.maskInstance = null;
+      }
 
-    const maskOptions = this.util.getMaskOptions(this.type, this.format);
+      this.util.updateFormat(this.format);
 
-    if (this.inputElement && maskOptions.mask) {
-      this.maskInstance = IMask(this.inputElement, maskOptions);
+      const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
-      this.maskInstance.on('accept', () => {
-        this.value = this.maskInstance.value;
-      });
+      if (this.inputElement && maskOptions.mask) {
+        // Capture the current display so it can be re-applied after IMask
+        // attaches. The restore at the bottom goes through maskInstance.value
+        // (not inputElement.value directly) so the mask's internal state and
+        // the input's displayed text stay in lock-step.
+        let existingValue = this.inputElement.value;
 
-      this.maskInstance.on('complete', () => {
-        this.value = this.maskInstance.value;
-
-        // Format date to North American format
-        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value, this.format)) {
-          const formattedDates = this.util.toNorthAmericanFormat(this.value, this.format);
-
-          this.formattedDate = formattedDates.formattedDate;
-          this.comparisonDate = formattedDates.dateForComparison;
+        // Format-change case (e.g. locale switch): existingValue is the OLD
+        // mask's display string and may not parse under the new mask. When
+        // we have a valid date model, rebuild the display from valueObject
+        // (the canonical source) using the new mask's format function.
+        if (
+          this.util.isFullDateFormat(this.type, this.format) &&
+          this.value &&
+          this.valueObject &&
+          typeof maskOptions.format === 'function'
+        ) {
+          existingValue = maskOptions.format(this.valueObject);
         }
-      });
-    }
-  }
 
-  /**
-   * @private
-   * @returns {string}
-   */
-  definePattern() {
-    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
-      return `.{${this.maxLength},${this.maxLength}}`;
-    }
+        // Clear before IMask attaches so the constructor seeds an empty
+        // internal value. Otherwise IMask reads the stale unmasked string
+        // and emits a spurious 'accept' before the restore below runs.
+        this.skipNextProgrammaticInputEvent = true;
+        this.inputElement.value = '';
 
-    return this.pattern;
+        this.maskInstance = IMask(this.inputElement, maskOptions);
+
+        // Mask fires 'accept' on every value change, including the restore
+        // step below. Skip events fired during configureAutoFormatting so
+        // we don't overwrite a value the parent just pushed.
+        this.maskInstance.on('accept', () => {
+          if (this._configuringMask) return;
+          this.value = this.util.toModelValue(this.maskInstance.value, this.format);
+        });
+
+        // Mask fires 'complete' on the restore step below for any value that
+        // happens to be a complete match. Same setup-suppression as 'accept'.
+        this.maskInstance.on('complete', () => {
+          if (this._configuringMask) return;
+          this.value = this.util.toModelValue(this.maskInstance.value, this.format);
+        });
+
+        // Write existingValue through the mask (not the input directly) so
+        // the mask reformats it under the new rules and keeps its internal
+        // _value aligned with the input's displayed text.
+        if (existingValue) {
+          this.maskInstance.value = existingValue;
+        }
+      }
+    } finally {
+      this._configuringMask = false;
+    }
   }
 
   /**
@@ -798,14 +980,17 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    let inputEvent = null;
-
-    inputEvent = new Event('input', {
+    // This echoes Lit's reactive value update (and handleClickClear's
+    // programmatic clear) — it is NOT a fresh user-input event. Mark it
+    // `isProgrammatic` so consumers (e.g. auro-combobox) can distinguish
+    // it from genuine user typing and skip clobbering their own
+    // programmatic state during init-time renders.
+    const inputEvent = new Event('input', {
       bubbles: true,
       composed: true,
     });
+    inputEvent.isProgrammatic = true;
 
-    // Dispatched event to alert outside shadow DOM context of event firing.
     this.dispatchEvent(inputEvent);
   }
 
@@ -849,34 +1034,50 @@ export default class BaseInput extends AuroElement {
     // Process credit card type detection and formatting during input
     if (this.type === 'credit-card') {
       this.processCreditCard();
+    }
+
+    // Sets value property to value of element value (el.value).
+    this.value = this.util.toModelValue(this.inputElement.value, this.format);
+
+    // Determine if the value change was programmatic, including autofill.
+    const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
+
+    // Validation on input or programmatic value change (including autofill).
+    if (this.validateOnInput || inputWasProgrammatic) {
       this.touched = true;
       this.validation.validate(this);
-    } else {
+    }
 
-      // Sets value property to value of element value (el.value).
-      this.value = this.inputElement.value;
-
-      // Determine if the value change was programmatic, including autofill.
-      const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
-
-      // Validation on input or programmatic value change (including autofill).
-      if (this.validateOnInput || inputWasProgrammatic) {
-        this.touched = true;
-        this.validation.validate(this);
+    // Prevents cursor jumping in Safari. Setting `this.value` triggers a Lit
+    // update that can re-render the input and reset the native cursor; we
+    // capture the caret position before that update commits and restore it
+    // via `setSelectionRange` once the update has flushed. Gated on
+    // `setSelectionInputTypes` so credit-card (and other masked types whose
+    // formatter manages the cursor itself) doesn't get a competing write.
+    // Capture the caret position INSIDE the gate — reading `selectionStart`
+    // on input types that don't support text selection (number, email in
+    // some browsers) throws InvalidStateError, which would crash all input
+    // handling. Wrap the read in try/catch belt-and-suspenders even though
+    // the gated types currently support it, since the list is a public
+    // property a consumer could mutate.
+    if (this.setSelectionInputTypes.includes(this.type)) {
+      let selectionStart = null;
+      try {
+        ({ selectionStart } = this.inputElement);
+      } catch {
+        return;
       }
-
-      // Prevents cursor jumping in Safari.
-      const { selectionStart } = this.inputElement;
-
-      if (this.setSelectionInputTypes.includes(this.type)) {
-        this.updateComplete.then(() => {
-          try {
-            this.inputElement.setSelectionRange(selectionStart, selectionStart);
-          } catch (error) { // eslint-disable-line
-            // do nothing
-          }
-        });
+      if (typeof selectionStart !== 'number') {
+        return;
       }
+      this.updateComplete.then(() => {
+        try {
+          this.inputElement.setSelectionRange(selectionStart, selectionStart);
+        } catch {
+          // Some input types (number/email in certain UAs) throw on
+          // setSelectionRange; swallow and let the native cursor stand.
+        }
+      });
     }
   }
 
@@ -996,57 +1197,11 @@ export default class BaseInput extends AuroElement {
       this.inputmode = this.inputmode || 'numeric';
     }
 
+    // Set default date format if type=date and no format is defined
     if (this.type === "date" && !this.format) {
-      this.format = 'mm/dd/yyyy';
+      this._setFormatFromLocale(this.util.getDateMaskFromLocale().toLowerCase());
+      this.util.updateFormat(this.format);
     }
-  }
-
-  /**
-   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
-   * @private
-   * @param {string} type Value entered into component prop.
-   * @returns {string} Iterates over allowed types array.
-   */
-  getInputType(type) {
-    if (this.allowedInputTypes.includes(type)) {
-      return type;
-    }
-
-    return "text";
-  }
-
-  /**
-   * Determines default help text string.
-   * @private
-   * @returns {string} Evaluates pre-determined help text.
-   */
-  getHelpText() {
-    const typeHelpText = [
-      'password',
-      'email',
-      'credit-card',
-      'tel'
-    ];
-
-    if (typeHelpText.includes(this.type)) {
-      return i18n(this.lang, this.type);
-    }
-
-    if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
-    }
-
-    return '';
-  }
-
-  /**
-   * Function to support show-password feature.
-   * @private
-   * @returns {void}
-   */
-  handleClickShowPassword() {
-    this.showPassword = !this.showPassword;
-    this.focus();
   }
 
   /**
@@ -1056,39 +1211,9 @@ export default class BaseInput extends AuroElement {
    */
   get placeholderStr() {
     if (!this.placeholder && this.type === 'date') {
-      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+      return this.format.toUpperCase();
     }
     return this.placeholder || "";
-  }
-
-  /**
-   * Defines placement of input icon based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineInputIcon() {
-    if (this.icon && this.type === 'credit-card') {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Defines padding of input label based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineLabelPadding() {
-    if (this.icon && this.type === 'credit-card' && (this.value === "" || this.value === undefined)) {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
   }
 
   // Functions specific to Credit Card component support
@@ -1103,7 +1228,7 @@ export default class BaseInput extends AuroElement {
     const creditCard = this.matchInputValueToCreditCard();
     const previousFormat = this.format;
 
-    this.format = creditCard.maskFormat;
+    this._setFormatFromLocale(creditCard.maskFormat);
 
     this.maxLength = creditCard.formatLength;
     this.minLength = creditCard.formatMinLength;
@@ -1123,6 +1248,7 @@ export default class BaseInput extends AuroElement {
   /**
    * Function to support credit-card feature type.
    * @private
+   * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
    * @returns {object} JSON with data for credit card formatting.
    */
   matchInputValueToCreditCard() {
@@ -1163,10 +1289,10 @@ export default class BaseInput extends AuroElement {
       },
       {
         name: 'Diners club',
-        regex: /^(?<num>36|38)\d{0}/u,
+        regex: /^(?<num>30[0-5]|36|38)\d{0}/u,
         formatLength: 16,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'credit-card',
+        cardIcon: 'cc-dinersclub',
         maskFormat: "0000 000000 0000"
       },
       {

@@ -22,48 +22,6 @@ const specialConfigs = {
     },
     tags: ['!autodocs'],
   },
-  'appearance-inverse-description': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-disabled': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-dropdown': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-error': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-group': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-helptext': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-snowflake': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
 };
 
 const ApiExamples: Meta = {
@@ -88,42 +46,21 @@ const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialC
 // Export all generated stories
 // eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
 // sourcery skip: use-object-destructuring
-export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
-export const AppearanceInverseError = stories.AppearanceInverseError;
 export const AppearanceInverse = stories.AppearanceInverse;
 export const Autocomplete = stories.Autocomplete;
 export const Basic = stories.Basic;
-export const CustomBibHeight = stories.CustomBibHeight;
-export const CustomErrorValidity  = stories.CustomErrorValidity;
-export const Custom = stories.Custom;
 export const Disabled = stories.Disabled;
 export const Error = stories.Error;
 export const FlexMenuWidth = stories.FlexMenuWidth;
-export const FloaterConfig = stories.FloaterConfig;
 export const FullscreenBreakpoint = stories.FullscreenBreakpoint;
-export const FullscreenDisabled = stories.FullscreenDisabled;
-export const HelpText = stories.HelpText;
-export const InDialog  = stories.InDialog;
-export const Label = stories.Label;
-export const Loading  = stories.Loading;
 export const MultiSelect = stories.MultiSelect;
-export const NestedSelect  = stories.NestedSelect;
 export const NoCheckmark = stories.NoCheckmark;
-export const OptionalLabel = stories.OptionalLabel;
 export const Placeholder = stories.Placeholder;
 export const Required = stories.Required;
-export const ResetState  = stories.ResetState;
-export const UpdateActiveOption  = stories.UpdateActiveOption;
-export const ValueAlert  = stories.ValueAlert;
-export const ValueExtraction  = stories.ValueExtraction;
-export const Value  = stories.Value;
-export const WithIcons = stories.WithIcons;
 export const WithSubmenus = stories.WithSubmenus;
 export const DisplayValue = stories.DisplayValue;
 export const DisabledOptions = stories.DisabledOptions;
-export const DuplicateValues = stories.DuplicateValues;
 export const NoValidate = stories.NoValidate;
-export const Size = stories.Size;
 export const Placement = stories.Placement;
 export const Shift = stories.Shift;
 export const NoFlip = stories.NoFlip;
@@ -133,4 +70,4 @@ export const MatchWidth = stories.MatchWidth;
 export const Appearance = stories.Appearance;
 export const CustomValidity = stories.CustomValidity;
 export const LargeFullscreenHeadline = stories.LargeFullscreenHeadline;
-export const InDrawer = stories.InDrawer;
+export const CssParts = stories.CssParts;

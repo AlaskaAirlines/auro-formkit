@@ -5,7 +5,7 @@
 
 The `auro-select` component follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/" target="_blank">W3C APG Select-Only Combobox</a> pattern. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
 
-For keyboard interaction details, see the <a href="./keyboard-behavior.html">Keyboard Behavior</a> page.
+For keyboard interaction details, see the <auro-hyperlink href="keyboard-behavior">Keyboard Behavior</auro-hyperlink> page.
 
 <auro-header level="2" id="ariaRolesAndAttributes">ARIA Roles and Attributes</auro-header>
 
@@ -69,6 +69,12 @@ On smaller viewports, the bib opens as a fullscreen modal dialog:
 - The dialog receives an accessible label derived from the component's `label` slot text via `aria-labelledby`.
 - A close button inside the dialog is focused when the modal opens, giving screen reader users an immediate action to dismiss it.
 - Touch scrolling on the page behind the dialog is blocked to prevent the background from scrolling into view.
+
+<auro-header level="2" id="modifierKeys">Modifier Keys</auro-header>
+
+The **Meta** key (Command on macOS, Windows/Super elsewhere) is intentionally not used as a modifier for select keyboard shortcuts. On Windows, Linux, and ChromeOS, the operating system intercepts `Meta` + Arrow combinations for window management (e.g. window snapping) before the browser receives the event, so any shortcut bound to `Meta` + Arrow would work only on macOS and silently fail on other platforms.
+
+To jump to the first or last option in a way that works uniformly across platforms, use **Home** and **End**, which follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/" target="_blank">WAI-ARIA Select-Only Combobox pattern</a>.
 
 <auro-header level="2" id="reducedMotion">Reduced Motion</auro-header>
 

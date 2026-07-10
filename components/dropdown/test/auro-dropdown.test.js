@@ -768,6 +768,655 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('desktopModal', () => {
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.false;
+      });
+
+      it('should reflect the desktopModal attribute', async () => {
+        const el = await fixture(html`<auro-dropdown desktopmodal><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.true;
+        await expect(el.hasAttribute('desktopmodal')).to.be.true;
+      });
+
+      it('should set siblings inert when opened in desktopModal mode', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        await expect(sibling.inert).to.not.be.true;
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        await expect(sibling.inert).to.be.true;
+      });
+
+      it('should clear sibling inert when closed', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        el.hide();
+        await elementUpdated(el);
+        await expectPopoverHidden(el);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+
+      it('should clear sibling inert on disconnectedCallback', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        wrapper.removeChild(el);
+        await elementUpdated(wrapper);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+
+      it('should trap Tab focus within the bib when open', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <button id="bibBtn1">First</button>
+              <button id="bibBtn2">Second</button>
+              <button id="bibBtn3">Third</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Wait for the initial focus move into the bib
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Tab should cycle through bib elements — dispatch Tab keydown
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // After another Tab, focus should still be inside the bib (not escape to trigger)
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Walk the active-element chain — focus must still be inside the bib
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        const bibContent = el.bibContent;
+        const isInsideBib = bibContent?.contains(active) ||
+          el.querySelectorAll('button')[0]?.getRootNode() === active?.getRootNode();
+        await expect(isInsideBib || el.contains(active)).to.be.true;
+      });
+
+      it('should trap Shift+Tab focus within the bib when open', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <button id="bibBtn1">First</button>
+              <button id="bibBtn2">Second</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Wait for initial focus into the bib
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Shift+Tab should wrap backward within the bib
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Focus must still be inside the component (bib), not escaped
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(el.contains(active) || el.shadowRoot.contains(active)).to.be.true;
+      });
+
+      it('should ignore non-Tab keys in the bib tab handler', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div><button>Bib button</button></div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Dispatch a non-Tab key — handler should return early without preventing default
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true });
+        el.dispatchEvent(event);
+        await elementUpdated(el);
+
+        // Default was not prevented (handler returned early)
+        await expect(event.defaultPrevented).to.be.false;
+      });
+
+      it('should return early from tab handler when no focusable elements exist', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>No focusable content here</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Tab with no focusable elements — handler returns early, default is not prevented
+        const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true, cancelable: true });
+        el.dispatchEvent(event);
+        await elementUpdated(el);
+
+        await expect(event.defaultPrevented).to.be.false;
+      });
+
+      it('should wrap Tab forward past the last focusable element', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <button id="only">Only button</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Focus the only button, then Tab — nextIdx wraps from 1 → 0
+        el.querySelector('#only').focus();
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(el.contains(active) || el.shadowRoot.contains(active)).to.be.true;
+      });
+
+      it('should toggle desktopModal while open and update inert state', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover"><button>Bib</button></div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        // Turn off desktopModal while still open — should clear inert
+        el.desktopModal = false;
+        await elementUpdated(el);
+        await expect(sibling.inert).to.not.be.true;
+
+        // Turn it back on — should re-apply inert
+        el.desktopModal = true;
+        await elementUpdated(el);
+        await expect(sibling.inert).to.be.true;
+      });
+
+      it('should not re-initialize inert if _setPageInert is called twice', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        const firstRef = el._inertSiblings;
+        // Calling _setPageInert again should bail early (guard at line 910)
+        el._setPageInert();
+        await expect(el._inertSiblings).to.equal(firstRef);
+      });
+
+      it('should call _setPageInert when isBibFullscreen changes to false while open', async () => {
+        // Directly toggle isBibFullscreen while the dropdown is open with desktopModal —
+        // triggers the changedProperties.has('isBibFullscreen') path at line 647-648
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover"><button>Btn</button></div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        // Simulate fullscreen mode, then open
+        el.isBibFullscreen = true;
+        await elementUpdated(el);
+        el.show();
+        await elementUpdated(el);
+
+        // Simulate switching from fullscreen to desktop (line 647: desktopModal && !isBibFullscreen)
+        el.isBibFullscreen = false;
+        await elementUpdated(el);
+
+        await expect(sibling.inert).to.be.true;
+
+        el.hide();
+        await elementUpdated(el);
+      });
+
+      it('should move focus to first element when Tab is pressed while focus is outside bib', async () => {
+        // Covers the idx === -1 branch (lines 836-837): focus is on the trigger,
+        // not in the focusables list — handler sets idx to -1 then wraps to 0
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <button slot="trigger" id="trig">Trigger</button>
+            <div>
+              <button id="bib1">First</button>
+              <button id="bib2">Second</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Focus the trigger — it is NOT in getFocusableElements(bibContent)
+        el.querySelector('#trig').focus();
+
+        // Tab with focus outside the bib focusables list — idx === -1 branch fires
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Focus should have moved into the bib
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(el.contains(active) || el.shadowRoot.contains(active)).to.be.true;
+      });
+
+      it('should skip a focusable that does not accept focus and try the next one', async () => {
+        // Covers lines 860-863: focus() call doesn't move focus to the target element.
+        // Override btn1.focus to redirect to btn2 so _getActiveElements() won't include btn1.
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <button slot="trigger" id="trig">Trigger</button>
+            <div>
+              <button id="bib1">First</button>
+              <button id="bib2">Second</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const btn1 = el.querySelector('#bib1');
+        const btn2 = el.querySelector('#bib2');
+
+        // Override btn1.focus so calling it focuses btn2 instead
+        btn1.focus = () => btn2.focus();
+
+        // Focus the trigger so idx === -1, nextIdx wraps to 0 (btn1)
+        // btn1.focus() -> actually focuses btn2, so newActives won't include btn1
+        // -> lines 860-862 execute, loop continues and finds btn2 works
+        el.querySelector('#trig').focus();
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Focus should have landed on btn2
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(active).to.equal(btn2);
+      });
+
+      it('should traverse shadow root active elements in _getActiveElements', async () => {
+        // Covers lines 894-896: the while loop fires when document.activeElement is a
+        // shadow host with a focused element in its shadow root.
+        // Register a minimal custom element with a shadow-DOM button, focus it,
+        // and call _getActiveElements() to trigger the traversal.
+        if (!customElements.get('focus-shadow-host')) {
+          customElements.define('focus-shadow-host', class extends HTMLElement {
+            constructor() {
+              super();
+              const shadow = this.attachShadow({ mode: 'open' });
+              const btn = document.createElement('button');
+              btn.textContent = 'inner';
+              shadow.appendChild(btn);
+            }
+          });
+        }
+
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <focus-shadow-host id="shadowHost"></focus-shadow-host>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Focus the inner button inside the shadow host
+        const shadowHost = el.querySelector('#shadowHost');
+        shadowHost.shadowRoot.querySelector('button').focus();
+
+        // _getActiveElements must now traverse: document.activeElement (shadowHost) →
+        // shadowHost.shadowRoot.activeElement (inner button) → lines 894-895 execute
+        const actives = el._getActiveElements();
+        await expect(actives.length).to.be.at.least(2);
+        await expect(actives).to.include(shadowHost.shadowRoot.querySelector('button'));
+      });
+
+      it('should walk up shadow DOM hosts in _setPageInert when nested in shadow root', async () => {
+        // Covers lines 921-922: dropdown is inside a shadow-DOM host —
+        // _setPageInert walks up through getRootNode().host to find the
+        // outermost light-DOM ancestor before inerting siblings.
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <div id="host"></div>
+          </div>
+        `);
+
+        const hostEl = wrapper.querySelector('#host');
+        const sibling = wrapper.querySelector('#sibling');
+
+        // Attach a shadow root and put the dropdown inside it via DOM APIs
+        const shadow = hostEl.attachShadow({ mode: 'open' });
+        const innerDropdown = document.createElement('auro-dropdown');
+        innerDropdown.setAttribute('desktopmodal', '');
+        innerDropdown.id = 'inner-dropdown';
+
+        const triggerDiv = document.createElement('div');
+        triggerDiv.setAttribute('slot', 'trigger');
+        triggerDiv.textContent = 'Trigger';
+
+        const popoverDiv = document.createElement('div');
+        popoverDiv.setAttribute('slot', 'popover');
+        const btn = document.createElement('button');
+        btn.textContent = 'Bib';
+        popoverDiv.appendChild(btn);
+
+        innerDropdown.appendChild(triggerDiv);
+        innerDropdown.appendChild(popoverDiv);
+        shadow.appendChild(innerDropdown);
+
+        await customElements.whenDefined('auro-dropdown');
+        await elementUpdated(innerDropdown);
+
+        innerDropdown.show();
+        await elementUpdated(innerDropdown);
+
+        // The shadow-DOM traversal should have walked up to hostEl
+        // and inereted the sibling div
+        await expect(sibling.inert).to.be.true;
+
+        innerDropdown.hide();
+        await elementUpdated(innerDropdown);
+      });
+
+      it('should move focus to last element when Shift+Tab is pressed with focus outside bib', async () => {
+        // Covers the `: focusables.length` ternary branch (line 837):
+        // Shift+Tab (direction === -1) when idx === -1 → idx = focusables.length
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <button slot="trigger" id="trig">Trigger</button>
+            <div>
+              <button id="bib1">First</button>
+              <button id="bib2">Last</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Focus trigger — not in bib focusables, so idx === -1
+        el.querySelector('#trig').focus();
+
+        // Shift+Tab: direction = -1, idx = focusables.length, nextIdx wraps to last
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(el.contains(active) || el.shadowRoot.contains(active)).to.be.true;
+      });
+
+      it('should preserve inert state of a sibling that was already inert before modal opened', async () => {
+        // Covers the `sibling.inert ? 'true' : 'false'` true-branch in _setPageInert:
+        // when sibling.inert is already true, auroInertWas is stored as 'true'
+        // and after close the sibling remains inert (its original state is restored)
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling" inert>Already inert sibling</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover"><button>Bib</button></div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        await expect(sibling.inert).to.be.true;
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        // After close, sibling should still be inert (auroInertWas = 'true')
+        el.hide();
+        await elementUpdated(el);
+        await expect(sibling.inert).to.be.true;
+      });
+
+      it('should complete the focus loop without returning when no focusable accepts focus', async () => {
+        // Covers the for-loop exit branch (line 863): all focusable elements' focus()
+        // calls fail — the loop exits without returning early
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <button slot="trigger" id="trig">Trigger</button>
+            <div>
+              <button id="bib1">First</button>
+              <button id="bib2">Second</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const btn1 = el.querySelector('#bib1');
+        const btn2 = el.querySelector('#bib2');
+
+        // Override both buttons' focus() to be a no-op so neither accepts focus
+        btn1.focus = () => {};
+        btn2.focus = () => {};
+
+        el.querySelector('#trig').focus();
+        // Tab with all focusables broken — loop exhausts and exits without returning
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+        // Test passes if no exception is thrown (loop exits gracefully)
+      });
+
+      it('should use the default count of 1 when auroInertCount is missing in _clearPageInert', async () => {
+        // Covers the `|| '1'` fallback branch in _clearPageInert:
+        // triggered when a sibling in _inertSiblings doesn't have auroInertCount set
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover"><button>Bib</button></div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Manually push an element without auroInertCount into _inertSiblings
+        const bareDiv = document.createElement('div');
+        wrapper.appendChild(bareDiv);
+        el._inertSiblings.push(bareDiv);
+
+        // Hiding calls _clearPageInert — bareDiv has no auroInertCount,
+        // so `count = parseInt(undefined || '1', 10) - 1 = 0` → clears it
+        el.hide();
+        await elementUpdated(el);
+        // No exception thrown and inert state is properly cleaned up
+        await expect(el._inertSiblings).to.be.undefined;
+      });
+
+      it('should use reference counting when two modal dropdowns share a sibling', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling</div>
+            <auro-dropdown desktopmodal id="d1">
+              <div slot="trigger">T1</div>
+              <div slot="popover">P1</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const d1 = wrapper.querySelector('#d1');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(d1);
+
+        // d1 opens — sibling count reaches 1
+        d1.show();
+        await elementUpdated(d1);
+        await expect(sibling.inert).to.be.true;
+        await expect(sibling.dataset.auroInertCount).to.equal('1');
+
+        // Simulate a second modal dropdown calling _setPageInert on the same sibling
+        // by resetting _inertSiblings on d1 and calling it again (as a second consumer would)
+        const saved = d1._inertSiblings;
+        d1._inertSiblings = undefined;
+        d1._setPageInert();
+        await expect(sibling.dataset.auroInertCount).to.equal('2');
+
+        // Restore and clear one consumer — count goes back to 1, sibling stays inert
+        d1._inertSiblings = saved;
+        d1._clearPageInert();
+        await expect(sibling.inert).to.be.true;
+        await expect(sibling.dataset.auroInertCount).to.equal('1');
+      });
+    });
+
     describe('offset', () => {
       it('should default to 0', async () => {
         const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
@@ -1447,8 +2096,16 @@ function runFullTest(mobileView) {
         }
       };
 
-      // Should not throw — catch block absorbs the error
-      el.handleTriggerContentSlotChange(mockEvent);
+      // Suppress the expected console.warn from the catch block
+      const originalWarn = console.warn;
+      console.warn = () => {};
+
+      try {
+        // Should not throw — catch block absorbs the error
+        el.handleTriggerContentSlotChange(mockEvent);
+      } finally {
+        console.warn = originalWarn;
+      }
       await elementUpdated(el);
     });
 
@@ -1579,6 +2236,71 @@ function runFullTest(mobileView) {
 
       // Should not focus trigger since eventType defaults to "unknown", not "keydown"
       await expect(el.isPopoverVisible).to.be.false;
+    });
+
+    // ─── handleDropdownToggle async focus-restore path ────────────────
+    it('handleDropdownToggle should call trigger.focus() when bib closes with focus inside bib', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>
+            <button id="bib-button">Bib button</button>
+          </div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      // Focus the bib button so bibContent matches :focus-within.
+      el.querySelector('#bib-button').focus();
+
+      // Spy on trigger.focus before calling close.
+      let focusCalled = false;
+      el.trigger.focus = () => { focusCalled = true; };
+
+      // Close via handleDropdownToggle directly — the bib stays visually open so
+      // :focus-within remains true and the async restore path fires unconditionally.
+      el.handleDropdownToggle({ detail: { expanded: false } });
+      await elementUpdated(el);
+
+      // Drain the macrotask queue so the setTimeout callback fires.
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(focusCalled).to.be.true;
+    });
+
+    // ─── handleDropdownToggle async path skips focus when bib re-opens ──
+    it('handleDropdownToggle should not call trigger.focus() if dropdown re-opens before timer fires', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>
+            <button id="bib-button">Bib button</button>
+          </div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      el.querySelector('#bib-button').focus();
+
+      let focusCalled = false;
+      el.trigger.focus = () => { focusCalled = true; };
+
+      // Close then immediately re-open before the timer fires — guard should abort.
+      el.handleDropdownToggle({ detail: { expanded: false } });
+      el.isPopoverVisible = true;
+      await elementUpdated(el);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(focusCalled).to.be.false;
     });
 
     // ─── chevron renders with onDark inverse appearance ───────────────
@@ -2034,6 +2756,55 @@ function runFullTest(mobileView) {
       const trigger = el.shadowRoot.querySelector("#trigger");
       expect(trigger.getAttribute('role')).to.equal('combobox');
       expect(trigger).to.have.attribute('aria-expanded');
+    });
+
+    // Matches the WAI-ARIA APG select-only combobox reference markup. The
+    // implicit default of aria-haspopup on role="combobox" is "listbox", but
+    // setting it explicitly avoids relying on UA implicit-value mapping.
+    it("should render aria-haspopup='listbox' on trigger when a11yRole is set to combobox", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(trigger).to.have.attribute('aria-haspopup', 'listbox');
+    });
+
+    it("should not render aria-haspopup on trigger when a11yRole is the default button", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(trigger.hasAttribute('aria-haspopup')).to.be.false;
+    });
+
+    // When the slotted trigger owns its own focus, the wrapper sheds combobox
+    // semantics (role/aria-expanded/aria-controls/aria-labelledby) — aria-haspopup
+    // must follow the same guard so it isn't stranded on a role-less wrapper.
+    it("should not render aria-haspopup on the wrapper when triggerContentFocusable is true", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <button slot="trigger">Focusable Trigger</button>
+        </auro-dropdown>
+      `);
+
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector("#trigger");
+      expect(el.triggerContentFocusable).to.be.true;
+      expect(trigger.hasAttribute('aria-haspopup')).to.be.false;
     });
 
     describe("aria-activedescendant", () => {

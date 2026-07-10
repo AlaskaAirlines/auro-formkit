@@ -1,11 +1,13 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef, no-unused-expressions */
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, oneEvent, waitUntil } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
+import sinon from 'sinon';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
+import '../../form/src/registered.js';
 import {
   defaultFixture,
   emphasizedFixture,
@@ -148,6 +150,54 @@ function runTest(mobileView) {
           expect(el.bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
         });
       }
+
+      it('keeps label observation wired after a disconnect+reconnect cycle', async () => {
+        // Regression guard: _observeLabelChanges() is invoked from firstUpdated(),
+        // which Lit fires once per instance. disconnectedCallback() tears down
+        // both _labelObserver and the slotchange retarget listener; without a
+        // matching connectedCallback hook, runtime label mutations after a
+        // reparent would silently stop syncing menu aria-label and
+        // dropdown.bibDialogLabel.
+        const el = await defaultFixture();
+        const parent = el.parentNode;
+        const label = el.querySelector('[slot="label"]');
+
+        parent.removeChild(el);
+        parent.appendChild(el);
+        await elementUpdated(el);
+
+        label.textContent = 'Updated label';
+        await new Promise((r) => requestAnimationFrame(r));
+        await elementUpdated(el);
+
+        expect(el.menu.getAttribute('aria-label'), 'menu aria-label must re-sync after reconnect').to.equal('Updated label');
+        expect(el.dropdown.bibDialogLabel, 'dropdown bibDialogLabel must re-sync after reconnect').to.equal('Updated label');
+      });
+
+      it('keeps menu event listeners wired after a disconnect+reconnect cycle', async () => {
+        // Regression guard: the listeners configureMenu() attaches must NOT be torn
+        // down in disconnectedCallback. configureMenu() runs from firstUpdated(),
+        // which Lit fires once per instance, so any listener removed on disconnect
+        // would never be re-wired on reconnect — optionActive, value, and
+        // announcement plumbing would silently break when the host is moved in the
+        // DOM (e.g., reparented into a dialog or SPA route swap).
+        const el = await defaultFixture();
+        const parent = el.parentNode;
+        const firstOption = el.menu.querySelector('auro-menuoption[value="Apples"]');
+        const secondOption = el.menu.querySelector('auro-menuoption[value="Oranges"]');
+
+        el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', { detail: firstOption }));
+        await elementUpdated(el);
+        await expect(el.optionActive).to.equal(firstOption);
+
+        parent.removeChild(el);
+        parent.appendChild(el);
+        await elementUpdated(el);
+
+        el.menu.dispatchEvent(new CustomEvent('auroMenu-activatedOption', { detail: secondOption }));
+        await elementUpdated(el);
+        await expect(el.optionActive, 'menu listeners must survive a disconnect+reconnect cycle').to.equal(secondOption);
+      });
     });
 
     describe('Properties', () => {
@@ -510,6 +560,64 @@ function runTest(mobileView) {
           await expect(el.optionSelected.length).to.equal(0);
         });
 
+        it('should not wipe prior selections when a valueless option is clicked', async () => {
+          // Regression: menu fires auroMenu-selectValueFailure on a click of an
+          // unselected valueless option without mutating its own state. The
+          // select listener used to unconditionally clear value/optionSelected,
+          // dropping every prior multiSelect pick on a single bad click.
+          const el = await fixture(html`
+            <auro-select multiselect>
+              <span slot="label">Pick</span>
+              <auro-menu>
+                <auro-menuoption value="a">Alpha</auro-menuoption>
+                <auro-menuoption value="b">Beta</auro-menuoption>
+                <auro-menuoption>NoValue</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          const opts = el.querySelectorAll('auro-menuoption');
+          opts[0].click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+          opts[1].click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+          expect(el.optionSelected.length).to.equal(2);
+
+          opts[2].click(); // valueless -> selectValueFailure
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          expect(el.optionSelected.length, 'valueless click must not clear prior selections').to.equal(2);
+        });
+
+        it('should not leak external mutation of select.optionSelected back into menu state', async () => {
+          // Regression: select.optionSelected must be a cloned array in multiselect
+          // mode so consumers mutating it cannot reach back into menu.optionSelected
+          // through a shared reference.
+          const el = await multiSelectFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = '["Apples", "Bananas"]';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(Array.isArray(el.optionSelected)).to.be.true;
+          expect(el.optionSelected.length).to.equal(2);
+          expect(menu.optionSelected.length).to.equal(2);
+          expect(el.optionSelected).to.not.equal(menu.optionSelected);
+
+          // Mutate the consumer-visible array.
+          el.optionSelected.push('intruder');
+          el.optionSelected.pop();
+          el.optionSelected.splice(0, 1);
+
+          expect(menu.optionSelected.length, 'menu state must be insulated from external mutation').to.equal(2);
+        });
+
       });
 
       describe('name', () => {
@@ -707,6 +815,24 @@ function runTest(mobileView) {
           await expect(el.getAttribute('validity')).to.equal('valueMissing');
         });
 
+        it('should clear valueMissing error after selecting a value following blur', async () => {
+          const el = await requiredFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new Event('focusin'));
+          await elementUpdated(el);
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valid');
+        });
+
       });
 
       describe('setCustomValidity', () => {
@@ -831,6 +957,57 @@ function runTest(mobileView) {
         });
       });
 
+      describe('reactive property propagation to menu', () => {
+        it('should update menu size via updateMenuShapeSize after layout change', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+
+          // classic layout always sets menu size to 'md'
+          expect(menu.getAttribute('size')).to.equal('md');
+
+          el.layout = 'emphasized';
+          await elementUpdated(el);
+          el.updateMenuShapeSize();
+          await elementUpdated(el);
+
+          // emphasized layout uses the select's own size
+          expect(menu.getAttribute('size')).to.equal('lg');
+        });
+
+        it('should update menu shape via updateMenuShapeSize after layout change', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+
+          // classic layout forces shape to 'box'
+          expect(menu.getAttribute('shape')).to.equal('box');
+
+          el.layout = 'default';
+          el.shape = 'round';
+          await elementUpdated(el);
+          el.updateMenuShapeSize();
+          await elementUpdated(el);
+
+          // default layout passes shape through
+          expect(menu.getAttribute('shape')).to.equal('round');
+        });
+
+        it('should propagate noCheckmark to menu as attribute', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.noCheckmark = true;
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          expect(menu.hasAttribute('nocheckmark')).to.be.true;
+        });
+
+      });
+
       describe('touched property', () => {
         it('touched becomes true after focusin', async () => {
           const el = await fixture(html`
@@ -915,6 +1092,26 @@ function runTest(mobileView) {
 
           await expect(el.value).to.eql('Apples');
           await expect(el.optionSelected).to.equal(selectedOption);
+        });
+
+        it('should clear the trigger label when value changes to a non-matching string', async () => {
+          // Regression: a runtime value change with no matching option must not
+          // leave the previous selection's label rendered in the trigger.
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          const triggerValueEl = el.shadowRoot.querySelector('#value');
+          expect(triggerValueEl.textContent.trim(), 'precondition: trigger shows prior selection').to.equal('Apples');
+
+          el.value = 'non-existent-value';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(triggerValueEl.textContent.trim()).to.equal('');
         });
 
         it('should apply value from host attribute on initial render', async () => {
@@ -1157,6 +1354,31 @@ function runTest(mobileView) {
           await elementUpdated(el);
           await expect(dropdown.isPopoverVisible).to.be.true;
         });
+
+        // Guards auro-select.js first-highlight fallback: on open with no
+        // selection, the first *active* option (not just non-disabled) must be
+        // highlighted so aria-activedescendant never points at a hidden row or
+        // static placeholder.
+        it('should highlight the first non-hidden, non-static option on open', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static>Header</auro-menuoption>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry">Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive.value).to.equal('banana');
+        });
       });
 
       describe('setMenuValue', () => {
@@ -1369,6 +1591,76 @@ function runTest(mobileView) {
         el.menu = savedMenu;
       });
 
+      // ─── aria-setsize/posinset re-stamp on dynamic option changes ────
+      it('re-stamps aria-setsize/aria-posinset when menu options change at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // Baseline: defaultFixture has 4 options, all stamped at init.
+        let options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(4);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('4');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+
+        // Append a new option after init — auro-menu's slotchange will
+        // re-run initItems() and dispatch auroMenu-optionsChange, which
+        // auro-select must hook to re-stamp position attributes.
+        const extra = document.createElement('auro-menuoption');
+        extra.setAttribute('value', 'Mangoes');
+        extra.textContent = 'Mangoes';
+        menu.appendChild(extra);
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(5);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('5');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+
+        // Remove an option — counts and positions should refresh again.
+        options[0].remove();
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        options = menu.querySelectorAll('auro-menuoption');
+        expect(options).to.have.lengthOf(4);
+        options.forEach((opt, i) => {
+          expect(opt.getAttribute('aria-setsize')).to.equal('4');
+          expect(opt.getAttribute('aria-posinset')).to.equal(String(i + 1));
+        });
+      });
+
+      // ─── native <option> list re-renders on dynamic option changes ───
+      it('re-renders the hidden native select when menu options change at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const nativeSelect = el.shadowRoot.querySelector('.nativeSelectWrapper select');
+
+        // Baseline: defaultFixture has 4 options, none of them Cherries.
+        expect(nativeSelect.querySelector('option[value="Cherries"]')).to.be.null;
+
+        // Append a new option. auro-menu's slotchange fires auroMenu-optionsChange,
+        // which auro-select hooks via requestUpdate() so renderNativeSelect re-stamps
+        // the hidden <option> list. Without that requestUpdate the native select
+        // would go stale, breaking form submission with dynamic options.
+        const extra = document.createElement('auro-menuoption');
+        extra.setAttribute('value', 'Cherries');
+        extra.textContent = 'Cherries';
+        menu.appendChild(extra);
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        expect(nativeSelect.querySelector('option[value="Cherries"]')).to.not.be.null;
+      });
+
       // ─── updateMenuShapeSize with no menu early return ───────────────
       it('updateMenuShapeSize returns early when menu is null', async () => {
         const el = await defaultFixture();
@@ -1405,46 +1697,16 @@ function runTest(mobileView) {
         expect(el.menu).to.not.be.null;
       });
 
-      // ─── auroMenu-selectedOption options fallback to empty array ─────
-      it('auroMenu-selectedOption falls back to empty array when options is undefined', async () => {
-        const el = await defaultFixture();
+      // ─── optionSelected is undefined when menu has no options ─────
+      it('optionSelected is undefined when menu has no options', async () => {
+        const el = await fixture(html`
+          <auro-select>
+            <auro-menu></auro-menu>
+          </auro-select>
+        `);
         await elementUpdated(el);
 
-        const menu = el.querySelector('auro-menu');
-
-        // Dispatch a synthetic auroMenu-selectedOption event with no options in detail
-        menu.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            stringValue: '',
-          }
-        }));
-        await elementUpdated(el);
-
-        // optionSelected should be undefined (options[0] of empty array)
         expect(el.optionSelected).to.equal(undefined);
-      });
-
-      // ─── updateActiveOptionBasedOnKey option.value fallback to empty string ─
-      it('updateActiveOptionBasedOnKey uses empty string when option has no value', async () => {
-        const el = await defaultFixture();
-        await elementUpdated(el);
-
-        // Add an option with no value attribute so option.value is empty
-        const menu = el.querySelector('auro-menu');
-        const noValueOption = document.createElement('auro-menuoption');
-        noValueOption.textContent = 'No Value';
-        menu.appendChild(noValueOption);
-        await elementUpdated(el);
-
-        // Call the method — the option with no value uses '' fallback
-        // Press 'z' which won't match anything, but the filter still runs on all options
-        el.updateActiveOptionBasedOnKey('z');
-        await elementUpdated(el);
-
-        // Should not throw; no match expected
-        expect(el).to.exist;
       });
 
       // ─── setMenuValue returns early when menu is null ───────────────
@@ -1550,6 +1812,44 @@ function runTest(mobileView) {
 
         // Value should remain unchanged
         expect(el.value).to.equal(originalValue);
+      });
+
+      // ─── _handleNativeSelectChange no-ops in multiSelect mode ──
+      it('_handleNativeSelectChange does not corrupt JSON-array value in multiSelect mode', async () => {
+        const el = await multiSelectFixture();
+        el.value = JSON.stringify(['Apples', 'Bananas']);
+        await elementUpdated(el);
+
+        // Simulate a browser autofill/bfcache change on the hidden native <select>
+        el._handleNativeSelectChange({
+          target: {
+            options: [{ value: 'Cherries' }],
+            selectedIndex: 0
+          }
+        });
+
+        // multiSelect value shape must remain a JSON-stringified array
+        expect(el.value).to.equal(JSON.stringify(['Apples', 'Bananas']));
+      });
+
+      // ─── autofill/bfcache divergence on multiSelect is reverted ──
+      it('reverts hidden native <select> to formattedValue[0] on autofill in multiSelect', async () => {
+        const el = await multiSelectFixture();
+        el.value = JSON.stringify(['Apples', 'Bananas']);
+        await elementUpdated(el);
+
+        const { nativeSelect } = el;
+        expect(nativeSelect.value).to.equal('Apples');
+
+        // Simulate autofill/bfcache writing a divergent value + firing change,
+        // exactly what a password manager or restored form state would do.
+        nativeSelect.value = 'Cherries';
+        nativeSelect.dispatchEvent(new Event('change'));
+
+        // Component value stays authoritative and native select is snapped back
+        // to formattedValue[0] so form submissions under `name` stay consistent.
+        expect(el.value).to.equal(JSON.stringify(['Apples', 'Bananas']));
+        expect(nativeSelect.value).to.equal('Apples');
       });
 
       // ─── renderNativeSelect falls back to textContent when option has no value ──
@@ -1702,6 +2002,46 @@ function runTest(mobileView) {
         }
       });
 
+      // ─── updateDisplayedValue removes stale slotted displayValue elements ──
+      // The emphasized layout clones <slot="displayValue"> nodes from the selected
+      // menuoption into the auro-select host's light DOM. On a second selection,
+      // the prior slotted node must be removed before the new one is appended —
+      // otherwise the trigger would visually stack icons from every option the
+      // user has ever clicked.
+      it('updateDisplayedValue removes previously-slotted displayValue elements on re-select', async () => {
+        const el = await emphasizedFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const flights = menu.querySelector('auro-menuoption[value="flights"]');
+        flights.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+
+        const slot = el.shadowRoot.querySelector('slot[name="displayValue"]');
+        expect(slot.assignedElements().length).to.equal(1);
+
+        const cars = menu.querySelector('auro-menuoption[value="cars"]');
+        cars.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+
+        // Old slotted node removed, new one appended — never more than one.
+        expect(slot.assignedElements().length).to.equal(1);
+      });
+
+      // ─── _getOptionDisplayText handles empty textContent ─────────────
+      // The textContent fallback guards the typeahead filter when an option
+      // has no text content (value-only). Called directly so the fixture
+      // doesn't need an empty-label menuoption, which trips axe.
+      it('_getOptionDisplayText returns an empty string for elements with no text', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const emptyEl = document.createElement('span');
+        expect(el._getOptionDisplayText(emptyEl)).to.equal('');
+      });
+
       // ─── handleMenuLoadingChange hides bib when loading starts ───────
       it('handleMenuLoadingChange hides bib when loading without placeholder', async () => {
         const el = await defaultFixture();
@@ -1751,24 +2091,6 @@ function runTest(mobileView) {
         await elementUpdated(el);
 
         await expect(el.isHiddenWhileLoading).to.be.false;
-      });
-
-      // ─── _handleNativeSelectChange multiSelect adds value ────────────
-      it('_handleNativeSelectChange adds selected value in multiSelect mode', async () => {
-        const el = await multiSelectFixture();
-        await elementUpdated(el);
-
-        // Create a mock native select change event
-        const fakeSelect = document.createElement('select');
-        const option = document.createElement('option');
-        option.value = 'Apples';
-        fakeSelect.appendChild(option);
-        fakeSelect.selectedIndex = 0;
-
-        el._handleNativeSelectChange({ target: fakeSelect });
-        await elementUpdated(el);
-
-        await expect(el.value).to.include('Apples');
       });
 
       // ─── renderLayout emphasized-left ────────────────────────────────
@@ -1926,6 +2248,115 @@ function runTest(mobileView) {
         await expect(trigger.ariaActiveDescendantElement === firstOption).to.be.true;
       });
 
+      it('should apply role="listbox" to the menu', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        await elementUpdated(menu);
+        await expect(menu.getAttribute('role')).to.equal('listbox');
+      });
+
+      it('should apply role="option" to each menu option', async () => {
+        const el = await defaultFixture();
+        const options = el.querySelectorAll('auro-menuoption');
+
+        await elementUpdated(el);
+        expect(options.length).to.be.greaterThan(0);
+        options.forEach((option) => {
+          expect(option.getAttribute('role')).to.equal('option');
+        });
+      });
+
+      it('should toggle aria-expanded on the trigger from false to true and back to false', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+      });
+
+      it('should set trigger aria-controls to the bib element id', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+
+        const controlsId = trigger.getAttribute('aria-controls');
+        expect(controlsId).to.not.be.empty;
+
+        // The referenced element must live in the same shadow root as the trigger.
+        const bib = dropdown.shadowRoot.getElementById(controlsId);
+        expect(bib).to.exist;
+        expect(bib.id).to.equal(controlsId);
+      });
+
+      it('should set trigger aria-labelledby to the label element id', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+
+        const labelledById = trigger.getAttribute('aria-labelledby');
+        expect(labelledById).to.not.be.empty;
+
+        const labelEl = dropdown.shadowRoot.getElementById(labelledById);
+        expect(labelEl).to.exist;
+      });
+
+      it('should reflect the disabled state via aria-disabled on the trigger', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+        await elementUpdated(el);
+        await expect(trigger.hasAttribute('aria-disabled')).to.be.false;
+
+        el.disabled = true;
+        await elementUpdated(el);
+        await elementUpdated(dropdown);
+        await expect(trigger.getAttribute('aria-disabled')).to.equal('true');
+
+        el.disabled = false;
+        await elementUpdated(el);
+        await elementUpdated(dropdown);
+        await expect(trigger.hasAttribute('aria-disabled')).to.be.false;
+      });
+
+      if (mobileView) {
+        it('should keep ariaActiveDescendantElement pointing at the activated option in fullscreen mode', async () => {
+          const el = await defaultFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          // Simulate fullscreen (resize observers don't fire in test env).
+          // In fullscreen, the trigger lives in select's shadow DOM while the
+          // options render inside the bib dialog — a different shadow root —
+          // so the element-reference binding must cross that boundary.
+          el.dropdown.isBibFullscreen = true;
+          await elementUpdated(el.dropdown);
+
+          el.menu.navigateOptions('down');
+          await elementUpdated(el);
+
+          const activeOption = el.menu.optionActive;
+          expect(activeOption).to.exist;
+          await expect(trigger.ariaActiveDescendantElement === activeOption).to.be.true;
+        });
+      }
+
       describe('announceToScreenReader', function() {
         this.timeout(5000);
 
@@ -1949,18 +2380,100 @@ function runTest(mobileView) {
           const el = await defaultFixture();
           await elementUpdated(el);
 
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          // Fake only setTimeout/clearTimeout — the announcement's cleanup timer
+          // is scheduled from inside a real rAF, so we need the fake in place
+          // before that rAF fires, but rAF/microtasks/Date must stay real so
+          // Lit's scheduler and @open-wc/testing helpers keep working.
+          const clock = sinon.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+          try {
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+            await elementUpdated(el);
+
+            // Real rAF frames: the first flushes announceToScreenReader's rAF
+            // callback (sets textContent, arms the fake 1000ms cleanup); the
+            // second absorbs any chained announcement (e.g., active-option
+            // followed by selection) that would rearm the timer.
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+            expect(liveRegion.textContent).to.not.equal('');
+
+            await clock.tickAsync(1000);
+            expect(liveRegion.textContent).to.equal('');
+          } finally {
+            clock.restore();
+          }
+        });
+
+        it('should not announce activation of an already-selected option', async () => {
+          const el = await presetValueFixture();
           await elementUpdated(el);
 
-          await new Promise((resolve) => requestAnimationFrame(resolve));
           const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
-          expect(liveRegion.textContent).to.not.equal('');
+          liveRegion.textContent = '';
 
-          // Multiple announcements can chain (e.g., active-option followed by selection),
-          // each resetting the 1000ms cleanup timer. Wait long enough for the final
-          // announcement's timer to expire.
-          await new Promise((resolve) => setTimeout(resolve, 2200));
+          // Opening the bib auto-activates the pre-selected option. Without the
+          // guard, the activatedOption handler would announce ", selected" here,
+          // then Enter would re-announce the same text 300ms later.
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
           expect(liveRegion.textContent).to.equal('');
+        });
+
+        it('should announce "not selected" when a multiSelect option is deselected', async () => {
+          const el = await presetMultiSelectFixture();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await elementUpdated(el);
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          liveRegion.textContent = '';
+
+          // Toggle "Price" off — currentLabel will collapse to "Duration", so the
+          // pre-fix code would falsely announce "Duration, selected" here.
+          const menu = el.querySelector('auro-menu');
+          const priceOption = menu.querySelector('auro-menuoption[value="price"]');
+          priceOption.click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          // Announcement is dispatched via setTimeout(300) inside the
+          // selectedOption handler, then routed through a rAF in
+          // announceToScreenReader.
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(liveRegion.textContent).to.equal('Price, not selected');
+        });
+
+        it('should announce "selected" with the added option when a multiSelect option is added', async () => {
+          const el = await presetMultiSelectFixture();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await elementUpdated(el);
+
+          el.showBib();
+          await waitUntil(() => el.dropdown.isPopoverVisible);
+
+          const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
+          liveRegion.textContent = '';
+
+          const menu = el.querySelector('auro-menu');
+          const stopsOption = menu.querySelector('auro-menuoption[value="stops"]');
+          stopsOption.click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(liveRegion.textContent).to.equal('Stops, selected');
         });
 
         if (mobileView) {
@@ -2011,9 +2524,24 @@ function runTest(mobileView) {
         const menu = el.querySelector('auro-menu');
         const labelSlot = el.querySelector('[slot="label"]');
 
-        if (labelSlot && menu.hasAttribute('aria-label')) {
-          expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
-        }
+        expect(labelSlot, 'label slot should be present').to.exist;
+        expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
+      });
+
+      it('updates menu aria-label and dropdown bibDialogLabel when label text mutates at runtime', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const label = el.querySelector('[slot="label"]');
+
+        label.textContent = 'Updated label';
+        // MutationObserver callbacks flush as microtasks; elementUpdated awaits the next Lit cycle.
+        await elementUpdated(el);
+
+        expect(menu.getAttribute('aria-label')).to.equal('Updated label');
+        expect(dropdown.bibDialogLabel).to.equal('Updated label');
       });
     });
 
@@ -2032,24 +2560,6 @@ function runTest(mobileView) {
             trigger.click();
             await expect(dropdown.isPopoverVisible).to.be.false;
           });
-
-          // // BUG: The select uses popover='manual' which does not support light dismiss,
-          // // and noHideOnThisFocusLoss is set to true, so clicking outside does not close the bib.
-          // it('should close the bib when clicking outside the select element', async () => {
-          //   const el = await defaultFixture();
-          //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-          //   const trigger = dropdown.querySelector('[slot="trigger"]');
-
-          //   trigger.click();
-          //   await elementUpdated(el);
-          //   await expect(dropdown.isPopoverVisible).to.be.true;
-
-          //   // Click outside the select element
-          //   document.body.click();
-          //   await elementUpdated(el);
-
-          //   await expect(dropdown.isPopoverVisible).to.be.false;
-          // });
         });
 
         describe('Menu Option', () => {
@@ -2342,7 +2852,21 @@ function runTest(mobileView) {
           await expect(dropdown.isPopoverVisible).to.be.true;
         });
 
-        describe('Meta', () => {
+        describe('Alt', () => {
+          it('should open the bib when collapsed', async () => {
+            const el = await defaultFixture();
+
+            await elementUpdated(el);
+
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            await elementUpdated(el);
+
+            await expect(dropdown.isPopoverVisible).to.be.true;
+          });
+
           it('should jump to the last enabled option', async () => {
             const el = await defaultFixture();
 
@@ -2353,7 +2877,7 @@ function runTest(mobileView) {
             const menu = el.querySelector('auro-menu');
             const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
 
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
             await elementUpdated(el);
 
             await expect(el.optionActive === lastOption).to.equal(true);
@@ -2379,14 +2903,28 @@ function runTest(mobileView) {
             const menu = el.querySelector('auro-menu');
             const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
 
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
             await elementUpdated(el);
 
             await expect(el.optionActive === lastEnabledOption).to.equal(true);
           });
         });
 
-        describe('Alt', () => {
+        describe('Ctrl', () => {
+          it('should open the bib when collapsed', async () => {
+            const el = await defaultFixture();
+
+            await elementUpdated(el);
+
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
+            await elementUpdated(el);
+
+            await expect(dropdown.isPopoverVisible).to.be.true;
+          });
+
           it('should jump to the last enabled option', async () => {
             const el = await defaultFixture();
 
@@ -2397,7 +2935,7 @@ function runTest(mobileView) {
             const menu = el.querySelector('auro-menu');
             const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
 
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
             await elementUpdated(el);
 
             await expect(el.optionActive === lastOption).to.equal(true);
@@ -2423,7 +2961,7 @@ function runTest(mobileView) {
             const menu = el.querySelector('auro-menu');
             const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
 
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
             await elementUpdated(el);
 
             await expect(el.optionActive === lastEnabledOption).to.equal(true);
@@ -2444,31 +2982,19 @@ function runTest(mobileView) {
           await expect(dropdown.isPopoverVisible).to.be.true;
         });
 
-        describe('Meta', () => {
-          it('should jump to the first enabled option', async () => {
+        describe('Alt', () => {
+          it('should open the bib when collapsed', async () => {
             const el = await defaultFixture();
 
-            await elementUpdated(el);
-            el.showBib();
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
             await elementUpdated(el);
 
-            // Move away from first option
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            await elementUpdated(el);
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            await elementUpdated(el);
-
-            const menu = el.querySelector('auro-menu');
-            const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
-
-            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', metaKey: true }));
-            await elementUpdated(el);
-
-            await expect(el.optionActive === firstOption).to.equal(true);
+            await expect(dropdown.isPopoverVisible).to.be.true;
           });
-        });
 
-        describe('Alt', () => {
           it('should jump to the first enabled option', async () => {
             const el = await defaultFixture();
 
@@ -2489,6 +3015,102 @@ function runTest(mobileView) {
             await elementUpdated(el);
 
             await expect(el.optionActive === firstOption).to.equal(true);
+          });
+
+          it('should skip disabled options', async () => {
+            const el = await fixture(html`
+              <auro-select>
+                <span slot="bib.fullscreen.headline">Bib Headline</span>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+                  <auro-menuoption value="Price">Price</auro-menuoption>
+                  <auro-menuoption value="Duration">Duration</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from the first enabled option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstEnabledOption).to.equal(true);
+          });
+        });
+
+        describe('Ctrl', () => {
+          it('should open the bib when collapsed', async () => {
+            const el = await defaultFixture();
+
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+            await elementUpdated(el);
+
+            await expect(dropdown.isPopoverVisible).to.be.true;
+          });
+
+          it('should jump to the first enabled option', async () => {
+            const el = await defaultFixture();
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from first option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstOption).to.equal(true);
+          });
+
+          it('should skip disabled options', async () => {
+            const el = await fixture(html`
+              <auro-select>
+                <span slot="bib.fullscreen.headline">Bib Headline</span>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+                  <auro-menuoption value="Price">Price</auro-menuoption>
+                  <auro-menuoption value="Duration">Duration</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from the first enabled option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstEnabledOption).to.equal(true);
           });
         });
       });
@@ -2563,7 +3185,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should do nothing while the bib is collapsed', async () => {
+        it('should open the bib and move to the last enabled option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -2574,7 +3196,77 @@ function runTest(mobileView) {
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
           await elementUpdated(el);
 
-          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          const menu = el.querySelector('auro-menu');
+          const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
+          await expect(el.optionActive).to.equal(lastOption);
+        });
+
+        it('should skip options with the hidden attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry" hidden>Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          // A hidden option must never land in aria-activedescendant.
+          await expect(el.optionActive.value).to.equal('banana');
+        });
+
+        it('should skip options with the static attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption static>Footer</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          await expect(el.optionActive.value).to.equal('banana');
+          await expect(el.optionActive.hasAttribute('static')).to.be.false;
+        });
+
+        // Regression guard: pressing End while collapsed must produce exactly one
+        // auroMenu-activatedOption dispatch. show() synchronously fires
+        // auroDropdown-toggled, whose handler will set a fallback active option
+        // unless updateActiveOption is called first. See selectKeyboardStrategy.End.
+        it('should dispatch auroMenu-activatedOption exactly once when opening via End', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          let count = 0;
+          menu.addEventListener('auroMenu-activatedOption', () => { count += 1; });
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          await elementUpdated(el);
+
+          await expect(count).to.equal(1);
         });
       });
 
@@ -2648,19 +3340,12 @@ function runTest(mobileView) {
           await expect(selectedOption.selected).to.be.true;
 
           const valueBefore = el.value;
-          let deselectPreventedEvent = null;
-
-          menu.addEventListener('auroMenu-deselectPrevented', (event) => {
-            deselectPreventedEvent = event;
-          }, { once: true });
 
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           await elementUpdated(menu);
+          await new Promise((resolve) => setTimeout(resolve, 0));
           await elementUpdated(el);
-          await waitUntil(() => !!deselectPreventedEvent);
 
-          await expect(deselectPreventedEvent).to.exist;
-          await expect(deselectPreventedEvent.detail.values[0]).to.equal(selectedOption);
           await expect(selectedOption.selected).to.be.true;
           await expect(el.value).to.equal(valueBefore);
           await expect(dropdown.isPopoverVisible).to.be.false;
@@ -2704,6 +3389,79 @@ function runTest(mobileView) {
             await expect(dropdown.isPopoverVisible).to.be.false;
           });
         }
+
+        // Per APG and native <select>, Enter must open the listbox when closed
+        // and select the active option when open — it must not bubble to a
+        // parent <form> (or auro-form's keydown listener) and trigger submit.
+        // See selectKeyboardStrategy.js Enter handler.
+        describe('does not bubble to parent form on Enter', () => {
+          it('should stop propagation when opening the bib from closed', async () => {
+            const wrapper = await fixture(html`
+              <form @submit=${(e) => e.preventDefault()}>
+                <auro-select>
+                  <span slot="bib.fullscreen.headline">Bib Headline</span>
+                  <span slot="label">Name</span>
+                  <auro-menu>
+                    <auro-menuoption value="Apples">Apples</auro-menuoption>
+                    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              </form>
+            `);
+            const el = wrapper.querySelector('auro-select');
+            await elementUpdated(el);
+
+            let bubbledEnterCount = 0;
+            wrapper.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') bubbledEnterCount += 1;
+            });
+
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            await expect(dropdown.isPopoverVisible).to.be.false;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await elementUpdated(el);
+
+            await expect(bubbledEnterCount).to.equal(0);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+          });
+
+          it('should stop propagation when selecting an option from open', async () => {
+            const wrapper = await fixture(html`
+              <form @submit=${(e) => e.preventDefault()}>
+                <auro-select>
+                  <span slot="bib.fullscreen.headline">Bib Headline</span>
+                  <span slot="label">Name</span>
+                  <auro-menu>
+                    <auro-menuoption value="Apples">Apples</auro-menuoption>
+                    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              </form>
+            `);
+            const el = wrapper.querySelector('auro-select');
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
+
+            trigger.click();
+            await elementUpdated(el);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            let bubbledEnterCount = 0;
+            wrapper.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') bubbledEnterCount += 1;
+            });
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await elementUpdated(el);
+
+            await expect(bubbledEnterCount).to.equal(0);
+            await expect(el.value).to.equal('Oranges');
+          });
+        });
       });
 
       describe('Escape', () => {
@@ -2859,7 +3617,7 @@ function runTest(mobileView) {
           await expect(el.optionActive).to.equal(undefined);
         });
 
-        it('should do nothing while the bib is collapsed', async () => {
+        it('should open the bib and move to the first enabled option while collapsed', async () => {
           const el = await defaultFixture();
 
           await elementUpdated(el);
@@ -2870,7 +3628,74 @@ function runTest(mobileView) {
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
           await elementUpdated(el);
 
-          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          const menu = el.querySelector('auro-menu');
+          const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
+          await expect(el.optionActive).to.equal(firstOption);
+        });
+
+        it('should skip a leading hidden option', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+                <auro-menuoption value="cherry">Cherry</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          // A hidden option must never land in aria-activedescendant.
+          await expect(el.optionActive.value).to.equal('banana');
+        });
+
+        it('should skip a leading static placeholder', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static nomatch>No results</auro-menuoption>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          el.showBib();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          await expect(el.optionActive.value).to.equal('apple');
+          await expect(el.optionActive.hasAttribute('static')).to.be.false;
+        });
+
+        // Regression guard: see matching test under End — same double-dispatch risk.
+        it('should dispatch auroMenu-activatedOption exactly once when opening via Home', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          let count = 0;
+          menu.addEventListener('auroMenu-activatedOption', () => { count += 1; });
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          await elementUpdated(el);
+
+          await expect(count).to.equal(1);
         });
       });
 
@@ -2941,6 +3766,125 @@ function runTest(mobileView) {
         });
       });
 
+      // Regression: chorded shortcuts (Cmd+C, Ctrl+V, Alt+X, Cmd+Space, …)
+      // must not leak into the type-ahead buffer or toggle the bib. Native
+      // <select> ignores modified letter/Space keys; the default-branch
+      // guard in selectKeyboardStrategy enforces the same.
+      describe('Modifier-chorded printable keys', () => {
+        it('should ignore Ctrl+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'v', ctrlKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should ignore Meta+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', metaKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should ignore Alt+letter — no typeahead buffer, no bib open', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', altKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el.menu.optionActive).to.not.exist;
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should not toggle the bib on Ctrl+Space / Meta+Space / Alt+Space', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', ctrlKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', metaKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', altKey: true }));
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should not extend an active typeahead buffer with Ctrl+letter', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Seed a buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Ctrl+p must not append 'p' to the buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', ctrlKey: true }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+        });
+
+        // Shift is intentionally NOT in the ignore list (only Ctrl/Meta/Alt are),
+        // so a Shift+letter — the normal way to type an uppercase character —
+        // still feeds typeahead. The uppercase key is lowercased into the buffer
+        // and matched case-insensitively against option textContent.
+        it('should feed typeahead on Shift+letter — uppercase key matches case-insensitively', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Shift+B arrives as an uppercase 'B' in evt.key.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'B', shiftKey: true }));
+          await elementUpdated(el);
+
+          expect(el.typeaheadBuffer).to.equal('b');
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('banana');
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Banana');
+        });
+      });
+
       describe('Tab', () => {
         it('should close the bib', async () => {
           const el = await defaultFixture();
@@ -2994,6 +3938,32 @@ function runTest(mobileView) {
 
           await expect(dropdown.isPopoverVisible).to.be.false;
           await expect(el.value).to.not.be.undefined;
+        });
+
+        // Per WAI-ARIA APG select-only combobox, Tab on an open listbox must
+        // perform the default action (advance focus to the next tabbable).
+        // Adding preventDefault() here would violate the spec and trap focus
+        // on the trigger. Synthetic keydown events don't trigger native focus
+        // traversal in the test runner, so we assert the invariant directly:
+        // the handler must leave defaultPrevented === false.
+        it('should not preventDefault on Tab — preserves native focus advancement', async () => {
+          const el = await defaultFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.querySelector('[slot="trigger"]');
+
+          trigger.click();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', cancelable: true });
+          el.dispatchEvent(tabEvent);
+          await elementUpdated(el);
+
+          await expect(tabEvent.defaultPrevented).to.be.false;
+          await expect(dropdown.isPopoverVisible).to.be.false;
         });
 
         if (mobileView) {
@@ -3130,6 +4100,31 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive.textContent.trim()).to.equal('Apricot');
         });
 
+        it('should prefer a multi-character prefix over single-char cycling when buffer matches an option', async () => {
+          // Repeated-char cycling must not override a longer prefix match.
+          // Typing "aa" with "Aardvark" present should land on Aardvark, not cycle past it to Anchor.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="aardvark">Aardvark</auro-menuoption>
+                <auro-menuoption value="anchor">Anchor</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('aardvark');
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('aardvark');
+        });
+
         it('should do nothing if there is no matching option for the pressed key', async () => {
           const el = await fixture(html`
             <auro-select>
@@ -3152,6 +4147,28 @@ function runTest(mobileView) {
           await elementUpdated(el);
 
           await expect(el.menu.optionActive).to.equal(previousActive);
+        });
+
+        it('should leave a closed bib closed when no option matches the pressed key', async () => {
+          // Intentional deviation from WAI-ARIA APG / some native <select> implementations:
+          // a printable keystroke with no matching option must NOT open the bib.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'z' }));
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
         });
 
         it('should loop through matching options when the same key is pressed repeatedly', async () => {
@@ -3193,6 +4210,1106 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive).to.exist;
           await expect(el.menu.optionActive.value).to.equal('apple');
           await expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
+        });
+
+        it('should match a multi-character prefix across rapid keystrokes', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          el.updateActiveOptionBasedOnKey('p');
+          el.updateActiveOptionBasedOnKey('r');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should reset the buffer after typeaheadTimeoutMs of inactivity', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="pear">Pear</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 20;
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('apple');
+
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          // Buffer should have reset — 'p' alone matches 'pear', not 'ap'
+          el.updateActiveOptionBasedOnKey('p');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('pear');
+        });
+
+        it('should skip disabled options when matching', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should match an option that has no value attribute via its display text', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption>Cherry</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('c');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Cherry');
+        });
+
+        it('should reflect typeaheadTimeoutMs to its attribute', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 750;
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('typeaheadtimeoutms')).to.equal('750');
+        });
+
+        it('should open a closed dropdown when a match is found', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        it('should not flash an intermediate active option when type-ahead opens the bib', async () => {
+          // Regression guard for the race where dropdown.show() synchronously
+          // fires auroDropdown-toggled, whose handler would set firstActive
+          // BEFORE the type-ahead match overrides it — producing a transient
+          // aria-activedescendant write. The fix calls updateActiveOption(match)
+          // before show() so the handler's `!optionActive` guard short-circuits.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+
+          const activations = [];
+          el.menu.addEventListener('auroMenu-activatedOption', (e) => {
+            activations.push(e.detail);
+          });
+
+          el.updateActiveOptionBasedOnKey('b');
+          await elementUpdated(el);
+
+          expect(activations.length).to.equal(1);
+          expect(activations[0].value).to.equal('banana');
+        });
+
+        it('should ignore non-printable keys', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const beforeActive = el.menu.optionActive;
+          el.updateActiveOptionBasedOnKey('Shift');
+          el.updateActiveOptionBasedOnKey('ArrowDown');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.equal(beforeActive);
+        });
+
+        it('should treat Space as a buffer character mid-typeahead without toggling the bib', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="san-diego">San Diego</auro-menuoption>
+                <auro-menuoption value="san-francisco">San Francisco</auro-menuoption>
+                <auro-menuoption value="seattle">Seattle</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Open the bib with a keystroke so we are mid-typeahead.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 's' }));
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'n' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          await expect(el.menu.optionActive.value).to.equal('san-diego');
+
+          // Space mid-typeahead extends the buffer; bib must stay open.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'f' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          await expect(el.menu.optionActive.value).to.equal('san-francisco');
+        });
+
+        it('should toggle the bib when Space is pressed with an empty buffer', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Sanity: bib closed, buffer empty.
+          el.dropdown.hide();
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Space opens the bib.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          // Buffer must remain empty — space did not get buffered.
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Space again closes the bib.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should resume toggling the bib once the buffer clears via timeout', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 20;
+          await elementUpdated(el);
+
+          // Build a buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Wait for the buffer to timeout.
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Bib should be open from the 'a' keystroke; space now closes it.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        // Locks in the ADO ticket assertion (AB#1567365): matching is against the
+        // displayed text of each option, not the `value` attribute. The fixture
+        // pairs an option whose value starts with a different letter than its
+        // label so the two strategies cannot both pass.
+        it('should match displayed text rather than the value attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Airport</span>
+              <auro-menu>
+                <auro-menuoption value="ord">Chicago</auro-menuoption>
+                <auro-menuoption value="lax">Los Angeles</auro-menuoption>
+                <auro-menuoption value="sea">Seattle</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // 'c' matches the displayed text "Chicago" even though no value starts with 'c'.
+          el.updateActiveOptionBasedOnKey('c');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('ord');
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Chicago');
+
+          // Buffer must clear between the two assertions or 'o' would extend "c" → "co".
+          el.typeaheadBuffer = '';
+
+          // 'o' must NOT activate Chicago — no displayed text starts with 'o',
+          // even though the value "ord" does.
+          const beforeActive = el.menu.optionActive;
+          el.updateActiveOptionBasedOnKey('o');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive).to.equal(beforeActive);
+        });
+
+        it('should fall back to the latest key when the accumulated buffer prefix-matches nothing', async () => {
+          // Fast "a" then "b" against [Apples, Oranges, Bananas]
+          // built buffer "ab", which prefix-matched nothing and failed the
+          // repeat-char gate, so the keystroke was silently dropped. Native
+          // <select> falls back to the latest key — jump to Bananas.
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          el.updateActiveOptionBasedOnKey('b');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+          expect(el.typeaheadBuffer).to.equal('b');
+        });
+
+        it('should not open a closed dropdown when no match is found', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dropdown.hide();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          el.updateActiveOptionBasedOnKey('z');
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should clear the type-ahead buffer when Escape is pressed', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed a buffer mid-typeahead.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Escape clears the buffer (in addition to closing the bib).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Next keystroke starts a fresh match — 'b' alone activates 'Bananas',
+          // not 'ab' (which would have no match).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+        });
+
+        it('should clear the type-ahead buffer when the component loses focus', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+        });
+
+        it('should skip options with the hidden attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          // Hidden Apple must not become the active option.
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should skip options with the static attribute (including nomatch placeholders)', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static nomatch>No results</auro-menuoption>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // 'n' is the first letter of the static "No results" placeholder
+          // (the only option whose displayed text starts with 'n'). Type-ahead
+          // must NOT activate that row — since no other option matches, the
+          // expected outcome is no active option at all.
+          el.updateActiveOptionBasedOnKey('n');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.not.exist;
+        });
+
+        it('should not mutate the buffer when all options are disabled', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="banana" disabled>Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          // Buffer must stay empty so Space keeps its toggle semantics.
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
+        it('should leave Space as a bib toggle when there are no enabled options', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="banana" disabled>Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          // A type-ahead keystroke arrives but cannot match — must not arm the buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+
+          // Now Space must still toggle the bib open (would fail if 'a' had armed the buffer).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        it('should clear a pre-existing buffer when options become unavailable mid-typing', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed a buffer with options present.
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Disable every option, then send another keystroke.
+          const menu = el.querySelector('auro-menu');
+          menu.querySelectorAll('auro-menuoption').forEach((opt) => {
+            opt.setAttribute('disabled', '');
+          });
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('p');
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
+        it('should cancel a pending buffer-reset timeout when cleared', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 50;
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          el._clearTypeaheadBuffer();
+          expect(el._typeaheadTimeout).to.equal(null);
+          expect(el.typeaheadBuffer).to.equal('');
+        });
+
+        it('should clear the type-ahead buffer when value is set programmatically', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed the buffer while the host keeps focus.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          // Programmatic value change (e.g. a parent controller or reset button)
+          // must reset the buffer so the next keystroke starts fresh.
+          el.value = 'Grapes';
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+
+          // 'b' alone should now activate 'Bananas' — would fail if 'a' had
+          // survived, since 'ab' has no match.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+        });
+
+        it('should clear the type-ahead buffer on reset()', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          el.reset();
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
+        it('cycles active option via type-ahead in multiselect mode without altering selection', async () => {
+          const el = await multiSelectFixture();
+          await elementUpdated(el);
+
+          el.focus();
+          el.dropdown.show();
+          await elementUpdated(el);
+
+          const previouslySelected = [...(el.optionSelected || [])];
+
+          // Press 'b' — should move active option to Bananas
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b', bubbles: true, composed: true }));
+          await elementUpdated(el);
+
+          expect(el.menu.optionActive).to.exist;
+          expect(el.menu.optionActive.textContent.trim().toLowerCase().startsWith('b')).to.be.true;
+
+          // Selection state is unchanged — type-ahead must not toggle checks in multiselect
+          expect([...(el.optionSelected || [])]).to.deep.equal(previouslySelected);
+        });
+      });
+    });
+
+    describe('Behavioral Edge Cases', () => {
+      // #1 — Arrow-key navigation must scroll the newly-active option into view
+      // with `behavior: 'auto'` when the OS reports prefers-reduced-motion. The
+      // scroll-method unit tests already prove the behavior branch, but they
+      // call the method directly; this test drives the real code path — a
+      // keyboard event that flips the menu's active option and triggers
+      // scrollActiveOptionIntoView via the auroMenu-activatedOption listener.
+      it('arrow-key navigation uses auto scroll behavior when prefers-reduced-motion matches', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const originalMatchMedia = window.matchMedia;
+        window.matchMedia = (query) => {
+          if (query === '(prefers-reduced-motion: reduce)') {
+            return { matches: true };
+          }
+          return originalMatchMedia(query);
+        };
+
+        const capturedBehaviors = [];
+        const originalScrollIntoViews = new Map();
+        el.menu.querySelectorAll('auro-menuoption').forEach((opt) => {
+          originalScrollIntoViews.set(opt, opt.scrollIntoView);
+          opt.scrollIntoView = (opts) => { capturedBehaviors.push(opts && opts.behavior); };
+        });
+
+        try {
+          el.showBib();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Drain any scroll calls from the initial-active setup so we only
+          // observe the ones triggered by the ArrowDown below.
+          capturedBehaviors.length = 0;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          expect(capturedBehaviors.length, 'scrollIntoView must fire on arrow-key nav').to.be.greaterThan(0);
+          capturedBehaviors.forEach((behavior) => {
+            expect(behavior).to.equal('auto');
+          });
+        } finally {
+          window.matchMedia = originalMatchMedia;
+          originalScrollIntoViews.forEach((fn, opt) => { opt.scrollIntoView = fn; });
+        }
+      });
+
+      // #3 — Remove every menu option while the bib is open. Space must still
+      // toggle the bib (would fail if the empty menu armed the typeahead
+      // buffer), and no option can remain "active" once its DOM node is gone.
+      it('removing all options while the bib is open leaves Space as a bib toggle and clears optionActive', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        const menu = el.querySelector('auro-menu');
+        menu.querySelectorAll('auro-menuoption').forEach((opt) => opt.remove());
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        // No option node exists — none can be active.
+        expect(menu.querySelector('auro-menuoption.active')).to.be.null;
+
+        // Space toggles the bib closed (the standard combobox toggle behavior
+        // must survive an empty menu).
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+        await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+        // Typeahead buffer must remain empty so Space kept its toggle semantics.
+        expect(el.typeaheadBuffer).to.equal('');
+      });
+
+      // #4 — Removing the currently-active option via slot mutation must not
+      // leave the keyboard nav pointing at a detached node. The next ArrowDown
+      // press has to land on a valid remaining option.
+      it('removing the active option via slot mutation leaves keyboard nav on a valid remaining option', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        const menu = el.querySelector('auro-menu');
+        // Move active to the second option so we have neighbors on both sides.
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+        const active = el.menu.optionActive;
+        expect(active).to.exist;
+
+        active.remove();
+        await elementUpdated(menu);
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        const remaining = [...menu.querySelectorAll('auro-menuoption')];
+        expect(remaining.length).to.be.greaterThan(0);
+        expect(el.menu.optionActive, 'next nav must land on a still-attached option').to.exist;
+        expect(remaining).to.include(el.menu.optionActive);
+        expect(el.menu.optionActive.isConnected).to.be.true;
+      });
+
+      // #5 — Multi-select complement to "should close the bib when an option is
+      // selected". Setting `value` programmatically while the bib is open must
+      // NOT close the bib in multi-select mode, so users can continue toggling
+      // additional options.
+      it('multi-select value set programmatically while bib open keeps the bib open', async () => {
+        const el = await multiSelectFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.value = JSON.stringify(['Apples']);
+        await elementUpdated(el);
+        await elementUpdated(el.menu);
+
+        const parsed = JSON.parse(el.value);
+        expect(parsed).to.include('Apples');
+        // Single-select would call hideBib() here; multiselect must not.
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      // #6 — Setting disabled=true while the bib is open. The current
+      // architecture propagates `disabled` to the underlying auro-dropdown as
+      // an attribute (see performUpdate at auro-select.js:1240) and applies
+      // the `is-disabled` class on the internal #dropdownLabel via
+      // commonLabelClasses. That guards subsequent open/close toggles in
+      // auro-dropdown's floater layer — a follow-up hide() becomes a no-op —
+      // so the observable contract from the select's side is that (a) the
+      // disabled attribute is reflected onto the dropdown, and (b) the
+      // is-disabled class is set on #dropdownLabel, which the styles use to
+      // render the trigger non-interactive.
+      it('setting disabled=true while bib open propagates disabled state to dropdown and dropdownLabel', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.disabled = true;
+        await elementUpdated(el);
+
+        expect(el.dropdown.hasAttribute('disabled'), 'disabled must propagate to auro-dropdown').to.be.true;
+        const dropdownLabel = el.shadowRoot.querySelector('#dropdownLabel');
+        expect(dropdownLabel, '#dropdownLabel must exist').to.exist;
+        expect(dropdownLabel.classList.contains('is-disabled'), 'is-disabled class must be applied on #dropdownLabel to render the trigger non-interactive').to.be.true;
+      });
+
+      // #7 — Full roundtrip of trigger.inert as the bib transitions between
+      // popover and fullscreen while OPEN. Existing tests cover each direction
+      // in isolation; this exercises both transitions on the same instance to
+      // guard against state that only correctly clears in one direction.
+      it('bib crossing fullscreenBreakpoint while open toggles trigger.inert in both directions', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Popover → fullscreen: inert must be added to the trigger.
+        dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+        dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change', {
+          bubbles: true,
+          composed: true
+        }));
+        await elementUpdated(el);
+        await expect(dropdown.trigger.inert, 'trigger must be inert while fullscreen dialog is open').to.be.true;
+
+        // Fullscreen → popover: inert must be removed.
+        dropdown.isBibFullscreen = false;
+        await elementUpdated(el);
+        dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change', {
+          bubbles: true,
+          composed: true
+        }));
+        await elementUpdated(el);
+        await expect(dropdown.trigger.inert, 'trigger must be interactive again after returning to popover mode').to.be.false;
+      });
+
+      // #9 — Runtime mutation of the ariaLabel.bib.close slot content. The
+      // slot forwards through auro-select's shadow (as a nested <slot> with
+      // slot="ariaLabel.close">) into auro-bibtemplate, which projects it into
+      // the close button's visible content — no explicit aria-label. Slots
+      // are live, so the accessible name follows the mutation automatically:
+      // the observable contract is that the auro-select forwarding slot's
+      // assignedNodes reflect the updated text.
+      it('runtime mutation of the ariaLabel.bib.close slot content is reflected in the forwarding slot', async () => {
+        const el = await fixture(html`
+          <auro-select>
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
+            <span slot="label">Name</span>
+            <span slot="ariaLabel.bib.close">Close menu</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        `);
+        await elementUpdated(el);
+
+        const forwardingSlot = el.shadowRoot.querySelector('slot[name="ariaLabel.bib.close"]');
+        expect(forwardingSlot, 'auro-select shadow must expose the ariaLabel.bib.close forwarding slot').to.exist;
+
+        const initialText = forwardingSlot
+          .assignedNodes({ flatten: true })
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        expect(initialText).to.equal('Close menu');
+
+        const closeSlotContent = el.querySelector('[slot="ariaLabel.bib.close"]');
+        closeSlotContent.textContent = 'Dismiss picker';
+        await new Promise((r) => requestAnimationFrame(r));
+
+        const updatedText = forwardingSlot
+          .assignedNodes({ flatten: true })
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        expect(updatedText).to.equal('Dismiss picker');
+      });
+
+      // #10 — Deselecting the last selected option in multi-select must return
+      // the trigger to its placeholder state, not just clear the displayed
+      // value. The #placeholder node is always in the DOM; visibility is
+      // toggled via the util_displayHidden class based on truthiness of
+      // this.value. Existing coverage proves the value text clears; this
+      // locks in that the placeholder itself is visible again.
+      it('deselecting the last selected option in multi-select restores the placeholder in the trigger', async () => {
+        const el = await fixture(html`
+          <auro-select multiselect placeholder="Pick a fruit">
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        `);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const apples = menu.querySelector('auro-menuoption[value="Apples"]');
+
+        apples.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+        await new Promise((r) => setTimeout(r, 0));
+        await elementUpdated(el);
+
+        // Sanity check: something is selected, so the placeholder is hidden.
+        expect(JSON.parse(el.value || '[]')).to.include('Apples');
+        const placeholderBefore = el.shadowRoot.querySelector('#placeholder');
+        expect(placeholderBefore, 'placeholder node is always rendered').to.exist;
+        expect(placeholderBefore.classList.contains('util_displayHidden'), 'placeholder must be hidden while a value is selected').to.be.true;
+
+        // Deselect the last selected chip (click the same option again).
+        apples.click();
+        await elementUpdated(el);
+        await elementUpdated(menu);
+        await new Promise((r) => setTimeout(r, 0));
+        await elementUpdated(el);
+
+        // Placeholder must be visible in the trigger again.
+        const placeholderAfter = el.shadowRoot.querySelector('#placeholder');
+        expect(placeholderAfter.classList.contains('util_displayHidden'), 'placeholder must be visible after last chip is deselected').to.be.false;
+        expect(placeholderAfter.textContent.trim()).to.equal('Pick a fruit');
+      });
+    });
+
+    describe('auro-form integration', () => {
+      const formFixture = (opts = {}) => fixture(html`
+        <auro-form>
+          <auro-select name="fruit" ?required=${Boolean(opts.required)}>
+            <span slot="label">Fruit</span>
+            <span slot="bib.fullscreen.headline">Bib Headline</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+          <button type="submit">Submit</button>
+          <button type="reset">Reset</button>
+        </auro-form>
+      `);
+
+      it('clears selection and resets validation when <button type="reset"> is clicked', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await expect(select.value).to.equal('Oranges');
+
+        select.validate(true);
+        await elementUpdated(select);
+        await expect(select.getAttribute('validity')).to.equal('valid');
+
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        await resetEventPromise;
+        await elementUpdated(select);
+
+        await expect(select.value).to.be.undefined;
+        // reset() clears validity to undefined and re-runs non-forced validation,
+        // which short-circuits on the untouched empty value — so the reflected
+        // attribute should be removed entirely, not just != 'valueMissing'.
+        await expect(select.getAttribute('validity')).to.be.null;
+      });
+
+      it('blocks submit when required select is empty', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        let submitFired = false;
+        form.addEventListener('submit', () => { submitFired = true; });
+
+        // Drive submit() directly so we can await the async validation chain.
+        await form.submit();
+        await elementUpdated(select);
+
+        await expect(submitFired).to.be.false;
+      });
+
+      it('dispatches reset event with detail.previousValue when reset button is clicked', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        const resetEvent = await resetEventPromise;
+
+        await expect(resetEvent.detail.previousValue).to.exist;
+        await expect(resetEvent.detail.previousValue.fruit).to.equal('Oranges');
+      });
+
+      it('removes disabled select from form.value at runtime', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Apples';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.value.fruit).to.equal('Apples');
+
+        select.setAttribute('disabled', '');
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        await expect(form.value).to.not.have.key('fruit');
+      });
+
+      it('re-keys form.value when select name changes at runtime', async () => {
+        const form = await formFixture();
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.value.fruit).to.equal('Oranges');
+
+        select.setAttribute('name', 'produce');
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        await expect(form.value).to.not.have.key('fruit');
+        await expect(form.value.produce).to.equal('Oranges');
+      });
+
+      // The empty-required negative test at :5074-5088 only proves submit is
+      // blocked; a broken "always block" implementation would still pass it.
+      // Complement with a positive path: a filled valid required select must
+      // reach the submit dispatch with the value in detail.value.fruit.
+      it('dispatches submit with detail.value.fruit when a required select has a valid value', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        select.value = 'Oranges';
+        await elementUpdated(select);
+        await elementUpdated(form);
+
+        const submitEventPromise = oneEvent(form, 'submit');
+        await form.submit();
+        const submitEvent = await submitEventPromise;
+
+        await expect(submitEvent.detail).to.exist;
+        await expect(submitEvent.detail.value.fruit).to.equal('Oranges');
+      });
+
+      // form.validity is a public contract on auro-form (auro-form.js:404-420):
+      // null in the initial state, 'valid' / 'invalid' after interaction.
+      // Existing coverage only checks the select's own validity attribute — not
+      // the form-level rollup that consumers gate submit buttons on.
+      it('form.validity transitions from null → valid → invalid → null across interactions', async () => {
+        const form = await formFixture({ required: true });
+        const select = form.querySelector('auro-select');
+        await elementUpdated(form);
+        await elementUpdated(select);
+
+        // Fresh required form, nothing touched — validity is null.
+        await expect(form.validity).to.be.null;
+
+        // Fill it → form is valid.
+        select.value = 'Apples';
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.equal('valid');
+
+        // Force-validate on empty → form is invalid.
+        select.value = undefined;
+        await elementUpdated(select);
+        select.validate(true);
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.equal('invalid');
+
+        // Reset returns to initial state → validity back to null.
+        const resetBtn = form.querySelector('button[type="reset"]');
+        const resetEventPromise = oneEvent(form, 'reset');
+        resetBtn.click();
+        await resetEventPromise;
+        await elementUpdated(select);
+        await elementUpdated(form);
+        await expect(form.validity).to.be.null;
+      });
+
+      describe('multiselect', () => {
+        const multiselectFormFixture = (opts = {}) => fixture(html`
+          <auro-form>
+            <auro-select multiselect name="fruit" ?required=${Boolean(opts.required)}>
+              <span slot="label">Fruit</span>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+                <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+                <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </auro-form>
+        `);
+
+        // auro-form.value reads select.value directly (auro-form.js:273-284),
+        // so a multiselect select stores its JSON-encoded array under the
+        // element's name. The native <select> mirror in auro-select.js:1465-1504
+        // only reflects the FIRST selection — form.value must not silently pick
+        // that up in place of the real multiselect payload.
+        it('form.value carries the full multiselect payload as a JSON-encoded array', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          const menu = select.querySelector('auro-menu');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          menu.querySelector('auro-menuoption[value="Apples"]').click();
+          await elementUpdated(select);
+          await elementUpdated(menu);
+          await new Promise((r) => setTimeout(r, 0));
+          menu.querySelector('auro-menuoption[value="Bananas"]').click();
+          await elementUpdated(select);
+          await elementUpdated(menu);
+          await new Promise((r) => setTimeout(r, 0));
+          await elementUpdated(form);
+
+          expect(form.value).to.have.key('fruit');
+          const parsed = JSON.parse(form.value.fruit);
+          expect(parsed).to.include('Apples');
+          expect(parsed).to.include('Bananas');
+          expect(parsed).to.have.length(2);
+        });
+
+        it('dispatches submit with the full multiselect payload in detail.value.fruit', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Apples', 'Oranges']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          const submitEventPromise = oneEvent(form, 'submit');
+          await form.submit();
+          const submitEvent = await submitEventPromise;
+
+          const parsed = JSON.parse(submitEvent.detail.value.fruit);
+          expect(parsed).to.include('Apples');
+          expect(parsed).to.include('Oranges');
+          expect(parsed).to.have.length(2);
+        });
+
+        it('reset event previousValue.fruit carries the full multiselect payload', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Oranges', 'Bananas']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          const resetBtn = form.querySelector('button[type="reset"]');
+          const resetEventPromise = oneEvent(form, 'reset');
+          resetBtn.click();
+          const resetEvent = await resetEventPromise;
+
+          expect(resetEvent.detail.previousValue).to.exist;
+          const parsed = JSON.parse(resetEvent.detail.previousValue.fruit);
+          expect(parsed).to.include('Oranges');
+          expect(parsed).to.include('Bananas');
+        });
+
+        it('removes disabled multiselect from form.value at runtime', async () => {
+          const form = await multiselectFormFixture();
+          const select = form.querySelector('auro-select');
+          await elementUpdated(form);
+          await elementUpdated(select);
+
+          select.value = JSON.stringify(['Apples']);
+          await elementUpdated(select);
+          await elementUpdated(form);
+          expect(form.value).to.have.key('fruit');
+
+          select.setAttribute('disabled', '');
+          await elementUpdated(select);
+          await elementUpdated(form);
+
+          expect(form.value).to.not.have.key('fruit');
         });
       });
     });

@@ -2,14 +2,17 @@
 , no-undef, no-plusplus, init-declarations
 , no-await-in-loop, no-implicit-coercion, jsdoc/require-jsdoc */
 
-import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { fixture, fixtureSync, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { unsafeStatic } from 'lit/static-html.js';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 import { AuroInput } from '../src/auro-input.js';
 import { setInputValue } from './testFunctions.js';
+import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
+
+const { toISOFormatString } = dateFormatter;
 
 const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
@@ -106,7 +109,6 @@ function runFullTest(mobileView) {
         const el = await fixture(html`
           <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
         `);
-
 
         el.value = '34';
         await elementUpdated(el);
@@ -211,9 +213,8 @@ function runFullTest(mobileView) {
         el.value = '36';
         await elementUpdated(el);
         const icon = el.shadowRoot.querySelector('.accentIcon');
-        // Diners Club may show as cc-diners or credit-card depending on implementation
         expect(icon).to.exist;
-        expect(icon.getAttribute('name')).to.be.oneOf(['cc-diners', 'credit-card']);
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
       });
 
       it('should identify card starting with "38" as Diners Club', async () => {
@@ -225,7 +226,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         const icon = el.shadowRoot.querySelector('.accentIcon');
         expect(icon).to.exist;
-        expect(icon.getAttribute('name')).to.be.oneOf(['cc-diners', 'credit-card']);
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
       });
 
       it('should apply Amex mask format for American Express cards', async () => {
@@ -240,6 +241,114 @@ function runFullTest(mobileView) {
         expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-amex');
         // The value should contain the Amex number
         expect(el.value.replace(/\s/g, '').length).to.be.greaterThan(0);
+      });
+
+      it('should identify card starting with "30" as Diners Club (legacy 300-305 range)', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccLegacyDiners" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '3000';
+        await elementUpdated(el);
+
+        const icon = el.shadowRoot.querySelector('.accentIcon');
+        expect(icon).to.exist;
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
+        expect(el.format).to.equal('0000 000000 0000');
+      });
+
+      it('does not throw or warn when value is set programmatically across format changes', async () => {
+        // Locks in the imask cursorPos throw fix (re-entrancy guard on
+        // configureAutoFormatting) and the patched-setter early-return that
+        // suppresses synthetic input events while the mask is being built.
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        const errors = [];
+        const warnings = [];
+        const onError = (e) => errors.push(e.error || e.reason || e.message);
+        const origWarn = console.warn;
+        console.warn = (...args) => warnings.push(args.join(' '));
+        window.addEventListener('error', onError);
+        window.addEventListener('unhandledrejection', onError);
+
+        try {
+          // Switch formats by value: triggers processCreditCard → format change →
+          // configureAutoFormatting. Pre-fix this throw'd inside imask alignCursor.
+          el.value = '3400 000000 00000';
+          await elementUpdated(el);
+          el.value = '3000 000000 0000';
+          await elementUpdated(el);
+          el.value = '4000 0000 0000 0000';
+          await elementUpdated(el);
+        } finally {
+          window.removeEventListener('error', onError);
+          window.removeEventListener('unhandledrejection', onError);
+          console.warn = origWarn;
+        }
+
+        expect(errors, `unexpected errors: ${errors.join(' | ')}`).to.have.lengthOf(0);
+        const maskWarnings = warnings.filter((w) => w.includes('changed outside of mask'));
+        expect(maskWarnings, `unexpected mask warnings: ${maskWarnings.join(' | ')}`).to.have.lengthOf(0);
+      });
+
+      it('keeps mask displayValue in lock-step with el.value after a programmatic write', async () => {
+        // Locks in the updated() change that routes credit-card value writes
+        // through maskInstance.value instead of el.value directly.
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        el.value = '4111111111111111';
+        await elementUpdated(el);
+        await elementUpdated(el);
+
+        const nativeInput = el.shadowRoot.querySelector('input');
+        expect(el.maskInstance, 'mask instance should exist').to.exist;
+        expect(el.maskInstance.displayValue).to.equal(nativeInput.value);
+      });
+
+      // The credit-card mask path writes through maskInstance.value rather
+      // than el.value to keep the mask's _value in sync. The `|| ''` fallback
+      // prevents passing an undefined formattedValue (which happens when value
+      // is cleared after the mask exists) into imask, where it would surface
+      // as a "changed outside of mask" warning.
+      it('clears maskInstance value via empty-string fallback when value is reset to empty', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        el.value = '4111111111111111';
+        await elementUpdated(el);
+        await elementUpdated(el);
+        expect(el.maskInstance).to.exist;
+        expect(el.maskInstance.value).to.not.equal('');
+
+        el.value = '';
+        await elementUpdated(el);
+        await elementUpdated(el);
+
+        expect(el.maskInstance.value).to.equal('');
+      });
+
+      it('configureAutoFormatting is re-entrancy safe', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        const first = el.maskInstance;
+        // Simulate the re-entrant call that used to happen via the synthetic
+        // input event from imask's internal updateControl. The guard should
+        // make the second call a no-op so the first call's mask survives.
+        el._configuringMask = true;
+        el.configureAutoFormatting();
+        el._configuringMask = false;
+        expect(el.maskInstance).to.equal(first);
       });
     });
 
@@ -270,168 +379,117 @@ function runFullTest(mobileView) {
     });
 
     describe('handles date formatting', () => {
-      it('should format as mm/dd/yyyy', async () => {
-        const el = await fixture(html`
-          <auro-input type="date" format="mm/dd/yyyy"></auro-input>
-        `);
+      it('mm/dd/yyyy — stores ISO, displays locale format', async () => {
+        const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
 
         setInputValue(el, '12312000');
         await elementUpdated(el);
-        expect(el.value).to.equal('12/31/2000');
+        expect(el.value).to.equal('2000-12-31');
+        expect(el.inputElement.value).to.equal('12/31/2000');
       });
 
-      it('should format as dd/mm/yyyy', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
-        `);
+      // When type=date is set without an explicit format, setCustomHelpTextMessage
+      // falls through the typeToI18n list and hits the date branch, wiring the
+      // default mm/dd/yyyy validity message. configureDataForType then resolves
+      // a default format from the locale, so subsequent renders read format
+      // from the property — exercising both ternary arms of placeholderStr.
+      it('type="date" without format wires default validity message and renders MM/DD/YYYY placeholder', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.setCustomValidityForType).to.exist;
+        expect(el.inputElement.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+      });
+
+      it('dd/mm/yyyy — stores ISO, displays locale format', async () => {
+        const el = await fixture(html`<auro-input type="date" format="dd/mm/yyyy"></auro-input>`);
 
         setInputValue(el, '31122000');
         await elementUpdated(el);
-        expect(el.value).to.equal('31/12/2000');
+        expect(el.value).to.equal('2000-12-31');
+        expect(el.inputElement.value).to.equal('31/12/2000');
       });
 
-      it('should format as yyyy/mm/dd', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="yyyy/mm/dd"></auro-input>
-        `);
+      it('yyyy/mm/dd — stores ISO, displays locale format', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yyyy/mm/dd"></auro-input>`);
 
         setInputValue(el, '20001231');
         await elementUpdated(el);
-        expect(el.value).to.equal('2000/12/31');
+        expect(el.value).to.equal('2000-12-31');
+        expect(el.inputElement.value).to.equal('2000/12/31');
       });
 
-      it('should format as yyyy/dd/mm', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
-        `);
+      it('yyyy/dd/mm — stores ISO, displays locale format', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yyyy/dd/mm"></auro-input>`);
 
         setInputValue(el, '20003112');
         await elementUpdated(el);
-        expect(el.value).to.equal('2000/31/12');
+        expect(el.value).to.equal('2000-12-31');
+        expect(el.inputElement.value).to.equal('2000/31/12');
       });
 
-      it('should format as mm/yy', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="mm/yy"></auro-input>
-        `);
+      it('mm/yy — partial format passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="mm/yy"></auro-input>`);
 
         setInputValue(el, '1231');
         await elementUpdated(el);
         expect(el.value).to.equal('12/31');
       });
 
-      it('should format as yy/mm', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="yy/mm"></auro-input>
-        `);
+      it('yy/mm — partial format passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yy/mm"></auro-input>`);
 
         setInputValue(el, '9912');
         await elementUpdated(el);
         expect(el.value).to.equal('99/12');
       });
 
-      it('should format as mm/yyyy', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
-        `);
+      it('mm/yyyy — partial format passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="mm/yyyy"></auro-input>`);
 
         setInputValue(el, '122000');
         await elementUpdated(el);
         expect(el.value).to.equal('12/2000');
       });
 
-      it('should format as yyyy/mm', async () => {
-        const el = await fixture(html`
-          <auro-input id="format-date" type="date" format="yyyy/mm"></auro-input>
-        `);
+      it('yyyy/mm — partial format passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yyyy/mm"></auro-input>`);
 
         setInputValue(el, '200012');
         await elementUpdated(el);
         expect(el.value).to.equal('2000/12');
       });
 
-      //   it('yy', async () => {
-      //     const el = await fixture(html`
-      //       <auro-input id="format-date" type="date" format="yy"></auro-input>
-      //     `);
+      it('yy — single component passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yy"></auro-input>`);
 
-      //     setInputValue(el, '99');
-      //     await elementUpdated(el);
-      //     expect(el.value).to.equal('99');
-      //   });
-
-      //   it('yyyy', async () => {
-      //     const el = await fixture(html`
-      //       <auro-input id="format-date" type="date" format="yyyy"></auro-input>
-      //     `);
-
-      //     setInputValue(el, '1999');
-      //     await elementUpdated(el);
-      //     expect(el.value).to.equal('1999');
-      //   });
-
-      //   it('mm', async () => {
-      //     const el = await fixture(html`
-      //       <auro-input id="format-date" type="date" format="mm"></auro-input>
-      //     `);
-
-      //     setInputValue(el, '12');
-      //     await elementUpdated(el);
-      //     expect(el.value).to.equal('12');
-      //   });
-
-      //   it('dd', async () => {
-      //     const el = await fixture(html`
-      //       <auro-input id="format-date" type="date" format="dd"></auro-input>
-      //     `);
-
-      //     setInputValue(el, '31');
-      //     await elementUpdated(el);
-      //     expect(el.value).to.equal('31');
-      //   });
-
-      it('getMaskOptions for single-component date formats returns working format/parse', async () => {
-        const el = await fixture(html`<auro-input></auro-input>`);
+        setInputValue(el, '99');
         await elementUpdated(el);
-
-        const maskOpts = el.util.getMaskOptions('date', 'dd');
-
-        expect(maskOpts.format(5)).to.equal('05');
-        expect(maskOpts.format(31)).to.equal('31');
-        expect(maskOpts.parse('15')).to.equal(15);
-        expect(maskOpts.parse('')).to.be.null;
+        expect(el.value).to.equal('99');
       });
 
-      it('getMaskOptions multi-component date format returns empty string for null date', async () => {
-        const el = await fixture(html`<auro-input></auro-input>`);
+      it('yyyy — single component passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="yyyy"></auro-input>`);
+
+        setInputValue(el, '1999');
         await elementUpdated(el);
-
-        const maskOpts = el.util.getMaskOptions('date', 'mm/dd/yyyy');
-
-        expect(maskOpts.format(null)).to.equal('');
-        expect(maskOpts.format(undefined)).to.equal('');
-        expect(maskOpts.parse('')).to.be.null;
+        expect(el.value).to.equal('1999');
       });
 
-      it('getMaskOptions multi-component date parse returns null for invalid parts', async () => {
-        const el = await fixture(html`<auro-input></auro-input>`);
+      it('mm — single component passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="mm"></auro-input>`);
+
+        setInputValue(el, '12');
         await elementUpdated(el);
-
-        const maskOpts = el.util.getMaskOptions('date', 'mm/dd/yyyy');
-
-        // Call parse with this.mask set to the format pattern
-        const result = maskOpts.parse.call({ mask: 'mm/dd/yyyy' }, 'xx/xx/xxxx');
-
-        expect(result).to.be.null;
+        expect(el.value).to.equal('12');
       });
 
-      it('toNorthAmericanFormat returns undefined when dateStr does not match format', async () => {
-        const el = await fixture(html`<auro-input></auro-input>`);
+      it('dd — single component passes value through unchanged', async () => {
+        const el = await fixture(html`<auro-input type="date" format="dd"></auro-input>`);
+
+        setInputValue(el, '31');
         await elementUpdated(el);
-
-        const result = el.util.toNorthAmericanFormat('not-a-date', 'mm/dd/yyyy');
-
-        expect(result).to.be.undefined;
+        expect(el.value).to.equal('31');
       });
     });
 
@@ -457,7 +515,7 @@ function runFullTest(mobileView) {
       input.focus();
       input.blur();
 
-      await elementUpdated(el);
+      await el.updateComplete;
 
       expect(el.hasAttribute('validity')).to.be.true;
     });
@@ -665,63 +723,46 @@ function runFullTest(mobileView) {
 
         expect(el.errorMessage).to.not.be.empty;
       });
+
+      // Regression: the help-text `<p>` must keep the same DOM node identity
+      // across valid → invalid → valid transitions. Earlier the template
+      // used two distinct branches, so Lit replaced the entire <p> on a
+      // validity flip; VoiceOver wouldn't re-announce because the
+      // aria-live region it was watching had been removed. Identity-stable
+      // means the role/aria-live attributes and text content flip in
+      // place, which AT does announce.
+      it('keeps the help-text <p> identity stable across validity transitions', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+        await elementUpdated(el);
+
+        const initialP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(initialP).to.exist;
+        expect(initialP.getAttribute('role')).to.be.null;
+        expect(initialP.getAttribute('aria-live')).to.be.null;
+
+        // Trigger an error state.
+        const input = el.shadowRoot.querySelector('input');
+        input.focus();
+        input.blur();
+        await elementUpdated(el);
+
+        const errorP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(errorP).to.equal(initialP);
+        expect(errorP.getAttribute('role')).to.equal('alert');
+        expect(errorP.getAttribute('aria-live')).to.equal('assertive');
+
+        // Flip back to valid by satisfying the required check.
+        el.value = 'now-valid';
+        await elementUpdated(el);
+
+        const recoveredP = el.shadowRoot.querySelector(`#${el.uniqueId}`);
+        expect(recoveredP).to.equal(initialP);
+        expect(recoveredP.getAttribute('role')).to.be.null;
+        expect(recoveredP.getAttribute('aria-live')).to.be.null;
+      });
     });
 
     describe('format', () => {
-      it('should check MM/YY format validity correctly', async () => {
-        const el = await fixture(html`
-          <auro-input type="date" format="MM/YY"></auro-input>
-        `);
-
-        el.value = '10/';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('tooShort');
-
-        el.value = '10/22';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('valid');
-      });
-
-      it('should check MM/YYYY format validity correctly', async () => {
-        const el = await fixture(html`
-          <auro-input type="date" format="MM/YYYY"></auro-input>
-        `);
-
-        el.value = '10/';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('tooShort');
-
-        el.value = '10/2022';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('valid');
-      });
-
-      it('should check YYYY/MM/DD format validity correctly', async () => {
-        const el = await fixture(html`
-          <auro-input type="date" format="YYYY/MM/DD"></auro-input>
-        `);
-
-        el.value = '20';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('tooShort');
-
-        el.value = '2022/10/10';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('valid');
-      });
-
       it('should format input value according to the specified format and enforce restrictions', async () => {
         const el = await fixture(html`
           <auro-input format="47440000"></auro-input>
@@ -842,21 +883,17 @@ function runFullTest(mobileView) {
     });
 
     describe('max', () => {
-      it('should check type date validity correctly when using the max attribute', async () => {
+      it('should check type date validity correctly when using the ISO max attribute', async () => {
         const el = await fixture(html`
-          <auro-input type="date" max="03/03/2023"></auro-input>
+          <auro-input type="date" max="2023-03-03"></auro-input>
         `);
 
-        el.value = '03/03/2023';
-
+        el.value = '2023-03-03';
         await elementUpdated(el);
-
         expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        el.value = '03/04/2023';
-
+        el.value = '2023-03-04';
         await elementUpdated(el);
-
         expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
       });
 
@@ -902,21 +939,17 @@ function runFullTest(mobileView) {
     });
 
     describe('min', () => {
-      it('should check type date validity correctly when using the min attribute', async () => {
+      it('should check type date validity correctly when using the ISO min attribute', async () => {
         const el = await fixture(html`
-          <auro-input type="date" min="03/03/2023"></auro-input>
+          <auro-input type="date" min="2023-03-03"></auro-input>
         `);
 
-        el.value = '03/04/2023';
-
+        el.value = '2023-03-04';
         await elementUpdated(el);
-
         expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        el.value = '03/02/2023';
-
+        el.value = '2023-03-02';
         await elementUpdated(el);
-
         expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
       });
 
@@ -1086,6 +1119,15 @@ function runFullTest(mobileView) {
         await expect(input).to.have.attribute('placeholder', 'John Doe');
       });
 
+      // type=date with an explicit format derives the placeholder from that
+      // format (uppercased) when the consumer hasn't supplied a placeholder
+      // of their own.
+      it('derives the placeholder from a date input\'s format when not explicitly set', async () => {
+        const el = await fixture(html`<auro-input type="date" format="dd/mm/yyyy"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.inputElement.getAttribute('placeholder')).to.equal('DD/MM/YYYY');
+      });
     });
 
     describe('readonly', () => {
@@ -1205,6 +1247,22 @@ function runFullTest(mobileView) {
           expect(helpText.textContent).to.contain('Please enter a valid email');
         }
       });
+
+      // Regression: uppercase `format` attribute (e.g. "MM/DD/YYYY", as
+      // used in the new localization-locale-formatted example) used to
+      // silently miss the `dateFormatMap` lookup inside
+      // `setCustomHelpTextMessage`, leaving setCustomValidityForType unset
+      // and the user without a type-specific validation message. The
+      // firstUpdated normalization lowers the format so the map lookup
+      // finds the matching i18n key.
+      it('normalizes uppercase format to lowercase and sets setCustomValidityForType', async () => {
+        const el = await fixture(html`<auro-input type="date" format="MM/DD/YYYY"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(el.format).to.equal('mm/dd/yyyy');
+        expect(el.setCustomValidityForType).to.be.a('string');
+        expect(el.setCustomValidityForType.length).to.be.greaterThan(0);
+      });
     });
 
     describe('setCustomValidityRangeOverflow', () => {
@@ -1291,6 +1349,32 @@ function runFullTest(mobileView) {
 
         expect(input.type).to.equal('text');
       });
+
+      // Regression: the show/hide toggle must expose its pressed state via
+      // aria-pressed so SR users perceive the toggle pattern. Without it
+      // the only signal is the slot-text swap ("Show Password" / "Hide
+      // Password"), which AT does not interpret as a toggle.
+      it('should expose aria-pressed on the password toggle button', async () => {
+        const el = await fixture(html`<auro-input type="password" value="secret"></auro-input>`);
+        await elementUpdated(el);
+
+        const toggle = el.shadowRoot.querySelector('.passwordBtn');
+        expect(toggle).to.exist;
+
+        // auro-button's transportAttributes forwards `aria-*` from the host
+        // onto the inner `<button>`. Query inside its shadow root for the
+        // attribute that the AT actually sees.
+        await toggle.updateComplete;
+        const innerButton = toggle.shadowRoot.querySelector('button');
+        expect(innerButton).to.exist;
+        expect(innerButton.getAttribute('aria-pressed')).to.equal('false');
+
+        el.showPassword = true;
+        await elementUpdated(el);
+        await toggle.updateComplete;
+
+        expect(innerButton.getAttribute('aria-pressed')).to.equal('true');
+      });
     });
 
     describe('simple', () => {
@@ -1360,6 +1444,164 @@ function runFullTest(mobileView) {
         expect(input.type).to.equal('text');
       });
 
+      describe('date', () => {
+        it('uses uppercase format string as programmatic placeholder for all formats', async () => {
+          const dateFormats = [
+            'mm/dd/yyyy', 'dd/mm/yyyy', 'yyyy/mm/dd', 'yyyy/dd/mm',
+            'mm/yy', 'yy/mm', 'mm/yyyy', 'yyyy/mm', 'yy', 'yyyy', 'mm', 'dd'
+          ];
+
+          for (let index = 0; index < dateFormats.length; index++) {
+            const el = await fixture(html`
+              <auro-input type="date" format=${dateFormats[index]}></auro-input>
+            `);
+
+            expect(el.placeholderStr).to.equal(dateFormats[index].toUpperCase());
+            el.placeholder = 'some date';
+            expect(el.placeholderStr).not.to.equal(dateFormats[index].toUpperCase());
+          }
+        });
+
+        it('incomplete entry is tooShort', async () => {
+          const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+          el.value = '202-10-10';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('tooShort');
+
+          el.value = '2022-10-10';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+        });
+
+        it('calendar-invalid date is marked as patternMismatch', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" format="mm/dd/yyyy"></auro-input>
+          `);
+
+          el.value = '2023-02-29';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('patternMismatch');
+        });
+
+        it('out-of-range month/day segments are marked as patternMismatch', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" format="mm/dd/yyyy"></auro-input>
+          `);
+
+          el.value = '2024-13-32';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('patternMismatch');
+        });
+
+        it('backspace on a fully-entered date does not wipe the input', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+          await elementUpdated(el);
+
+          // Set a complete ISO value — simulates user finishing a full date entry
+          el.value = '2024-01-15';
+          await elementUpdated(el);
+          await elementUpdated(el);
+          expect(el.valueObject).to.be.instanceof(Date);
+
+          await sendKeys({ press: 'Backspace' });
+          await elementUpdated(el);
+
+          // Input must not be wiped — partial display value should remain
+          expect(el.value).to.not.equal('');
+          expect(el.value).to.not.be.undefined;
+        });
+
+        it('clearing value propagates to clear valueObject', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+
+          el.value = '2024-01-15';
+          await elementUpdated(el);
+          expect(el.valueObject).to.be.instanceof(Date);
+
+          el.value = undefined;
+          await elementUpdated(el);
+          await elementUpdated(el);
+
+          expect(el.valueObject).to.be.undefined;
+        });
+
+        it('clearing min after it was set clears minObject', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+
+          el.min = '2024-01-01';
+          await elementUpdated(el);
+          expect(el.minObject).to.be.instanceof(Date);
+
+          el.min = undefined;
+          await elementUpdated(el);
+          await elementUpdated(el);
+
+          expect(el.minObject).to.be.undefined;
+        });
+
+        describe('partial date format validation', () => {
+          [
+            {
+              format: 'mm/yyyy',
+              value: '12/2025'
+            },
+            {
+              format: 'yyyy',
+              value: '2025'
+            },
+            {
+              format: 'mm/dd',
+              value: '12/25'
+            },
+            {
+              format: 'mm/yy',
+              value: '12/25'
+            },
+            {
+              format: 'dd/mm',
+              value: '25/12'
+            },
+            {
+              format: 'yy/mm',
+              value: '25/12'
+            },
+            {
+              format: 'yyyy/mm',
+              value: '2025/12'
+            },
+            {
+              format: 'dd',
+              value: '25'
+            },
+            {
+              format: 'yy',
+              value: '25'
+            },
+            {
+              format: 'mm',
+              value: '12'
+            },
+          ].forEach(({ format, value }) => {
+            it(`valid value "${value}" for format "${format}" resolves to valid`, async () => {
+              const el = await fixture(html`<auro-input type="date" format="${format}" value="${value}"></auro-input>`);
+              await elementUpdated(el);
+              el.validate(true);
+              await elementUpdated(el);
+              expect(el.validity).to.equal('valid');
+            });
+          });
+
+          it('out-of-range value for partial format resolves to patternMismatch', async () => {
+            const el = await fixture(html`<auro-input type="date" format="mm/yyyy" value="13/2025"></auro-input>`);
+            await elementUpdated(el);
+            el.validate(true);
+            await elementUpdated(el);
+            expect(el.validity).to.equal('patternMismatch');
+          });
+        });
+      });
+
       it('should validate type="email" input correctly', async () => {
         const el = await fixture(html`
           <auro-input type="email" label="Label"></auro-input>
@@ -1376,54 +1618,6 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
-      });
-
-      it('should use programmatic placeholder for date inputs', async () => {
-        // All date types and their default placeholders at their corresponding index
-        const dateFormats = [
-          'mm/dd/yyyy',
-          'dd/mm/yyyy',
-          'yyyy/mm/dd',
-          'yyyy/dd/mm',
-          'mm/yy',
-          'yy/mm',
-          'mm/yyyy',
-          'yyyy/mm',
-          'yy',
-          'yyyy',
-          'mm',
-          'dd'
-        ];
-
-        for (let index = 0; index < dateFormats.length; index++) {
-          const el = await fixture(html`
-            <auro-input type="date" format=${dateFormats[index]}></auro-input>
-          `);
-
-          expect(el.placeholderStr).to.equal(dateFormats[index].toUpperCase());
-
-          el.placeholder = "some date";
-
-          expect(el.placeholderStr).not.to.equal(dateFormats[index].toUpperCase());
-        }
-      });
-
-      it('should check type date validity correctly', async () => {
-        const el = await fixture(html`
-          <auro-input type="date"></auro-input>
-        `);
-
-        el.value = '10/10/202';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('tooShort');
-
-        el.value = '10/10/2022';
-
-        await elementUpdated(el);
-
-        expect(el.getAttribute('validity')).to.be.equal('valid');
       });
 
     });
@@ -1520,6 +1714,359 @@ function runFullTest(mobileView) {
         expect(el.value).to.equal(undefined);
       });
 
+    });
+
+    describe('valueObject / minObject / maxObject', () => {
+      it('does not create date objects when type is not "date"', async () => {
+        const el = await fixture(html`
+          <auro-input type="text" value="2024-01-01" min="2023-01-01" max="2024-12-31"></auro-input>
+        `);
+
+        const initialValue = el.value;
+        const initialMin = el.min;
+        const initialMax = el.max;
+        await elementUpdated(el);
+
+        expect(el.value).to.equal(initialValue);
+        expect(el.min).to.equal(initialMin);
+        expect(el.max).to.equal(initialMax);
+      });
+
+      it('populates valueObject, minObject, maxObject from ISO strings', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-05-10';
+        el.min = '2024-01-01';
+        el.max = '2024-12-31';
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('2024-05-10');
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-05-10');
+        expect(toISOFormatString(el.minObject)).to.equal('2024-01-01');
+        expect(toISOFormatString(el.maxObject)).to.equal('2024-12-31');
+      });
+
+      it('valueObject, minObject, maxObject are readonly getters', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        const findDescriptor = (obj, prop) => {
+          let proto = Object.getPrototypeOf(obj);
+          while (proto && proto !== Object.prototype) {
+            const desc = Object.getOwnPropertyDescriptor(proto, prop);
+            if (desc) return desc;
+            proto = Object.getPrototypeOf(proto);
+          }
+          return undefined;
+        };
+
+        ['valueObject', 'minObject', 'maxObject'].forEach((prop) => {
+          const desc = findDescriptor(el, prop);
+          expect(desc).to.exist;
+          expect(desc.get).to.be.a('function');
+          expect(desc.set).to.be.undefined;
+        });
+      });
+
+      it('valueObject is undefined when value is unset or empty', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '';
+        el.min = '2024-01-01';
+        el.max = '2024-12-31';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.undefined;
+        expect(el.minObject).to.be.instanceOf(Date);
+        expect(el.maxObject).to.be.instanceOf(Date);
+      });
+
+      it('only valueObject is created when min/max are not set', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-03-10';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-03-10');
+        expect(el.minObject).to.be.undefined;
+        expect(el.maxObject).to.be.undefined;
+      });
+
+      it('invalid ISO value does not populate valueObject', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-99-99';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.undefined;
+      });
+
+      it('valueObject round-trips correctly on US DST spring-forward day (2025-03-09)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2025-03-09';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2025-03-09');
+      });
+
+      it('valueObject round-trips correctly on US DST fall-back day (2024-11-03)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-11-03';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-11-03');
+      });
+
+      it('valueObject round-trips correctly on a leap day (2024-02-29)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2024-02-29';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-02-29');
+      });
+
+      it('valueObject is undefined for Feb 29 on a non-leap year (2023-02-29)', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        el.value = '2023-02-29';
+        await elementUpdated(el);
+
+        expect(el.valueObject).to.be.undefined;
+      });
+
+      it('keeps ISO model value and updates display when format changes', async () => {
+        const el = await fixture(html`
+          <auro-input type="date" format="mm/dd/yyyy"></auro-input>
+        `);
+
+        el.value = '2024-12-31';
+        await elementUpdated(el);
+        expect(el.inputElement.value).to.equal('12/31/2024');
+
+        el.format = 'dd/mm/yyyy';
+        await elementUpdated(el);
+        expect(el.value).to.equal('2024-12-31');
+        expect(el.inputElement.value).to.equal('31/12/2024');
+      });
+
+      it('does not create valueObject for non-full-date formats', async () => {
+        const el = await fixture(html`
+          <auro-input type="date" format="mm/yy"></auro-input>
+        `);
+
+        el.value = '12/24';
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('12/24');
+        expect(el.valueObject).to.be.undefined;
+      });
+    });
+
+    describe('locale', () => {
+      it('defaults to en-US format when no locale is set', async () => {
+        const el = await fixture(html`<auro-input type="date"></auro-input>`);
+
+        expect(el.locale).to.equal('en-US');
+        expect(el.format).to.equal('mm/dd/yyyy');
+        expect(el.placeholderStr).to.equal('MM/DD/YYYY');
+      });
+
+      it('locale="en-GB" derives dd/mm/yyyy format', async () => {
+        const el = await fixture(html`<auro-input type="date" locale="en-GB"></auro-input>`);
+
+        expect(el.format).to.equal('dd/mm/yyyy');
+        expect(el.placeholderStr).to.equal('DD/MM/YYYY');
+      });
+
+      it('locale="zh-CN" derives yyyy/mm/dd format', async () => {
+        const el = await fixture(html`<auro-input type="date" locale="zh-CN"></auro-input>`);
+
+        expect(el.format).to.equal('yyyy/mm/dd');
+        expect(el.placeholderStr).to.equal('YYYY/MM/DD');
+      });
+
+      it('explicit format overrides locale-derived format', async () => {
+        const el = await fixture(html`
+          <auro-input type="date" locale="en-GB" format="yyyy/mm/dd"></auro-input>
+        `);
+
+        expect(el.format).to.equal('yyyy/mm/dd');
+
+        setInputValue(el, '20001231');
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('2000-12-31');
+        expect(el.inputElement.value).to.equal('2000/12/31');
+      });
+
+      it('inherits nearest data-locale from DOM when locale prop is not set', async () => {
+        const wrapper = fixtureSync(html`
+          <div data-locale="de-DE">
+            <auro-input type="date"></auro-input>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-input');
+        await elementUpdated(el);
+
+        expect(el.locale).to.equal('de-DE');
+        expect(el.format).to.equal('dd.mm.yyyy');
+        expect(el.placeholderStr).to.equal('DD.MM.YYYY');
+      });
+
+      it('locale prop takes precedence over inherited data-locale', async () => {
+        const wrapper = fixtureSync(html`
+          <div data-locale="de-DE">
+            <auro-input type="date" locale="en-US"></auro-input>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-input');
+        await elementUpdated(el);
+
+        expect(el.locale).to.equal('en-US');
+        expect(el.format).to.equal('mm/dd/yyyy');
+      });
+
+      it('changing locale updates format when format was locale-derived', async () => {
+        const el = await fixture(html`<auro-input type="date" locale="en-US"></auro-input>`);
+
+        expect(el.format).to.equal('mm/dd/yyyy');
+
+        el.locale = 'en-GB';
+        await elementUpdated(el);
+
+        expect(el.format).to.equal('dd/mm/yyyy');
+      });
+
+      it('changing locale does not override explicitly set format', async () => {
+        const el = await fixture(html`
+          <auro-input type="date" locale="en-US" format="yyyy/mm/dd"></auro-input>
+        `);
+
+        el.locale = 'en-GB';
+        await elementUpdated(el);
+
+        expect(el.format).to.equal('yyyy/mm/dd');
+      });
+
+      it('locale change preserves ISO value, min, max and updates display', async () => {
+        const el = await fixture(html`<auro-input type="date" locale="en-US"></auro-input>`);
+
+        el.value = '2024-12-31';
+        el.min = '2024-01-01';
+        el.max = '2024-12-31';
+        await elementUpdated(el);
+
+        expect(el.inputElement.value).to.equal('12/31/2024');
+
+        el.locale = 'en-GB';
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('2024-12-31');
+        expect(toISOFormatString(el.valueObject)).to.equal('2024-12-31');
+        expect(el.inputElement.value).to.equal('31/12/2024');
+      });
+
+      describe('min/max validation with locale', () => {
+        it('en-US (default): ISO min enforced — rangeUnderflow when below min', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" min="2025-06-01"></auro-input>
+          `);
+
+          el.value = '2025-06-01';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+
+          el.value = '2025-05-31';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeUnderflow');
+        });
+
+        it('en-US (default): ISO max enforced — rangeOverflow when above max', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" max="2025-06-30"></auro-input>
+          `);
+
+          el.value = '2025-06-30';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+
+          el.value = '2025-07-01';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeOverflow');
+        });
+
+        it('locale="en-GB": ISO min enforced, display in dd/mm/yyyy', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" locale="en-GB" min="2025-06-01"></auro-input>
+          `);
+
+          await elementUpdated(el);
+          expect(el.format).to.equal('dd/mm/yyyy');
+
+          el.value = '2025-06-01';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+          expect(el.inputElement.value).to.equal('01/06/2025');
+
+          el.value = '2025-05-31';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeUnderflow');
+        });
+
+        it('locale="en-GB": ISO max enforced', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" locale="en-GB" max="2025-06-30"></auro-input>
+          `);
+
+          el.value = '2025-06-30';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+
+          el.value = '2025-07-01';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeOverflow');
+        });
+
+        it('inherited de-DE locale: ISO min enforced', async () => {
+          const wrapper = fixtureSync(html`
+            <div data-locale="de-DE">
+              <auro-input type="date" min="2025-06-01"></auro-input>
+            </div>
+          `);
+
+          const el = wrapper.querySelector('auro-input');
+          await elementUpdated(el);
+
+          el.value = '2025-06-01';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('valid');
+
+          el.value = '2025-05-31';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeUnderflow');
+        });
+
+        it('locale="en-GB" format="mm/dd/yyyy": explicit format wins, ISO min still enforced', async () => {
+          const el = await fixture(html`
+            <auro-input type="date" locale="en-GB" format="mm/dd/yyyy" min="2025-06-01"></auro-input>
+          `);
+
+          await elementUpdated(el);
+          expect(el.format).to.equal('mm/dd/yyyy');
+
+          el.value = '2025-05-31';
+          await elementUpdated(el);
+          expect(el.getAttribute('validity')).to.equal('rangeUnderflow');
+        });
+      });
     });
 
   });
@@ -1643,11 +2190,13 @@ function runFullTest(mobileView) {
       });
 
       it('should set auro-input attribute when registered under a custom name', async () => {
-        const customName = `custom-input-${Date.now()}`;
+        const customName = `custom-input-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
         AuroInput.register(customName);
 
-        const el = await fixture(html`<${unsafeStatic(customName)}></${unsafeStatic(customName)}>`);
-        await elementUpdated(el);
+        const host = await fixture(html`<div></div>`);
+        const el = document.createElement(customName);
+        host.appendChild(el);
+        await el.updateComplete;
 
         expect(el.tagName.toLowerCase()).to.equal(customName);
         expect(el.hasAttribute('auro-input')).to.be.true;
@@ -1974,24 +2523,6 @@ function runFullTest(mobileView) {
       expect(input.classList.contains('body-lg')).to.be.true;
     });
 
-    it('hasTypeIcon returns true for icon attribute', async () => {
-      const el = await fixture(html`<auro-input icon></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.true;
-    });
-
-    it('hasTypeIcon returns true for date type', async () => {
-      const el = await fixture(html`<auro-input type="date"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.true;
-    });
-
-    it('hasTypeIcon returns false for text type', async () => {
-      const el = await fixture(html`<auro-input></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.false;
-    });
-
     it('renderLayout handles emphasized-left and right', async () => {
       const el = await fixture(html`<auro-input></auro-input>`);
       await elementUpdated(el);
@@ -2042,42 +2573,6 @@ function runFullTest(mobileView) {
       const el = await fixture(html`<auro-input></auro-input>`);
       await elementUpdated(el);
       expect(el.renderLayoutSnowflake()).to.exist;
-    });
-
-    it('defineInputIcon returns true for date type', async () => {
-      const el = await fixture(html`<auro-input type="date"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineInputIcon()).to.be.true;
-    });
-
-    it('defineInputIcon returns true for credit-card type with icon', async () => {
-      const el = await fixture(html`<auro-input type="credit-card" icon></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineInputIcon()).to.be.true;
-    });
-
-    it('defineInputIcon returns false for text type', async () => {
-      const el = await fixture(html`<auro-input type="text"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineInputIcon()).to.be.false;
-    });
-
-    it('defineLabelPadding returns true for date type', async () => {
-      const el = await fixture(html`<auro-input type="date"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineLabelPadding()).to.be.true;
-    });
-
-    it('defineLabelPadding returns true for credit-card with icon and no value', async () => {
-      const el = await fixture(html`<auro-input type="credit-card" icon></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineLabelPadding()).to.be.true;
-    });
-
-    it('defineLabelPadding returns false for text type', async () => {
-      const el = await fixture(html`<auro-input type="text"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.defineLabelPadding()).to.be.false;
     });
 
     it('getActiveElement returns null when no active element exists', async () => {
@@ -2310,42 +2805,200 @@ function runFullTest(mobileView) {
       expect(result.getMonth()).to.equal(5);
     });
 
-    rawIt('toNorthAmericanFormat defaults day to 01 when format has no dd component', async () => {
-      const el = await fixture(html`<auro-input type="date" format="mm/yy"></auro-input>`);
+    describe('date mask utilities', () => {
+      it('getMaskOptions for single-component date formats returns working format/parse', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const maskOpts = el.util.getMaskOptions('date', 'dd');
+
+        expect(maskOpts.format(5)).to.equal('05');
+        expect(maskOpts.format(31)).to.equal('31');
+        expect(maskOpts.parse('15')).to.equal(15);
+        expect(maskOpts.parse('')).to.be.null;
+      });
+
+      it('getMaskOptions multi-component date format returns empty string for null date', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const maskOpts = el.util.getMaskOptions('date', 'mm/dd/yyyy');
+
+        expect(maskOpts.format(null)).to.equal('');
+        expect(maskOpts.format(undefined)).to.equal('');
+        expect(maskOpts.parse('')).to.satisfy(d => d instanceof Date && isNaN(d.getTime()));
+      });
+
+      it('getMaskOptions multi-component date parse returns null for invalid parts', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const maskOpts = el.util.getMaskOptions('date', 'mm/dd/yyyy');
+        const result = maskOpts.parse.call({ mask: 'mm/dd/yyyy' }, 'xx/xx/xxxx');
+
+        expect(result).to.satisfy(d => d instanceof Date && isNaN(d.getTime()));
+      });
+
+      // Regression: `toFormattedValue` is exposed publicly via
+      // `AuroInputUtil.toFormattedValue` (auro-input-util.js), so a falsy
+      // `format` argument must return undefined instead of throwing on
+      // `format.toLowerCase()`.
+      it('toFormattedValue returns undefined and does not throw when format is falsy', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const date = new Date(2024, 0, 15);
+        expect(() => el.util.toFormattedValue(date, undefined)).to.not.throw();
+        expect(el.util.toFormattedValue(date, undefined)).to.be.undefined;
+        expect(el.util.toFormattedValue(date, null)).to.be.undefined;
+        expect(el.util.toFormattedValue(date, '')).to.be.undefined;
+      });
+
+      // Same guarantee through the public AuroInputUtil surface.
+      it('AuroInputUtil.toFormattedValue handles a missing format gracefully', async () => {
+        const { AuroInputUtil } = await import('../src/auro-input-util.js');
+        const date = new Date(2024, 0, 15);
+
+        expect(() => AuroInputUtil.toFormattedValue(date, undefined)).to.not.throw();
+        expect(AuroInputUtil.toFormattedValue(date, undefined)).to.be.undefined;
+      });
+
+      // Regression: `formatISODate` is exposed on the public AuroInputUtil
+      // surface. `stringToDateInstance("not-a-date")` returns an Invalid
+      // Date (not a throw), so without an explicit NaN guard the function
+      // returned literal strings like "0NaN/0NaN/0NaN" instead of undefined.
+      it('AuroInputUtil.formatISODate returns undefined for invalid ISO strings', async () => {
+        const { AuroInputUtil } = await import('../src/auro-input-util.js');
+
+        expect(AuroInputUtil.formatISODate('not-a-date', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate('2024-99-99', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate('', 'mm/dd/yyyy')).to.be.undefined;
+        expect(AuroInputUtil.formatISODate(null, 'mm/dd/yyyy')).to.be.undefined;
+
+        // Well-formed input still formats correctly.
+        expect(AuroInputUtil.formatISODate('2024-01-15', 'mm/dd/yyyy')).to.equal('01/15/2024');
+      });
+    });
+  });
+
+  // Regression coverage for the TZ-safe ISO↔Date conversion paths. The bug
+  // class: `new Date('2024-01-15')` parses as UTC midnight, which renders as
+  // Jan 14 in zones west of UTC. The input relies on
+  // dateFormatter.stringToDateInstance (which parses local midnight) for
+  // valueObject/minObject/maxObject and the display formatters. These tests
+  // pass in any host TZ if those paths stay wired up; they actually exercise
+  // the bug only under a negative-offset TZ — `npm test` runs the suite
+  // under PST, EST, and HST so regressions surface in CI.
+  describe('Timezone-safe ISO date conversion', () => {
+    it('valueObject reflects the ISO calendar date without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
       await elementUpdated(el);
 
-      const input = el.shadowRoot.querySelector('input');
-      input.focus();
-      setInputValue(el, '06/25');
+      el.value = '2024-01-15';
+      await elementUpdated(el);
       await elementUpdated(el);
 
-      expect(el.formattedDate).to.not.be.undefined;
+      expect(el.valueObject).to.be.instanceof(Date);
+      expect(el.valueObject.getFullYear()).to.equal(2024);
+      expect(el.valueObject.getMonth()).to.equal(0);
+      expect(el.valueObject.getDate()).to.equal(15);
     });
 
-    it('toNorthAmericanFormat defaults month and year when format only has dd', async () => {
-      const el = await fixture(html`<auro-input type="date" format="dd"></auro-input>`);
+    it('minObject/maxObject reflect their ISO dates without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" min="2024-01-15" max="2024-12-31"></auro-input>`);
+      await elementUpdated(el);
       await elementUpdated(el);
 
-      // parseDate with 'dd' format returns only day, no month or year
-      const result = el.util.toNorthAmericanFormat('15', 'dd');
-      expect(result).to.not.be.undefined;
-      expect(result.formattedDate).to.equal('15');
-      expect(result.dateForComparison).to.include('01');
+      expect(el.minObject.getFullYear()).to.equal(2024);
+      expect(el.minObject.getMonth()).to.equal(0);
+      expect(el.minObject.getDate()).to.equal(15);
+
+      expect(el.maxObject.getFullYear()).to.equal(2024);
+      expect(el.maxObject.getMonth()).to.equal(11);
+      expect(el.maxObject.getDate()).to.equal(31);
     });
 
-    it('parseDate uses default mm/dd/yyyy format when format is undefined', async () => {
-      const el = await fixture(html`<auro-input type="date"></auro-input>`);
+    it('display value formats the ISO calendar day, not a TZ-shifted day', async () => {
+      // mm/dd/yyyy + value="2024-01-15" must render "01/15/2024" regardless
+      // of host TZ. Under the pre-fix code, UTC midnight parsed in a
+      // negative zone would render "01/14/2024".
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" value="2024-01-15"></auro-input>`);
+      await elementUpdated(el);
       await elementUpdated(el);
 
-      const result = el.util.parseDate('06/15/2025', undefined);
-      expect(result).to.not.be.undefined;
-      expect(result.month).to.equal('06');
-      expect(result.day).to.equal('15');
-      expect(result.year).to.equal('2025');
+      expect(el.inputElement.value).to.equal('01/15/2024');
+    });
+
+    it('display value preserves the day for dd/mm/yyyy format', async () => {
+      const el = await fixture(html`<auro-input type="date" format="dd/mm/yyyy" value="2024-01-15"></auro-input>`);
+      await elementUpdated(el);
+      await elementUpdated(el);
+
+      expect(el.inputElement.value).to.equal('15/01/2024');
+    });
+
+    it('round-trips display value back to the same ISO without TZ shift', async () => {
+      // The display string "01/15/2024" must convert back to "2024-01-15"
+      // regardless of host TZ. Tests the toModelValue → ISO path.
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+      await elementUpdated(el);
+
+      setInputValue(el, '01/15/2024');
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('2024-01-15');
+    });
+
+    it('AuroInputUtil.formatISODate returns the same calendar day across TZs', async () => {
+      // formatISODate is part of the public input util surface so consumer
+      // apps can render ISO dates safely. The test exercises a few formats
+      // and confirms the day never shifts.
+      const { AuroInputUtil } = await import('../src/auro-input-util.js');
+
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'mm/dd/yyyy')).to.equal('01/15/2024');
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'dd/mm/yyyy')).to.equal('15/01/2024');
+      expect(AuroInputUtil.formatISODate('2024-01-15', 'yyyy/mm/dd')).to.equal('2024/01/15');
+    });
+
+    it('util.toFormattedValue formats a Date without TZ shift', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+      await elementUpdated(el);
+
+      // Construct a local-midnight Date directly so the test does not depend
+      // on stringToDateInstance — this proves the formatter side is TZ-safe.
+      const date = new Date(2024, 0, 15);
+      expect(el.util.toFormattedValue(date, 'mm/dd/yyyy')).to.equal('01/15/2024');
     });
   });
 
   describe('Keyboard Behavior', () => {
+    it('date input cursor does not move back after user moves it left', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" label="selection start test"></auro-input>`);
+      await elementUpdated(el);
+
+      el.focus();
+
+      await sendKeys({ press: '0' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '9' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: 'ArrowLeft' });
+      await sendKeys({ press: 'ArrowLeft' });
+
+      const input = el.shadowRoot.querySelector('input');
+      const selectionStartAfterLeft = input.selectionStart;
+
+      await sendKeys({ press: 'Backspace' });
+
+      await expect(input.value).to.equal('01/11/1');
+
+      await expect(input.selectionStart).to.equal(selectionStartAfterLeft - 1);
+    });
+
     it('should accept typed input', async () => {
       const el = await fixture(html`<auro-input></auro-input>`);
       await elementUpdated(el);

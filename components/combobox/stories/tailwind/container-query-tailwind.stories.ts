@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect } from 'storybook/test';
+import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../../menu/src/registered';
 
@@ -76,7 +76,9 @@ export const InDialogContainerQuery: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
@@ -108,7 +110,9 @@ export const InDrawerContainerQuery: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(true);

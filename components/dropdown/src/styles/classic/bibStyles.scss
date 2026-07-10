@@ -64,6 +64,14 @@
   }
 }
 
+// Desktop modal: positioned by Floating UI like normal desktop,
+// with page content made inert but no visible backdrop.
+:host([desktopmodal]:popover-open) {
+  &::backdrop {
+    background: transparent;
+  }
+}
+
 :host(:not([matchWidth])) {
   .container {
       min-width: fit-content;

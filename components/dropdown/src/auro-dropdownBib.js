@@ -366,7 +366,7 @@ export class AuroDropdownBib extends LitElement {
     classes[`shape-${this.shape}`] = true;
 
     return html`
-      <dialog class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
+      <dialog tabindex="-1" class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
         ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually">${this.dialogLabel}</span>` : ''}
         <slot></slot>
         <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>

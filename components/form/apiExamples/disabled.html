@@ -1,0 +1,38 @@
+<auro-form id="disabledExampleForm">
+  <auro-input id="first-name" name="firstName" required>
+    <span slot="label">First Name</span>
+  </auro-input>
+
+  <br />
+
+  <auro-input id="last-name" name="lastName" required>
+    <span slot="label">Last Name</span>
+  </auro-input>
+
+  <br />
+
+  <auro-input id="loyalty-number" name="loyaltyNumber" value="AS-123456" disabled>
+    <span slot="label">Mileage Plan number</span>
+    <span slot="helpText">Account number is read-only and is not submitted with the form.</span>
+  </auro-input>
+
+  <br />
+
+  <auro-button type="submit">Submit</auro-button>
+</auro-form>
+
+<output id="disabledExampleOutput" aria-live="polite">Submit the form to see what data gets stored.</output>
+
+<style>
+  #disabledExampleOutput {
+    display: block;
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid #2a2a2a;
+    border-radius: 0.25rem;
+    background: #f5f5f5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+  }
+</style>

@@ -44,6 +44,36 @@ function normalizeFilterValue(value) {
   return raw.trim() ? raw.trimEnd() : raw;
 }
 
+/**
+ * Returns the option's plain-text label suitable for input.value, with
+ * HTML-indentation whitespace collapsed and the displayValue slot text
+ * removed (the slot renders separately in the trigger).
+ * @param {HTMLElement} option - An auro-menuoption element.
+ * @returns {string} Normalized label.
+ */
+function getOptionLabel(option) {
+  if (!option) {
+    return '';
+  }
+
+  // Consumer-provided override: short-circuit the DOM walk entirely.
+  if (option.dataset && option.dataset.label) {
+    return option.dataset.label;
+  }
+
+  // Walk direct children — the `slot` attribute only applies to direct children
+  // of the slot host, so a shallow filter is sufficient. Avoids the cloneNode +
+  // querySelector allocation that ran on every keystroke via syncValuesAndStates.
+  let text = '';
+  for (const node of option.childNodes) {
+    const isDisplayValueSlot = node.nodeType === Node.ELEMENT_NODE && node.getAttribute('slot') === 'displayValue';
+    if (!isDisplayValueSlot) {
+      text += node.textContent || '';
+    }
+  }
+  return text.replace(/\s+/gu, ' ').trim();
+}
+
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The `auro-combobox` element provides users with a way to select an option from a list of filtered or suggested options based on user input.
@@ -116,8 +146,6 @@ export class AuroCombobox extends AuroElement {
     this.availableOptions = [];
     this.dropdownId = undefined;
     this.dropdownOpen = false;
-    this.triggerExpandedState = false;
-    this._expandedTimeout = null;
     this._inFullscreenTransition = false;
     this.errorMessage = null;
     this.isHiddenWhileLoading = false;
@@ -128,6 +156,30 @@ export class AuroCombobox extends AuroElement {
     this.touched = false;
     this.validation = new AuroFormValidation();
     this.validity = undefined;
+    this._userTyped = false;
+    // Tracks every setTimeout scheduled via _scheduleTimer so
+    // disconnectedCallback can cancel them. Without this, a detached
+    // combobox's pending timers still fire — most are no-ops, but
+    // configureMenu's racing-condition retry would otherwise loop.
+    this._pendingTimers = new Set();
+  }
+
+  /**
+   * Wraps setTimeout and records the timer id so disconnectedCallback
+   * can cancel any outstanding callbacks. The id is removed from the set
+   * once the callback fires so the set doesn't grow unbounded.
+   * @param {Function} fn - Callback to run.
+   * @param {number} ms - Delay in milliseconds.
+   * @returns {number} The timer id.
+   * @private
+   */
+  _scheduleTimer(fn, ms) {
+    const id = setTimeout(() => {
+      this._pendingTimers.delete(id);
+      fn();
+    }, ms);
+    this._pendingTimers.add(id);
+    return id;
   }
 
   // This function is to define props used within the scope of this component
@@ -171,7 +223,19 @@ export class AuroCombobox extends AuroElement {
       availableOptions: {
         state: true,
         type: Array,
-        reflect: false
+        reflect: false,
+        hasChanged(newVal, oldVal) {
+          if (!oldVal && !newVal) {
+            return false;
+          }
+          if (!oldVal || !newVal) {
+            return true;
+          }
+          if (newVal.length !== oldVal.length) {
+            return true;
+          }
+          return newVal.some((opt, idx) => opt !== oldVal[idx]);
+        }
       },
 
       /**
@@ -406,6 +470,8 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * If set, the `icon` attribute will be applied to the trigger `auro-input` element.
+       * Icon rendering is currently limited to `type="credit-card"`. Setting `triggerIcon`
+       * without a supported `type` propagates the attribute but does not render a visible icon.
        */
       triggerIcon: {
         type: Boolean,
@@ -437,7 +503,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Value selected for the dropdown menu.
+       * Value selected for the dropdown menu. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` and `optionSelected` are cleared to `undefined`. `hidden` options (including those filtered out by type-ahead) remain selectable by value.
        */
       value: {
         type: String
@@ -477,17 +543,6 @@ export class AuroCombobox extends AuroElement {
         attribute: false
       },
 
-      /**
-       * Deferred aria-expanded state for the trigger input.
-       * Delays the "true" transition so VoiceOver finishes its character echo
-       * before announcing "expanded".
-       * @private
-       */
-      triggerExpandedState: {
-        type: Boolean,
-        reflect: false,
-        attribute: false
-      },
     };
   }
 
@@ -509,13 +564,6 @@ export class AuroCombobox extends AuroElement {
     }
     return this.input.value;
   }
-
-  // /**
-  //  * Sets the value of the input element within the combobox.
-  //  */
-  // set inputValue(value) {
-  //   this.input.value = value;
-  // }
 
   /**
    * Checks if the element is valid.
@@ -602,18 +650,15 @@ export class AuroCombobox extends AuroElement {
         matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
       }
 
-      // If input is empty, show all options (except static ones)
-      if (!filterValue) {
-        if (!option.hasAttribute('static')) {
-          option.removeAttribute('hidden');
-          this.availableOptions.push(option);
-        }
-      } else if (matchString.includes(filterValue) && !option.hasAttribute('static')) {
-        // only count options that match the typed input value AND are not static
+      if (!filterValue && option.hasAttribute('static')) {
+        // Static options are shown when the input is empty so consumers can
+        // surface headers / "add new" rows when no filter is active.
+        option.removeAttribute('hidden');
+        this.availableOptions.push(option);
+      } else if (filterValue && matchString.includes(filterValue) && !option.hasAttribute('static')) {
         option.removeAttribute('hidden');
         this.availableOptions.push(option);
       } else if (!option.hasAttribute('persistent')) {
-        // Hide all other non-persistent options
         option.setAttribute('hidden', '');
         option.removeAttribute('aria-setsize');
         option.removeAttribute('aria-posinset');
@@ -621,7 +666,9 @@ export class AuroCombobox extends AuroElement {
     });
 
     if (this.availableOptions.length === 0) {
-      if (this.noMatchOption) {
+      // Only surface the nomatch option once the user has actually typed
+      // something. Empty input is handled by the bib being closed.
+      if (this.noMatchOption && filterValue) {
         this.noMatchOption.removeAttribute('hidden');
       } else if (!this.menu.loading || this.isHiddenWhileLoading) {
         this.hideBib();
@@ -637,11 +684,14 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   syncValuesAndStates() {
-    // Only sync matchWord, don't set menu.value here since setMenuValue should handle that
+    // Do NOT call setMenuValue here — the caller (handleMenuOptions) already
+    // guards setMenuValue with an option-match check. Calling it unconditionally
+    // sets free-form values on the menu, triggering clearSelection which resets
+    // _index and breaks subsequent makeSelection calls.
     if (this.menu) {
       this.menu.matchWord = normalizeFilterValue(this.input.value);
     }
-    const label = this.menu.currentLabel;
+    const label = getOptionLabel(this.menu.optionSelected);
     this.updateTriggerTextDisplay(label || this.value);
   }
 
@@ -655,12 +705,16 @@ export class AuroCombobox extends AuroElement {
     // in suggestion mode, do not override input value if no selection has been made and the input currently has focus
     const isInputFocusedWithNoSelection = !this.menu.value && (this.input.matches(':focus-within') || (this.inputInBib && this.inputInBib.matches(':focus-within')));
 
-    if (!this.persistInput && !(this.behavior === 'suggestion' && isInputFocusedWithNoSelection)) {
-      this.input.value = label || this.value;
+    const suppressed = this.persistInput || (this.behavior === 'suggestion' && isInputFocusedWithNoSelection);
+    if (!suppressed) {
+      this.syncInputValuesAcrossTriggerAndBib(label || this.value);
     }
 
-    // update the displayValue in the trigger if displayValue slot content is present
-    const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
+    // Replace any previously appended displayValue clone in the trigger.
+    // :not(slot) excludes the template's <slot name="displayValue"
+    // slot="displayValue"> forwarder, which also has slot="displayValue"
+    // and would otherwise be matched first and removed.
+    const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]:not(slot)');
 
     if (displayValueInTrigger) {
       displayValueInTrigger.remove();
@@ -670,6 +724,14 @@ export class AuroCombobox extends AuroElement {
       const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
       if (displayValueEl) {
         this.input.appendChild(displayValueEl.cloneNode(true));
+        // auro-input's hasDisplayValueContent is non-reactive; nudge it to
+        // re-evaluate the slot and re-render so the displayValue wrapper
+        // gets its hasContent class. Without this, the apple/icon stays
+        // hidden when input.value is set in the same tick as the append.
+        if (typeof this.input.checkDisplayValueSlotChange === 'function') {
+          this.input.checkDisplayValueSlotChange();
+          this.input.requestUpdate();
+        }
       }
     }
 
@@ -677,13 +739,77 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Writes nextValue to the trigger input and the bib input when their current
+   * value differs, then re-asserts imask after Lit's update flushes.
+   * @param {string} nextValue - The value to write to both inputs.
+   * @returns {Promise<void>} Resolves after both inputs flush and imask
+   *   re-asserts; resolves immediately when no sync is needed.
+   * @private
+   */
+  async syncInputValuesAcrossTriggerAndBib(nextValue) {
+    // Only set the flag when there's an actual write to suppress —
+    // syncValuesAndStates re-enters here during typing when both inputs
+    // already match, and a no-op flag flip would make the bib branch's
+    // bail eat legitimate user-input events.
+    const triggerNeedsSync = this.input.value !== nextValue;
+    const bibNeedsSync = Boolean(this.inputInBib) && this.inputInBib.value !== nextValue;
+    if (!triggerNeedsSync && !bibNeedsSync) {
+      return;
+    }
+
+    this._syncingDisplayValue = true;
+
+    const pending = [];
+    if (triggerNeedsSync) {
+      this.input.value = nextValue;
+      pending.push(this.input.updateComplete);
+    }
+    if (bibNeedsSync) {
+      this.inputInBib.value = nextValue;
+      pending.push(this.inputInBib.updateComplete);
+    }
+    // finally — not a bare .then — so that an imask throw (see commit
+    // d1857401c: imask can throw on credit-card format change) doesn't strand
+    // _syncingDisplayValue=true and silently swallow every subsequent input.
+    try {
+      await Promise.all(pending);
+      // imask reasserts otherwise, and handleBlur reverts to its stale value.
+      if (triggerNeedsSync && this.input.maskInstance && typeof this.input.maskInstance.updateValue === 'function') {
+        this.input.maskInstance.updateValue();
+      }
+      if (bibNeedsSync && this.inputInBib.maskInstance && typeof this.inputInBib.maskInstance.updateValue === 'function') {
+        this.inputInBib.maskInstance.updateValue();
+      }
+    } finally {
+      this._syncingDisplayValue = false;
+    }
+  }
+
+  /**
    * Processes hidden state of all menu options and determines if there are any available options not hidden.
    * @private
+   * @param {object} [options={}] - Optional flag bag.
+   * @param {boolean} [options.preferComboboxValue=false] - When true,
+   *   handleMenuOptions matches the selected option against `this.value`
+   *   first instead of `this.input.value`. Needed on mount and re-mount
+   *   because under `persistInput` the consumer's typedValue prop can drift
+   *   from the framework value (Svelte `{#key}` re-mount after a swap, or
+   *   SPA preselect after route change) and the old input-first match would
+   *   then pick the stale text. Only handleSlotChange passes this; typing
+   *   and clearing paths keep the input-first match so user clears aren't
+   *   undone.
    * @returns {void}
    */
-  handleMenuOptions() {
+  handleMenuOptions({ preferComboboxValue = false } = {}) {
     this.generateOptionsArray();
     this.availableOptions = [];
+    // Single source of truth for the menu's filter/highlight token per call.
+    // syncValuesAndStates re-writes the same value on exact-match keystrokes —
+    // Lit's hasChanged makes that a no-op — and the prior duplicate set inside
+    // handleTriggerInputValueChange is gone.
+    if (this.menu) {
+      this.menu.matchWord = normalizeFilterValue(this.input.value);
+    }
     this.updateFilter();
 
     // Set aria-setsize/aria-posinset on each visible option so screen readers
@@ -695,15 +821,28 @@ export class AuroCombobox extends AuroElement {
       option.setAttribute('aria-posinset', index + 1);
     });
 
-    if (this.value && this.input.value && !this.menu.value) {
-      if (this.behavior === 'suggestion' && this.menu.options && this.menu.options.some((opt) => opt.value === this.value)) {
-        this.setMenuValue(this.value);
-      }
-
+    // On mount/re-mount (via handleSlotChange), prefer the framework-set
+    // `this.value` when it matches a menu option. Covers SPA preselect and
+    // consumer swap patterns (e.g. Svelte `{#key}` re-mount) where
+    // `this.value` is authoritative but `this.input.value` may be empty or
+    // carry stale typed text from another field. Event-driven callers do
+    // not pass the flag, otherwise user clears would be undone by
+    // re-syncing to the previous combobox.value.
+    if (preferComboboxValue &&
+        this.value &&
+        this.menu.options?.some((opt) => opt.value === this.value)) {
+      this.setMenuValue(this.value);
+      this.syncValuesAndStates();
+    } else if (this.input.value &&
+        this.menu.options?.some((opt) => opt.value === this.input.value)) {
+      this.setMenuValue(this.input.value);
       this.syncValuesAndStates();
     }
 
-    if (!this.availableOptions.includes(this.menu.optionActive)) {
+    // Re-activate when optionActive is not in the current scrollable viewport,
+    // or when _index has been reset (e.g. by clearSelection in an async update)
+    // so that makeSelection() can find the correct option.
+    if (!this.availableOptions.includes(this.menu.optionActive) || this.menu._index < 0) {
       this.activateFirstEnabledAvailableOption();
     }
   }
@@ -775,18 +914,6 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
 
-      // Defer aria-expanded "true" so VoiceOver finishes character echo
-      // before announcing "expanded". Set "false" immediately on close.
-      clearTimeout(this._expandedTimeout);
-      if (this.dropdownOpen) {
-        const expandedDelay = 150;
-        this._expandedTimeout = setTimeout(() => {
-          this.triggerExpandedState = true;
-        }, expandedDelay);
-      } else {
-        this.triggerExpandedState = false;
-      }
-
       // Clear aria-activedescendant when dropdown closes
       if (!this.dropdownOpen && this.input) {
         this.input.setActiveDescendant(null);
@@ -799,6 +926,14 @@ export class AuroCombobox extends AuroElement {
         // keyboard navigation continues from the correct place in the page
         if (this.dropdown.isBibFullscreen) {
           restoreTriggerAfterClose(this.dropdown, this.input);
+
+          // After the rAF inside restoreTriggerAfterClose() refocuses the
+          // trigger, park the caret at end-of-text. Without this, the trigger
+          // shows the new value (e.g. "Peaches") but its caret sits at [0, 0]
+          // because nothing wrote to the native input between close and focus.
+          doubleRaf(() => {
+            this.setInputFocus();
+          });
         }
       }
 
@@ -828,13 +963,25 @@ export class AuroCombobox extends AuroElement {
 
           guardTouchPassthrough(this.menu);
 
-          // Wait for the bibtemplate to fully render across
-          // multiple Lit update cycles before moving focus into the bib
-          doubleRaf(() => {
+          // showModal() takes focus away from the trigger. Early focus once
+          // the dialog has painted; the shared doubleRaf below is the fallback
+          // for when the dialog needs an extra frame and also clears the
+          // validation guard.
+          requestAnimationFrame(() => {
             this.setInputFocus();
-            this._inFullscreenTransition = false;
           });
         }
+        // else (desktop popover-open): Chrome resets the trigger caret to
+        // [0, 0] when its floating <label for="…"> overlay receives focus.
+        // The shared doubleRaf below parks the caret back at end-of-text
+        // after the dropdown layout settles.
+
+        doubleRaf(() => {
+          this.setInputFocus();
+          if (this._inFullscreenTransition) {
+            this._inFullscreenTransition = false;
+          }
+        });
       }
     });
 
@@ -852,7 +999,12 @@ export class AuroCombobox extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
-    // Exposes the CSS parts from the bibtemplate for styling
+    if (this.customBibWidth) {
+      this.dropdown.dropdownWidth = this.customBibWidth;
+    }
+
+    // Exposes the CSS parts from the dropdown and bibtemplate for styling
+    this.dropdown.exposeCssParts();
     this.bibtemplate.exposeCssParts();
 
     this.hideBib = this.hideBib.bind(this);
@@ -871,7 +1023,7 @@ export class AuroCombobox extends AuroElement {
         this.dropdown.trigger.inert = false;
       }
 
-      setTimeout(() => {
+      this._scheduleTimer(() => {
         this.setInputFocus();
       }, 0);
     });
@@ -910,22 +1062,36 @@ export class AuroCombobox extends AuroElement {
    */
   setInputFocus() {
     if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
-      this.inputInBib.focus();
+      // Sync the native input value synchronously before focusing.
+      // Lit's property-to-attribute sync is async (microtask), so the
+      // native <input> inside inputInBib may still hold a stale value
+      // when focus moves here during the fullscreen transition. Without
+      // this, keystrokes (e.g. Backspace) operate on the wrong content.
+      const nativeInput = this.inputInBib.inputElement;
+      const triggerNativeInput = this.input.inputElement;
+      if (nativeInput && triggerNativeInput && nativeInput.value !== triggerNativeInput.value) {
+        this.inputInBib.skipNextProgrammaticInputEvent = true;
+        nativeInput.value = triggerNativeInput.value || '';
+      }
+
+      // Focus the native input directly to ensure it receives keystrokes
+      // after the fullscreen dialog opens. The dialog's showModal() may
+      // have moved focus to the dialog element itself; focusing the
+      // auro-input custom element doesn't always reach the native input
+      // when the dialog DOM isn't fully painted.
+      if (nativeInput) {
+        nativeInput.focus();
+      } else {
+        this.inputInBib.focus();
+      }
 
       // Place cursor at end of existing text so the user can continue editing
-      const nativeInput = this.inputInBib.inputElement;
       if (nativeInput && nativeInput.value) {
         const len = nativeInput.value.length;
         nativeInput.setSelectionRange(len, len);
       }
-    } else if (!this.input.componentHasFocus) {
-      const focusedEl = this.querySelector(":focus");
+    } else {
       this.input.focus();
-      // current focus is on a menuoption, after clicking on it.
-      if (this.persistInput && focusedEl && (focusedEl.tagName.toLowerCase() === 'auro-menuoption' || focusedEl.hasAttribute('auro-menuoption'))) {
-        this.setClearBtnFocus();
-        this.validate(true);
-      }
     }
   }
 
@@ -1001,7 +1167,7 @@ export class AuroCombobox extends AuroElement {
 
     // racing condition on custom-combobox with custom-menu
     if (!this.menu) {
-      setTimeout(() => {
+      this._scheduleTimer(() => {
         this.configureMenu();
       }, 0);
       return;
@@ -1021,46 +1187,70 @@ export class AuroCombobox extends AuroElement {
       this.menu.setAttribute('nocheckmark', '');
     }
 
-    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
-      this.hideBib();
-    });
+    // Handle menu option selection
+    this.menu.addEventListener('auroMenu-selectedOption', (evt) => {
+      // Capture before the consumption below — true means this event is the
+      // echo of our own setMenuValue (programmatic value sync), false means
+      // a fresh user selection.
+      const isEcho = this._pendingMenuValueSync === true;
 
-    // Handle menu option selection like select does
-    this.menu.addEventListener('auroMenu-selectedOption', (event) => {
-      // Update the optionSelected from the event details, not manually
-      [this.optionSelected] = event.detail.options;
+      if (this.menu.optionSelected) {
+        const selected = this.menu.optionSelected;
 
-      // Update the internal value to match the menu's value
-      this.value = event.detail.stringValue;
+        if (this.optionSelected !== selected) {
+          this.optionSelected = selected;
+        }
 
-      // Update display
-      this.updateTriggerTextDisplay(event.detail.label || event.detail.value);
+        // Skip writeback when this event is the echo of our own setMenuValue —
+        // otherwise it cascades against handleInputValueChange in suggestion mode.
+        if (this._pendingMenuValueSync) {
+          this._pendingMenuValueSync = false;
+        } else if (!this.value || this.value !== this.optionSelected.value) {
+          this.value = this.optionSelected.value;
+        }
 
-      // Update match word for filtering
-      const trimmedInput = normalizeFilterValue(this.input.value);
-      if (this.menu.matchWord !== trimmedInput) {
-        this.menu.matchWord = trimmedInput;
+        // Update display
+        this.updateTriggerTextDisplay(getOptionLabel(this.optionSelected));
+
+        // Update match word for filtering
+        const trimmedInput = normalizeFilterValue(this.input.value);
+        if (this.menu.matchWord !== trimmedInput) {
+          this.menu.matchWord = trimmedInput;
+        }
       }
 
-      // Update available options based on selection
-      this.handleMenuOptions();
-
       // Hide dropdown on selection (except during slot changes)
-      if (event.detail && event.detail.source !== 'slotchange') {
-        setTimeout(() => {
-          // do not close while typing in suggestion mode with no value selected, to allow freeform input
-          if (this.menu.value || this.behavior !== 'suggestion') {
-            this.hideBib();
-          }
-        }, 0);
+      if (evt.detail && evt.detail.source !== 'slotchange') {
+        // do not close while typing in suggestion mode with no value selected, to allow freeform input
+        this.hideBib();
+
+        // Move focus to the clear button when the user makes a selection,
+        // unless the Shift+Tab handler opted this selection out.
+        if (this._suppressClearBtnFocusOnSelection) {
+          this._suppressClearBtnFocusOnSelection = false;
+        } else if (!isEcho && this.menu.value !== undefined) {
+          this.setClearBtnFocus();
+        }
 
         // Announce the selection after the dropdown closes so it isn't
         // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
-        const selectedValue = event.detail.stringValue;
-        const announcementDelay = 300;
-        setTimeout(() => {
-          announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
-        }, announcementDelay);
+        // Skip when there's no selected value (e.g. menu.clearSelection() from
+        // the unmatched-value path), otherwise VoiceOver reads "undefined".
+        const selectedValue = this.menu.value;
+        if (selectedValue) {
+          const announcementDelay = 300;
+          this._scheduleTimer(() => {
+            announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
+          }, announcementDelay);
+        }
+      }
+
+      // Programmatic value syncs leave availableOptions stale because
+      // updateTriggerTextDisplay sets input.value with _syncingDisplayValue
+      // and handleInputValueChange bails. Refresh the filter on echo events
+      // only — fresh user selections take the existing hideBib path.
+      if (isEcho && this.menu.optionSelected) {
+        this._programmaticFilterRefresh = true;
       }
     });
 
@@ -1068,17 +1258,55 @@ export class AuroCombobox extends AuroElement {
       this.hideBib();
     });
 
+    // When the menu cannot match a programmatic value to any option,
+    // clear the combobox selection state so it doesn't reference a
+    // stale option. Safe from re-entrancy because any resulting
+    // input.value changes dispatch isProgrammatic events.
+    this.menu.addEventListener('auroMenu-selectValueFailure', () => {
+      // Announce the rejection BEFORE we clear `this.value` so the live
+      // region carries the attempted value — without this the bib closes
+      // silently and screen-reader users get no signal that their request
+      // (e.g. a direct setMenuValue() call) was dropped.
+      const attemptedValue = this.value;
+      if (attemptedValue) {
+        announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${attemptedValue}`);
+      }
+      this.value = undefined;
+      this.optionSelected = undefined;
+    });
+
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 
       if (this.input) {
-        this.input.setActiveDescendant(this.optionActive);
+        // setActiveDescendant runs after Lit's update finishes because the
+        // template's `.a11yActivedescendant` binding calls setAttribute on
+        // the internal <input> in auro-input.updated(), which clears the
+        // reflected ariaActiveDescendantElement property. Setting the ref
+        // synchronously here would get overwritten by that attribute write.
+        // Awaiting updateComplete lets the attribute write finish first,
+        // then the ref sticks and screen readers can cross the shadow-DOM
+        // boundary to the auro-menuoption in light DOM.
+        //
+        // The equality check covers the async gap: this.optionActive can
+        // change before the callback runs (user arrowed elsewhere, or the
+        // menu closed and cleared it to null), so we bail if the target
+        // no longer matches to avoid reinstating a stale ref.
+        const targetOption = this.optionActive;
+        this.updateComplete.then(() => {
+          if (this.input && this.optionActive === targetOption) {
+            this.input.setActiveDescendant(targetOption);
+          }
+        });
       }
 
-      // Announce the active option for screen readers including position,
-      // since shadow DOM boundaries prevent native reading of
-      // aria-setsize/aria-posinset via aria-activedescendant.
-      if (this.optionActive) {
+      // In fullscreen mode the menu sits inside a nested <dialog> shadow root,
+      // and aria-activedescendant references across that boundary are lost —
+      // VoiceOver/NVDA don't read the active option natively, so we mirror it
+      // into the polite live region. In popover mode aria-activedescendant on
+      // the trigger input is read natively; double-announcing would flood the
+      // queue on arrow-key repeat.
+      if (this.optionActive && this.dropdown.isBibFullscreen) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
         const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
@@ -1111,7 +1339,12 @@ export class AuroCombobox extends AuroElement {
      * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
-      if (!this.componentHasFocus && !this._inFullscreenTransition) {
+      // Skip while the dropdown is open — focus transits out briefly on
+      // mousedown of a menu option (popover top-layer breaks :focus-within),
+      // and validating against the pre-selection value flashes a stale error
+      // between mousedown and mouseup. The next focusout fires after the
+      // dropdown closes and validates against the post-selection value.
+      if (!this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
         this.validate();
       }
     });
@@ -1168,43 +1401,65 @@ export class AuroCombobox extends AuroElement {
     // event from the trigger. The _syncingBibValue guard persists across the
     // async boundary and prevents that re-entrant event from running the
     // non-fullscreen path (which would call clear() → hideBib()).
-    // When the event comes from the fullscreen bib input, sync the value to
-    // the trigger and run filtering, but suppress the re-entrant input event
-    // that the trigger fires (via Lit updated() → notifyValueChanged()) so
-    // the non-fullscreen hide/clear logic doesn't close the dialog.
     if (event.target === this.inputInBib) {
-      this._syncingBibValue = true;
-      this.input.value = this.inputInBib.value;
-      this.input.updateComplete.then(() => {
-        this._syncingBibValue = false;
-      });
+      // Mirror the trigger-branch bail below — programmatic inputInBib writes
+      // notify back into this branch via Lit's notifyValueChanged.
+      if (this._syncingDisplayValue) {
+        return;
+      }
 
-      // Run filtering inline — the re-entrant event won't reach this code.
-      this.menu.matchWord = normalizeFilterValue(this.inputInBib.value);
-      this.optionActive = null;
-      this.handleMenuOptions();
+      // Filtering runs via re-entrance: writing this.input.value below
+      // dispatches an 'input' event that the trigger's listener routes to
+      // handleTriggerInputValueChange, which refreshes the menu filter.
+      if (this.input.value !== this.inputInBib.value) {
+        this._syncingBibValue = true;
+        this.input.value = this.inputInBib.value;
+        this.input.updateComplete.then(() => {
+          this._syncingBibValue = false;
+        });
+      }
+
       this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
+    } else if (event.target === this.input) {
+
+      // Also sync the native input immediately so keystrokes arriving
+      // before Lit's async update cycle (e.g. rapid Backspaces during a
+      // fullscreen transition) operate on the correct content.
+      // Skip the next programmatic input event to prevent the patched setter
+      // from re-entering handleInputValueChange via the bib path.
+      const bibNativeInput = this.inputInBib.inputElement;
+      if (bibNativeInput && bibNativeInput.value !== this.input.value) {
+        this.inputInBib.skipNextProgrammaticInputEvent = true;
+        bibNativeInput.value = this.input.value || '';
+      }
+    }
+
+    // SPA preselect guard: on init render, auro-input's notifyValueChanged
+    // echoes an empty value through as an isProgrammatic input event before
+    // the framework-set combobox.value has propagated down to the input.
+    // Without this bail, the `this.value = this.input.value` below clobbers
+    // the framework value with '' and clear() wipes optionSelected. Scoped
+    // to the exact shape of that echo (isProgrammatic + non-empty combobox
+    // value + empty input.value) so it doesn't affect the swap/typed paths
+    // where value/input already track each other through the sync helpers.
+    if (event && event.isProgrammatic && this.value && !this.input.value) {
       return;
     }
 
-    // Ignore re-entrant input events caused by the bib→trigger sync above.
-    if (this._syncingBibValue) {
+    this.value = this.input.value;
+
+    // Ignore re-entrant input events caused by programmatic value sets.
+    if (this._syncingBibValue || this._syncingDisplayValue) {
       return;
     }
-
-    this.inputInBib.value = this.input.value;
-
-    this.menu.matchWord = normalizeFilterValue(this.input.value);
-    this.optionActive = null;
 
     if (this.behavior === 'suggestion') {
       this.value = this.input.value;
     }
 
-    if (!this.input.value) {
+    if (!this.input.value && !this._clearing) {
       this.clear();
     }
-    this.handleMenuOptions();
 
     // Validate only if the value was set programmatically (not during user
     // interaction). In fullscreen dialog mode, componentHasFocus returns false
@@ -1214,34 +1469,44 @@ export class AuroCombobox extends AuroElement {
       this.validate();
     }
 
-    if (this.input.value && this.input.value.length === 0) {
-      // Hide menu if value is empty, otherwise show if there are available suggestions
-      this.hideBib();
-    } else if (this.menu.loading) {
-      // if input has value but menu is loading, show bib immediately
-      this.showBib();
-    } else if (this.availableOptions.length === 0 && !this.dropdown.isBibFullscreen) {
-      // Force dropdown bib to hide if input value has no matching suggestions
-      this.hideBib();
-    }
-
-    // iOS virtual keyboard retention: when in fullscreen mode, ensure the
-    // dialog opens and the bib input is focused synchronously within the
-    // input event (user gesture) chain. Without this, Lit's async update
-    // cycle delays showModal() past the user activation window, causing
-    // iOS Safari to dismiss the virtual keyboard when the fullscreen
-    // dialog opens — the user then has to tap the input again to resume
-    // typing.
-    if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0) {
-      if (!this.dropdown.isPopoverVisible) {
-        this.showBib();
-      }
-      if (this.dropdown.isPopoverVisible) {
-        this.setInputFocus();
-      }
-    }
-
     this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
+  }
+
+  /**
+   * Handles input value changes originating from the trigger input.
+   * Refreshes menu options and filtering, delegates to handleInputValueChange
+   * for value synchronization, and manages fullscreen bib focus.
+   * @private
+   * @param {Event} event - The input event from the trigger input element.
+   * @returns {void}
+   */
+  handleTriggerInputValueChange(event) {
+    // 'input' fires for every user-initiated value change — typing, paste,
+    // IME composition end, dead-key composition, drag-drop. Flip _userTyped
+    // here so updated('availableOptions') auto-opens the bib for sources
+    // that keydown alone misses: paste fires no keydown, IME uses
+    // key='Process', and dead keys produce multi-char keys (all bypass the
+    // prior keydown.key.length===1 gate). Skip programmatic syncs.
+    if (!this._syncingDisplayValue && !this._syncingBibValue && !this._programmaticFilterRefresh) {
+      this._userTyped = true;
+    }
+
+    this.handleMenuOptions();
+    this.optionActive = null;
+
+    if (this.value === this.input.value) {
+      return;
+    }
+
+    this.handleInputValueChange(event);
+
+    if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0 && this.dropdown.isPopoverVisible) {
+      this.setInputFocus();
+    }
+
+    if (this._programmaticFilterRefresh) {
+      this._programmaticFilterRefresh = false;
+    }
   }
 
   /**
@@ -1267,6 +1532,16 @@ export class AuroCombobox extends AuroElement {
       // focus. Those composed events bubble up through shadow DOM boundaries
       // and would incorrectly set combobox validity. Ignore them.
       if (this._inFullscreenTransition) {
+        return;
+      }
+
+      // Ignore dispatches from the bib (fullscreen) input. It's re-validated
+      // inside this.validate()'s auroInputElements loop with its own
+      // (often undefined) validity, and the event is composed/bubbles up to
+      // this listener with `target` retargeted to the combobox. Letting it
+      // through would overwrite the trigger input's correct validity with
+      // the bib input's stale one (e.g. wiping `tooShort` during typing).
+      if (this.inputInBib && evt.composedPath()[0] === this.inputInBib && this.inputInBib !== this.input) {
         return;
       }
 
@@ -1299,6 +1574,11 @@ export class AuroCombobox extends AuroElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inFullscreenTransition = false;
+    // Cancel any outstanding timers so detached callbacks don't fire on
+    // disposed DOM — most are no-ops, but configureMenu's racing-condition
+    // retry would otherwise keep rescheduling itself indefinitely.
+    this._pendingTimers.forEach((id) => clearTimeout(id));
+    this._pendingTimers.clear();
   }
 
   firstUpdated() {
@@ -1331,10 +1611,18 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   setMenuValue(value) {
-    if (!this.menu) {
+    if (!this.menu || this.menu.value === value) {
       return;
     }
+    // One-shot flag consumed by the auroMenu-selectedOption listener so the
+    // echo of this sync doesn't propagate back to this.value.
+    this._pendingMenuValueSync = true;
     this.menu.value = value;
+    // Backup clear: if menu.value === menu.optionSelected.value already, the
+    // listener won't fire and the flag would swallow the next user click.
+    this._scheduleTimer(() => {
+      this._pendingMenuValueSync = false;
+    }, 0);
   }
 
   /**
@@ -1346,9 +1634,16 @@ export class AuroCombobox extends AuroElement {
     this.value = undefined;
     this.typedValue = undefined;
     this.input.value = undefined;
+    // Fullscreen bib mounts a second auro-input that holds the user-facing
+    // native <input> on mobile; clearing only the trigger leaves stale text
+    // there when the bib is reopened after reset.
+    if (this.inputInBib) {
+      this.inputInBib.value = undefined;
+    }
     this.menu.value = undefined;
     this.validation.reset(this);
     this.touched = false;
+    this.validity = undefined;
   }
 
   /**
@@ -1356,16 +1651,35 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   clear() {
-    // Clear combobox state first
-    this.optionSelected = undefined;
-    this.value = undefined;
-
-    // Then clear input and menu
-    if (this.input.value) {
-      this.input.clear();
+    // input.clear() fires an input event that re-enters handleInputValueChange
+    // → which calls clear() again on empty input. Guard against that loop.
+    if (this._clearing) {
+      return;
     }
-    if (this.menu.value || this.menu.optionSelected) {
-      this.menu.reset();
+    this._clearing = true;
+    try {
+      this.optionSelected = undefined;
+      this.value = undefined;
+
+      // Clear the appended displayValue clone in the trigger if present.
+      // :not(slot) excludes the template's <slot name="displayValue"
+      // slot="displayValue"> forwarder (line 1816), which also has
+      // slot="displayValue" and would otherwise be matched first and removed,
+      // permanently breaking the consumer-provided displayValue slot.
+      const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]:not(slot)');
+
+      if (displayValueInTrigger) {
+        displayValueInTrigger.remove();
+      }
+
+      if (this.input.value) {
+        this.input.clear();
+      }
+      if (this.menu.value || this.menu.optionSelected) {
+        this.menu.reset();
+      }
+    } finally {
+      this._clearing = false;
     }
   }
 
@@ -1381,47 +1695,49 @@ export class AuroCombobox extends AuroElement {
   }
 
   updated(changedProperties) {
-    // After the component is ready, send direct value changes to auro-menu.
+    // After the component is ready, propagate direct changes down to child components.
     if (changedProperties.has('value')) {
-      if (this.value && this.value.length > 0) {
-        this.hasValue = true;
-      } else {
-        this.hasValue = false;
+      // Only flag programmatic refreshes — user-typed value changes must not
+      // suppress the availableOptions branch's showBib(). Firefox batches
+      // 'value' and 'availableOptions' into the same updated() call, so
+      // setting the flag unconditionally here masks the user-typed open path.
+      if (!this._userTyped) {
+        this._programmaticFilterRefresh = true;
       }
 
-      if (this.hasValue && !this.input.value && (!this.menu.options || this.menu.options.length === 0)) {
-        this.input.value = this.value;
-      }
-
-      if (this.menu && this.hasValue && this.menu.options) {
-        this.menu.options.forEach((opt) => {
-          if (!opt.hasAttribute('static')) {
-            opt.removeAttribute('hidden');
-          }
-        });
-      }
-
-      if (this.behavior === 'suggestion') {
-        if (!this.menu.options || this.menu.options.length === 0) {
-          // No options loaded yet (async pattern) — don't touch menu.value.
-        } else if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
-          this.setMenuValue(this.value);
-        } else {
-          this.menu.value = undefined;
-          // Sync the input display for freeform values that don't match any option
-          this.input.value = this.value;
+      if (this.input.value !== this.value) {
+        // Clear menu.value AND menu.optionSelected together. Clearing only
+        // menu.value leaves the previously-selected option element pinned
+        // as menu.optionSelected; a later auroMenu-selectedOption event
+        // would then write its stale .value back into combobox.value
+        // (e.g. Tab-after-Backspace re-selecting the prior option).
+        if (this.menu.value || this.menu.optionSelected) {
+          this.menu.clearSelection();
         }
-      } else {
-        // Use setMenuValue like select does instead of direct assignment
-        this.setMenuValue(this.value);
-        if (!this.value) {
-          this.clear();
+
+        if (!this.persistInput) {
+          this.syncInputValuesAcrossTriggerAndBib(this.value || '');
+        }
+
+        // Programmatic value with no matching option: updateFilter will close
+        // the bib silently (see line 648 — no noMatchOption + 0 results
+        // hides). Announce so screen-reader users hear the request was
+        // dropped. Gated on `input.value !== this.value` so this never fires
+        // for user typing — that path always reconciles input.value to
+        // this.value before updated() runs.
+        if (
+          this.value &&
+          this.menu &&
+          this.menu.options &&
+          this.menu.options.length > 0 &&
+          !this.menu.options.some((opt) => opt.value === this.value)
+        ) {
+          announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${this.value}`);
         }
       }
-      if (this.value && !this.componentHasFocus) {
-        // If the value got set programmatically make sure we hide the bib
-        // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-        this.hideBib();
+
+      if (!this.value) {
+        this.clear();
       }
 
       // Sync the input and match word, but don't directly set menu.value again
@@ -1435,7 +1751,7 @@ export class AuroCombobox extends AuroElement {
         composed: true,
         detail: {
           optionSelected: this.menu.optionSelected,
-          value: this.menu.value
+          value: this.value
         }
       }));
 
@@ -1454,13 +1770,31 @@ export class AuroCombobox extends AuroElement {
       // branch from calling hideBib() when the dropdown was just opened but
       // :focus-within hasn't propagated through the top-layer dialog's nested
       // shadow DOM boundaries.
-      if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || (this.menu && this.menu.loading) || (this.availableOptions.length === 0 && this.noMatchOption)) {
-        this.showBib();
+      // Skip the show/hide side effects when the availableOptions change came
+      // from a programmatic filter refresh after a value swap — the user
+      // didn't interact, so we shouldn't auto-open the bib (especially for
+      // the no-match path where the existing condition unconditionally fires).
+      if ((this.menu && !this._programmaticFilterRefresh)) {
+        if (
+          this.availableOptions.length > 0 ||
+          this.menu.loading ||
+          this.noMatchOption
+        ) {
+          if (this._userTyped && !this.dropdownOpen) {
+            this.showBib();
+          }
+          this._userTyped = false;
+        }
+
         if (!this.availableOptions.includes(this.menu.optionActive)) {
           this.activateFirstEnabledAvailableOption();
         }
-      } else {
+      } else if (!this.dropdown.isBibFullscreen) {
         this.hideBib();
+      }
+
+      if (this._programmaticFilterRefresh) {
+        this._programmaticFilterRefresh = false;
       }
     }
 
@@ -1550,7 +1884,11 @@ export class AuroCombobox extends AuroElement {
           }
         });
 
-        this.handleMenuOptions();
+        // Slot change (mount/re-mount): pass `preferComboboxValue` so that a
+        // framework-set `this.value` wins over any stale `input.value` when
+        // matching against the newly-available options. Fixes the display
+        // for SPA preselect and Svelte `{#key}` re-mount swap patterns.
+        this.handleMenuOptions({ preferComboboxValue: true });
 
         break;
 
@@ -1604,10 +1942,10 @@ export class AuroCombobox extends AuroElement {
           shape="${this.shape}"
           size="${this.size}">
             <${this.inputTag}
-              @input="${this.handleInputValueChange}"
+              @input="${this.handleTriggerInputValueChange}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
-              .a11yExpanded="${this.triggerExpandedState}"
+              .a11yExpanded="${this.dropdownOpen}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
               .inputmode="${this.inputmode}"

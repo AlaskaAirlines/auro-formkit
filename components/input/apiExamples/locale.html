@@ -1,0 +1,38 @@
+<p class="body-sm"><strong>en-GB</strong></p>
+<auro-input type="date" locale="en-GB">
+  <span slot="ariaLabel.clear">Clear All</span>
+  <span slot="label">en-GB Date</span>
+  <span slot="helpText">Help Text</span>
+</auro-input>
+
+<p class="body-sm"><strong>en-US</strong></p>
+<auro-input type="date" locale="en-US">
+  <span slot="ariaLabel.clear">Clear All</span>
+  <span slot="label">en-US Date</span>
+  <span slot="helpText">Help Text</span>
+</auro-input>
+
+<p class="body-sm"><strong>zh-CN</strong></p>
+<auro-input type="date" locale="zh-CN">
+  <span slot="ariaLabel.clear">全部清除</span>
+  <span slot="label">中文日期</span>
+  <span slot="helpText">帮助文本</span>
+  <span slot="optionalLabel">（可选）</span>
+</auro-input>
+
+<p class="body-sm"><strong>en-US with explicit <code>format="yyyy.mm.dd"</code></strong></p>
+<auro-input type="date" locale="en-US" format="yyyy.mm.dd">
+  <span slot="ariaLabel.clear">Clear All</span>
+  <span slot="label">en-US with yyyy.mm.dd format</span>
+  <span slot="helpText">Help Text</span>
+</auro-input>
+
+<p class="body-sm"><strong>Inherited de-DE (via <code>data-locale</code>)</strong></p>
+<div data-locale="de-DE">
+  <auro-input type="date">
+    <span slot="ariaLabel.clear">Alles löschen</span>
+    <span slot="label">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+    <span slot="helpText">Hilfetext</span>
+    <span slot="optionalLabel">(freiwillig)</span>
+  </auro-input>
+</div>

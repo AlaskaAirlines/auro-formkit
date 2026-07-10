@@ -8,6 +8,11 @@ export default {
   ],
   concurrency: 1,
   testsFinishTimeout: 300000,
+  // Filter out browser `console.debug()` output. We emit `console.debug` from
+  // component internals (e.g. deprecation notices, locale fallbacks) to help
+  // consumers troubleshoot integration issues at runtime — they shouldn't
+  // clutter our own test output. Warnings, errors, log, and info still print.
+  filterBrowserLogs: (log) => log.type !== 'debug',
   reporters: [defaultReporter(), jsonSummaryReporter()],
   nodeResolve: {
     moduleDirectories: [
@@ -35,8 +40,8 @@ export default {
   },
   testRunnerHtml: (testFramework) => `<html>
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm//@aurodesignsystem/design-tokens@latest/dist/auro-classic/CSSCustomProperties.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm//@aurodesignsystem/design-tokens@latest/dist/alaska/CSSCustomProperties--alaska.css">
+        <link rel="stylesheet" href="/node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css">
+        <link rel="stylesheet" href="/node_modules/@aurodesignsystem/design-tokens/dist/web/alaska.css">
       </head>
       <body>
         <script type="module" src="${testFramework}"></script>

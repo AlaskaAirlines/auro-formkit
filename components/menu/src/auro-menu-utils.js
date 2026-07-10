@@ -44,6 +44,18 @@ export function arrayConverter(value) {
 }
 
 /**
+ * Serializes a multi-select value array back into the String `value` property.
+ * An empty (or missing) array collapses to `undefined` so an emptied selection
+ * clears `value` rather than reflecting a `"[]"` attribute.
+ * @private
+ * @param {Array<string>|undefined} values - The selected values.
+ * @returns {string|undefined} JSON string of the values, or undefined when empty.
+ */
+export function serializeMultiSelectValue(values) {
+  return values && values.length > 0 ? JSON.stringify(values) : undefined;
+}
+
+/**
  * Compare two arrays for equality.
  * @private
  * @param {Array} arr1 - First array to compare.
@@ -79,6 +91,20 @@ export function arraysAreEqual(arr1, arr2) {
 export function isOptionInteractive(option) {
   return !option.hasAttribute('hidden') &&
          !option.hasAttribute('disabled') &&
+         !option.hasAttribute('static');
+}
+
+/**
+ * Validates if an option may be selected by matching a programmatic value.
+ * Unlike `isOptionInteractive`, `hidden` is allowed: the combobox toggles
+ * `hidden` as its type-ahead filter, so a filtered-out option is still a
+ * valid programmatic selection. Only disabled and static options — which are
+ * never selectable — are rejected.
+ * @param {HTMLElement} option - The option to check.
+ * @returns {boolean} True if option can be selected by value.
+ */
+export function isSelectableByValue(option) {
+  return !option.hasAttribute('disabled') &&
          !option.hasAttribute('static');
 }
 

@@ -340,21 +340,6 @@ export class AuroCounter extends LitElement {
     }
   }
 
-  /**
-   * Handles the slotchange event for the description slot.
-   * Updates ariaDescribedByElements on the spinbutton.
-   *
-   * @param {Event} event - The slotchange event.
-   * @private
-   */
-  onDescriptionSlotChange(event) {
-    const spinbutton = this.shadowRoot.querySelector('[role="spinbutton"]');
-    if (spinbutton) {
-      const assigned = event.target.assignedElements();
-      spinbutton.ariaDescribedByElements = assigned.length > 0 ? assigned : [];
-    }
-  }
-
   updated(changedProperties) {
     if (changedProperties.has("value")) {
       this.validate();
@@ -410,7 +395,7 @@ export class AuroCounter extends LitElement {
             <label class="label">
               <slot @slotchange="${this.onDefaultSlotChange}"></slot>
             </label>
-            <slot name="description" class="body-xs" @slotchange="${this.onDescriptionSlotChange}"></slot>
+            <slot name="description" class="body-xs"></slot>
           </div>
           <div
             part="counterControl"

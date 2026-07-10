@@ -20,6 +20,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
+import { getActiveOptions } from './selectUtils.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -128,6 +129,16 @@ export class AuroSelect extends AuroElement {
      * @private
      */
     this.hasDisplayValueContent = false;
+
+    /**
+     * @private
+     */
+    this.typeaheadBuffer = '';
+
+    /**
+     * @private
+     */
+    this._typeaheadTimeout = null;
   }
 
   /**
@@ -140,6 +151,7 @@ export class AuroSelect extends AuroElement {
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
     this.isPopoverVisible = false;
+    this.typeaheadTimeoutMs = 500;
 
     // Layout Config
     this.layout = 'classic';
@@ -345,14 +357,6 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * @private
-       */
-      options: {
-        type: Array,
-        state: true
-      },
-
-      /**
        * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
        * @type {HTMLElement|Array<HTMLElement>}
        */
@@ -444,6 +448,16 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * Milliseconds of keyboard inactivity before the type-ahead buffer resets.
+       * Increase for users who type slowly.
+       * @default 500
+       */
+      typeaheadTimeoutMs: {
+        type: Number,
+        reflect: true
+      },
+
+      /**
        * Specifies the `validityState` this element is in.
        */
       validity: {
@@ -452,7 +466,7 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Value selected for the component.
+       * Value selected for the component. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable by value.
        */
       value: {
         type: String,
@@ -574,8 +588,11 @@ export class AuroSelect extends AuroElement {
           } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
             this.menu.updateActiveOption(this.optionSelected[0]);
           } else {
-            // If no activeOption has yet to be set, then make the first enabled option active by default
-            const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
+            // If no activeOption has yet to be set, make the first active option
+            // (non-disabled, non-hidden, non-static) active by default. "Active" —
+            // not just "enabled" — so hidden rows and static placeholders never
+            // land in aria-activedescendant on open.
+            const [firstActive] = getActiveOptions(this.menu);
             this.menu.updateActiveOption(firstActive);
           }
         }
@@ -629,14 +646,66 @@ export class AuroSelect extends AuroElement {
       this.dropdown.dropdownWidth = this.customBibWidth;
     }
 
-    // Pass label text to the dropdown bib for accessible dialog naming
-    const labelElement = this.querySelector('span[slot="label"]');
-    if (labelElement) {
-      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
-    }
+    this._syncLabelText();
 
     // Exposes the CSS parts from the dropdown for styling
     this.dropdown.exposeCssParts();
+  }
+
+  /**
+   * Reads the current label slot text and pushes it to the dropdown bib
+   * (for dialog naming) and the menu (for listbox aria-label). Safe to call
+   * before either child has been wired up — each branch self-guards.
+   * @private
+   */
+  _syncLabelText() {
+    const labelElement = this.querySelector('[slot="label"]');
+    const text = labelElement ? labelElement.textContent.trim() : '';
+    if (this.dropdown) {
+      this.dropdown.bibDialogLabel = text || undefined;
+    }
+    if (this.menu) {
+      if (text) {
+        this.menu.setAttribute('aria-label', text);
+      } else {
+        this.menu.removeAttribute('aria-label');
+      }
+    }
+  }
+
+  /**
+   * Keeps the dialog/menu accessible names in sync when consumers mutate the
+   * label slot at runtime (e.g., i18n locale swap). `slotchange` alone is
+   * insufficient — it doesn't fire when textContent of an already-assigned
+   * slotted node changes, which is the common case. We scope the observer to
+   * the label node itself (not the whole host subtree) so option-content
+   * mutations don't trigger label re-syncs, and re-target on `slotchange`
+   * when consumers add or replace the label element.
+   * @private
+   */
+  _observeLabelChanges() {
+    if (this._labelObserver) return;
+    this._labelObserver = new MutationObserver(() => this._syncLabelText());
+
+    const retarget = () => {
+      this._labelObserver.disconnect();
+      const labelElement = this.querySelector('[slot="label"]');
+      if (labelElement) {
+        this._labelObserver.observe(labelElement, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+      this._syncLabelText();
+    };
+
+    retarget();
+
+    this._retargetLabelObserver = retarget;
+    this.shadowRoot.querySelectorAll('slot[name="label"]').forEach((slot) => {
+      slot.addEventListener('slotchange', retarget);
+    });
   }
 
   /**
@@ -769,6 +838,12 @@ export class AuroSelect extends AuroElement {
 
   /**
    * Binds all behavior needed to the menu after rendering.
+   *
+   * The `<auro-menu>` reference is captured once and not re-targeted on
+   * `slotchange`. Runtime option mutations are covered via
+   * `auroMenu-optionsChange`, so swap options inside the menu freely; do not
+   * swap the `<auro-menu>` element itself under a live select — remount the
+   * parent `<auro-select>` instead.
    * @private
    * @returns {void}
    */
@@ -789,22 +864,59 @@ export class AuroSelect extends AuroElement {
     this.updateMenuShapeSize();
     this.setMenuValue(this.value);
 
-    // Set accessible name on the menu for screen readers based on the label slot content
-    const labelElement = this.querySelector('[slot="label"]');
-    if (labelElement) {
-      this.menu.setAttribute('aria-label', labelElement.textContent.trim());
-    }
+    this._syncLabelText();
 
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
     }
 
-    this.options = this.menu.options;
+    // Menu's items are populated by initItems() during its firstUpdated/slotchange.
+    // Since the parent select's firstUpdated runs before the child menu's, call initItems()
+    // here so renderNativeSelect can render the native <option> list on first paint.
+    if (typeof this.menu.initItems === 'function') {
+      this.menu.initItems();
+    }
     this.updateOptionPositions();
+    // renderNativeSelect reads this.menu.options, which the parent doesn't
+    // observe — request an update so the hidden native <option> list reflects
+    // the menu's options after initItems populates them.
+    this.requestUpdate();
+
+    // Keep aria-setsize/aria-posinset (and the native <option> list) in sync
+    // when the menu re-initializes its items — e.g., slotchange, async/lazy
+    // loads, value-triggered re-init. Without this, stale set-size is
+    // announced and the native select goes stale after dynamic mutations.
+    this.menu.addEventListener('auroMenu-optionsChange', () => {
+      this.updateOptionPositions();
+      this.requestUpdate();
+    });
+
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
-    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
-      this.hideBib();
+    this.menu.addEventListener("auroMenu-selectValueFailure", () => {
+      // Menu dispatches this from two paths: a programmatic value mismatch
+      // (menu pre-clears its own optionSelected to undefined before firing)
+      // and a click on an unselected valueless option (menu leaves state
+      // untouched). Only mirror the clear in the first case — otherwise a
+      // valueless click in multiSelect would wipe every prior pick.
+      if (this.menu.optionSelected !== undefined) {
+        return;
+      }
+      // Skip when the select is already cleared (valueless click with no
+      // prior selection): value/optionSelected are already empty and there
+      // is no stale trigger text to refresh, so updateDisplayedValue would
+      // just churn the DOM and request a needless dropdown re-render.
+      const hasStaleState = this.value !== undefined ||
+        (this.multiSelect ? this.optionSelected?.length > 0 : this.optionSelected !== undefined);
+      if (!hasStaleState) {
+        return;
+      }
+      this.value = undefined;
+      this.optionSelected = this.multiSelect ? [] : undefined;
+      // The trigger label is rendered imperatively into #value, so a property
+      // change alone won't clear it. Refresh so stale text doesn't linger when
+      // a runtime value change fails to match any option.
+      this.updateDisplayedValue();
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
@@ -814,11 +926,31 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(this.optionActive);
       }
 
-      // Announce the active option for screen readers
-      if (this.optionActive) {
+      // Live-region announce only for [not selected] options. For activations
+      // on an already-selected option — auto-activation on bib open, arrow
+      // navigation back to the selection, or click in multiSelect — rely on
+      // aria-activedescendant + aria-selected="true" to convey state per the
+      // WAI-ARIA listbox pattern. This is intentional, not limited to the
+      // initial activation on open: it also prevents a duplicate "X, selected"
+      // when Enter on the active+selected option re-fires
+      // auroMenu-selectedOption (see 03b289e39).
+      if (this.optionActive && !this.optionActive.hasAttribute('selected')) {
         const optionText = this.optionActive.textContent.trim();
-        const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}${selectedState}`);
+        const message = `${optionText}, not selected`;
+        if (this.dropdown.isPopoverVisible) {
+          announceToScreenReader(this._getAnnouncementRoot(), message);
+        } else {
+          // Typeahead-on-closed calls updateActiveOption() before show(), so
+          // this handler runs with isPopoverVisible still false. queueMicrotask
+          // is safe because show() → showBib() flips isPopoverVisible and
+          // dialog.showModal() both run synchronously in the same task; the
+          // microtask queue only drains once _handleTypeahead unwinds, by
+          // which point _getAnnouncementRoot() resolves to the bib's shadow
+          // root inside the now-open modal. Do NOT switch to auroDropdown-toggled
+          // — it fires before showModal(), landing the announcement in the
+          // host root while the dialog is still not-yet-modal.
+          queueMicrotask(() => announceToScreenReader(this._getAnnouncementRoot(), message));
+        }
       }
 
       if (this.dropdown.isPopoverVisible) {
@@ -826,29 +958,53 @@ export class AuroSelect extends AuroElement {
       }
     });
 
-    this.menu.addEventListener('auroMenu-selectedOption', (event) => {
+    this.menu.addEventListener('auroMenu-selectedOption', () => {
+      const previousSelected = this.optionSelected;
 
       // Update the displayed value
       this.updateDisplayedValue();
 
-      const options = event.detail.options || [];
+      this.value = this.menu.value;
 
-      this.value = event.detail.stringValue;
-
-      this.optionSelected = this.multiSelect ? options : options[0];
+      // Clone the multiselect array so external mutation of select.optionSelected
+      // can't reach back into menu's internal state through a shared reference.
+      let nextSelected = this.menu.optionSelected;
+      if (this.multiSelect) {
+        nextSelected = Array.isArray(nextSelected) ? [...nextSelected] : [];
+      }
+      this.optionSelected = nextSelected;
 
       if (this.dropdown.isPopoverVisible && !this.multiSelect) {
         this.dropdown.hide();
         this.dropdown.trigger.focus();
       }
 
-      // Announce the selection after the dropdown closes so it isn't
-      // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
-      const selectedValue = event.detail.stringValue;
-      const announcementDelay = 300;
-      setTimeout(() => {
-        announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
-      }, announcementDelay);
+      // Describe the actual change. In multiSelect, currentLabel is the
+      // concatenated remaining list — announcing "{list}, selected" after a
+      // deselect would falsely claim every remaining label was just added.
+      // Diff previous vs next to recover the toggled option.
+      let announcement = '';
+      if (this.multiSelect) {
+        const prev = Array.isArray(previousSelected) ? previousSelected : [];
+        const removed = prev.find((opt) => !nextSelected.includes(opt));
+        const added = nextSelected.find((opt) => !prev.includes(opt));
+        if (removed) {
+          announcement = `${removed.textContent.trim()}, not selected`;
+        } else if (added) {
+          announcement = `${added.textContent.trim()}, selected`;
+        }
+      } else {
+        announcement = `${this.menu.currentLabel}, selected`;
+      }
+
+      // Delay so the utterance isn't overridden by VoiceOver's "collapsed"
+      // announcement from aria-expanded when the dropdown closes.
+      if (announcement) {
+        const announcementDelay = 300;
+        setTimeout(() => {
+          announceToScreenReader(this._getAnnouncementRoot(), announcement);
+        }, announcementDelay);
+      }
     });
   }
 
@@ -867,6 +1023,7 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('blur', () => {
       this.validate();
       this.hasFocus = false;
+      this._clearTypeaheadBuffer();
     });
   }
 
@@ -881,40 +1038,103 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns the lowercase, trimmed text content of a menu option.
+   * @private
+   * @param {HTMLElement} option - The menu option element.
+   * @returns {string}
+   */
+  _getOptionDisplayText(option) {
+    return (option.textContent || '').trim().toLowerCase();
+  }
+
+  /**
+   * Empties the type-ahead buffer and cancels any pending reset timeout.
+   * Called when focus leaves the component, when Escape closes the bib, and on disconnect
+   * so a stale buffer never bridges into a fresh interaction.
+   * @private
+   */
+  _clearTypeaheadBuffer() {
+    if (this._typeaheadTimeout) {
+      clearTimeout(this._typeaheadTimeout);
+      this._typeaheadTimeout = null;
+    }
+    this.typeaheadBuffer = '';
+  }
+
+  /**
    * Updates the active option in the menu based on keyboard input.
+   *
+   * Implements the WAI-ARIA APG Listbox type-ahead pattern: accumulates printable
+   * keystrokes into a buffer that resets after `typeaheadTimeoutMs` of inactivity.
+   * A multi-character buffer matches the first option whose displayed text starts
+   * with the buffer; repeating a single character cycles through options that start
+   * with that character.
    * @private
    * @param {string} _key - The key pressed by the user.
    * @returns {void}
    */
   updateActiveOptionBasedOnKey(_key) {
+    // Ignore non-printable keys (Shift, ArrowDown, Tab, etc.)
+    if (typeof _key !== 'string' || _key.length !== 1) {
+      return;
+    }
 
-    // Get a lowercase version of the key pressed
+    // No selectable options to match against — clear any stale buffer/timer so
+    // Space stays a bib toggle and the next keystroke after fresh options load
+    // starts cleanly. `getActiveOptions` excludes disabled, hidden, and static
+    // options (e.g. `static nomatch` placeholders). Checked BEFORE mutating
+    // the buffer.
+    const options = getActiveOptions(this.menu);
+    if (!options.length) {
+      this._clearTypeaheadBuffer();
+      return;
+    }
+
     const key = _key.toLowerCase();
 
-    // Calculate how many times the same letter has been pressed
-    this.sameLetterTimes = key === this.lastLetter ? this.sameLetterTimes + 1 : 0;
+    // Reset the buffer after a period of inactivity
+    if (this._typeaheadTimeout) {
+      clearTimeout(this._typeaheadTimeout);
+    }
+    this._typeaheadTimeout = setTimeout(() => {
+      this._clearTypeaheadBuffer();
+    }, this.typeaheadTimeoutMs);
 
-    // Set last letter for tracking
-    this.lastLetter = key;
+    this.typeaheadBuffer += key;
 
-    // Get all the options that start with the last letter pressed
-    const letterOptions = this.menu.options.filter((option) => {
-      const optionText = option.value || '';
-      return optionText.toLowerCase().startsWith(this.lastLetter);
-    });
+    // Prefer the literal buffer as a prefix per WAI-ARIA APG ("focus moves to the
+    // next item with a name that starts with the string of characters typed").
+    // Only fall back to single-char cycling when the repeated buffer has no
+    // longer prefix match — e.g. "aa" cycles through ["Apple", "Apricot"] only
+    // because no option starts with "aa".
+    let match = options.find((option) => this._getOptionDisplayText(option).startsWith(this.typeaheadBuffer));
 
-    // If we have options that match the letter pressed
-    if (letterOptions.length) {
+    const isRepeatedChar = !match && this.typeaheadBuffer.length > 1 && new Set(this.typeaheadBuffer).size === 1;
+    if (isRepeatedChar) {
+      const matches = options.filter((option) => this._getOptionDisplayText(option).startsWith(key));
+      if (matches.length) {
+        const cycleIndex = (this.typeaheadBuffer.length - 1) % matches.length;
+        match = matches[cycleIndex];
+      }
+    } else if (!match && this.typeaheadBuffer.length > 1) {
+      // Buffer has no prefix match and isn't a repeat-char cycle (e.g. "a" then
+      // "b" against [Apple, Banana]). Reset to just the new key and retry —
+      // mirrors native <select>, which falls back to a single-char search when
+      // accumulated input matches nothing, rather than swallowing the keystroke.
+      this.typeaheadBuffer = key;
+      match = options.find((option) => this._getOptionDisplayText(option).startsWith(key));
+    }
 
-      // Show the dropdown if it is not already visible
-      this.dropdown.show();
-
-      // Get the index we're after based on how many times the letter has been pressed and the length of the letterOptions array
-      const index = this.sameLetterTimes < letterOptions.length ? this.sameLetterTimes : this.sameLetterTimes % letterOptions.length;
-
-      // Select the new option in the menu
-      const newOption = letterOptions[index];
-      this.menu.updateActiveOption(newOption);
+    // Intentional: no-match leaves the bib closed (deviates from APG / some native <select>).
+    if (match) {
+      // Pre-stash the match so the auroDropdown-toggled handler's `!optionActive`
+      // guard short-circuits and skips the firstActive/selected fallback —
+      // otherwise show() synchronously fires the handler, which writes
+      // aria-activedescendant once before we overwrite it.
+      this.menu.updateActiveOption(match);
+      if (!this.dropdown.isPopoverVisible) {
+        this.dropdown.show();
+      }
     }
   }
 
@@ -1028,6 +1248,33 @@ export class AuroSelect extends AuroElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._clearTypeaheadBuffer();
+    if (this._labelObserver) {
+      this._labelObserver.disconnect();
+      this._labelObserver = null;
+    }
+    if (this._retargetLabelObserver && this.shadowRoot) {
+      this.shadowRoot.querySelectorAll('slot[name="label"]').forEach((slot) => {
+        slot.removeEventListener('slotchange', this._retargetLabelObserver);
+      });
+      this._retargetLabelObserver = null;
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Regression guard: firstUpdated() fires once per instance, so the label
+    // observer setup it triggers does NOT re-run on reconnect. After a
+    // disconnect+reconnect (reparent, SPA route swap), runtime label mutations
+    // would silently stop syncing menu aria-label / dropdown.bibDialogLabel
+    // unless we re-wire the observer here.
+    if (this.hasUpdated) {
+      this._observeLabelChanges();
+    }
+  }
+
   // lifecycle runs only after the element's DOM has been updated the first time
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
@@ -1036,11 +1283,16 @@ export class AuroSelect extends AuroElement {
     this.configureDropdown();
     this.configureMenu();
     this.configureSelect();
+    this._observeLabelChanges();
   }
 
+  /**
+   * Sets the selected value by matching it against the menu options. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is rejected and `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable.
+   * @param {string} value - The value to match against the menu options.
+   */
   setMenuValue(value) {
     if (!this.menu) return;
-    this.menu.value = value;
+    this.menu.selectByValue(value);
   }
 
   /**
@@ -1094,6 +1346,13 @@ export class AuroSelect extends AuroElement {
     }
 
     if (changedProperties.has('value')) {
+      // A value change ends the current interaction — whether it came from a
+      // user commit, programmatic assignment, or reset(). Clear the buffer so
+      // a stale prefix does not concatenate onto the next keystroke while the
+      // host still has focus (the blur listener would otherwise be the only
+      // focus-retained clear point, and hideBib() below does not blur).
+      this._clearTypeaheadBuffer();
+
       this.setMenuValue(this.value);
 
       this._updateNativeSelect();
@@ -1149,6 +1408,9 @@ export class AuroSelect extends AuroElement {
    * @returns {void}
    */
   reset() {
+    // Defense-in-depth: updated()'s value-change branch also clears, but
+    // reset-to-same-value (e.g. undefined → undefined) skips that path.
+    this._clearTypeaheadBuffer();
     this.menu.reset();
     this.validation.reset(this);
   }
@@ -1168,25 +1430,23 @@ export class AuroSelect extends AuroElement {
    * @private
    */
   _handleNativeSelectChange(event) {
+    // Hidden native <select> has no `multiple` attribute, so any change it fires
+    // is a single raw value — applying it in multiSelect mode would collapse the
+    // JSON-array `value` shape. Bfcache/autofill can reach this on a name-bearing
+    // form control even with aria-hidden/tabindex=-1, so revert to the expected
+    // mirror (formattedValue[0]) rather than letting the native select drift and
+    // silently submit the autofilled scalar under `name`.
+    if (this.multiSelect) {
+      this._updateNativeSelect();
+      return;
+    }
+
     const selectedOption = event.target.options[event.target.selectedIndex];
     if (!selectedOption) return;
     const selectedValue = selectedOption.value;
 
-    if (this.multiSelect) {
-      const currentArray = this.menu.value || [];
-
-      if (!currentArray.includes(selectedValue)) {
-        this.value = JSON.stringify([
-          ...currentArray,
-          selectedValue
-        ]);
-      }
-    } else {
-      const currentValue = this.value;
-
-      if (currentValue !== selectedValue) {
-        this.value = selectedValue;
-      }
+    if (this.value !== selectedValue) {
+      this.value = selectedValue;
     }
   }
 

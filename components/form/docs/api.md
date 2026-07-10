@@ -8,7 +8,7 @@ The `auro-form` element provides users a way to create and manage forms in a con
 |------------------|-----------|--------------------------------------------------|--------------------------------------------------|
 | `isInitialState` | readonly  | `boolean`                                        | Returns `true` if no form element has been interacted with or had its value changed since the form was initialized or last reset. |
 | `validity`       | readonly  | `"valid" \| "invalid" \| null`                   | Returns `'valid'` if all required and interacted-with form elements are valid, `'invalid'` if any are not, or `null` if the form has not been interacted with yet. |
-| `value`          | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` | Returns the current values of all named form elements as a key-value object, keyed by each element's `name` attribute. |
+| `value`          | readonly  | `Record<string, string \| number \| boolean \| string[] \| Record<string, number> \| null>` | Returns the current values of all named, enabled form elements as a key-value object, keyed by each element's `name` attribute. Each value is the child component's own `.value`, so the shape depends on the element type — see that component's documentation for its exact shape (for example, `auro-checkbox-group` yields an array, `auro-counter-group` yields an object keyed by counter name, and `auro-select` with `multiSelect` yields a JSON-encoded string). The one form-specific exception is a `range` `auro-datepicker`, whose `.values` array (`[start, end]`) is stored instead of its single `.value` string. |
 
 ## Methods
 
@@ -23,8 +23,8 @@ The `auro-form` element provides users a way to create and manage forms in a con
 |----------|--------------------------------------------------|--------------------------------------------------|
 | `change` |                                                  | Fires when a child form element's value changes or the form is initialized. |
 | `input`  |                                                  | Fires when a child form element receives user input. |
-| `reset`  | `CustomEvent<{ previousValue: Record<string, string \| number \| boolean \| string[] \| null>; }>` | Fires when the form is reset. The event detail contains the previous value of the form before reset. |
-| `submit` | `CustomEvent<{ value: Record<string, string \| number \| boolean \| string[] \| null>; }>` | Fires when the form is submitted. The event detail contains the current value of the form. |
+| `reset`  | `CustomEvent<{ previousValue: Record<string, string \| number \| boolean \| string[] \| Record<string, number> \| null>; }>` | Fires when the form is reset. The event detail contains the previous value of the form before reset. |
+| `submit` | `CustomEvent<{ value: Record<string, string \| number \| boolean \| string[] \| Record<string, number> \| null>; }>` | Fires when the form is submitted. The event detail contains the current value of the form. |
 
 ## Slots
 

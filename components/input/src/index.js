@@ -1,3 +1,3 @@
 import { AuroInput } from './auro-input.js';
-
-export { AuroInput };
+import { AuroInputUtil} from './auro-input-util.js';
+export { AuroInput, AuroInputUtil };

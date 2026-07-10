@@ -12,6 +12,9 @@ import {classMap} from "lit/directives/class-map.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
+import { getDateFormatFromLocale } from '@aurodesignsystem/auro-input/src/utilities.js';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
@@ -32,7 +35,7 @@ import snowflakeColors from "./styles/snowflake/color-css.js";
 import './auro-calendar.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import { AuroInput } from '@aurodesignsystem/auro-input';
+import { AuroInput, AuroInputUtil } from '@aurodesignsystem/auro-input';
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
 
@@ -65,8 +68,10 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
- * @slot date_MM_DD_YYYY - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
- * @slot popover_MM_DD_YYYY - Defines the content to display in the auro-calendar-cell popover for the specified date.
+ * @slot optionalFromLabel - Overrides the "(optional)" text rendered next to the first input's label when the datepicker is not `required`.
+ * @slot optionalToLabel - Overrides the "(optional)" text rendered next to the second input's label when `range` is set and the datepicker is not `required`.
+ * @slot date_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
+ * @slot popover_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell popover for the specified date.
  * @csspart dropdown - Use for customizing the style of the dropdown.
  * @csspart trigger - Use for customizing the style of the datepicker trigger.
  * @csspart input - Use for customizing the style of the datepicker inputs.
@@ -74,7 +79,6 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @csspart calendar - Use for customizing the style of the calendar.
  * @csspart helpTextSpan - Use for customizing the style of the datepicker help text span.
  * @csspart helpText - Use for customizing the style of the datepicker help text.
- * @event auroDatePicker-valueSet - Notifies that the component has a new value set.
  * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
  * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
@@ -87,6 +91,7 @@ export class AuroDatePicker extends AuroElement {
       delegatesFocus: true,
     };
   }
+
   constructor() {
     super();
 
@@ -100,13 +105,13 @@ export class AuroDatePicker extends AuroElement {
      */
     this.calendarRenderUtil = new UtilitiesCalendarRender();
 
+    /**
+     *  @private
+     */
+    this.domHandler = new DomHandler();
+
     // If `calendarStartDate` is set, use that as the central date. Otherwise, use the current date.
-    if (this.getAttribute('calendarStartDate') && this.util.validDateStr(this.getAttribute('calendarStartDate'), this.getAttribute('format'))) {
-      this.formattedStartDate = this.util.toNorthAmericanFormat(this.getAttribute('calendarStartDate'), this.getAttribute('format'));
-      this.calendarRenderUtil.updateCentralDate(this, this.formattedStartDate);
-    } else {
-      this.calendarRenderUtil.updateCentralDate(this, new Date());
-    }
+    this.calendarRenderUtil.updateCentralDate(this, this.calendarStartDateObject ?? new Date());
 
     this.appearance = "default";
     this.touched = false;
@@ -115,6 +120,17 @@ export class AuroDatePicker extends AuroElement {
     this.required = false;
     this.onDark = false;
     this.range = false;
+    this.rangeLabelStart = 'range start';
+    this.rangeLabelEnd = 'range end';
+    this.rangeLabelBeforeRange = 'before range';
+    this.rangeLabelInRange = 'in range';
+    this.rangeLabelAfterRange = 'after range';
+    this.rangeLabelEndPreview = 'previewing range end';
+    this.blackoutDates = [];
+    this.blackoutLabel = 'unavailable';
+    this.navLabelPrevMonth = 'Previous month';
+    this.navLabelNextMonth = 'Next month';
+    this.calendarGridLabel = 'Calendar days of the month';
     this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
@@ -123,23 +139,8 @@ export class AuroDatePicker extends AuroElement {
     this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
-    this.format = 'mm/dd/yyyy';
     this.fullscreenBreakpoint = 'sm';
-    this.monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
+    this._validLocale = 'en-US';
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -225,6 +226,22 @@ export class AuroDatePicker extends AuroElement {
     this.handleClick = this.handleClick.bind(this);
 
     /**
+     * Single AbortController shared by every listener registered in the
+     * configure* methods. Lets disconnectedCallback tear all of them down
+     * with one abort() call.
+     *
+     * The genuine leak risk is the listeners attached to children that can
+     * outlive the host if they get reparented — `this.dropdown`,
+     * `this.calendar`, and the inputs inside the dropdown's slot.
+     * Listeners attached to `this` (e.g. focusin/focusout on the host)
+     * form a self-contained reference graph that the GC can collect with
+     * the host anyway, but they share the same signal so the cleanup
+     * pattern stays uniform across all configure* sites.
+     * @private
+     */
+    this._listenerAbortController = new AbortController();
+
+    /**
      * @private
      */
     this.handleClearClick = this.handleClearClick.bind(this);
@@ -245,7 +262,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -263,9 +280,43 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
+       *
+       * **Immutable update required.** The datepicker treats this array as
+       * immutable and memoizes a lookup Set keyed on the array's reference
+       * identity — matching Lit's own reactivity semantics for array
+       * properties. In-place mutations (`blackoutDates.push(...)`,
+       * `blackoutDates[i] = ...`, `blackoutDates.splice(...)`) will not
+       * invalidate the cache and the new entries will be silently ignored.
+       * To update, reassign the property: `el.blackoutDates = [...el.blackoutDates, '2024-12-25']`.
+       */
+      blackoutDates: {
+        type: Array,
+        reflect: true
+      },
+
+      /**
+       * Label announced for blackout (disabled but in-range) date cells.
+       * @default 'unavailable'
+       */
+      blackoutLabel: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * The last date that may be displayed in the calendar.
        */
       calendarEndDate: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Accessible label for the calendar grid containing the days of the month.
+       * @default 'Calendar days of the month'
+       */
+      calendarGridLabel: {
         type: String,
         reflect: true
       },
@@ -317,31 +368,18 @@ export class AuroDatePicker extends AuroElement {
         reflect: true
       },
 
-      hasFocus: {
-        type: Boolean,
-        reflect: false,
-      },
-
-      /**
-       * @private
-       */
-      hasValue: {
-        type: Boolean,
-        reflect: false,
-      },
-
-      /**
-       * @private
-       */
-      hasAllValues: {
-        type: Boolean,
-        reflect: false
-      },
-
       /**
        * Specifies the date format. The default is `mm/dd/yyyy`.
        */
       format: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Defines the locale of the element. Used to derive the date format when `format` is not explicitly set.
+       */
+      locale: {
         type: String,
         reflect: true
       },
@@ -357,6 +395,27 @@ export class AuroDatePicker extends AuroElement {
       fullscreenBreakpoint: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      hasAllValues: {
+        type: Boolean,
+        reflect: false
+      },
+
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+      },
+
+      /**
+       * @private
+       */
+      hasValue: {
+        type: Boolean,
+        reflect: false,
       },
 
       /** Exposes inputmode attribute for input. */
@@ -402,13 +461,6 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
-       */
-      monthNames: {
-        type: Array
-      },
-
-      /**
        * @private
        */
       monthFirst: {
@@ -416,18 +468,36 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Names of all 12 months to render in the calendar.
+       * When omitted, month names will be automatically populated from the active `locale` (falling back to `en-US`).
        */
-      noFlip: {
-        type: Boolean,
+      monthNames: {
+        type: Array
+      },
+
+      /**
+       * Accessible label for the next month navigation button.
+       * @default 'Next month'
+       */
+      navLabelNextMonth: {
+        type: String,
         reflect: true
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Accessible label for the previous month navigation button.
+       * @default 'Previous month'
        */
-      shift: {
+      navLabelPrevMonth: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
         type: Boolean,
         reflect: true
       },
@@ -494,8 +564,67 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Dates that the user should have for reference as part of their decision making when selecting a date.
-       * This should be a JSON string array of dates in the format of `MM/DD/YYYY`.
+       * Label announced for cells after a fully selected range (both
+       * `dateFrom` and `dateTo` are set). While a range is still being
+       * picked (`dateFrom` set, `dateTo` unset), focused cells past the
+       * start use `rangeLabelEndPreview` instead.
+       * @default 'after range'
+       */
+      rangeLabelAfterRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for cells before the range start.
+       * @default 'before range'
+       */
+      rangeLabelBeforeRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the range end date cell.
+       * @default 'range end'
+       */
+      rangeLabelEnd: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the focused cell while previewing a range end
+       * (dateFrom set, dateTo not yet selected). Tells AT users that
+       * pressing Enter would commit this cell as the range end.
+       * @default 'previewing range end'
+       */
+      rangeLabelEndPreview: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for cells within the selected range.
+       * @default 'in range'
+       */
+      rangeLabelInRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the range start date cell.
+       * @default 'range start'
+       */
+      rangeLabelStart: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Dates that the user should have for reference as part of their decision-making when selecting a date.
+       * This should be a JSON string array of ISO date strings (`YYYY-MM-DD`).
        */
       referenceDates: {
         type: Array,
@@ -519,6 +648,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Custom help text message to display when validity = `customError`.
+       * Also used as the validation message when a blackout date is typed into the input.
        */
       setCustomValidityCustomError: {
         type: String
@@ -546,11 +676,29 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       */
+      shift: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Set true to make datepicker stacked style.
        */
       stacked: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * Indicates whether the datepicker is in a dirty state (has been interacted with).
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       },
 
       /**
@@ -573,16 +721,6 @@ export class AuroDatePicker extends AuroElement {
        */
       valueEnd: {
         type: String
-      },
-
-      /**
-       * Indicates whether the datepicker is in a dirty state (has been interacted with).
-       * @private
-       */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
       }
     };
   }
@@ -691,8 +829,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * @private
    * Common display value wrapper classes.
+   * @private
+   * @returns {Object} Class map for Lit's classMap directive.
    */
   get commonDisplayValueWrapperClasses() {
     return {
@@ -730,8 +869,8 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   handleFocusDateChange() {
-    if (this.formattedFocusDate) {
-      this.calendarRenderUtil.updateCentralDate(this, this.formattedFocusDate);
+    if (this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate)) {
+      this.calendarRenderUtil.updateCentralDate(this, this.calendarFocusDateObject);
 
       this.forceScrollOnNextMobileCalendarRender = true;
     }
@@ -763,7 +902,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {Number} Simplified number.
    */
   convertToWcValidTime(date) {
-    return new Date(date).getTime() / 1000;
+    return date?.getTime() / 1000;
   }
 
   /**
@@ -772,12 +911,98 @@ export class AuroDatePicker extends AuroElement {
    * @param {String} time - Unix timestamp to be converted to a date object.
    * @returns {Date} Date formatted as a string.
    */
+  // ─── Read-only *Object properties ─────────────────────────────────────────
+
+  /**
+   * Read-only `Date` object derived from `value`. Returns `undefined` when `value` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get valueObject() {
+    return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `valueEnd`. Returns `undefined` when `valueEnd` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get valueEndObject() {
+    return this.valueEnd && dateFormatter.isValidDate(this.valueEnd) ? dateFormatter.stringToDateInstance(this.valueEnd) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `minDate`. Returns `undefined` when `minDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get minDateObject() {
+    return this.minDate && dateFormatter.isValidDate(this.minDate) ? dateFormatter.stringToDateInstance(this.minDate) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `maxDate`. Returns `undefined` when `maxDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get maxDateObject() {
+    return this.maxDate && dateFormatter.isValidDate(this.maxDate) ? dateFormatter.stringToDateInstance(this.maxDate) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `calendarStartDate`. Returns `undefined` when `calendarStartDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get calendarStartDateObject() {
+    return this.calendarStartDate && dateFormatter.isValidDate(this.calendarStartDate) ? dateFormatter.stringToDateInstance(this.calendarStartDate) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `calendarEndDate`. Returns `undefined` when `calendarEndDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get calendarEndDateObject() {
+    return this.calendarEndDate && dateFormatter.isValidDate(this.calendarEndDate) ? dateFormatter.stringToDateInstance(this.calendarEndDate) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `centralDate`. Returns `undefined` when `centralDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get centralDateObject() {
+    return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
+  }
+
+  /**
+   * Read-only `Date` object derived from `calendarFocusDate`. Returns `undefined` when `calendarFocusDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
+  get calendarFocusDateObject() {
+    return this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate) ? dateFormatter.stringToDateInstance(this.calendarFocusDate) : undefined;
+  }
+
+  // ─── Vendor calendar time conversions ─────────────────────────────────────
+
+  /**
+   * Converts a Unix timestamp (seconds) from the vendored range-datepicker
+   * (`src/vendor/wc-range-datepicker/day.js`) to an ISO date string.
+   *
+   * Timezone contract:
+   * - INPUT: `time` is assumed to be the seconds-since-epoch of **local
+   *   midnight** for the intended calendar day. The vendor's Day constructor
+   *   builds it via `date-fns format(date, 't')` from a locally-constructed
+   *   Date, so this assumption currently holds end-to-end.
+   * - OUTPUT: `dateFormatter.toISOFormatString` reads the Date's local
+   *   getFullYear/getMonth/getDate components, so the returned YYYY-MM-DD
+   *   string matches the local calendar day.
+   *
+   * If the vendor ever switches to emitting UTC-midnight timestamps, this
+   * conversion will silently shift the returned date by one day in zones
+   * west of UTC. Any vendor swap should re-verify this contract; the TZ
+   * regression suite (`npm run test:hst`, UTC-10) will catch the symptom.
+   *
+   * @private
+   * @param {number} time - Unix timestamp (seconds), local midnight of the day.
+   * @returns {string} ISO date string (yyyy-mm-dd) reflecting the local calendar day.
+   */
   convertWcTimeToDate(time) {
-    return new Date(time * 1000).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+    return dateFormatter.toISOFormatString(new Date(time * 1000));
   }
 
   /**
@@ -786,15 +1011,10 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    this.dispatchEvent(new Event('auroDatePicker-valueSet', {
+    this.dispatchEvent(new CustomEvent('input', {
       bubbles: true,
       composed: true,
-    }));
-
-    // Standard input event so auro-form can track datepicker value changes.
-    this.dispatchEvent(new Event('input', {
-      bubbles: true,
-      composed: true,
+      detail: this.value,
     }));
   }
 
@@ -804,7 +1024,9 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   handleCentralDateChange() {
-    this.calendar.setAttribute('centralDate', this.centralDate);
+    if (this.centralDateObject) {
+      this.calendar.centralDate = this.centralDate;
+    }
   }
 
   /**
@@ -841,12 +1063,89 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Attempts to focus the active calendar cell using a rAF retry loop.
+   * Shared by both fullscreen and desktop open paths.
+   * @private
+   * @returns {void}
+   */
+  focusActiveCellWhenReady() {
+    const MAX_ATTEMPTS = 20;
+    let attempts = 0;
+
+    const tryFocus = () => {
+      attempts += 1;
+      const allCells = this.calendar.getAllFocusableCells();
+
+      if (!allCells.length && attempts < MAX_ATTEMPTS) {
+        requestAnimationFrame(tryFocus);
+        return;
+      }
+
+      // Compute and mark the active cell
+      if (this.calendar.activeCellDate === null || this.calendar.activeCellDate === undefined) {
+        this.calendar.activeCellDate = this.calendar.computeActiveDate();
+      }
+      if (this.calendar.activeCellDate !== undefined) {
+        this.calendar.setActiveCell(this.calendar.activeCellDate);
+      }
+
+      // If no cell matched (e.g. centralDate month differs from the rendered
+      // range on mobile), fall back to the first rendered enabled cell.
+      let activeCell = allCells.find((cell) => cell.active);
+      if (!activeCell && allCells.length) {
+        const [fallback] = allCells;
+        if (fallback.day) {
+          this.calendar.activeCellDate = fallback.day.date;
+          this.calendar.setActiveCell(this.calendar.activeCellDate);
+          activeCell = allCells.find((cell) => cell.active);
+        }
+      }
+
+      // Focus the calendar grid wrapper. The live region (announced just
+      // below) handles the SR announcement for the active cell.
+      if (activeCell) {
+        this.calendar.focusActiveCell();
+
+        // Announce the initial active cell via the live region.
+        // Delay the announcement so it arrives after VoiceOver finishes
+        // speaking the focus-change announcement for the grid wrapper.
+        // Without this delay, VoiceOver drops the live region update
+        // because it's already mid-announcement from the focus move.
+        const announcement = this.calendar.buildFocusAnnouncement(activeCell.day.date);
+        setTimeout(() => {
+          this.calendar.announceSelection(announcement);
+        }, 500);
+
+        // On mobile fullscreen — or when an explicit focusDate change has
+        // requested a forced scroll on the next render — scroll the active
+        // cell into view. Doing this here (after activeCellDate has been
+        // resolved by the rAF loop above) prevents a no-op scroll that
+        // would happen if we tried to scroll before the cell was set.
+        if (this.dropdown.isBibFullscreen || this.forceScrollOnNextMobileCalendarRender) {
+          this.calendar.scrollToActiveCell();
+          this.forceScrollOnNextMobileCalendarRender = false;
+        }
+      } else if (attempts < MAX_ATTEMPTS) {
+        requestAnimationFrame(tryFocus);
+      }
+    };
+
+    requestAnimationFrame(tryFocus);
+  }
+
+  /**
    * Binds all behavior needed to the dropdown after rendering.
    * @private
    * @returns {void}
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+
+    // The datepicker manages its own open/close lifecycle (Space/Escape/date-select/done).
+    // Prevent the floater's document-level focusin handler from closing the bib
+    // when focus moves from the trigger into the calendar cells (which live inside
+    // a top-layer popover where :focus-within on the dropdown host returns false).
+    this.dropdown.noHideOnThisFocusLoss = true;
 
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
@@ -856,14 +1155,37 @@ export class AuroDatePicker extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
+    const { signal } = this._listenerAbortController;
+
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
         this.dropdown.show();
       }
-    });
+    }, { signal });
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.notifyDatepickerToggled();
+
+      if (this.dropdown.isPopoverVisible) {
+        // Reset calendar focus state so it recomputes from the current selection.
+        // Without this, reopening after navigating to a month without a selected
+        // date leaves activeCellDate pointing at a cell in a different month than
+        // what centralDate renders, causing all cells to have tabindex="-1".
+        this.calendar.activeCellDate = null;
+
+        // On open, reset the visible month to a predictable source rather than
+        // whichever month the user last navigated to. Route through updateCentralDate
+        // so centralDate stays first-of-month.
+        // Priority: calendarFocusDate (when valid) -> value (when set) -> today (when neither is set).
+        // Respect consumer-provided centralDate/calendarStartDate/minDate when neither calendarFocusDate nor value is set.
+        if (this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.calendarFocusDateObject);
+        } else if (this.valueObject) {
+          this.calendarRenderUtil.updateCentralDate(this, this.value);
+        } else if (!this.centralDate && !this.calendarStartDate && !this.minDate) {
+          this.calendarRenderUtil.updateCentralDate(this, new Date());
+        }
+      }
 
       // This forces the calendar to render when the dropdown is opened.
       // It is not rendered by default
@@ -897,19 +1219,37 @@ export class AuroDatePicker extends AuroElement {
               bibEl.open(true);
 
               doubleRaf(() => {
-                this.calendar.focusCloseButton();
+                this.focusActiveCellWhenReady();
               });
             }
           });
 
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
+        } else {
+          // Desktop (non-fullscreen) modal: make the trigger inert so users
+          // cannot interact with the input while the modal bib is open.
+          if (this.dropdown.desktopModal) {
+            this.dropdown.trigger.inert = true;
+          }
+
+          // Desktop (non-fullscreen): focus the active calendar cell.
+          this.dropdown.updateComplete.then(() => {
+            this.focusActiveCellWhenReady();
+          });
         }
       } else {
         // Always clear the inert flag. Only restore focus to the input when the datepicker
         // still has focus (e.g. Escape, date selected) — not when the user tabbed away,
         // which would pull them back and require extra Tab presses to escape.
+        //
+        // `_restoreFocusOnClose` is set by the Escape handler in
+        // datepickerKeyboardStrategy.js to force restore even when hasFocus
+        // has already been cleared — hidePopover() (desktop non-modal path)
+        // can drop focus to <body> before this update fires.
         this.dropdown.trigger.inert = false;
-        if (this.hasFocus) {
+        const shouldRestoreFocus = this.hasFocus || this._restoreFocusOnClose;
+        this._restoreFocusOnClose = false;
+        if (shouldRestoreFocus) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
               this.inputList[0].focus();
@@ -918,19 +1258,11 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
-      if (this.dropdown.isPopoverVisible && this.forceScrollOnNextMobileCalendarRender) {
-
-        // Since the calendar is not rendered until the dropdown is opened,
-        // and the auroDropdown-toggled event fires before the popover is actually open,
-        // we need to wait until the next frame to ensure the calendar is fully rendered
-        // and the area we're trying to scroll to is present in the DOM.
-        setTimeout(() => {
-          this.calendar.scrollMonthIntoView(this.formattedFocusDate);
-          this.forceScrollOnNextMobileCalendarRender = false;
-        }, 0);
-      }
-    });
+      // Note: the forceScrollOnNextMobileCalendarRender scroll-into-view
+      // happens inside focusActiveCellWhenReady() once activeCellDate has
+      // been resolved by its rAF wait — not here in a setTimeout(0), which
+      // fired before the active date was set and silently no-op'd.
+    }, { signal });
 
     // Handle responsive strategy changes while the dropdown is open
     // (e.g. resizing from desktop → mobile or vice versa).
@@ -947,16 +1279,37 @@ export class AuroDatePicker extends AuroElement {
           if (bibEl && this.dropdown.isPopoverVisible) {
             bibEl.close();
             bibEl.open(true);
-            doubleRaf(() => {
-              this.calendar.focusCloseButton();
-            });
           }
+
+          // Re-render the calendar with the new fullscreen layout,
+          // then restore focus after the re-render completes.
+          this.calendar.isFullscreen = true;
+          this.calendar.updateComplete.then(() => {
+            doubleRaf(() => {
+              this.focusActiveCellWhenReady();
+            });
+          });
         });
       } else if (!this.dropdown.isBibFullscreen) {
-        // Switching from fullscreen to floating — restore trigger accessibility
-        this.dropdown.trigger.inert = false;
+        // Switching from fullscreen to floating — only restore trigger accessibility
+        // when the bib is closed or the desktop layout is not a modal. A desktopModal
+        // dropdown keeps the trigger inert while open, matching the desktop-open path.
+        if (!this.dropdown.isPopoverVisible || !this.dropdown.desktopModal) {
+          this.dropdown.trigger.inert = false;
+        }
+
+        // Re-render the calendar with the desktop layout,
+        // then restore focus after the re-render completes.
+        this.dropdown.updateComplete.then(() => {
+          this.calendar.isFullscreen = false;
+          this.calendar.updateComplete.then(() => {
+            doubleRaf(() => {
+              this.focusActiveCellWhenReady();
+            });
+          });
+        });
       }
-    });
+    }, { signal });
   }
 
   /**
@@ -969,18 +1322,20 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
+    const { signal } = this._listenerAbortController;
+
     this.inputList.forEach((input, index) => {
       input.addEventListener('input', (event) => {
         event.stopPropagation();
 
         if (index === 0) {
-          this.value = input.value;
+          this.value = input.value || undefined;
         } else if (index === 1) {
-          this.valueEnd = input.value;
+          this.valueEnd = input.value || undefined;
         }
 
         this.notifyValueChanged();
-      });
+      }, { signal });
 
       input.addEventListener('auroFormElement-validated', (evt) => {
         // not to bubble up input's validated event.
@@ -996,7 +1351,7 @@ export class AuroDatePicker extends AuroElement {
           this.validity = evt.detail.validity;
           this.errorMessage = evt.detail.message;
         }
-      });
+      }, { signal });
     });
   }
 
@@ -1008,32 +1363,44 @@ export class AuroDatePicker extends AuroElement {
   configureCalendar() {
     this.calendar = this.shadowRoot.querySelector('auro-formkit-calendar');
     this.calendar.datepicker = this;
-    this.calendar.format = this.format;
     this.calendar.dropdown = this.dropdown;
 
+    const { signal } = this._listenerAbortController;
+
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
-      if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
-        this.inputList[0].value = this.convertWcTimeToDate(this.calendar.dateFrom);
+      // Compare the input's ISO value against the *converted* calendar
+      // timestamp (the vendor's `dateFrom`/`dateTo` are Unix-seconds
+      // strings — comparing the input ISO directly against them would
+      // never match, so the write would fire on every event and emit
+      // redundant input/change activity).
+      if (this.calendar.dateFrom !== undefined) {
+        const fromIso = this.convertWcTimeToDate(this.calendar.dateFrom);
+        if (this.inputList[0].value !== fromIso) {
+          this.inputList[0].value = fromIso;
+        }
       }
 
-      if (this.inputList[1] && this.calendar.dateTo && this.inputList[1].value !== this.calendar.dateTo) {
-        this.inputList[1].value = this.convertWcTimeToDate(this.calendar.dateTo);
+      if (this.inputList[1] && this.calendar.dateTo) {
+        const toIso = this.convertWcTimeToDate(this.calendar.dateTo);
+        if (this.inputList[1].value !== toIso) {
+          this.inputList[1].value = toIso;
+        }
       }
-    });
+    }, { signal });
 
     this.calendar.addEventListener('auroCalendar-dismissRequest', () => {
       this.dropdown.hide();
-    });
+    }, { signal });
 
     this.calendar.addEventListener('auroCalendar-centralDateChanged', (event) => {
-      const match = this.util.datesMatch(event.detail.date, this.centralDate);
+      const match = this.centralDateObject && this.util.datesMatch(event.detail.date, this.centralDateObject);
 
       if (!match) {
         this.calendarRenderUtil.updateCentralDate(this, event.detail.date);
       }
 
       this.notifyMonthChanged(event);
-    });
+    }, { signal });
   }
 
   /**
@@ -1042,10 +1409,17 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureDatepicker() {
+    // These listeners are on `this` (the host), so they would GC with the
+    // host even without the abort signal — see the leak rationale on
+    // `_listenerAbortController`. The signal is still passed for uniform
+    // cleanup semantics with the child-element listeners in the other
+    // configure* methods.
+    const { signal } = this._listenerAbortController;
+
     this.addEventListener('focusin', () => {
       this.touched = true;
       this.hasFocus = true;
-    });
+    }, { signal });
 
     this.addEventListener('focusout', () => {
       this.hasFocus = false;
@@ -1054,17 +1428,17 @@ export class AuroDatePicker extends AuroElement {
         return;
       }
 
-      if (!this.contains(document.activeElement)) {
+      if (!this.matches(':focus-within')) {
         this.validate();
       }
-    });
+    }, { signal });
 
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.calendar.dateFrom = new Date(this.formattedValue).getTime();
+    if (this.valueObject) {
+      this.calendar.dateFrom = this.convertToWcValidTime(this.valueObject);
     }
 
-    if (this.hasAttribute('valueEnd') && this.getAttribute('valueEnd').length > 0) {
-      this.calendar.dateTo = new Date(this.formattedValueEnd).getTime();
+    if (this.valueEndObject) {
+      this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
     }
   }
 
@@ -1105,7 +1479,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   handleCalendarCentralDateChange(event) {
-    const match = this.util.datesMatch(event.detail.date, this.centralDate);
+    const match = this.util.datesMatch(event.detail.date, this.centralDateObject);
 
     if (!match) {
       this.calendarRenderUtil.updateCentralDate(this, event.detail.date);
@@ -1121,36 +1495,30 @@ export class AuroDatePicker extends AuroElement {
   handleCellClick(time) {
     this.cellClickActive = true;
 
-    const convertedDate = this.convertWcTimeToDate(time);
-    const newDate = this.util.toCustomFormat(convertedDate, this.format);
+    // convertWcTimeToDate now returns an ISO string directly
+    const newDate = this.convertWcTimeToDate(time);
 
     let onEndValue = false;
-    if (this.util.validDateStr(newDate, this.format)) {
-      if (this.range) {
-        const isValueValid = this.value && this.util.validDateStr(this.value, this.format);
-        const isValueEndValid = this.valueEnd && this.util.validDateStr(this.valueEnd, this.format);
+    if (dateFormatter.isValidDate(newDate)) {
 
-        if (isValueValid && !isValueEndValid) {
+      if (this.range) {
+        if (this.valueObject && !this.valueEndObject) {
           // verify the date is after this.value to insure we are setting a proper range
-          if (new Date(this.util.toNorthAmericanFormat(newDate, this.format)) >= new Date(this.formattedValue)) {
+          if (dateFormatter.stringToDateInstance(newDate) >= this.valueObject) {
             onEndValue = true;
           }
-        } else if (isValueValid && isValueEndValid) {
-          // both dateTo and dateFrom are valid, then reset datTo
-          this.valueEnd = '';
+        } else if (this.valueObject && this.valueEndObject) {
+          // both dateTo and dateFrom are valid, then reset dateEnd
+          // set input's value directly as the callback restores this.valueEnd to the old value
+          this.inputList[1].value = undefined;
+          // callback will set valueEnd to undefined
         }
       }
 
       if (onEndValue) {
         this.valueEnd = newDate;
-        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
-          this.focus('startDate');
-        }
       } else {
         this.value = newDate;
-        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
-          this.focus('endDate');
-        }
       }
     }
   }
@@ -1191,6 +1559,23 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Checks whether a formatted date string matches a blackout date.
+   * @private
+   * @param {string} dateStr - A date string in the component's configured format.
+   * @returns {boolean} True if the date is in the blackoutDates list.
+   */
+  isBlackoutDate(dateStr) {
+    if (!Array.isArray(this.blackoutDates) ||
+      this.blackoutDates.length === 0 ||
+      !dateStr ||
+      !dateFormatter.isValidDate(dateStr)) {
+      return false;
+    }
+
+    return this.blackoutDates.includes(dateStr);
+  }
+
+  /**
    * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
@@ -1201,6 +1586,23 @@ export class AuroDatePicker extends AuroElement {
     }
 
     this.validation.validate(this, force);
+
+    // After standard validation, check blackout dates for typed input
+    if (this.validity !== 'customError' &&
+      (this.isBlackoutDate(this.value) || (this.range && this.isBlackoutDate(this.valueEnd)))) { // eslint-disable-line no-extra-parens
+      const msg = this.setCustomValidityCustomError || 'Selected date is unavailable';
+      this.validity = 'customError';
+      this.errorMessage = msg;
+
+      this.dispatchEvent(new CustomEvent('auroFormElement-validated', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          validity: this.validity,
+          message: this.errorMessage
+        }
+      }));
+    }
   }
 
   /**
@@ -1219,23 +1621,95 @@ export class AuroDatePicker extends AuroElement {
     this.hasAllValues = (this.value && this.value.length > 0) && (this.valueEnd && this.valueEnd.length > 0); // eslint-disable-line no-extra-parens
   }
 
+  /**
+   * Returns `true` when the datepicker has an active validation error.
+   * @returns {boolean}
+   */
   get hasError() {
     return this.validity !== undefined && this.validity !== 'valid';
   }
 
-  updated(changedProperties) {
-    if (changedProperties.has('format')) {
-      this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
-    }
+  /**
+   * Per-class dedup set used by `_warnInvalidLocale`. Static so the dedup
+   * spans every datepicker instance on the page; lives on the class (not
+   * at module scope) so it stays an encapsulated implementation detail of
+   * this component and does not interfere with WCA's class-JSDoc
+   * attachment.
+   * @private
+   */
+  static _warnedInvalidLocales = new Set();
 
-    if (changedProperties.has('referenceDates')) {
-      // backward compatibility for old format of referenceDates which is a stringified array with - instead of / as separator, e.g. ["10-22-2025","10-23-2025"]
-      const stringfiedDates = JSON.stringify(this.referenceDates);
-      if (stringfiedDates.includes('-')) {
-        this.referenceDates = this.referenceDates.map(date => date.replace(/-/gu, '/' ));
+  /**
+   * Logs a one-time `console.debug` when an unsupported locale falls back to
+   * en-US. Deduped by the offending tag so noisy re-renders that resurface
+   * the same bad value stay quiet, but each new bad value still signals so
+   * consumers can spot the typo or missing tag.
+   * @private
+   * @param {string|undefined} badLocale - The locale value that failed.
+   * @returns {void}
+   */
+  _warnInvalidLocale(badLocale) {
+    // Stringify without coalescing — `String(undefined)` / `String(null)`
+    // surface the actual offending value in the log, instead of the
+    // ambiguous `Locale ""` that `String(badLocale ?? '')` would produce.
+    // Dedup still works correctly because each unique stringification
+    // becomes its own Set entry.
+    const key = String(badLocale);
+    const seen = AuroDatePicker._warnedInvalidLocales;
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    // eslint-disable-next-line no-console
+    console.debug(`[auro-datepicker] Locale "${key}" is not supported by Intl.DateTimeFormat. Falling back to "en-US". Pass a BCP 47 tag such as "en-US", "fr-FR", or "ja-JP".`);
+  }
+
+  /**
+   * Lifecycle method to check if the locale is valid.
+   * @ignore
+   * @param {Map} changedProperties - The map of properties that have changed since the last update.
+   * @returns {void}
+   */
+  willUpdate(changedProperties) {
+    if (changedProperties.has('locale')) {
+      try {
+        const supported = Intl.DateTimeFormat.supportedLocalesOf([this.locale], { localeMatcher: 'lookup' });
+        if (supported.length > 0) {
+          this._validLocale = this.locale;
+        } else {
+          this._validLocale = 'en-US';
+          this._warnInvalidLocale(this.locale);
+        }
+      } catch {
+        this._validLocale = 'en-US';
+        this._warnInvalidLocale(this.locale);
+      }
+
+      const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
+      if (!changedProperties.has('format') && (!this.format || this.format.toLowerCase() === previousLocaleFormat)) {
+        this.format = getDateFormatFromLocale(this._validLocale);
       }
     }
 
+    if (changedProperties.has('referenceDates') && this.calendar) {
+      this.calendar.requestUpdate();
+      this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
+    }
+
+    // Range invariant: if a value change (from click or programmatic) has
+    // moved start past end, clear valueEnd here so both properties land in
+    // the SAME reactive cycle. Doing it in updated() would schedule a
+    // second cycle after cellClickActive/wasCellClick has already been
+    // consumed by the value branch, leaving the valueEnd branch to run
+    // with a stale handshake and racing with any intervening programmatic
+    // value assignments.
+    if ((changedProperties.has('value') || changedProperties.has('valueEnd')) &&
+      this.valueObject && this.valueEndObject && this.valueObject > this.valueEndObject) {
+      this.valueEnd = undefined;
+    }
+  }
+
+  updated(changedProperties) {
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.previousTabIndex = this.getAttribute('tabindex');
@@ -1247,53 +1721,37 @@ export class AuroDatePicker extends AuroElement {
       }
     }
 
-    if (changedProperties.has('calendarFocusDate')) {
-      this.formattedFocusDate = this.util.toNorthAmericanFormat(this.calendarFocusDate, this.format);
-
-      this.handleFocusDateChange();
-    }
-
     if (changedProperties.has('calendarStartDate')) {
-      this.formattedStartDate = this.util.toNorthAmericanFormat(this.calendarStartDate, this.format);
-
-      this.calendar.setAttribute('calendarStartDate', this.formattedStartDate);
+      this.calendar.setAttribute('calendarStartDate', this.calendarStartDate || '');
     }
 
     if (changedProperties.has('calendarEndDate')) {
-      this.formattedEndDate = this.util.toNorthAmericanFormat(this.calendarEndDate, this.format);
-
-      this.calendar.setAttribute('calendarEndDate', this.formattedEndDate);
+      this.calendar.setAttribute('calendarEndDate', this.calendarEndDate || '');
     }
 
     if (changedProperties.has('value')) {
 
-      this.formattedValue = this.util.toNorthAmericanFormat(this.value, this.format);
-
       // Change the calendar focus to the first valid date value only the first time the value is set
-      if (!this.calendarFocusDate && this.util.validDateStr(this.value, this.format)) {
-        if (!this.dropdown.isPopoverVisible) {
-          this.calendarFocusDate = this.value;
+      if (!this.calendarFocusDate && dateFormatter.isValidDate(this.value) && !this.dropdown.isPopoverVisible) {
+        this.calendarFocusDate = this.value;
 
-          // Let the calendar know to scroll to the focus date when it is next rendered on mobile
-          this.forceScrollOnNextMobileCalendarRender = true;
-        }
+        // Let the calendar know to scroll to the focus date when it is next rendered on mobile
+        this.forceScrollOnNextMobileCalendarRender = true;
       }
 
       if (this.cellClickActive) {
         this.cellClickActive = false;
+        this.wasCellClick = true;
+      } else {
+        this.wasCellClick = false;
       }
 
-      if (this.value && this.util.validDateStr(this.value, this.format)) {
-        if (this.calendar.dateFrom !== this.value) {
-          this.calendar.dateFrom = this.convertToWcValidTime(this.formattedValue);
-        }
+      if (this.value && dateFormatter.isValidDate(this.value)) {
+        this.calendar.dateFrom = this.convertToWcValidTime(this.valueObject);
+        this.calendarRenderUtil.updateCentralDate(this, this.valueObject);
       } else {
         if (this.inputList[0].value !== this.value) {
-          if (this.value) {
-            this.inputList[0].value = this.value;
-          } else {
-            this.inputList[0].value = '';
-          }
+          this.inputList[0].value = this.value || '';
         }
 
         if (this.calendar.dateFrom !== undefined) {
@@ -1301,7 +1759,7 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      // update the inputs
+      // update the inputs — auro-input accepts ISO directly
       if (this.inputList[0].value !== this.value) {
         if (this.value) {
           this.inputList[0].value = this.value;
@@ -1310,27 +1768,53 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      if (this.value && this.value.length === this.inputList[0].lengthForType) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
+      if (this.value && this.value.length === this.inputList[0].lengthForType && !(this.wasCellClick && this.range)) {
+        // Skip centralDate update when user clicked a cell in range mode
+        // to prevent the displayed months from shifting. Route through
+        // updateCentralDate so centralDate stays first-of-month — direct
+        // assignment of the raw value briefly holds a mid-month string
+        // and violates the invariant that observers (e.g. calendar sync)
+        // rely on.
+        this.calendarRenderUtil.updateCentralDate(this, this.value);
       }
 
       this.setHasValue();
     }
 
-    if (changedProperties.has('valueEnd') && this.inputList[1]) {
+    if (changedProperties.has('blackoutDates')) {
+      // Force calendar cells to re-render with updated blackout state.
+      // requestUpdate on the calendar alone is insufficient because cells
+      // don't receive blackoutDates as a bound property. Dispatching the
+      // slot content event triggers handleSlotContent → requestUpdate on each cell.
+      if (this.calendar) {
+        this.calendar.requestUpdate();
+        this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
+      }
 
-      this.formattedValueEnd = this.util.toNorthAmericanFormat(this.valueEnd, this.format);
+      // Re-run validation so that a previously valid value that now falls on
+      // a blackout date is flagged, and vice versa.
+      if (this.value || this.valueEnd) {
+        this.validate();
+      }
+    }
+
+    if (changedProperties.has('valueEnd') && this.inputList[1]) {
+      if (this.cellClickActive) {
+        this.cellClickActive = false;
+        this.wasCellClick = true;
+      } else {
+        this.wasCellClick = false;
+      }
 
       // update the calendar
-      if (this.valueEnd && this.util.validDateStr(this.valueEnd, this.format)) {
-        this.calendar.dateTo = this.convertToWcValidTime(this.formattedValueEnd);
+      if (this.valueEndObject) {
+        this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
+        if (!this.wasCellClick) {
+          this.calendarRenderUtil.updateCentralDate(this, this.valueEndObject);
+        }
       } else {
         if (this.inputList[1].value !== this.valueEnd) {
-          if (this.valueEnd) {
-            this.inputList[1].value = this.valueEnd;
-          } else {
-            this.inputList[1].value = '';
-          }
+          this.inputList[1].value = this.valueEnd || '';
         }
 
         if (this.calendar.dateTo !== undefined) {
@@ -1338,7 +1822,7 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      // update the inputs
+      // update the inputs — auro-input accepts ISO directly
       if (this.inputList[1].value !== this.valueEnd) {
         if (this.valueEnd) {
           this.inputList[1].value = this.valueEnd;
@@ -1347,12 +1831,23 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      if (this.valueEnd && this.valueEnd.length === this.inputList[1].lengthForType) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedValueEnd);
+      if (this.valueEnd && this.valueEnd.length === this.inputList[1].lengthForType && !this.wasCellClick) {
+        // Skip centralDate update when user clicked a cell in range mode
+        // to prevent the displayed months from shifting. Route through
+        // updateCentralDate to preserve the first-of-month invariant
+        // (see matching comment in the value branch above).
+        this.calendarRenderUtil.updateCentralDate(this, this.valueEnd);
       }
 
       this.validate();
       this.setHasValue();
+    }
+
+    // Run focus-date handling AFTER value/valueEnd so that when a consumer sets
+    // calendarFocusDate together with value, the focus date wins for the visible
+    // month instead of being overwritten by the value branch's updateCentralDate.
+    if (changedProperties.has('calendarFocusDate')) {
+      this.handleFocusDateChange();
     }
 
     if (changedProperties.has('error')) {
@@ -1372,45 +1867,34 @@ export class AuroDatePicker extends AuroElement {
       this.validation.validate(lastInput, true);
     }
 
-    if (this.value && this.valueEnd && this.util.validDateStr(this.value, this.format) && this.util.validDateStr(this.valueEnd, this.format) && new Date(this.formattedValue) > new Date(this.formattedValueEnd)) {
-      this.valueEnd = undefined;
-    }
-
     // This resets the datepicker when the minDate is set to a new value that is
     // a later date than the current value date
-    if (changedProperties.has('minDate')) {
-      this.formattedMinDate = this.util.toNorthAmericanFormat(this.minDate, this.format);
-
-      if (this.minDate) {
-        const minDateMonth = Number(this.formattedMinDate.split('/')[0]);
-        const minDateYear = Number(this.formattedMinDate.split('/')[2]);
+    if (changedProperties.has('minDate') && this.minDate) {
+      if (this.minDateObject) {
+        const minDateMonth = this.minDateObject.getMonth() + 1;
+        const minDateYear = this.minDateObject.getFullYear();
 
         // This sets the visible month of the calendar to the minDate when the minDate is later
         // than the current visible date
         if (minDateYear > this.calendar.year) {
-          this.calendarRenderUtil.updateCentralDate(this, this.formattedMinDate);
+          this.calendarRenderUtil.updateCentralDate(this, this.minDateObject);
         } else if (minDateYear === this.calendar.year && minDateMonth > this.calendar.month) {
-          this.calendarRenderUtil.updateCentralDate(this, this.formattedMinDate);
+          this.calendarRenderUtil.updateCentralDate(this, this.minDateObject);
         }
 
-        if (this.value) {
-          if (new Date(this.formattedMinDate).getTime() > new Date(this.formattedValue).getTime()) {
-            this.value = undefined;
+        if (!changedProperties.has('value') && this.valueObject && this.minDateObject > this.valueObject) {
+          this.value = undefined;
 
-            if (this.range && this.valueEnd) {
-              this.valueEnd = undefined;
-            }
-
-            this.calendarRenderUtil.updateCentralDate(this, this.formattedMinDate);
+          if (this.range && this.valueEnd) {
+            this.valueEnd = undefined;
           }
-        }
-      }
 
-      // If the minDate was set to a valid date
-      if (this.util.validDateStr(this.minDate, this.format)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.minDateObject);
+        }
+
         // When there is no focusDate and no value, set the focusDate to the minDate
         const nothingSet = !this.calendarFocusDate && !this.value;
-        const earlierThanMinDate = new Date(this.formattedFocusDate) < new Date(this.formattedMinDate);
+        const earlierThanMinDate = this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate) && this.calendarFocusDateObject < this.minDateObject;
 
         if (nothingSet || earlierThanMinDate) {
           this.calendarFocusDate = this.minDate;
@@ -1423,31 +1907,27 @@ export class AuroDatePicker extends AuroElement {
     // This resets the datepicker when the maxDate is set to a new value that is
     // an earlier date than the current value date
     if (changedProperties.has('maxDate')) {
-      this.formattedMaxDate = this.util.toNorthAmericanFormat(this.maxDate, this.format);
+      if (this.maxDate && dateFormatter.isValidDate(this.maxDate)) {
+        const maxDateMonth = this.maxDateObject.getMonth() + 1;
+        const maxDateYear = this.maxDateObject.getFullYear();
 
-      const maxDateMonth = Number(this.formattedMaxDate.split('/')[0]);
-      const maxDateYear = Number(this.formattedMaxDate.split('/')[2]);
-
-      // This sets the visible month of the calendar to the maxDate when the maxDate is earlier
-      // than the current visible date
-      if (maxDateYear < this.calendar.year) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedMaxDate);
-      } else if (maxDateYear === this.calendar.year && maxDateMonth < this.calendar.month) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedMaxDate);
+        // This sets the visible month of the calendar to the maxDate when the maxDate is earlier
+        // than the current visible date
+        if (maxDateYear < this.calendar.year) {
+          this.calendarRenderUtil.updateCentralDate(this, this.maxDateObject);
+        } else if (maxDateYear === this.calendar.year && maxDateMonth < this.calendar.month) {
+          this.calendarRenderUtil.updateCentralDate(this, this.maxDateObject);
+        }
       }
 
-      if (this.maxDate) {
-        if (this.value) {
-          if (new Date(this.formattedMaxDate).getTime() < new Date(this.formattedValue).getTime()) {
-            this.value = undefined;
+      if (this.maxDate && !changedProperties.has('value') && this.valueObject && this.maxDateObject < this.valueObject) {
+        this.value = undefined;
 
-            if (this.range && this.valueEnd) {
-              this.valueEnd = undefined;
-            }
-
-            this.calendarRenderUtil.updateCentralDate(this, this.formattedMaxDate);
-          }
+        if (this.range && this.valueEnd) {
+          this.valueEnd = undefined;
         }
+
+        this.calendarRenderUtil.updateCentralDate(this, this.maxDateObject);
       }
 
       this.calendar.requestUpdate();
@@ -1478,9 +1958,28 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   handleClick(event) {
+    const path = event.composedPath();
+    const [initTarget] = path;
+    const pathIncludesBib = path.includes(this.dropdown?.bibContent);
+    const triggerIsInert = this.dropdown?.trigger?.inert;
 
-    // Get the initial target of the click event
-    const [initTarget] = event.composedPath();
+    // When desktopModal is open, the datepicker marks the dropdown's #trigger
+    // element inert to keep AT and Tab off the input. Inert also blocks pointer
+    // events, so a click on the visible trigger area passes through to the
+    // wrapper <div> that sits alongside #trigger in the dropdown's shadow root.
+    // composedPath() then no longer contains #trigger, and the floater's
+    // window-level click-outside handler treats the click as an outside click
+    // and closes the bib. Suppress that misdetection here: if the click lands
+    // inside the trigger's bounds and outside the bib, stop propagation before
+    // it reaches the window listener.
+    if (this.dropdown?.isPopoverVisible && triggerIsInert && !pathIncludesBib) {
+      const triggerRect = this.dropdown.trigger?.getBoundingClientRect();
+      if (triggerRect &&
+          event.clientX >= triggerRect.left && event.clientX <= triggerRect.right &&
+          event.clientY >= triggerRect.top && event.clientY <= triggerRect.bottom) {
+        event.stopPropagation();
+      }
+    }
 
     // Determine if the current layout requires special handling
     const layoutRequiresHandling = ['snowflake'].includes(this.layout);
@@ -1489,7 +1988,7 @@ export class AuroDatePicker extends AuroElement {
     const targetIsInput = initTarget.tagName === 'INPUT';
     const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
 
-    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !event.composedPath().includes(this.dropdown.bibContent)) {
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !pathIncludesBib) {
       // Focus the first input
       this.inputList[0].focus();
     }
@@ -1501,12 +2000,22 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureClickHandler() {
-    this.addEventListener('click', this.handleClick);
+    this.addEventListener('click', this.handleClick, { signal: this._listenerAbortController.signal });
   }
 
   firstUpdated() {
+
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
+
+    // If the element was disconnected before this first render finished,
+    // disconnectedCallback's microtask already aborted the controller. The
+    // connectedCallback reinit guard skips that case because `hasUpdated`
+    // is still false. Mint a fresh controller here so configure* registers
+    // listeners against a live signal.
+    if (this._listenerAbortController.signal.aborted) {
+      this._listenerAbortController = new AbortController();
+    }
 
     this.configureDropdown();
     this.configureInput();
@@ -1519,7 +2028,34 @@ export class AuroDatePicker extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    // True reconnect after `disconnectedCallback` aborted our controller:
+    // the existing signal is dead, so listeners registered against it
+    // would never fire. Create a fresh controller and re-run the
+    // configure* wiring (each method is idempotent — it just re-caches
+    // child refs and re-registers listeners against the new signal).
+    // `hasUpdated` gates this so the *first* connect (which precedes
+    // firstUpdated) still falls through to firstUpdated's initial wiring.
+    if (this.hasUpdated && this._listenerAbortController.signal.aborted) {
+      this._listenerAbortController = new AbortController();
+      this.configureDropdown();
+      this.configureInput();
+      this.configureCalendar();
+      this.configureDatepicker();
+      this.configureClickHandler();
+    }
+
+    this.locale = this.domHandler.getLocale(this);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // Defer so that re-parenting (auro-drawer slotting it into a dialog,
+    // for example) does not abort listeners we still need after reconnect.
+    queueMicrotask(() => {
+      if (!this.isConnected) {
+        this._listenerAbortController.abort();
+      }
+    });
   }
 
   // layout render methods
@@ -1569,7 +2105,7 @@ export class AuroDatePicker extends AuroElement {
           <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
             <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}>
               <span>
-                ${this.formatShortDate(this.value)}${this.range ? html`–${this.formatShortDate(this.valueEnd)}` : undefined}
+                ${this.formatShortDate(this.valueObject)}${this.range ? html`–${this.formatShortDate(this.valueEndObject)}` : undefined}
               </span>
             </slot>
           </div>
@@ -1643,7 +2179,7 @@ export class AuroDatePicker extends AuroElement {
    * Simple formatter that ONLY WORKS FOR US DATES.
    * Returns formatted date like Apr 21 or Dec 25.
    * @private
-   * @param {string} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
+   * @param {Date} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
    * @returns {string}
    */
   formatShortDate(date) {
@@ -1653,16 +2189,16 @@ export class AuroDatePicker extends AuroElement {
       day: '2-digit'
     };
 
-    return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+    return date?.toLocaleDateString(this.locale, options).replace(',', '');
   }
 
   /**
    * Format and render the provided date value.
    * @private
-   * @param {string} dateValue - The date value to format and render.
+   * @param {Date} date - The date value to format and render.
    * @returns {import('lit').TemplateResult}
    */
-  renderDisplayTextDate(dateValue) {
+  renderDisplayTextDate(date) {
     const displayTextClasses = {
       'displayValueText': true,
       'body-lg': true
@@ -1671,8 +2207,8 @@ export class AuroDatePicker extends AuroElement {
     return html`
         <div>
           <div class="${classMap(displayTextClasses)}">
-            ${dateValue && this.util.validDateStr(dateValue, this.format)
-        ? this.formatShortDate(dateValue)
+            ${date
+        ? this.formatShortDate(date)
         : undefined
       }
           </div>
@@ -1698,7 +2234,8 @@ export class AuroDatePicker extends AuroElement {
           ?disabled="${this.disabled}"
           ?required="${this.required}"
           ?hideLabelVisually="${this.layout !== 'classic'}"
-          .format="${this.format}"
+          format="${this.format}"
+          locale="${this._validLocale}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
           .placeholder="${this.placeholder}"
@@ -1720,13 +2257,14 @@ export class AuroDatePicker extends AuroElement {
           ${this.layout !== "classic"
         ? html`
               <span slot="displayValue">
-                ${this.renderDisplayTextDate(this.value)}
+                ${this.renderDisplayTextDate(this.valueObject)}
               </span>
             `
         : undefined
       }
           <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
           <span slot="label"><slot name="fromLabel"></slot></span>
+          <slot name="optionalFromLabel" slot="optionalLabel"> (optional)</slot>
         </${this.inputTag}>
       </div>
 
@@ -1743,6 +2281,7 @@ export class AuroDatePicker extends AuroElement {
             ?required="${this.required}"
             ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
+            locale="${this._validLocale}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
@@ -1763,13 +2302,14 @@ export class AuroDatePicker extends AuroElement {
             ${this.layout !== "classic"
           ? html`
               <span slot="displayValue">
-                ${this.renderDisplayTextDate(this.valueEnd)}
+                ${this.renderDisplayTextDate(this.valueEndObject)}
               </span>
             `
           : undefined
         }
             <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
+            <slot name="optionalToLabel" slot="optionalLabel"> (optional)</slot>
           </${this.inputTag}>
         </div>
       ` : undefined}
@@ -1785,7 +2325,7 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Handles click on the clear button.
    * @private
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event - The mouse event from the clear button click.
    * @returns {void}
    */
   handleClearClick(event) {
@@ -1905,12 +2445,11 @@ export class AuroDatePicker extends AuroElement {
         ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
         ?noRange="${!this.range}"
         .format="${this.format}"
-        .monthFirst="${this.monthFirst}"
-        .min="${this.convertToWcValidTime(new Date(this.formattedMinDate))}"
-        .max="${this.convertToWcValidTime(new Date(this.formattedMaxDate))}"
+        .monthFirst="${this.format.indexOf('mm') < this.format.indexOf('yyyy')}"
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
+        .localeCode="${this._validLocale}"
         .mobileBreakpoint="${this.mobileBreakpoint}"
         part="calendar"
       >
@@ -1919,8 +2458,8 @@ export class AuroDatePicker extends AuroElement {
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-        <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="bib.fullscreen.toStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }
@@ -1934,7 +2473,7 @@ export class AuroDatePicker extends AuroElement {
     // Base HTML render() handles dropdown and calendar bib
     return html`
       <!-- Hidden slot for clear button aria-label -->
-      <slot name="ariaLabel.input.clear" hidden @slotchange=${this.requestUpdate}></slot>
+      <slot name="ariaLabel.input.clear" hidden @slotchange=${() => this.requestUpdate()}></slot>
 
       <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
@@ -1951,6 +2490,7 @@ export class AuroDatePicker extends AuroElement {
           .shape="${this.shape}"
           .size="${this.size}"
           class="${classMap(dropdownElementClassMap)}"
+          desktopModal
           disableEventShow
           for="dropdownMenu"
           part="dropdown"

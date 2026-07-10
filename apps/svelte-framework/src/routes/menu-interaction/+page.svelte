@@ -41,15 +41,6 @@
 		</auro-menu>
 	</section>
 
-	<!-- Allow deselect menu -->
-	<section data-testid="allow-deselect">
-		<auro-menu allowDeselect>
-			<auro-menuoption value="One">One</auro-menuoption>
-			<auro-menuoption value="Two">Two</auro-menuoption>
-			<auro-menuoption value="Three">Three</auro-menuoption>
-		</auro-menu>
-	</section>
-
 	<!-- No checkmark menu -->
 	<section data-testid="no-checkmark">
 		<auro-menu noCheckmark>

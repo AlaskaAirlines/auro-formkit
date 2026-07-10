@@ -25,6 +25,9 @@ import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+
+import i18n from './i18n.js';
+
 import BaseInput from './base-input.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -315,38 +318,20 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Function to determine if the input is meant to render an icon visualizing the input type.
-   * @private
-   * @returns {boolean} - Returns true if the input type is meant to render an icon.
-   */
-  hasTypeIcon() {
-    if (this.icon || this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Function to determine if there is any displayValue content to render.
    * @private
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+    // flatten:true resolves through auro-combobox's forwarding slot
+    // (<slot name="displayValue" slot="displayValue">) so a clone appended
+    // directly to auro-input's light DOM alongside the forwarder still
+    // counts as content. The prior nodes[0].tagName === 'SLOT' recursion
+    // discarded any siblings past the forwarder.
+    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const nodes = slot.assignedNodes({ flatten: true });
 
-    // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
-    if (nodes && nodes[0] && nodes[0].tagName === 'SLOT') {
-      nodes = nodes[0].assignedNodes();
-    }
-
-    let hasContent = false;
-
-    if (nodes.length > 0) {
-      hasContent = true;
-    }
-
-    this.hasDisplayValueContent = hasContent;
+    this.hasDisplayValueContent = nodes.length > 0;
   }
 
   firstUpdated() {
@@ -365,6 +350,63 @@ export class AuroInput extends BaseInput {
         evt.stopPropagation();
       });
     }
+  }
+
+  /**
+   * Determines default help text string.
+   * @private
+   * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
+   * @returns {string} Evaluates pre-determined help text.
+   */
+  getHelpText() {
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
+    }
+
+    return '';
+  }
+
+  /**
+   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
+   * @private
+   * @param {string} type Value entered into component prop.
+   * @returns {string} Iterates over allowed types array.
+   */
+  getInputType(type) {
+    if (this.allowedInputTypes.includes(type)) {
+      return type;
+    }
+
+    return "text";
+  }
+
+  /**
+   * Function to support show-password feature.
+   * @private
+   * @returns {void}
+   */
+  handleClickShowPassword() {
+    this.showPassword = !this.showPassword;
+    this.focus();
+  }
+
+  /**
+   * @private
+   * @returns {string}
+   */
+  definePattern() {
+    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
+      return `.{${this.maxLength},${this.maxLength}}`;
+    }
+
+    return this.pattern;
   }
 
   /**
@@ -493,6 +535,7 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickShowPassword}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
+          aria-pressed="${this.showPassword ? 'true' : 'false'}"
           class="notificationBtn passwordBtn"
           shape="circle"
           size="sm"
@@ -566,25 +609,29 @@ export class AuroInput extends BaseInput {
    * @returns {html} - Returns HTML for the help text and error message.
    */
   renderHtmlHelpText() {
+    // Single `<p>` with stable identity across validity transitions —
+    // previously two distinct templates (valid vs invalid) caused Lit to
+    // replace the node entirely on a flip, and VoiceOver wouldn't
+    // re-announce because the live-region element it was watching had been
+    // removed and a new one inserted. Keeping one node means the `role`,
+    // `aria-live`, and text content all change in-place, which AT does
+    // observe and announce.
+    const isError = this.validity && this.validity !== 'valid';
     return html`
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-        ? html`
-          <${this.helpTextTag}
-            appearance="${this.onDark ? 'inverse' : this.appearance}">
-            <p id="${this.uniqueId}" part="helpText">
-              <slot name="helpText">${this.getHelpText()}</slot>
-            </p>
-          </${this.helpTextTag}>
-        `
-        : html`
-          <${this.helpTextTag} error
-            appearance="${this.onDark ? 'inverse' : this.appearance}">
-            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-              ${this.errorMessage}
-            </p>
-          </${this.helpTextTag}>
-        `
+      <${this.helpTextTag}
+        appearance="${this.onDark ? 'inverse' : this.appearance}"
+        ?error=${isError}>
+        <p
+          id="${this.uniqueId}"
+          part="helpText"
+          role="${ifDefined(isError ? 'alert' : undefined)}"
+          aria-live="${ifDefined(isError ? 'assertive' : undefined)}">
+          ${isError
+        ? this.errorMessage
+        : html`<slot name="helpText">${this.getHelpText()}</slot>`
       }
+        </p>
+      </${this.helpTextTag}>
     `;
   }
 

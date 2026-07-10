@@ -4,6 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-datepicker to be fully registered and its dropdown ready. */
 async function waitForDatepicker(page: Page, fixture: string) {
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     (testId) => {
       const section = document.querySelector(`[data-testid="${testId}"]`);
@@ -14,7 +15,7 @@ async function waitForDatepicker(page: Page, fixture: string) {
       );
     },
     fixture,
-    { timeout: 10_000 },
+    { timeout: 30_000 },
   );
 }
 
@@ -25,6 +26,7 @@ function dp(page: Page, fixture: string): Locator {
 
 /** Click the datepicker input to open the bib. */
 async function openBib(page: Page, fixture: string) {
+  await waitForDatepicker(page, fixture);
   await dp(page, fixture).evaluate((el: any) => {
     el.inputList[0].click();
   });
@@ -60,7 +62,9 @@ function getValueEnd(page: Page, fixture: string) {
 /** Get the month index (0-based) of the currently displayed central date. */
 function getCentralMonth(page: Page, fixture: string) {
   return dp(page, fixture).evaluate((el: any) => {
-    return new Date(el.centralDate).getMonth();
+    // centralDate is an ISO string — use centralDateObject (local-time parsed) to avoid
+    // UTC off-by-one-day errors in UTC− timezones.
+    return el.centralDateObject?.getMonth() ?? new Date().getMonth();
   });
 }
 
@@ -130,13 +134,16 @@ async function hoverCalendarCell(page: Page, fixture: string, cellIndex: number)
   }, cellIndex);
 }
 
-/** Check whether a calendar cell at the given index has hovered state. */
+/** Check whether a calendar cell at the given index has hovered state (inRange class). */
 function isCellHovered(page: Page, fixture: string, cellIndex: number) {
   return dp(page, fixture).evaluate((el: any, idx: number) => {
     const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
     const cells = calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
-    return Boolean(cells[idx]?.hovered);
+    const cell = cells[idx];
+    if (!cell) return false;
+    const btn = cell.shadowRoot.querySelector('button');
+    return btn ? btn.classList.contains('inRange') : false;
   }, cellIndex);
 }
 
@@ -188,22 +195,16 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         await waitForBibClosed(page, 'default');
       });
 
-      test('does not open the bib when Enter is pressed on the input', async ({ page }) => {
+      test('opens the bib when Enter is pressed on the input', async ({ page }) => {
         await dp(page, 'default').evaluate((el: any) => el.focus());
         await page.keyboard.press('Enter');
-        await page.waitForTimeout(100);
-
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
       });
 
-      test('does not open the bib when Space is pressed on the input', async ({ page }) => {
+      test('opens the bib when Space is pressed on the input', async ({ page }) => {
         await dp(page, 'default').evaluate((el: any) => el.focus());
         await page.keyboard.press('Space');
-        await page.waitForTimeout(100);
-
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
       });
 
       test('typing in the input does not open the bib', async ({ page }) => {
@@ -473,22 +474,27 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       expect(value).not.toBe('');
     });
 
-    test('focus moves to the close button when fullscreen dialog opens', async ({ page }) => {
+    test('focus moves to the active calendar cell when fullscreen dialog opens', async ({ page }) => {
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
 
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
 
-      // Wait for focus cycle (rAF)
+      // With aria-activedescendant, DOM focus stays on the grid wrapper
+      // (#calendarGrid) and ariaActiveDescendantElement points to the
+      // active cell. Verify that the grid wrapper has focus and an active
+      // cell exists.
       await expect.poll(async () => {
         return dp(page, 'default').evaluate((el: any) => {
           const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-          const bibtemplateTag = calendar.bibtemplateTag?._$litStatic$;
-          if (!bibtemplateTag) return false;
-          const bibtemplate = calendar.shadowRoot.querySelector(bibtemplateTag);
-          if (!bibtemplate) return false;
-          const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
-          return bibtemplate.shadowRoot.activeElement === closeBtn;
+          if (!calendar) return false;
+
+          const gridWrapper = calendar.shadowRoot.querySelector('#calendarGrid');
+          if (!gridWrapper || calendar.shadowRoot.activeElement !== gridWrapper) return false;
+
+          const allCells = calendar.getAllFocusableCells();
+          const activeCell = allCells.find((cell: any) => cell.active);
+          return !!activeCell;
         });
       }, { timeout: 5_000 }).toBe(true);
     });
@@ -528,6 +534,127 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
       // Popover should be closed
       await expect.poll(() => isBibVisible(page, 'default')).toBe(false);
+    });
+  });
+
+  // ─── Viewport resize tests ─────────────────────────────────────────────────
+
+  test.describe(`${label} — viewport resize`, () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto(route);
+      await waitForDatepicker(page, 'default');
+    });
+
+    test('resizing from desktop to mobile switches calendar to fullscreen', async ({ page }) => {
+      // Open bib on desktop
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Verify desktop mode
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(false);
+
+      // Resize to mobile width
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Calendar should switch to fullscreen
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+
+      // Calendar isFullscreen should be updated
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          return calendar?.isFullscreen;
+        });
+      }, { timeout: 5_000 }).toBe(true);
+    });
+
+    test('resizing from mobile to desktop switches calendar from fullscreen', async ({ page }) => {
+      // Resize to mobile first
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(100);
+
+      // Open bib in fullscreen mode
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
+
+      // Resize back to desktop
+      await page.setViewportSize({ width: 1280, height: 800 });
+
+      // Calendar should switch out of fullscreen
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(false);
+
+      // Calendar isFullscreen should be updated
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          return calendar?.isFullscreen;
+        });
+      }, { timeout: 5_000 }).toBe(false);
+    });
+
+    test('trigger remains inert across desktop/mobile resize while bib is open', async ({ page }) => {
+      // Open bib on desktop. The datepicker dropdown is a desktopModal, so the
+      // trigger is inert whenever the bib is open — on both desktop and mobile.
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Trigger should be inert on desktop (desktopModal)
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(true);
+
+      // Resize to mobile
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Trigger should remain inert in fullscreen
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(true);
+
+      // Resize back to desktop
+      await page.setViewportSize({ width: 1280, height: 800 });
+
+      // Trigger should still be inert after returning to desktop
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(false);
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(true);
+    });
+
+    test('bib remains open after resizing from desktop to mobile', async ({ page }) => {
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Bib should still be open after resize
+      await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
+    });
+
+    test('active cell exists after resizing from desktop to mobile', async ({ page }) => {
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Resize to mobile
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+
+      // An active cell should exist after resize + re-render
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          if (!calendar) return false;
+          const allCells = calendar.getAllFocusableCells();
+          return allCells.some((cell: any) => cell.active);
+        });
+      }, { timeout: 8_000 }).toBe(true);
     });
   });
 }

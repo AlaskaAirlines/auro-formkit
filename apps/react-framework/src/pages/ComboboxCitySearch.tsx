@@ -120,7 +120,7 @@ function ComboboxWrapper({ onSelectedValueChange }: ComboboxWrapperProps) {
     <>
       <auro-combobox ref={comboboxRef} noFilter persistInput required autocomplete="off" dvInputOnly>
         <span slot="label">From</span>
-        <auro-menu ref={menuRef} hasLoadingPlaceholder>
+        <auro-menu ref={menuRef}>
           {stations.map((city) => (
             <Fragment key={city.code}>
               <auro-menuoption value={city.code}>

@@ -35,10 +35,10 @@
   <p>In some cases it is necessary to preset the value of the component as part of the initial render.</p>
   <auro-header level="4" id="us3a">Single Select</auro-header>
   <p>When a value is preset, the matching option in the menu will be marked as both <code>active</code> and <code>selected</code>.</p>
-  <p>If a preset value is defined that does not match any enabled option, the value is reset to <code>undefined</code>.</p>
+  <p>If a preset value is defined that does not match any option, the value is reset to <code>undefined</code>. A value that matches an option marked <code>disabled</code> or <code>static</code> is also rejected and reset to <code>undefined</code>; a value matching a <code>hidden</code> option is still applied.</p>
   <auro-header level="4" id="us3b">Multi Select</auro-header>
   <p>When configured for multi-select, the preset value may include multiple options. The first selected option will also be marked <code>active</code>.</p>
-  <p>If one or more preset values do not match any option they will be discarded. If no preset values match any option, the value is reset to <code>undefined</code>.</p>
+  <p>If one or more preset values do not match any option — or match an option marked <code>disabled</code> or <code>static</code> — they will be discarded. If no preset values remain, the value is reset to <code>undefined</code>.</p>
   <div class="note"><strong>Important caveat:</strong> Multi-select is notoriously difficult for all users, including screen reader users — WCAG and usability research generally recommend avoiding <code>&lt;auro-select multiSelect></code> in favor of checkboxes or other patterns that make multi-selection more discoverable.</div>
   <auro-header level="3" id="multiselect">Multi-select</auro-header>
   <p>In certain cases it may be valid to allow more than one option to be selected. When the component is configured to support multi-select only one option is still able to be marked <code>active</code>. However, multiple options may be <code>selected</code> via click, tap or keyboard events on each option. A second click, tap or keyboard event on an already selected option will de-select it.</p>

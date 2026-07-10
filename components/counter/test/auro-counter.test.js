@@ -110,6 +110,14 @@ function runFullTest(mobileView) {
         el.decrement();
         await expect(el.value).to.equal(5);
       });
+
+      it('should become interactive again after disabled is removed', async () => {
+        const el = await fixture(html`<auro-counter disabled value="5">Counter</auro-counter>`);
+        el.removeAttribute('disabled');
+        await elementUpdated(el);
+        el.increment();
+        expect(el.value).to.equal(6);
+      });
     });
 
     describe('error', () => {
@@ -146,6 +154,20 @@ function runFullTest(mobileView) {
       it('should return true when value is equal to min', async () => {
         const el = await fixture(html`<auro-counter>Counter 1</auro-counter>`);
         expect(el.isIncrementDisabled(el.min)).to.be.true;
+      });
+
+      it('should not allow value below min on initialization', async () => {
+        const el = await fixture(html`<auro-counter min="2" value="0">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.be.equal(0);
+      });
+    });
+
+    describe('max', () => {
+      it('should not allow value to exceed max on initialization', async () => {
+        const el = await fixture(html`<auro-counter max="3" value="5">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.be.equal(5);
       });
     });
 
@@ -435,60 +457,11 @@ function runFullTest(mobileView) {
   });
 
   describe('A11Y', () => {
-    it('should set aria-describedby elements on the spin button when a description element is slotted', async () => {
-      const el = await fixture(html`
-        <auro-counter>
-          Counter
-          <span slot="description">Description text</span>
-        </auro-counter>
-      `);
-
-      const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
-      const descriptionEl = el.querySelector('[slot="description"]');
-
-      expect(spinbutton.ariaDescribedByElements).to.deep.equal([descriptionEl]);
-    });
-
-    it('should clear aria-describedby elements on the spin button when the description element is removed', async () => {
-      const el = await fixture(html`
-        <auro-counter>
-          Counter
-          <span slot="description">Description text</span>
-        </auro-counter>
-      `);
-
-      const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
-      const descriptionEl = el.querySelector('[slot="description"]');
-
-      expect(spinbutton.ariaDescribedByElements).to.deep.equal([descriptionEl]);
-
-      const descSlot = el.shadowRoot.querySelector('slot[name="description"]');
-      const slotChangePromise = oneEvent(descSlot, 'slotchange');
-      el.removeChild(descriptionEl);
-      await slotChangePromise;
-
-      // Per spec, setting ariaDescribedByElements to an empty sequence unsets it (returns null)
-      expect(spinbutton.ariaDescribedByElements.length).to.equal(0);
-    });
-
-    it('should set aria-describedby elements when a description element is added dynamically', async () => {
-      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
-
-      const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
-      const descSlot = el.shadowRoot.querySelector('slot[name="description"]');
-
-      const desc = document.createElement('span');
-      desc.setAttribute('slot', 'description');
-      desc.textContent = 'Added description';
-
-      const slotChangePromise = oneEvent(descSlot, 'slotchange');
-      el.appendChild(desc);
-      await slotChangePromise;
-
-      expect(spinbutton.ariaDescribedByElements).to.deep.equal([desc]);
-    });
-
-    it('should not use the aria-describedby attribute on the spin button', async () => {
+    // aria-describedBy is unsupported on spinbutton role elements,
+    // these 2's conflict cancels swiping guesture when iOS VoiceOver is turned on.
+    // This is a known issue with the spinbutton role and aria-describedby.
+    // The test is kept to ensure that the aria-describedby attribute is not set when a description element is slotted.
+    it('should NOT set aria-describedby elements on the spin button', async () => {
       const el = await fixture(html`
         <auro-counter>
           Counter
@@ -498,7 +471,7 @@ function runFullTest(mobileView) {
 
       const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
 
-      expect(spinbutton.getAttribute('aria-describedby') === "" || !spinbutton.hasAttribute('aria-describedby')).to.be.true;
+      expect(spinbutton.ariaDescribedByElements).to.be.null;
     });
   });
 
@@ -520,6 +493,17 @@ function runFullTest(mobileView) {
         decrementBtn.click();
 
         expect(el.value).to.equal(2);
+      });
+
+      it('should register each rapid click and increment value correctly', async () => {
+        const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+        const incrementBtn = el.shadowRoot.querySelector('[part="controlPlus"]');
+
+        incrementBtn.click();
+        incrementBtn.click();
+        incrementBtn.click();
+
+        expect(el.value).to.equal(3);
       });
     });
   });

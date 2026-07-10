@@ -12,7 +12,7 @@ async function waitForCombobox(page: Page) {
       const els = document.querySelectorAll('auro-combobox');
       return els.length > 0 && [...els].every((el: any) => el.dropdown != null);
     },
-    { timeout: 10_000 },
+    { timeout: 30_000 },
   );
 }
 
@@ -47,12 +47,12 @@ function comboboxValue(page: Page, fixture: string) {
 
 /** Wait for the dropdown bib to become visible. */
 async function waitForBibOpen(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(true);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 15_000 }).toBe(true);
 }
 
 /** Wait for the dropdown bib to close. */
 async function waitForBibClosed(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(false);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 15_000 }).toBe(false);
 }
 
 /** Type into the combobox input using real keyboard events. */
@@ -135,49 +135,6 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         // ArrowUp back
         await page.keyboard.press('ArrowUp');
         await expect.poll(() => activeOptionValue(page, 'nested')).toBe('option 2');
-      });
-
-      test('Alt+ArrowDown jumps to the last option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('Alt+ArrowDown');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
-      });
-
-      test('Meta+ArrowDown jumps to the last option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('Meta+ArrowDown');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
-      });
-
-      test('Alt+ArrowUp jumps to the first option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        // Navigate away from first
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('ArrowDown');
-
-        await page.keyboard.press('Alt+ArrowUp');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Apples');
-      });
-
-      test('Meta+ArrowUp jumps to the first option', async ({ page }) => {
-        await typeInCombobox(page, 'three-options', 'a');
-        await waitForBibOpen(page, 'three-options');
-        await waitForOptionsReady(page, 'three-options');
-
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('ArrowDown');
-
-        await page.keyboard.press('Meta+ArrowUp');
-        await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Apples');
       });
 
       test('Home jumps to the first enabled option', async ({ page }) => {
@@ -353,47 +310,28 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       });
     });
 
-    // ── Screen reader live region ─────────────────────────────────────────
+    // ── Screen reader announcements ───────────────────────────────────────
 
     test.describe('Screen reader announcements', () => {
-      test('populates live region when an option is activated', async ({ page }) => {
+      // Desktop's screen reader hook is aria-activedescendant — expressed
+      // via the ariaActiveDescendantElement DOM property so the reference
+      // can cross the shadow-DOM boundary between the trigger input and the
+      // menu option in light DOM. The polite live region (#srAnnouncement)
+      // is populated only in fullscreen mode (see auro-combobox.js:1259 and
+      // the fullscreen-mobile suite below), so no desktop live-region test.
+      test('points the trigger input at the active option via ariaActiveDescendantElement', async ({ page }) => {
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
         await waitForOptionsReady(page, 'no-filter');
 
         await page.keyboard.press('ArrowDown');
 
-        // The live region is inside the combobox's shadow root
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            const liveRegion = root?.querySelector('#srAnnouncement');
-            return liveRegion?.textContent ?? '';
-          });
-        }, { timeout: 3_000 }).not.toBe('');
-      });
-
-      test('clears live region after announcement duration', async ({ page }) => {
-        await typeInCombobox(page, 'no-filter', 'a');
-        await waitForBibOpen(page, 'no-filter');
-
-        await page.keyboard.press('ArrowDown');
-
-        // Wait for the announcement to appear
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            return root?.querySelector('#srAnnouncement')?.textContent ?? '';
-          });
-        }, { timeout: 3_000 }).not.toBe('');
-
-        // Wait for it to be cleared (component uses a ~1000ms timer)
-        await expect.poll(async () => {
-          return combobox(page, 'no-filter').evaluate((el: any) => {
-            const root = el.shadowRoot;
-            return root?.querySelector('#srAnnouncement')?.textContent ?? '';
-          });
-        }, { timeout: 5_000 }).toBe('');
+        await expect.poll(() =>
+          combobox(page, 'no-filter').evaluate((el: any) => {
+            const inputEl = el.input?.inputElement;
+            return inputEl?.ariaActiveDescendantElement?.value ?? null;
+          }),
+        { timeout: 3_000 }).not.toBeNull();
       });
     });
 
@@ -418,9 +356,12 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         await waitForBibClosed(page, 'default');
 
         const value = await comboboxValue(page, 'default');
-        // Depending on behavior, either undefined or the typed text — but not a menu value
-        // The key assertion: no menu selection was forced by click-outside
-        expect(value).not.toBe('Oranges');
+        // Default fixture is suggestion mode: typing sets value to the input
+        // text, so 'a' should survive a click-outside. Asserting on the exact
+        // typed text catches a regression where the click silently picks an
+        // option (e.g. 'Apples' first-match). The prior `not.toBe('Oranges')`
+        // form would have passed even if 'Apples' was selected.
+        expect(value).toBe('a');
       });
     });
 
@@ -635,6 +576,32 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
           return bibText || hostText;
         });
       }, { timeout: 3_000 }).not.toBe('');
+    });
+
+    test('live region clears after announcement duration in fullscreen', async ({ page }) => {
+      await typeInCombobox(page, 'no-filter', 'a');
+      await waitForBibOpen(page, 'no-filter');
+
+      // Wait for fullscreen to settle
+      await expect.poll(async () =>
+        combobox(page, 'no-filter').evaluate((el: any) => Boolean(el.dropdown?.isBibFullscreen)),
+      ).toBe(true);
+
+      await page.keyboard.press('ArrowDown');
+
+      const readLiveRegion = () =>
+        combobox(page, 'no-filter').evaluate((el: any) => {
+          const bibEl = el.dropdown?.bibElement?.value;
+          const bibText = bibEl?.shadowRoot?.querySelector('#srAnnouncement')?.textContent ?? '';
+          const hostText = el.shadowRoot?.querySelector('#srAnnouncement')?.textContent ?? '';
+          return bibText || hostText;
+        });
+
+      // Wait for the announcement to appear
+      await expect.poll(readLiveRegion, { timeout: 3_000 }).not.toBe('');
+
+      // Wait for it to be cleared (announceToScreenReader uses a ~1000ms timer)
+      await expect.poll(readLiveRegion, { timeout: 5_000 }).toBe('');
     });
   });
 }

@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="6">ArrowDown</td>
+      <td rowspan="2">ArrowDown</td>
       <td rowspan="2">-</td>
       <td>Collapsed, list options have been populated</td>
       <td>
@@ -34,47 +34,7 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="2">Command</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the last enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Option</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the last enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="6">ArrowUp</td>
+      <td rowspan="2">ArrowUp</td>
       <td rowspan="2">-</td>
       <td>Collapsed, list options have been populated</td>
       <td>
@@ -92,46 +52,6 @@
       </td>
       <td>
         Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Command</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Trigger input element, <strong>NOT</strong> the trigger input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="2">Option</td>
-      <td>Collapsed, list options have been populated</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-      </td>
-      <td>Opens the bib.</td>
-    </tr>
-    <tr>
-      <td>Expanded</td>
-      <td>
-        Input element, <strong>NOT</strong> the input clear button
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content inputs.
-        </div>
-      </td>
-      <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
       </td>
     </tr>
     <tr>
@@ -238,10 +158,7 @@
         </div>
       </td>
       <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-        <div class="note">
-          <strong>Note:</strong> the bib will <strong>NOT</strong> close and the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.
-        </div>
+        The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the previous focusable element on the page.
       </td>
     </tr>
   </tbody>

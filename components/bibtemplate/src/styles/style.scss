@@ -41,7 +41,7 @@
 #bodyContainer {
   position: relative;
   overflow: auto;
-  flex: 1 1 100%;
+  flex: 1;
 }
 
 :host([isfullscreen]) {
@@ -55,9 +55,5 @@
 }
 
 #footerContainer{
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
   padding: var(--ds-size-200, #{vac.$ds-size-200});
 }

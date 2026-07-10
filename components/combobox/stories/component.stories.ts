@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../menu/src/registered';
 
@@ -118,18 +118,22 @@ export const ComboboxEnterSelectsOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
-    // Open bib
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    el.focus();
     await el.updateComplete;
-    // Navigate to first option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    // Typing a matching character auto-opens the bib and activates the first
+    // option — no explicit Enter is needed to open. At narrow (fullscreen)
+    // viewports the open transition is driven by requestAnimationFrame, so
+    // poll for the open state rather than assuming a microtask has settled it.
+    await userEvent.keyboard('{a}');
+    await waitFor(() => expect(el.dropdownOpen).toBe(true));
+    // Navigate to an option, then select it with Enter.
+    await userEvent.keyboard('{ArrowDown}');
     await el.updateComplete;
-    // Select it
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await el.updateComplete;
-    await new Promise((r) => setTimeout(r, 50));
-    await expect(el.dropdown.isPopoverVisible).toBe(false);
+    await userEvent.keyboard('{Enter}');
+    // The fullscreen close path restores focus via rAF/doubleRaf, so the bib
+    // may not report closed until a few frames later. Poll instead of racing a
+    // fixed timeout.
+    await waitFor(() => expect(el.dropdownOpen).toBe(false));
     await expect(el.value).not.toBeNull();
   },
 };
@@ -166,7 +170,7 @@ export const ComboboxEscapeClosesWithoutSelect: Story = {
     el.hideBib();
     await el.updateComplete;
     await expect(el.dropdown.isPopoverVisible).toBe(false);
-    await expect(el.value).toBeUndefined();
+    await expect(el.value).toBe('a');
   },
 };
 
@@ -357,7 +361,9 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     await el.updateComplete;
 
     // Type a value and open the bib
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -423,8 +429,9 @@ export const ComboboxFullscreenLiveRegionInBib: Story = {
     await el.updateComplete;
 
     // Open the dropdown
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -467,8 +474,9 @@ export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
     await el.updateComplete;
 
     // Open the dropdown
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -510,8 +518,9 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
     await el.updateComplete;
 
     // Open the dropdown
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
 
@@ -582,7 +591,9 @@ export const ComboboxInDialogBibOpen: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -635,7 +646,9 @@ export const ComboboxInDrawerBibOpen: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -695,7 +708,9 @@ export const ComboboxDisabledOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
-    setInputValue(el, 'a');
+    el.focus();
+    await el.updateComplete;
+    await userEvent.keyboard('{a}');
     await el.updateComplete;
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
@@ -736,6 +751,57 @@ export const ComboboxInverseDisabled: Story = {
   </auro-combobox>
 </div>
   `,
+};
+
+// ─── customBibWidth sets bib to a specific width ────────────────────────────
+export const ComboboxCustomBibWidth: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox id="customBibWidthStory">
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Departure Airport</span>
+  <span slot="label">From</span>
+  <auro-menu>
+    <auro-menuoption value="SEA">Seattle, WA (SEA-Seattle/Tacoma Intl.)</auro-menuoption>
+    <auro-menuoption value="PDX">Portland, OR (PDX-Portland Intl.)</auro-menuoption>
+    <auro-menuoption value="SFO">San Francisco, CA (SFO-San Francisco Intl.)</auro-menuoption>
+    <auro-menuoption value="LAX">Los Angeles, CA (LAX-Los Angeles Intl.)</auro-menuoption>
+    <auro-menuoption value="JFK">New York, NY (JFK-John F. Kennedy Intl.)</auro-menuoption>
+    <auro-menuoption value="ORD">Chicago, IL (ORD-Chicago O'Hare Intl.)</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+<style>
+  #customBibWidthStory::part(dropdownSize) {
+    width: 400px;
+  }
+</style>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    if (window.innerWidth <= 320) {
+      return;
+    }
+
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // dropdownSize part must be exposed so consumers can style bib width
+    const exportparts = el.dropdown.getAttribute('exportparts') || '';
+    await expect(exportparts).toContain('size:dropdownSize');
+
+    // Open the bib
+    setInputValue(el, 's');
+    await new Promise((r) => setTimeout(r, 100));
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Bib content should reflect the ::part(dropdownSize) width
+    const bibEl = el.dropdown.bibElement.value;
+    const container = bibEl.shadowRoot.querySelector('.container') as HTMLElement;
+    await waitUntil(() => container.getBoundingClientRect().width >= 399);
+    await expect(container.getBoundingClientRect().width).toBeGreaterThanOrEqual(399);
+  },
 };
 
 // ─── Inverse error ───────────────────────────────────────────────────────────

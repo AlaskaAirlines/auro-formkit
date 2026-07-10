@@ -10,8 +10,8 @@
         "demo/*.min.js",
         "docTemplates/**",
         "docs/api.md",
-        "src/styles/*.css",
-        "src/styles/*-css.js"
+        "src/styles/**/*.css",
+        "src/styles/**/*-css.js"
       ]
     },
     "build:version": {
@@ -96,6 +96,13 @@
         "@aurodesignsystem/auro-dropdown#build"
       ]
     },
+    "@aurodesignsystem/auro-counter#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
     "@aurodesignsystem/auro-datepicker#build": {
       "dependsOn": [
         "@aurodesignsystem/auro-bibtemplate#build",
@@ -121,7 +128,16 @@
     },
     "@aurodesignsystem/auro-select#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-dropdown#build"
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-menu#build"
+      ]
+    },
+    "@aurodesignsystem/auro-counter#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-helptext#build"
       ]
     },
     "test:framework": {
