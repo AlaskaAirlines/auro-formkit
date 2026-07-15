@@ -478,6 +478,34 @@ function runFullTest(mobileView) {
 
   describe('Keyboard Behavior', () => {
     describe('Enter', () => {
+      // eslint-disable-next-line jsdoc/require-jsdoc
+      async function expectSubmitOnEnter(markup, selector) {
+        const el = await fixture(markup);
+        await elementUpdated(el);
+
+        const control = el.querySelector(selector);
+        const submitPromise = new Promise((resolve, reject) => {
+          const timeoutId = setTimeout(() => {
+            reject(new Error(`Expected submit event when pressing Enter on ${selector}`));
+          // eslint-disable-next-line no-magic-numbers
+          }, 100);
+
+          el.addEventListener('submit', () => {
+            clearTimeout(timeoutId);
+            resolve(true);
+          }, { once: true });
+        });
+
+        control.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }));
+
+        await submitPromise;
+      }
+
       it('should submit the form when Enter is pressed on an input element', async () => {
         const el = await fixture(html`
           <auro-form>
@@ -537,6 +565,42 @@ function runFullTest(mobileView) {
 
         await elementUpdated(el);
         await expect(defaultPrevented).to.be.true;
+      });
+
+      it('should submit the form when Enter is pressed on an auro-checkbox inside an auro-checkbox-group', async () => {
+        await expectSubmitOnEnter(html`
+          <auro-form>
+            <auro-checkbox-group name="testGroup">
+              <span slot="legend">Form label goes here</span>
+              <auro-checkbox value="value1">Checkbox option</auro-checkbox>
+              <auro-checkbox value="value2" checked>Checkbox option</auro-checkbox>
+            </auro-checkbox-group>
+          </auro-form>
+        `, 'auro-checkbox');
+      });
+
+      it('should submit the form when Enter is pressed on an auro-radio inside an auro-radio-group', async () => {
+        await expectSubmitOnEnter(html`
+          <auro-form>
+            <auro-radio-group name="testGroup">
+              <span slot="legend">Form label goes here</span>
+              <auro-radio label="Yes" name="radioDemo" value="yes" checked></auro-radio>
+              <auro-radio label="No" name="radioDemo" value="no"></auro-radio>
+            </auro-radio-group>
+          </auro-form>
+        `, 'auro-radio');
+      });
+
+      it('should submit the form when Enter is pressed on an auro-counter inside an auro-counter-group', async () => {
+        await expectSubmitOnEnter(html`
+          <auro-form>
+            <auro-counter-group name="someCounterGroup" isDropdown>
+              <auro-counter name="shortLabel">
+                Short label
+              </auro-counter>
+            </auro-counter-group>
+          </auro-form>
+        `, 'auro-counter');
       });
 
       it('does not submit when Enter is pressed on a disabled form element', async () => {
