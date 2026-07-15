@@ -3248,8 +3248,8 @@ function runFullTest(mobileView) {
       clearBtn.focus = origFocus;
     });
 
-    // ─── focusin handler only calls this.focus() when target is the host ──
-    it('focusin from a child element does not call this.focus()', async () => {
+    // ─── focusin handler only calls this.focus() when composedPath origin is the host ──
+    it('focusin from a shadow-DOM child does not call this.focus()', async () => {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
@@ -3257,15 +3257,13 @@ function runFullTest(mobileView) {
       const origFocus = el.focus.bind(el);
       el.focus = () => { hostFocusCalled = true; origFocus(); };
 
-      // Dispatch a focusin event that originates from a child element
-      // (simulating e.g. the internal input receiving focus). The handler
-      // should NOT call this.focus() because event.target !== this.
-      const childFocusIn = new FocusEvent('focusin', {
-        bubbles: true,
-        composed: true,
-      });
-      Object.defineProperty(childFocusIn, 'target', { value: el.input });
-      el.dispatchEvent(childFocusIn);
+      // Focus the internal input directly — the composed focusin event
+      // bubbles to the host with composedPath()[0] pointing at the native
+      // input inside auro-input's shadow DOM, not the combobox host.
+      // The handler should NOT call this.focus() in this case.
+      const nativeInput = el.input.shadowRoot.querySelector('input');
+      nativeInput.focus();
+      await elementUpdated(el);
 
       expect(hostFocusCalled).to.be.false;
 
