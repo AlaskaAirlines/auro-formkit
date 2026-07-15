@@ -11,6 +11,48 @@ import '../src/registered.js';
 const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 /**
+ * Verifies that pressing Enter on a form control submits the form.
+ * When `innerSelector` is provided, dispatches from a shadow child so the
+ * event reaches the form with a different origin node than the listener host.
+ * @param {*} markup - The fixture markup.
+ * @param {string} selector - Selector for the host control.
+ * @param {string} [innerSelector] - Optional selector for the interactive node inside the host's shadow root.
+ * @returns {Promise<void>}
+ */
+async function expectSubmitOnEnter(markup, selector, innerSelector) {
+  const el = await fixture(markup);
+  await elementUpdated(el);
+
+  const control = el.querySelector(selector);
+  const dispatchTarget = innerSelector ? control.shadowRoot?.querySelector(innerSelector) : control;
+
+  if (!dispatchTarget) {
+    throw new Error(`Unable to find Enter dispatch target for ${selector}`);
+  }
+
+  const submitPromise = new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`Expected submit event when pressing Enter on ${selector}`));
+    // eslint-disable-next-line no-magic-numbers
+    }, 100);
+
+    el.addEventListener('submit', () => {
+      clearTimeout(timeoutId);
+      resolve(true);
+    }, { once: true });
+  });
+
+  dispatchTarget.dispatchEvent(new KeyboardEvent('keydown', {
+    key: 'Enter',
+    bubbles: true,
+    cancelable: true,
+    composed: true
+  }));
+
+  await submitPromise;
+}
+
+/**
  * Runs the full form test suite for a given viewport mode.
  * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
  * @returns {void}
@@ -478,34 +520,6 @@ function runFullTest(mobileView) {
 
   describe('Keyboard Behavior', () => {
     describe('Enter', () => {
-      // eslint-disable-next-line jsdoc/require-jsdoc
-      async function expectSubmitOnEnter(markup, selector) {
-        const el = await fixture(markup);
-        await elementUpdated(el);
-
-        const control = el.querySelector(selector);
-        const submitPromise = new Promise((resolve, reject) => {
-          const timeoutId = setTimeout(() => {
-            reject(new Error(`Expected submit event when pressing Enter on ${selector}`));
-          // eslint-disable-next-line no-magic-numbers
-          }, 100);
-
-          el.addEventListener('submit', () => {
-            clearTimeout(timeoutId);
-            resolve(true);
-          }, { once: true });
-        });
-
-        control.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'Enter',
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }));
-
-        await submitPromise;
-      }
-
       it('should submit the form when Enter is pressed on an input element', async () => {
         const el = await fixture(html`
           <auro-form>
@@ -576,7 +590,7 @@ function runFullTest(mobileView) {
               <auro-checkbox value="value2" checked>Checkbox option</auro-checkbox>
             </auro-checkbox-group>
           </auro-form>
-        `, 'auro-checkbox');
+        `, 'auro-checkbox', 'input');
       });
 
       it('should submit the form when Enter is pressed on an auro-radio inside an auro-radio-group', async () => {
@@ -588,7 +602,7 @@ function runFullTest(mobileView) {
               <auro-radio label="No" name="radioDemo" value="no"></auro-radio>
             </auro-radio-group>
           </auro-form>
-        `, 'auro-radio');
+        `, 'auro-radio', 'input');
       });
 
       it('should submit the form when Enter is pressed on an auro-counter inside an auro-counter-group', async () => {
@@ -600,7 +614,7 @@ function runFullTest(mobileView) {
               </auro-counter>
             </auro-counter-group>
           </auro-form>
-        `, 'auro-counter');
+        `, 'auro-counter', '[part="counterControl"]');
       });
 
       it('does not submit when Enter is pressed on a disabled form element', async () => {
