@@ -724,14 +724,28 @@ export class AuroCombobox extends AuroElement {
       const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
       if (displayValueEl) {
         this.input.appendChild(displayValueEl.cloneNode(true));
-        // auro-input's hasDisplayValueContent is non-reactive; nudge it to
-        // re-evaluate the slot and re-render so the displayValue wrapper
-        // gets its hasContent class. Without this, the apple/icon stays
-        // hidden when input.value is set in the same tick as the append.
-        if (typeof this.input.checkDisplayValueSlotChange === 'function') {
-          this.input.checkDisplayValueSlotChange();
-          this.input.requestUpdate();
-        }
+      }
+
+      // auro-input's hasDisplayValueContent is non-reactive; nudge it to
+      // re-evaluate the slot and re-render so the displayValue wrapper
+      // gets its hasContent class. Without this, the apple/icon stays
+      // hidden when input.value is set in the same tick as the append.
+      if (typeof this.input.checkDisplayValueSlotChange === 'function') {
+        this.input.checkDisplayValueSlotChange();
+        this.input.requestUpdate();
+      }
+    } else if (this.value) {
+      // No optionSelected yet (e.g. setMenuValue was called but the menu's
+      // auroMenu-selectedOption event hasn't fired yet, or we're on remount
+      // with no options loaded). Synthesize a displayValue from the value so
+      // the overlay isn't blank.
+      const syntheticDV = document.createElement('span');
+      syntheticDV.setAttribute('slot', 'displayValue');
+      syntheticDV.textContent = this.value;
+      this.input.appendChild(syntheticDV);
+      if (typeof this.input.checkDisplayValueSlotChange === 'function') {
+        this.input.checkDisplayValueSlotChange();
+        this.input.requestUpdate();
       }
     }
 
@@ -1481,6 +1495,15 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleTriggerInputValueChange(event) {
+    // Clear a stale _programmaticFilterRefresh when the user is genuinely
+    // interacting. On mount, updated('value') sets the flag, but the early
+    // return at `this.value === this.input.value` exits before clearing it.
+    // Without this, the first keystroke after mount fails to set _userTyped
+    // and the bib doesn't open.
+    if (this._programmaticFilterRefresh && this.componentHasFocus) {
+      this._programmaticFilterRefresh = false;
+    }
+
     // 'input' fires for every user-initiated value change — typing, paste,
     // IME composition end, dead-key composition, drag-drop. Flip _userTyped
     // here so updated('availableOptions') auto-opens the bib for sources
@@ -1520,10 +1543,12 @@ export class AuroCombobox extends AuroElement {
       inputResolver: (comp, ctx) => (ctx.isModal && comp.inputInBib ? comp.inputInBib : comp.input),
     });
 
-    this.addEventListener('focusin', () => {
+    this.addEventListener('focusin', (event) => {
       this.touched = true;
 
-      this.focus();
+      if (event.target === this) {
+        this.focus();
+      }
     });
 
     this.addEventListener('auroFormElement-validated', (evt) => {
