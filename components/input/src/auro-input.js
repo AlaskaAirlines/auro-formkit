@@ -328,7 +328,10 @@ export class AuroInput extends BaseInput {
     // directly to auro-input's light DOM alongside the forwarder still
     // counts as content. The prior nodes[0].tagName === 'SLOT' recursion
     // discarded any siblings past the forwarder.
-    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const slot = this.shadowRoot?.querySelector('slot[name="displayValue"]');
+    if (!slot) {
+      return;
+    }
     const nodes = slot.assignedNodes({ flatten: true });
 
     this.hasDisplayValueContent = nodes.length > 0;

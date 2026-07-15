@@ -3185,6 +3185,93 @@ function runFullTest(mobileView) {
 
       await expect(dropdown.dropdownWidth).to.equal('400px');
     });
+
+    // ─── programmatic value sync does not set _userTyped ──
+    it('programmatic value sync via syncInputValuesAcrossTriggerAndBib does not set _userTyped', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      expect(el._userTyped).to.be.false;
+
+      // Programmatic value set goes through syncInputValuesAcrossTriggerAndBib
+      // which guards with _syncingDisplayValue, preventing _userTyped from
+      // being set. This simulates what happens when a framework binding
+      // pushes a new value into the combobox.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // _userTyped must remain false because the sync was programmatic
+      // (guarded by _syncingDisplayValue / _programmaticFilterRefresh)
+      expect(el._userTyped).to.be.false;
+    });
+
+    // ─── setClearBtnFocus is skipped when combobox does not have focus ──
+    it('does not move focus to clear button on selection when combobox lacks focus', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Spy on the clear button's focus()
+      const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+      expect(clearBtn).to.exist;
+      let focusCalled = false;
+      const origFocus = clearBtn.focus.bind(clearBtn);
+      clearBtn.focus = () => { focusCalled = true; origFocus(); };
+
+      // Programmatically select a value WITHOUT giving the combobox focus.
+      // This simulates a framework-driven value sync where the user is
+      // interacting with a different field.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // setClearBtnFocus must NOT have been called because the selection
+      // was an echo of setMenuValue (isEcho guard) — only fresh user-initiated
+      // selections should move focus.
+      expect(focusCalled).to.be.false;
+
+      // Cleanup
+      clearBtn.focus = origFocus;
+    });
+
+    // ─── focusin handler only calls this.focus() when target is the host ──
+    it('focusin from a child element does not call this.focus()', async () => {
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      let hostFocusCalled = false;
+      const origFocus = el.focus.bind(el);
+      el.focus = () => { hostFocusCalled = true; origFocus(); };
+
+      // Dispatch a focusin event that originates from a child element
+      // (simulating e.g. the internal input receiving focus). The handler
+      // should NOT call this.focus() because event.target !== this.
+      const childFocusIn = new FocusEvent('focusin', {
+        bubbles: true,
+        composed: true,
+      });
+      Object.defineProperty(childFocusIn, 'target', { value: el.input });
+      el.dispatchEvent(childFocusIn);
+
+      expect(hostFocusCalled).to.be.false;
+
+      // Cleanup
+      el.focus = origFocus;
+    });
   });
 
   describe('A11Y', () => {
