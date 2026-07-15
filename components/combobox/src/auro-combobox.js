@@ -1546,7 +1546,7 @@ export class AuroCombobox extends AuroElement {
     this.addEventListener('focusin', (event) => {
       this.touched = true;
 
-      if (event.target === this) {
+      if (event.composedPath()[0] === this) {
         this.focus();
       }
     });

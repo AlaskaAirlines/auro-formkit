@@ -330,6 +330,12 @@ export class AuroInput extends BaseInput {
     // discarded any siblings past the forwarder.
     const slot = this.shadowRoot?.querySelector('slot[name="displayValue"]');
     if (!slot) {
+      // Shadow root not yet rendered — fall back to checking light-DOM
+      // children so hasDisplayValueContent isn't stuck false after an
+      // early call from auro-combobox during mount.
+      this.hasDisplayValueContent = Boolean(
+        this.querySelector('[slot="displayValue"]:not(slot)')
+      );
       return;
     }
     const nodes = slot.assignedNodes({ flatten: true });
