@@ -1276,6 +1276,9 @@ export class AuroCombobox extends AuroElement {
       // only — fresh user selections take the existing hideBib path.
       if (isEcho && this.menu.optionSelected) {
         this._programmaticFilterRefresh = true;
+        this.updateComplete.then(() => {
+          this._programmaticFilterRefresh = false;
+        });
       }
     });
 
@@ -1506,15 +1509,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleTriggerInputValueChange(event) {
-    // Clear a stale _programmaticFilterRefresh when the user is genuinely
-    // interacting. On mount, updated('value') sets the flag, but the early
-    // return at `this.value === this.input.value` exits before clearing it.
-    // Without this, the first keystroke after mount fails to set _userTyped
-    // and the bib doesn't open.
-    if (this._programmaticFilterRefresh && this.componentHasFocus) {
-      this._programmaticFilterRefresh = false;
-    }
-
     // 'input' fires for every user-initiated value change — typing, paste,
     // IME composition end, dead-key composition, drag-drop. Flip _userTyped
     // here so updated('availableOptions') auto-opens the bib for sources
@@ -1536,10 +1530,6 @@ export class AuroCombobox extends AuroElement {
 
     if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0 && this.dropdown.isPopoverVisible) {
       this.setInputFocus();
-    }
-
-    if (this._programmaticFilterRefresh) {
-      this._programmaticFilterRefresh = false;
     }
   }
 
@@ -1739,6 +1729,12 @@ export class AuroCombobox extends AuroElement {
       // setting the flag unconditionally here masks the user-typed open path.
       if (!this._userTyped) {
         this._programmaticFilterRefresh = true;
+        // Self-clear after this update cycle completes. This collapses
+        // the previous scattered clear-points into one and prevents the
+        // flag from surviving into the next user interaction.
+        this.updateComplete.then(() => {
+          this._programmaticFilterRefresh = false;
+        });
       }
 
       if (this.input.value !== this.value) {
@@ -1827,10 +1823,6 @@ export class AuroCombobox extends AuroElement {
         }
       } else if (!this.dropdown.isBibFullscreen) {
         this.hideBib();
-      }
-
-      if (this._programmaticFilterRefresh) {
-        this._programmaticFilterRefresh = false;
       }
     }
 
