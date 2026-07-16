@@ -752,7 +752,6 @@ export class AuroCombobox extends AuroElement {
       this.input.appendChild(syntheticDV);
       if (typeof this.input.checkDisplayValueSlotChange === 'function') {
         this.input.checkDisplayValueSlotChange();
-        this.input.requestUpdate();
       }
     }
 
