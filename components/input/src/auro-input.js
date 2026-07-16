@@ -323,24 +323,27 @@ export class AuroInput extends BaseInput {
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    // flatten:true resolves through auro-combobox's forwarding slot
-    // (<slot name="displayValue" slot="displayValue">) so a clone appended
-    // directly to auro-input's light DOM alongside the forwarder still
-    // counts as content. The prior nodes[0].tagName === 'SLOT' recursion
-    // discarded any siblings past the forwarder.
     const slot = this.shadowRoot?.querySelector('slot[name="displayValue"]');
     if (!slot) {
-      // Shadow root not yet rendered — fall back to checking light-DOM
-      // children so hasDisplayValueContent isn't stuck false after an
-      // early call from auro-combobox during mount.
-      this.hasDisplayValueContent = Boolean(
-        this.querySelector('[slot="displayValue"]:not(slot)')
-      );
       return;
     }
     const nodes = slot.assignedNodes({ flatten: true });
 
-    this.hasDisplayValueContent = nodes.length > 0;
+    // Check for actual visible content, not just node existence.
+    // An empty <span slot="displayValue"></span> forwarded from the
+    // consumer should not be treated as "has content" — it causes the
+    // displayValue wrapper to render (with hasContent class) but show
+    // nothing, blocking the combobox's synthetic displayValue from
+    // being visible on preset/deeplink load.
+    this.hasDisplayValueContent = nodes.some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent.trim().length > 0;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        return node.textContent.trim().length > 0 || node.children.length > 0;
+      }
+      return false;
+    });
   }
 
   firstUpdated() {
