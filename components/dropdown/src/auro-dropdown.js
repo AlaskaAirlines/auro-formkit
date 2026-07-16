@@ -253,7 +253,7 @@ export class AuroDropdown extends AuroElement {
         const assigned = slot.assignedElements();
         for (const el of assigned) {
           if (el.hasAttribute('disabled')) {
-            continue;
+            continue; // eslint-disable-line no-continue
           }
           // Try finding a focusable descendant first (handles non-focusable
           // wrappers like <div> containing a <button>). If none found, try
