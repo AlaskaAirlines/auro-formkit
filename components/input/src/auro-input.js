@@ -323,15 +323,50 @@ export class AuroInput extends BaseInput {
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    // flatten:true resolves through auro-combobox's forwarding slot
-    // (<slot name="displayValue" slot="displayValue">) so a clone appended
-    // directly to auro-input's light DOM alongside the forwarder still
-    // counts as content. The prior nodes[0].tagName === 'SLOT' recursion
-    // discarded any siblings past the forwarder.
-    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const slot = this.shadowRoot?.querySelector('slot[name="displayValue"]');
+    if (!slot) {
+      // Shadow slot not yet rendered — fall back to checking light-DOM
+      // children so hasDisplayValueContent isn't stuck false when called
+      // before firstUpdated (e.g. from auro-combobox during mount).
+      // Check for any element (including custom elements like <auro-icon>
+      // that render via shadow DOM with no text content).
+      const lightDomNodes = Array.from(this.querySelectorAll('[slot="displayValue"]:not(slot)'));
+      const hasContent = lightDomNodes.some((node) => (
+        node.textContent.trim().length > 0 ||
+        node.children.length > 0 ||
+        node.shadowRoot !== null
+      ));
+      if (this.hasDisplayValueContent !== hasContent) {
+        this.hasDisplayValueContent = hasContent;
+        this.requestUpdate();
+      }
+      return;
+    }
     const nodes = slot.assignedNodes({ flatten: true });
 
-    this.hasDisplayValueContent = nodes.length > 0;
+    // Check for actual visible content, not just node existence.
+    // An empty <span slot="displayValue"></span> forwarded from the
+    // consumer should not be treated as "has content" — it causes the
+    // displayValue wrapper to render (with hasContent class) but show
+    // nothing, blocking the combobox's synthetic displayValue from
+    // being visible on preset/deeplink load.
+    // Custom elements (e.g. <auro-icon>) that render via shadow DOM are
+    // treated as content even when they have no text or light-DOM children.
+    const hasContent = nodes.some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent.trim().length > 0;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        return node.textContent.trim().length > 0 ||
+          node.children.length > 0 ||
+          node.shadowRoot !== null;
+      }
+      return false;
+    });
+    if (this.hasDisplayValueContent !== hasContent) {
+      this.hasDisplayValueContent = hasContent;
+      this.requestUpdate();
+    }
   }
 
   firstUpdated() {

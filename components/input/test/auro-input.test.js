@@ -2148,16 +2148,23 @@ function runFullTest(mobileView) {
 
         const displayValueSlot = el.shadowRoot.querySelector('slot[name="displayValue"]');
 
-        // Mock assignedNodes to return a <slot> element that itself returns assigned nodes
+        // Mock assignedNodes to verify flatten:true is passed and return
+        // the resolved inner content (matching browser behavior where
+        // flatten resolves through nested slots).
         const innerContent = document.createTextNode('nested content');
-        const innerSlot = document.createElement('slot');
+        let flattenRequested = false;
 
         const originalAssignedNodes = displayValueSlot.assignedNodes.bind(displayValueSlot);
-        displayValueSlot.assignedNodes = () => [innerSlot];
-        innerSlot.assignedNodes = () => [innerContent];
+        displayValueSlot.assignedNodes = (options) => {
+          if (options && options.flatten) {
+            flattenRequested = true;
+          }
+          return [innerContent];
+        };
 
         el.checkDisplayValueSlotChange();
 
+        expect(flattenRequested).to.be.true;
         expect(el.hasDisplayValueContent).to.be.true;
 
         // Restore

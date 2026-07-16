@@ -724,14 +724,34 @@ export class AuroCombobox extends AuroElement {
       const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
       if (displayValueEl) {
         this.input.appendChild(displayValueEl.cloneNode(true));
-        // auro-input's hasDisplayValueContent is non-reactive; nudge it to
-        // re-evaluate the slot and re-render so the displayValue wrapper
-        // gets its hasContent class. Without this, the apple/icon stays
-        // hidden when input.value is set in the same tick as the append.
-        if (typeof this.input.checkDisplayValueSlotChange === 'function') {
-          this.input.checkDisplayValueSlotChange();
-          this.input.requestUpdate();
-        }
+      }
+
+      // auro-input's hasDisplayValueContent is non-reactive; nudge it to
+      // re-evaluate the slot and re-render so the displayValue wrapper
+      // gets its hasContent class. Without this, the apple/icon stays
+      // hidden when input.value is set in the same tick as the append.
+      if (typeof this.input.checkDisplayValueSlotChange === 'function') {
+        this.input.checkDisplayValueSlotChange();
+      }
+    } else if (this.value) {
+      // No optionSelected yet (e.g. setMenuValue was called but the menu's
+      // auroMenu-selectedOption event hasn't fired yet, or we're on remount
+      // with no options loaded). Synthesize a displayValue from the value so
+      // the overlay isn't blank.
+      //
+      // NOTE: This renders the raw machine value (e.g. "SEA"), not the
+      // human-readable label (e.g. "Seattle, WA"). For consumers where
+      // value ≠ label, this produces a brief flash of the raw value until
+      // the option elements load and updateTriggerTextDisplay re-runs with
+      // the correct label. This is intentionally preferred over a blank
+      // state — the displayValueInTrigger.remove() cleanup above ensures
+      // this placeholder is replaced once the real option is available.
+      const syntheticDV = document.createElement('span');
+      syntheticDV.setAttribute('slot', 'displayValue');
+      syntheticDV.textContent = this.value;
+      this.input.appendChild(syntheticDV);
+      if (typeof this.input.checkDisplayValueSlotChange === 'function') {
+        this.input.checkDisplayValueSlotChange();
       }
     }
 
@@ -904,6 +924,10 @@ export class AuroCombobox extends AuroElement {
     // from combobox's light DOM and won't be detected by dropdown's contains() check.
     this.dropdown.noHideOnThisFocusLoss = true;
 
+    // Suppress the dropdown's generic focus restoration on close — the combobox
+    // manages its own focus via setClearBtnFocus / setInputFocus / keyboard strategy.
+    this.dropdown.noFocusRestoreOnClose = true;
+
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
       this.dropdownId = event.detail.id;
@@ -977,7 +1001,11 @@ export class AuroCombobox extends AuroElement {
         // after the dropdown layout settles.
 
         doubleRaf(() => {
-          this.setInputFocus();
+          // Guard: skip if the dropdown closed before this rAF fired
+          // (e.g. user selected an option immediately after the bib opened).
+          if (this.dropdownOpen) {
+            this.setInputFocus();
+          }
           if (this._inFullscreenTransition) {
             this._inFullscreenTransition = false;
           }
@@ -1024,7 +1052,9 @@ export class AuroCombobox extends AuroElement {
       }
 
       this._scheduleTimer(() => {
-        this.setInputFocus();
+        if (this.dropdown.isPopoverVisible) {
+          this.setInputFocus();
+        }
       }, 0);
     });
   }
@@ -1033,14 +1063,19 @@ export class AuroCombobox extends AuroElement {
    * @private
    */
   setClearBtnFocus() {
-    const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
-    if (clearBtn) {
-      // Wait for the element to fully render across
-      // multiple Lit update cycles before moving focus
-      doubleRaf(() => {
+    doubleRaf(() => {
+      // First establish focus inside the input's shadow root.
+      // Without this, clearBtn.focus() silently fails when focus is on
+      // document.body (e.g. after a click selection closes the bib dialog).
+      // delegatesFocus on BaseInput routes this to the native <input>.
+      this.input.focus();
+
+      // Now move focus to the clear button within the same shadow root.
+      const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
+      if (clearBtn) {
         clearBtn.focus();
-      });
-    }
+      }
+    });
   }
 
   /**
@@ -1251,6 +1286,9 @@ export class AuroCombobox extends AuroElement {
       // only — fresh user selections take the existing hideBib path.
       if (isEcho && this.menu.optionSelected) {
         this._programmaticFilterRefresh = true;
+        this.updateComplete.then(() => {
+          this._programmaticFilterRefresh = false;
+        });
       }
     });
 
@@ -1503,10 +1541,6 @@ export class AuroCombobox extends AuroElement {
     if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0 && this.dropdown.isPopoverVisible) {
       this.setInputFocus();
     }
-
-    if (this._programmaticFilterRefresh) {
-      this._programmaticFilterRefresh = false;
-    }
   }
 
   /**
@@ -1520,10 +1554,12 @@ export class AuroCombobox extends AuroElement {
       inputResolver: (comp, ctx) => (ctx.isModal && comp.inputInBib ? comp.inputInBib : comp.input),
     });
 
-    this.addEventListener('focusin', () => {
+    this.addEventListener('focusin', (event) => {
       this.touched = true;
 
-      this.focus();
+      if (event.composedPath()[0] === this) {
+        this.focus();
+      }
     });
 
     this.addEventListener('auroFormElement-validated', (evt) => {
@@ -1703,6 +1739,12 @@ export class AuroCombobox extends AuroElement {
       // setting the flag unconditionally here masks the user-typed open path.
       if (!this._userTyped) {
         this._programmaticFilterRefresh = true;
+        // Self-clear after this update cycle completes. This collapses
+        // the previous scattered clear-points into one and prevents the
+        // flag from surviving into the next user interaction.
+        this.updateComplete.then(() => {
+          this._programmaticFilterRefresh = false;
+        });
       }
 
       if (this.input.value !== this.value) {
@@ -1791,10 +1833,6 @@ export class AuroCombobox extends AuroElement {
         }
       } else if (!this.dropdown.isBibFullscreen) {
         this.hideBib();
-      }
-
-      if (this._programmaticFilterRefresh) {
-        this._programmaticFilterRefresh = false;
       }
     }
 
@@ -1978,7 +2016,7 @@ export class AuroCombobox extends AuroElement {
             <slot @slotchange="${this.handleSlotChange}"></slot>
             <${this.inputTag}
               id="inputInBib"
-              autofocus
+              ?autofocus="${this.dropdownOpen && this.dropdown?.isBibFullscreen}"
               @input="${this.handleInputValueChange}"
               .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
               .a11yControls=${`${this.dropdownId}-floater-bib`}

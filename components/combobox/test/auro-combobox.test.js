@@ -3185,6 +3185,150 @@ function runFullTest(mobileView) {
 
       await expect(dropdown.dropdownWidth).to.equal('400px');
     });
+
+    // ─── programmatic value sync does not set _userTyped ──
+    it('programmatic value sync via syncInputValuesAcrossTriggerAndBib does not set _userTyped', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      expect(el._userTyped).to.be.false;
+
+      // Programmatic value set goes through syncInputValuesAcrossTriggerAndBib
+      // which guards with _syncingDisplayValue, preventing _userTyped from
+      // being set. This simulates what happens when a framework binding
+      // pushes a new value into the combobox.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+
+      // _userTyped must remain false because the sync was programmatic
+      // (guarded by _syncingDisplayValue / _programmaticFilterRefresh)
+      expect(el._userTyped).to.be.false;
+    });
+
+    // ─── setClearBtnFocus is skipped when combobox does not have focus ──
+    it('does not move focus to clear button on selection when combobox lacks focus', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      // Spy on the clear button's focus()
+      const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+      expect(clearBtn).to.exist;
+      let focusCalled = false;
+      const origFocus = clearBtn.focus.bind(clearBtn);
+      clearBtn.focus = () => { focusCalled = true; origFocus(); };
+
+      // Programmatically select a value WITHOUT giving the combobox focus.
+      // This simulates a framework-driven value sync where the user is
+      // interacting with a different field.
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // setClearBtnFocus must NOT have been called because the selection
+      // was an echo of setMenuValue (isEcho guard) — only fresh user-initiated
+      // selections should move focus.
+      expect(focusCalled).to.be.false;
+
+      // Cleanup
+      clearBtn.focus = origFocus;
+    });
+
+    // ─── focusin handler only calls this.focus() when composedPath origin is the host ──
+    it('focusin from a shadow-DOM child does not call this.focus()', async () => {
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      let hostFocusCalled = false;
+      const origFocus = el.focus.bind(el);
+      el.focus = () => { hostFocusCalled = true; origFocus(); };
+
+      // Focus the internal input directly — the composed focusin event
+      // bubbles to the host with composedPath()[0] pointing at the native
+      // input inside auro-input's shadow DOM, not the combobox host.
+      // The handler should NOT call this.focus() in this case.
+      const nativeInput = el.input.shadowRoot.querySelector('input');
+      nativeInput.focus();
+      await elementUpdated(el);
+
+      expect(hostFocusCalled).to.be.false;
+
+      // Cleanup
+      el.focus = origFocus;
+    });
+
+    // ─── Bug #1: synthetic displayValue when optionSelected is null ──
+    it('synthesizes a displayValue placeholder when value is set but optionSelected is null', async () => {
+      // Mount with a preset value and matching options present synchronously.
+      // The fixture resolves optionSelected, so we clear it to simulate the
+      // "options haven't loaded yet" state that triggers the synthetic branch.
+      const el = await presetValueFixture(mobileView);
+      await elementUpdated(el);
+
+      // Force the synthetic path: clear optionSelected so the
+      // `else if (this.value)` branch runs on the next updateTriggerTextDisplay call.
+      el.optionSelected = undefined;
+      el.menu.optionSelected = undefined;
+
+      // Remove any existing displayValue clone from the prior match
+      const existing = el.input.querySelector('[slot="displayValue"]:not(slot)');
+      if (existing) {
+        existing.remove();
+      }
+
+      // Trigger updateTriggerTextDisplay — with optionSelected null and
+      // this.value = 'Apples', the synthetic branch should create a
+      // <span slot="displayValue"> with the raw value.
+      el.updateTriggerTextDisplay('');
+      await elementUpdated(el);
+
+      const syntheticDV = el.input.querySelector('[slot="displayValue"]:not(slot)');
+      expect(syntheticDV).to.exist;
+      expect(syntheticDV.textContent).to.equal('Apples');
+    });
+
+    // ─── Bug #4: first keystroke after preset-value mount opens the bib ──
+    it('opens the bib on the first keystroke after mounting with a preset value', async () => {
+      // Mount with a preset value — updated('value') sets
+      // _programmaticFilterRefresh = true, which previously suppressed
+      // _userTyped on the first keystroke. The self-clearing flag fix
+      // ensures it's cleared by the time the user types.
+      const el = await presetValueFixture(mobileView);
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      // Wait for the self-clearing updateComplete.then() to fire
+      await el.updateComplete;
+
+      // Verify precondition: value is set, bib is closed
+      expect(el.value).to.equal('Apples');
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      // Simulate user interaction: focus and delete a character.
+      // Backspace changes "Apples" → "Apple" which still matches,
+      // so the bib should open.
+      el.focus();
+      await elementUpdated(el);
+      await sendKeys({ press: 'Backspace' });
+      await elementUpdated(el);
+
+      // The bib should open on the first keystroke
+      expect(el.dropdown.isPopoverVisible).to.be.true;
+    });
   });
 
   describe('A11Y', () => {

@@ -3195,6 +3195,62 @@ function runFullTest(mobileView) {
       expectPopoverHidden(el);
     });
   });
+
+  describe('Focus Restoration', () => {
+    it('should focus slotted trigger content when trigger wrapper has no tabindex', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <input slot="trigger" type="text" aria-label="test input" />
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      const slottedInput = el.querySelector('input[slot="trigger"]');
+
+      // Verify trigger has no tabindex (focusable content detected)
+      expect(trigger.hasAttribute('tabindex')).to.be.false;
+
+      // focusTrigger should route focus to the slotted input
+      el.focusTrigger();
+
+      expect(slottedInput).to.equal(document.activeElement);
+    });
+
+    it('should suppress focus restoration when noFocusRestoreOnClose is true', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger" tabindex="0">Trigger</div>
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Set the flag (as the combobox does)
+      el.noFocusRestoreOnClose = true;
+      el.hasFocus = true;
+
+      // Spy on focusTrigger
+      let focusTriggerCalled = false;
+      const origFocusTrigger = el.focusTrigger.bind(el);
+      el.focusTrigger = () => { focusTriggerCalled = true; origFocusTrigger(); };
+
+      // Simulate keydown-driven close
+      el.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+        detail: { expanded: false, eventType: 'keydown' }
+      }));
+
+      // Also wait for the setTimeout path
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(focusTriggerCalled).to.be.false;
+
+      // Cleanup
+      el.focusTrigger = origFocusTrigger;
+      el.noFocusRestoreOnClose = false;
+    });
+  });
 }
 
 // Desktop Test Suite
