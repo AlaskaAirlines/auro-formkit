@@ -336,6 +336,7 @@ export class AuroInput extends BaseInput {
         lightDomContent.children.length > 0 ||
         lightDomContent.shadowRoot !== null
       ));
+      this.requestUpdate();
       return;
     }
     const nodes = slot.assignedNodes({ flatten: true });
