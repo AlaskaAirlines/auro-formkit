@@ -73,7 +73,7 @@ export class AuroDropdown extends AuroElement {
      * Set by consumers (e.g. combobox) that manage their own focus routing
      * via setClearBtnFocus / setInputFocus / keyboard strategy.
      * Separate from noHideOnThisFocusLoss (which controls auto-close behavior).
-     * @private
+     * @public
      */
     this.noFocusRestoreOnClose = false;
 
