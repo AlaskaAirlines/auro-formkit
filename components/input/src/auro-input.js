@@ -330,12 +330,12 @@ export class AuroInput extends BaseInput {
       // before firstUpdated (e.g. from auro-combobox during mount).
       // Check for any element (including custom elements like <auro-icon>
       // that render via shadow DOM with no text content).
-      const lightDomContent = this.querySelector('[slot="displayValue"]:not(slot)');
-      this.hasDisplayValueContent = Boolean(lightDomContent && (
-        lightDomContent.textContent.trim().length > 0 ||
-        lightDomContent.children.length > 0 ||
-        lightDomContent.shadowRoot !== null
-      ));
+const lightDomNodes = Array.from(this.querySelectorAll('[slot="displayValue"]:not(slot)'));
+this.hasDisplayValueContent = lightDomNodes.some((node) => (
+  node.textContent.trim().length > 0 ||
+  node.children.length > 0 ||
+  node.shadowRoot !== null
+));
       this.requestUpdate();
       return;
     }
