@@ -325,6 +325,17 @@ export class AuroInput extends BaseInput {
   checkDisplayValueSlotChange() {
     const slot = this.shadowRoot?.querySelector('slot[name="displayValue"]');
     if (!slot) {
+      // Shadow slot not yet rendered — fall back to checking light-DOM
+      // children so hasDisplayValueContent isn't stuck false when called
+      // before firstUpdated (e.g. from auro-combobox during mount).
+      // Check for any element (including custom elements like <auro-icon>
+      // that render via shadow DOM with no text content).
+      const lightDomContent = this.querySelector('[slot="displayValue"]:not(slot)');
+      this.hasDisplayValueContent = Boolean(lightDomContent && (
+        lightDomContent.textContent.trim().length > 0 ||
+        lightDomContent.children.length > 0 ||
+        lightDomContent.shadowRoot !== null
+      ));
       return;
     }
     const nodes = slot.assignedNodes({ flatten: true });
@@ -335,12 +346,16 @@ export class AuroInput extends BaseInput {
     // displayValue wrapper to render (with hasContent class) but show
     // nothing, blocking the combobox's synthetic displayValue from
     // being visible on preset/deeplink load.
+    // Custom elements (e.g. <auro-icon>) that render via shadow DOM are
+    // treated as content even when they have no text or light-DOM children.
     this.hasDisplayValueContent = nodes.some((node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         return node.textContent.trim().length > 0;
       }
       if (node.nodeType === Node.ELEMENT_NODE) {
-        return node.textContent.trim().length > 0 || node.children.length > 0;
+        return node.textContent.trim().length > 0 ||
+          node.children.length > 0 ||
+          node.shadowRoot !== null;
       }
       return false;
     });

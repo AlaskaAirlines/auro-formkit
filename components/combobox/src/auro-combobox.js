@@ -739,6 +739,14 @@ export class AuroCombobox extends AuroElement {
       // auroMenu-selectedOption event hasn't fired yet, or we're on remount
       // with no options loaded). Synthesize a displayValue from the value so
       // the overlay isn't blank.
+      //
+      // NOTE: This renders the raw machine value (e.g. "SEA"), not the
+      // human-readable label (e.g. "Seattle, WA"). For consumers where
+      // value ≠ label, this produces a brief flash of the raw value until
+      // the option elements load and updateTriggerTextDisplay re-runs with
+      // the correct label. This is intentionally preferred over a blank
+      // state — the displayValueInTrigger.remove() cleanup above ensures
+      // this placeholder is replaced once the real option is available.
       const syntheticDV = document.createElement('span');
       syntheticDV.setAttribute('slot', 'displayValue');
       syntheticDV.textContent = this.value;
@@ -917,6 +925,10 @@ export class AuroCombobox extends AuroElement {
     // Prevent dropdown from closing on focus loss since menu content is slotted
     // from combobox's light DOM and won't be detected by dropdown's contains() check.
     this.dropdown.noHideOnThisFocusLoss = true;
+
+    // Suppress the dropdown's generic focus restoration on close — the combobox
+    // manages its own focus via setClearBtnFocus / setInputFocus / keyboard strategy.
+    this.dropdown.noFocusRestoreOnClose = true;
 
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
