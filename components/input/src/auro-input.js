@@ -331,12 +331,15 @@ export class AuroInput extends BaseInput {
       // Check for any element (including custom elements like <auro-icon>
       // that render via shadow DOM with no text content).
       const lightDomNodes = Array.from(this.querySelectorAll('[slot="displayValue"]:not(slot)'));
-      this.hasDisplayValueContent = lightDomNodes.some((node) => (
+      const hasContent = lightDomNodes.some((node) => (
         node.textContent.trim().length > 0 ||
         node.children.length > 0 ||
         node.shadowRoot !== null
       ));
-      this.requestUpdate();
+      if (this.hasDisplayValueContent !== hasContent) {
+        this.hasDisplayValueContent = hasContent;
+        this.requestUpdate();
+      }
       return;
     }
     const nodes = slot.assignedNodes({ flatten: true });
@@ -349,7 +352,7 @@ export class AuroInput extends BaseInput {
     // being visible on preset/deeplink load.
     // Custom elements (e.g. <auro-icon>) that render via shadow DOM are
     // treated as content even when they have no text or light-DOM children.
-    this.hasDisplayValueContent = nodes.some((node) => {
+    const hasContent = nodes.some((node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         return node.textContent.trim().length > 0;
       }
@@ -360,7 +363,10 @@ export class AuroInput extends BaseInput {
       }
       return false;
     });
-    this.requestUpdate();
+    if (this.hasDisplayValueContent !== hasContent) {
+      this.hasDisplayValueContent = hasContent;
+      this.requestUpdate();
+    }
   }
 
   firstUpdated() {
