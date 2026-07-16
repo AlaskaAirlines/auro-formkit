@@ -23,9 +23,10 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 export default class BaseInput extends AuroElement {
 
   // Delegate focus to the native <input> inside the shadow root so that
-  // showModal()'s dialog focusing steps reach the input element.
-  // This keeps the mobile virtual keyboard open when the fullscreen dialog
-  // opens, because the browser sees an input-to-input focus transfer.
+  // clicking anywhere on the input wrapper focuses the native input, and
+  // programmatic .focus() calls on elements in the shadow DOM work correctly.
+  // The initial-load focus theft was caused by the static `autofocus`
+  // attribute on the bib input (now conditional), not by delegatesFocus.
   static get shadowRootOptions() {
     return {
       ...AuroElement.shadowRootOptions,

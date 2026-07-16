@@ -991,7 +991,11 @@ export class AuroCombobox extends AuroElement {
         // after the dropdown layout settles.
 
         doubleRaf(() => {
-          this.setInputFocus();
+          // Guard: skip if the dropdown closed before this rAF fired
+          // (e.g. user selected an option immediately after the bib opened).
+          if (this.dropdownOpen) {
+            this.setInputFocus();
+          }
           if (this._inFullscreenTransition) {
             this._inFullscreenTransition = false;
           }
@@ -1038,7 +1042,9 @@ export class AuroCombobox extends AuroElement {
       }
 
       this._scheduleTimer(() => {
-        this.setInputFocus();
+        if (this.dropdown.isPopoverVisible) {
+          this.setInputFocus();
+        }
       }, 0);
     });
   }
@@ -1047,14 +1053,19 @@ export class AuroCombobox extends AuroElement {
    * @private
    */
   setClearBtnFocus() {
-    const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
-    if (clearBtn) {
-      // Wait for the element to fully render across
-      // multiple Lit update cycles before moving focus
-      doubleRaf(() => {
+    doubleRaf(() => {
+      // First establish focus inside the input's shadow root.
+      // Without this, clearBtn.focus() silently fails when focus is on
+      // document.body (e.g. after a click selection closes the bib dialog).
+      // delegatesFocus on BaseInput routes this to the native <input>.
+      this.input.focus();
+
+      // Now move focus to the clear button within the same shadow root.
+      const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
+      if (clearBtn) {
         clearBtn.focus();
-      });
-    }
+      }
+    });
   }
 
   /**
@@ -2003,7 +2014,7 @@ export class AuroCombobox extends AuroElement {
             <slot @slotchange="${this.handleSlotChange}"></slot>
             <${this.inputTag}
               id="inputInBib"
-              autofocus
+              ?autofocus="${this.dropdownOpen && this.dropdown?.isBibFullscreen}"
               @input="${this.handleInputValueChange}"
               .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
               .a11yControls=${`${this.dropdownId}-floater-bib`}
