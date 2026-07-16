@@ -68,6 +68,15 @@ export class AuroDropdown extends AuroElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
+    /**
+     * When true, the dropdown skips its generic focus restoration on close.
+     * Set by consumers (e.g. combobox) that manage their own focus routing
+     * via setClearBtnFocus / setInputFocus / keyboard strategy.
+     * Separate from noHideOnThisFocusLoss (which controls auto-close behavior).
+     * @private
+     */
+    this.noFocusRestoreOnClose = false;
+
     this.errorMessage = undefined; // TODO - check with Doug if there is still more to do here
 
     // Layout Config
@@ -242,9 +251,20 @@ export class AuroDropdown extends AuroElement {
       const slot = this.trigger.querySelector('slot[name="trigger"]');
       if (slot) {
         const assigned = slot.assignedElements();
-        const focusable = assigned.find((el) => !el.hasAttribute('disabled'));
-        if (focusable) {
-          focusable.focus();
+        for (const el of assigned) {
+          if (el.hasAttribute('disabled')) {
+            continue;
+          }
+          // Try finding a focusable descendant first (handles non-focusable
+          // wrappers like <div> containing a <button>). If none found, try
+          // focusing the element directly (works for custom elements like
+          // auro-input that have delegatesFocus or a custom focus() method).
+          const descendants = getFocusableElements(el);
+          if (descendants.length > 0) {
+            descendants[0].focus();
+            return;
+          }
+          el.focus();
           return;
         }
       }
@@ -705,7 +725,7 @@ export class AuroDropdown extends AuroElement {
     }
 
     const eventType = event.detail.eventType || "unknown";
-    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
+    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown" && !this.noFocusRestoreOnClose) {
       this.focusTrigger();
     }
 
@@ -713,9 +733,9 @@ export class AuroDropdown extends AuroElement {
     // On Tab-driven close (eventType "focusloss"), let focus advance naturally
     // — restoring to the trigger would trap the user on this dropdown, forcing
     // an extra Tab to move on. Escape and outside-click still restore.
-    // When noHideOnThisFocusLoss is true, the consumer (e.g. combobox) manages
+    // When noFocusRestoreOnClose is true, the consumer (e.g. combobox) manages
     // its own focus restoration — skip the generic trigger focus to avoid races.
-    if (!this.isPopoverVisible && eventType !== "focusloss" && !this.noHideOnThisFocusLoss) {
+    if (!this.isPopoverVisible && eventType !== "focusloss" && !this.noFocusRestoreOnClose) {
       // wait til the bib gets fully closed and rendered
       setTimeout(() => {
         // Skip if the bib re-opened, or if focus moved intentionally outside the dropdown (not to body).
