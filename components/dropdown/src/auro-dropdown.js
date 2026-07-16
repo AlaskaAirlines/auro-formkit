@@ -264,10 +264,10 @@ export class AuroDropdown extends AuroElement {
             descendants[0].focus();
             return;
           }
-el.focus();
-if (document.activeElement === el) {
-  return;
-}
+          el.focus();
+          if (document.activeElement === el) {
+            return;
+          }
         }
       }
       // Fallback: try DOM children (non-slotted content)
