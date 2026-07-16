@@ -360,6 +360,7 @@ export class AuroInput extends BaseInput {
       }
       return false;
     });
+    this.requestUpdate();
   }
 
   firstUpdated() {
