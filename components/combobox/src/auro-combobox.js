@@ -732,7 +732,6 @@ export class AuroCombobox extends AuroElement {
       // hidden when input.value is set in the same tick as the append.
       if (typeof this.input.checkDisplayValueSlotChange === 'function') {
         this.input.checkDisplayValueSlotChange();
-        this.input.requestUpdate();
       }
     } else if (this.value) {
       // No optionSelected yet (e.g. setMenuValue was called but the menu's
