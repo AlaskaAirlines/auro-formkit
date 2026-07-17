@@ -1922,6 +1922,36 @@ function runFullTest(mobileView) {
         await expect(getInput(el, 1).value).to.equal('2023-02-28');
       });
 
+      // Regression: a long fromLabel/toLabel used to stretch the first input and push the
+      // range-end input out of view. Both inputs should now split the row ~50/50 and the
+      // end input must stay within the component's box (labels truncate via ellipsis instead).
+      it('keeps both range inputs on-screen and evenly sized when labels are long', async () => {
+        const longLabel = 'Departure with an extremely long label that should truncate rather than expand the input beyond its allotted half of the row';
+
+        const el = await fixture(html`
+          <auro-datepicker range style="display: block; width: 320px;">
+            <span slot="fromLabel">${longLabel}</span>
+            <span slot="toLabel">${longLabel}</span>
+          </auro-datepicker>
+        `);
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const hostRect = el.getBoundingClientRect();
+        const fromRect = getInput(el, 0).getBoundingClientRect();
+        const toRect = getInput(el, 1).getBoundingClientRect();
+
+        // The range-end input must not be pushed outside the component (allow 1px rounding).
+        await expect(toRect.right).to.be.at.most(hostRect.right + 1);
+
+        // Both inputs render with real width and split the available space ~50/50.
+        await expect(fromRect.width).to.be.greaterThan(0);
+        await expect(toRect.width).to.be.greaterThan(0);
+        const fromShare = fromRect.width / (fromRect.width + toRect.width);
+        await expect(fromShare).to.be.within(0.4, 0.6);
+      });
+
     });
 
     describe('referenceDates', () => {
