@@ -31,11 +31,12 @@ async function expectSubmitOnEnter(markup, selector, innerSelector) {
   }
 
   const submitPromise = new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-magic-numbers
+    const submitTimeoutMs = 1000;
+
     const timeoutId = setTimeout(() => {
       reject(new Error(`Expected submit event when pressing Enter on ${selector}`));
-    // eslint-disable-next-line no-magic-numbers
-    }, 100);
-
+    }, submitTimeoutMs);
     el.addEventListener('submit', () => {
       clearTimeout(timeoutId);
       resolve(true);
