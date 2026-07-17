@@ -63,8 +63,12 @@
   justify-content: center;
 }
 
-.valueContainer [slot="displayValue"] {
-  display: none;
+.valueContainer {
+  max-width: 100%;
+
+  [slot="displayValue"] {
+    display: none;
+  }
 }
 
 .accents {
@@ -93,6 +97,7 @@
 .triggerContent {
   display: flex;
   width: 100%;
+  box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
@@ -132,7 +137,10 @@
   }
 
   .value {
+    overflow: hidden;
     height: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
