@@ -650,9 +650,18 @@ export class AuroDropdown extends AuroElement {
     this.clearTriggerFocusEventBinding();
   }
 
+  // eslint-disable-next-line complexity
   updated(changedProperties) {
     super.updated(changedProperties);
     this.floater.handleUpdate(changedProperties);
+
+    // Close the dropdown if the disabled property is set to true
+    if (changedProperties.has('disabled')) {
+      if (this.disabled && this.isPopoverVisible) {
+        this.hide();
+        this.isPopoverVisible = false;
+      }
+    }
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
     // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
