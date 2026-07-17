@@ -24,10 +24,10 @@ async function expectSubmitOnEnter(markup, selector, innerSelector) {
   await elementUpdated(el);
 
   const control = el.querySelector(selector);
-  const dispatchTarget = innerSelector ? control.shadowRoot?.querySelector(innerSelector) : control;
+  const dispatchTarget = innerSelector ? control?.shadowRoot?.querySelector(innerSelector) : control;
 
   if (!dispatchTarget) {
-    throw new Error(`Unable to find Enter dispatch target for ${selector}`);
+    throw new Error(`Unable to find Enter dispatch target for ${selector}${innerSelector ? ' (' + innerSelector + ')' : ''}`);
   }
 
   const submitPromise = new Promise((resolve, reject) => {
