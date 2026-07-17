@@ -447,6 +447,17 @@ function runFullTest(mobileView) {
         expectPopoverHidden(el);
       });
 
+      it('should close the bib when disabled while open', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        const trigger = el.shadowRoot.querySelector("#trigger");
+
+        trigger.click();
+        await elementUpdated(el);
+        el.disabled = true;
+        await elementUpdated(el);
+        expectPopoverHidden(el);
+      });
+
       it('disabled dropdown has aria-disabled="true" on trigger', async () => {
         const el = await fixture(html`
           <auro-dropdown disabled>
