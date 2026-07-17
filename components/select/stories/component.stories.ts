@@ -51,6 +51,47 @@ export const SelectDefault: Story = {
   `,
 };
 
+// ─── Long selected value truncates before chevron ─────────────────────────────
+export const SelectLongValueEllipsis: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select style="width: 230px" value="long label">
+  <span slot="label">Select Example</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="long label">Verify the trigger truncates with ellipsis in classic layout without clipping the chevron area</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as AuroSelect;
+    const menu = el.querySelector('auro-menu') as HTMLElement & { updateComplete?: Promise<void> };
+
+    await el.updateComplete;
+    await menu.updateComplete;
+    await el.dropdown.updateComplete;
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+
+    const value = el.shadowRoot?.querySelector('#value') as HTMLDivElement | null;
+    const dropdown = el.shadowRoot?.querySelector('[auro-dropdown]') as HTMLElement | null;
+    const triggerContent = dropdown?.querySelector('#triggerFocus') as HTMLDivElement | null;
+    const wrapper = dropdown?.shadowRoot?.querySelector('.triggerContentWrapper') as HTMLDivElement | null;
+    const chevron = dropdown?.shadowRoot?.querySelector('.chevron') as HTMLDivElement | null;
+
+    if (!value || !dropdown || !triggerContent || !wrapper || !chevron) {
+      throw new Error('Failed to find select trigger elements for the truncation assertion.');
+    }
+
+    const valueRect = value.getBoundingClientRect();
+    const triggerContentRect = triggerContent.getBoundingClientRect();
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const chevronRect = chevron.getBoundingClientRect();
+
+    await expect(triggerContentRect.right).toBeLessThanOrEqual(wrapperRect.right + 0.5);
+    await expect(valueRect.right).toBeLessThanOrEqual(chevronRect.left + 0.5);
+  },
+};
+
 // ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
 export const SelectOpenAndSelectOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -785,4 +826,3 @@ export const SelectInverseError: Story = {
 </div>
   `,
 };
-
