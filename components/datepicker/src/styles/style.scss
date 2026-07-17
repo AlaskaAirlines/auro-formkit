@@ -67,6 +67,23 @@
   }
 }
 
+// Range mode splits the input row into two equal, shrinkable halves so a long
+// label in one input can never push its sibling (the range end input) out of
+// view. `min-width: 0` lets each half shrink below its content's intrinsic
+// width, which allows auro-input's built-in label ellipsis to engage instead
+// of overflowing. Single-input datepickers keep the original full-width rule.
+:host([range]) {
+  .inputContainer {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .dateFrom,
+  .dateTo {
+    min-width: 0;
+  }
+}
+
 .dpTriggerContent {
   width: 100%;
 }
