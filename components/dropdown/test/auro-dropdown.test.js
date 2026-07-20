@@ -453,9 +453,10 @@ function runFullTest(mobileView) {
 
         trigger.click();
         await elementUpdated(el);
+        await expectPopoverShown(el);
         el.disabled = true;
         await elementUpdated(el);
-        expectPopoverHidden(el);
+        await expectPopoverHidden(el);
       });
 
       it('disabled dropdown has aria-disabled="true" on trigger', async () => {
