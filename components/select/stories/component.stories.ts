@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
+import type { AuroSelect } from '../src/index';
 import '../../menu/src/registered';
 
 import '../src/registered';
@@ -75,8 +76,8 @@ export const SelectLongValueEllipsis: Story = {
     const value = el.shadowRoot?.querySelector('#value') as HTMLDivElement | null;
     const dropdown = el.shadowRoot?.querySelector('[auro-dropdown]') as HTMLElement | null;
     const triggerContent = dropdown?.querySelector('#triggerFocus') as HTMLDivElement | null;
-    const wrapper = dropdown?.shadowRoot?.querySelector('.triggerContentWrapper') as HTMLDivElement | null;
-    const chevron = dropdown?.shadowRoot?.querySelector('.chevron') as HTMLDivElement | null;
+    const wrapper = dropdown?.shadowRoot?.querySelector('#triggerLabel') as HTMLDivElement | null;
+    const chevron = dropdown?.shadowRoot?.querySelector('#showStateIcon') as HTMLDivElement | null;
 
     if (!value || !dropdown || !triggerContent || !wrapper || !chevron) {
       throw new Error('Failed to find select trigger elements for the truncation assertion.');
@@ -86,7 +87,13 @@ export const SelectLongValueEllipsis: Story = {
     const triggerContentRect = triggerContent.getBoundingClientRect();
     const wrapperRect = wrapper.getBoundingClientRect();
     const chevronRect = chevron.getBoundingClientRect();
+    const valueStyles = getComputedStyle(value);
+    const wrapperStyles = getComputedStyle(wrapper);
 
+    await expect(valueStyles.textOverflow).toBe('ellipsis');
+    await expect(valueStyles.whiteSpace).toBe('nowrap');
+    await expect(wrapperStyles.overflowX === 'hidden' || wrapperStyles.overflow === 'hidden').toBe(true);
+    await expect(value.scrollWidth).toBeGreaterThan(value.clientWidth);
     await expect(triggerContentRect.right).toBeLessThanOrEqual(wrapperRect.right + 0.5);
     await expect(valueRect.right).toBeLessThanOrEqual(chevronRect.left + 0.5);
   },
