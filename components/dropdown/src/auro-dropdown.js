@@ -656,11 +656,9 @@ export class AuroDropdown extends AuroElement {
     this.floater.handleUpdate(changedProperties);
 
     // Close the dropdown if the disabled property is set to true
-    if (changedProperties.has('disabled')) {
-      if (this.disabled && this.isPopoverVisible) {
-        this.hide();
-        this.isPopoverVisible = false;
-      }
+    if (changedProperties.has('disabled') && this.disabled && this.isPopoverVisible) {
+      this.hide();
+      this.isPopoverVisible = false;
     }
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
