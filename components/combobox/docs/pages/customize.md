@@ -28,6 +28,7 @@
       <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
       <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
       <auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
+      <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -315,6 +316,17 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dynamic-menu.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="loading">Loading</auro-header>
+        <p>Use the <code>loading</code> attribute on <code>auro-menu</code> to display a loading state while menu options are being fetched. Define the <code>loadingIcon</code> and <code>loadingText</code> slots inside the menu to provide visual feedback during the loading state.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>
