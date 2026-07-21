@@ -5,6 +5,7 @@
 import { AuroCombobox } from '../src/auro-combobox.js';
 import '../../menu/src/registered.js';
 import { dynamicMenuExample } from '../apiExamples/dynamic-menu.js';
+import { auroMenuLoadingExample } from '../apiExamples/loading.js';
 
 AuroCombobox.register(); // registering to `auro-combobox`
 AuroCombobox.register('custom-combobox');
@@ -14,6 +15,7 @@ export async function initExamples(initCount) {
 
   try {
     await dynamicMenuExample();
+    await auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {

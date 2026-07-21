@@ -5,7 +5,7 @@ export function auroMenuLoadingExample() {
   const emptyMenu = () => {
     const menuoptions = menu.querySelectorAll('auro-menuoption');
     menuoptions.forEach(mo => menu.removeChild(mo));
-  }
+  };
 
   const fillMenu = () => {
     menu.innerHTML += `
@@ -16,7 +16,7 @@ export function auroMenuLoadingExample() {
       <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
       <auro-menuoption static nomatch>No matching option</auro-menuoption>
     `;
-  }
+  };
 
   const load = () => {
     clearTimeout(load.id);
@@ -25,13 +25,17 @@ export function auroMenuLoadingExample() {
     load.id = setTimeout(() => {
       menu.removeAttribute('loading');
       fillMenu();
-    }, 1000);
+    }, 2 * 1000);
 
-  }
+  };
 
   combobox.addEventListener("inputValue", (e) => {
-    if (e.target.inputValue && e.target.value !== e.target.inputValue) {
+    if (e.detail.value) {
       load();
+    } else {
+      clearTimeout(load.id);
+      menu.removeAttribute('loading');
+      emptyMenu();
     }
   });
 }
