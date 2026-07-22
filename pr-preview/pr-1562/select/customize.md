@@ -32,6 +32,7 @@
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
+<auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -1244,6 +1245,54 @@
     &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="prefer alaska"&gt;Prefer Alaska&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="loading">Loading</auro-header>
+<p>Use the <code>loading</code> attribute on <code>auro-menu</code> to display a loading state while menu options are being fetched. Define the <code>loadingIcon</code> and <code>loadingText</code> slots inside the menu to provide visual feedback during the loading state.</p>
+<p>In this example, the second select will load for 5 seconds before displaying the options. </p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
+<!-- The below content is automatically added from ./../apiExamples/loading.html -->
+<auro-select id="loadingSelectCategory">
+<span slot="bib.fullscreen.headline">Select Category</span>
+<span slot="label">Category</span>
+<auro-menu>
+<auro-menuoption value="Fruit">Fruit</auro-menuoption>
+<auro-menuoption value="Vegetable">Vegetable</auro-menuoption>
+<auro-menuoption value="Protein">Protein</auro-menuoption>
+</auro-menu>
+</auro-select>
+<auro-select id="loadingSelectItem" disabled>
+<span slot="bib.fullscreen.headline">Select Item</span>
+<span slot="label">Item</span>
+<auro-menu id="loadingSelectItemMenu">
+<auro-loader slot="loadingIcon" orbit xs></auro-loader>
+<span slot="loadingText">Loading...</span>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/loading.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select id="loadingSelectCategory"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select Category&lt;/span&gt;
+  &lt;span slot="label"&gt;Category&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="Fruit"&gt;Fruit&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Vegetable"&gt;Vegetable&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Protein"&gt;Protein&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;
+&lt;auro-select id="loadingSelectItem" disabled&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select Item&lt;/span&gt;
+  &lt;span slot="label"&gt;Item&lt;/span&gt;
+  &lt;auro-menu id="loadingSelectItemMenu"&gt;
+    &lt;auro-loader slot="loadingIcon" orbit xs&gt;&lt;/auro-loader&gt;
+    &lt;span slot="loadingText"&gt;Loading...&lt;/span&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
