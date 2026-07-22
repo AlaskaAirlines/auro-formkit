@@ -7,7 +7,6 @@ import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
 import styleCss from "./styles/counter-wrapper-css.js";
-import colorCss from "./styles/counter-wrapper-color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
@@ -21,7 +20,6 @@ export class AuroCounterWrapper extends LitElement {
 
   static get styles() {
     return [
-      colorCss,
       styleCss,
       tokensCss
     ];

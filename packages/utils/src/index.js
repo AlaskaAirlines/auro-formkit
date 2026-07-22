@@ -2,3 +2,4 @@ export { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTrigge
 export { IconUtil } from './iconUtil.js';
 export { generateStoriesFromGlobData, generateGroupedStory } from './storyHelpers.js';
 export { createDisplayContext, applyKeyboardStrategy, navigateArrow } from './keyboard.js';
+export { buildAllowlist, findUnbundledImports, init as initUnbundledImports } from './unbundledImports.js';
