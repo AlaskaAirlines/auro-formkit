@@ -38,6 +38,11 @@ export class AuroCalendar extends RangeDatepicker {
     /**
      * @private
      */
+    this.testing = 'lorem ipsum';
+
+    /**
+     * @private
+     */
     this.util = new AuroDatepickerUtilities();
 
     /**
