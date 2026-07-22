@@ -24,7 +24,7 @@
 <p>The component supports two modes:</p>
 <ul>
 <li><strong>Suggestion (default)</strong> — The user may type any value. The menu provides suggestions but does not restrict input.</li>
-<li><strong>Filter</strong> — The user must select from the menu. Typing filters the available options but does not set the component's value. The value is only set when a menu option is selected.</li>
+<li><strong>Filter</strong> — Typing filters the available options and sets the component's <code>value</code> to the typed text, but the input is not considered valid until a menu option is selected. Validation surfaces <code>valueMissing</code> until the typed value matches a chosen option.</li>
 </ul>
 <p>Common use cases:</p>
 <ul>
@@ -136,6 +136,7 @@
 <auro-header level="3" id="presetValue">Preset the value</auro-header>
 <p>In some cases it is necessary to preset the value of the component as part of the initial render.</p>
 <p>When a value is preset, the matching option in the menu will be marked as both <code>active</code> and <code>selected</code>, and the input will display the corresponding text.</p>
+<p>If a preset value matches an option marked <code>disabled</code> or <code>static</code>, the selection is rejected: <code>value</code> and <code>optionSelected</code> are cleared to <code>undefined</code>. A value that matches a <code>hidden</code> option is still applied.</p>
 <p>If a preset value does not match any option, the component value is preserved and displayed in the input, but no menu option will be marked as selected. In suggestion mode, this value is treated as valid freeform input. In filter mode, the value will fail validation if the component is <code>required</code>.</p>
 <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
 <p>The component supports the use of <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> configuration through HTML attributes.</p>

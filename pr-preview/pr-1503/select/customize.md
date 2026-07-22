@@ -8,6 +8,7 @@
 <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
 <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
 <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
+<auro-anchorlink fluid href="#resetOption" class="level2 body-xs">Reset Option</auro-anchorlink>
 <auro-anchorlink fluid href="#noCheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
 <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
 <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
@@ -22,8 +23,10 @@
 <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#autoComplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
+<auro-anchorlink fluid href="#typeAhead" class="level2 body-xs">Type-Ahead</auro-anchorlink>
 <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
 <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
+<auro-anchorlink fluid href="#submenus" class="level2 body-xs">Submenus</auro-anchorlink>
 <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
 <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
@@ -37,7 +40,7 @@
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
-<p>See the <a href="./design.html">Design page</a> for a detailed breakdown.</p>
+<p>See the <auro-hyperlink href="design">Design page</auro-hyperlink> for a detailed breakdown.</p>
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
@@ -156,6 +159,46 @@
       Hotels
       &lt;auro-icon slot="displayValue" category="destination" name="hotel-filled" customcolor&gt;&lt;/auro-icon&gt;
     &lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="resetOption">Adding a reset option</auro-header>
+<p><code>auro-select</code> has no built-in way to clear a selection from the trigger. If a user picks the wrong option on an optional field, they have no way to reset their selection.</p>
+<p>Add a selectable entry at the top of the menu with whatever label fits the field ("None," "N/A," "No preference," etc.). <code>value=""</code> won't work — <code>auro-menu</code> treats an empty string as a clear-selection signal.</p>
+<p>Use a non-empty sentinel like <code>value="none"</code> instead, choosing one that cannot collide with any real domain value. Either accept <code>"none"</code> on the backend, or coerce it in your submit handler:</p>
+        <pre><code>payload.suffix = payload.suffix === "none" ? "" : payload.suffix;</code></pre>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/none-option.html) -->
+<!-- The below content is automatically added from ./../apiExamples/none-option.html -->
+<auro-select>
+<span slot="bib.fullscreen.headline">Suffix</span>
+<span slot="label">Suffix</span>
+<span slot="helpText">If shown on your government-issued travel ID.</span>
+<auro-menu>
+<auro-menuoption value="none">None</auro-menuoption>
+<auro-menuoption value="Jr">Jr</auro-menuoption>
+<auro-menuoption value="Sr">Sr</auro-menuoption>
+<auro-menuoption value="II">II</auro-menuoption>
+<auro-menuoption value="III">III</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/none-option.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/none-option.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Suffix&lt;/span&gt;
+  &lt;span slot="label"&gt;Suffix&lt;/span&gt;
+  &lt;span slot="helpText"&gt;If shown on your government-issued travel ID.&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="none"&gt;None&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Jr"&gt;Jr&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Sr"&gt;Sr&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="II"&gt;II&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="III"&gt;III&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -660,9 +703,11 @@
 <auro-select class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
 <span slot="helpText">This select has custom styles applied via CSS Shadow Parts.</span>
+<auro-menu>
 <auro-menuoption value="one">Option One</auro-menuoption>
 <auro-menuoption value="two">Option Two</auro-menuoption>
 <auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-menu>
 </auro-select>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -687,9 +732,11 @@
 &lt;auro-select class="css-parts-demo"&gt;
   &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
   &lt;span slot="helpText"&gt;This select has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -745,9 +792,79 @@
 &lt;/form&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="typeAhead">Type-Ahead</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/typeahead.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/typeahead.md -->
+<p>Type-ahead lets a guest jump to an option by typing. As keys are pressed, the active option advances to the first enabled option whose <strong>displayed text</strong> starts with the buffered keystrokes — following the <auro-hyperlink href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">WAI-ARIA Listbox pattern</auro-hyperlink>, and mirroring native HTML <code>&lt;select&gt;</code> behavior. Matching uses the rendered text rather than the <code>value</code> attribute.</p>
+<p>The <code>typeaheadTimeoutMs</code> attribute (default <code>500</code>) controls how long the buffer persists between keystrokes. Repeating the same character cycles through every enabled option starting with it; <code>disabled</code>, <code>hidden</code>, and <code>static</code> options are skipped.</p>
+<div class="note">
+<strong>Note:</strong> The <kbd>Space</kbd> key is context-sensitive. When the type-ahead buffer is empty it toggles the bib open or closed, matching the rest of <code>&lt;auro-select&gt;</code>. When the buffer is active it extends the buffer instead, so multi-word options such as "San Francisco" can be matched by typing <kbd>s</kbd>, <kbd>a</kbd>, <kbd>n</kbd>, <kbd>Space</kbd>, <kbd>f</kbd>.
+</div>
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/typeahead.html) -->
+<!-- The below content is automatically added from ./../apiExamples/typeahead.html -->
+<auro-select>
+<span slot="ariaLabel.bib.close">Close Popup</span>
+<span slot="bib.fullscreen.headline">Airport</span>
+<span slot="label">Destination airport</span>
+<auro-menu>
+<auro-menuoption value="ANC">Anchorage</auro-menuoption>
+<auro-menuoption value="ATL">Atlanta</auro-menuoption>
+<auro-menuoption value="AUS">Austin</auro-menuoption>
+<auro-menuoption value="BOS">Boston</auro-menuoption>
+<auro-menuoption value="DEN">Denver</auro-menuoption>
+<auro-menuoption value="DFW" disabled>Dallas/Fort Worth</auro-menuoption>
+<auro-menuoption value="DTW">Detroit</auro-menuoption>
+<auro-menuoption value="HNL">Honolulu</auro-menuoption>
+<auro-menuoption value="LAX">Los Angeles</auro-menuoption>
+<auro-menuoption value="MIA">Miami</auro-menuoption>
+<auro-menuoption value="ORD">Chicago</auro-menuoption>
+<auro-menuoption value="PDX">Portland</auro-menuoption>
+<auro-menuoption value="PHX">Phoenix</auro-menuoption>
+<auro-menuoption value="SAN">San Diego</auro-menuoption>
+<auro-menuoption value="SEA">Seattle</auro-menuoption>
+<auro-menuoption value="SFO">San Francisco</auro-menuoption>
+<auro-menuoption value="SJC" disabled>San Jose</auro-menuoption>
+<auro-menuoption value="SLC">Salt Lake City</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/typeahead.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/typeahead.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close Popup&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Airport&lt;/span&gt;
+  &lt;span slot="label"&gt;Destination airport&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="ANC"&gt;Anchorage&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ATL"&gt;Atlanta&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="AUS"&gt;Austin&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="BOS"&gt;Boston&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DEN"&gt;Denver&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DFW" disabled&gt;Dallas/Fort Worth&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="DTW"&gt;Detroit&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="HNL"&gt;Honolulu&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="LAX"&gt;Los Angeles&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="MIA"&gt;Miami&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ORD"&gt;Chicago&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PDX"&gt;Portland&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PHX"&gt;Phoenix&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SAN"&gt;San Diego&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SEA"&gt;Seattle&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SFO"&gt;San Francisco&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SJC" disabled&gt;San Jose&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SLC"&gt;Salt Lake City&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="disableComponent">Disable Component</auro-header>
 <p>The entire component may be disabled. When disabled, the component will render to reflect the state, may not receive focus nor react to any key or pointer events.</p>
-<p>When the component is disabled and part of a form, the components value is still included in the form submission.</p>
+<p>When the component is disabled and part of a form, the component's value is not included in the form submission (matching native HTML behavior for disabled form controls).</p>
 <p class="note">
 <strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
 </p>
@@ -790,6 +907,9 @@
 <p>The component may be rendered with one or more <code>disabled</code> options. When navigating the list of options with the keyboard or assistive technology to mark the next or previous option as active, disabled options will be skipped, jumping to the next enabled option.</p>
 <p>While using the pointer to mark options as active, hovering over disabled options will be ignored and the previous active option will remain active.</p>
 <p class="note">
+<strong>Note:</strong> Setting the component <code>value</code> to one that matches a <code>disabled</code> or <code>static</code> option — whether via the <code>value</code> attribute or programmatic assignment (e.g. <code>el.value = 'x'</code>) — is rejected: <code>value</code> and <code>optionSelected</code> are cleared to <code>undefined</code>. A value matching a <code>hidden</code> option is still applied.
+</p>
+<p class="note">
 <strong>Note:</strong> If the currently <code>selected</code> option is marked as <code>disabled</code>, the component value is reset to <code>undefined</code> and the component validation workflow is performed (e.g., if the component instance is <code>required</code> it will set <code>validity="valueMissing".</code>).
 </p>
 <p class="note">
@@ -826,6 +946,91 @@
     &lt;auro-menuoption value="departure" disabled&gt;Departure&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="prefer alaska"&gt;Prefer Alaska&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="submenus">Submenus</auro-header>
+<p>Options may be organized into nested groups by placing additional <code>&lt;auro-menu&gt;</code> elements inside the top-level <code>&lt;auro-menu&gt;</code>. Use <code>&lt;hr&gt;</code> elements to add visual dividers between groups. Nested groups receive an indent and an <code>aria-label="submenu"</code> so that assistive technologies can announce the grouping.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/with-submenus.html) -->
+<!-- The below content is automatically added from ./../apiExamples/with-submenus.html -->
+<auro-select placeholder="Placeholder Text">
+<span slot="bib.fullscreen.headline">Bib Headline</span>
+<span slot="label">Label</span>
+<auro-menu>
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="apples">Apples</auro-menuoption>
+<auro-menuoption value="oranges">Oranges</auro-menuoption>
+<auro-menuoption value="pears">Pears</auro-menuoption>
+<auro-menuoption value="grapes">Grapes</auro-menuoption>
+<auro-menuoption value="kiwi">Kiwi</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="person">Person</auro-menuoption>
+<auro-menuoption value="woman">Woman</auro-menuoption>
+<auro-menuoption value="man">Man</auro-menuoption>
+<auro-menuoption value="camera">Camera</auro-menuoption>
+<auro-menuoption value="tv">TV</auro-menuoption>
+</auro-menu>
+</auro-menu>
+<hr>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+<hr>
+<auro-menu>
+<auro-menuoption value="cars">Cars</auro-menuoption>
+<auro-menuoption value="trucks">Trucks</auro-menuoption>
+<auro-menuoption value="boats">Boats</auro-menuoption>
+<auro-menuoption value="planes">Planes</auro-menuoption>
+<auro-menuoption value="motorcycles">Motorcycles</auro-menuoption>
+</auro-menu>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/with-submenus.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/with-submenus.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select placeholder="Placeholder Text"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
+  &lt;span slot="label"&gt;Label&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+    &lt;hr&gt;
+    &lt;auro-menu&gt;
+      &lt;auro-menuoption value="apples"&gt;Apples&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="oranges"&gt;Oranges&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="pears"&gt;Pears&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="grapes"&gt;Grapes&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="kiwi"&gt;Kiwi&lt;/auro-menuoption&gt;
+      &lt;hr&gt;
+      &lt;auro-menu&gt;
+        &lt;auro-menuoption value="person"&gt;Person&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="woman"&gt;Woman&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="man"&gt;Man&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="camera"&gt;Camera&lt;/auro-menuoption&gt;
+        &lt;auro-menuoption value="tv"&gt;TV&lt;/auro-menuoption&gt;
+      &lt;/auro-menu&gt;
+    &lt;/auro-menu&gt;
+    &lt;hr&gt;
+    &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+    &lt;hr&gt;
+    &lt;auro-menu&gt;
+      &lt;auro-menuoption value="cars"&gt;Cars&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="trucks"&gt;Trucks&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="boats"&gt;Boats&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="planes"&gt;Planes&lt;/auro-menuoption&gt;
+      &lt;auro-menuoption value="motorcycles"&gt;Motorcycles&lt;/auro-menuoption&gt;
+    &lt;/auro-menu&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

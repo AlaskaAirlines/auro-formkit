@@ -33,14 +33,14 @@
 <td>-</td>
 <td>Collapsed</td>
 <td>Trigger input, <strong>NOT</strong> the input clear button</td>
-<td>Opens the calendar bib. Focus moves to the calendar grid, with <code>aria-activedescendant</code> pointing to the active date cell. The Enter key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
+<td>Opens the calendar bib. Focus moves to the calendar grid; the active date cell is marked imperatively and announced via the <code>aria-live</code> region. The Enter key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
 </tr>
 <tr>
 <td>Space</td>
 <td>-</td>
 <td>Collapsed</td>
 <td>Trigger input, <strong>NOT</strong> the input clear button</td>
-<td>Opens the calendar bib. Focus moves to the calendar grid, with <code>aria-activedescendant</code> pointing to the active date cell. The Space key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
+<td>Opens the calendar bib. Focus moves to the calendar grid; the active date cell is marked imperatively and announced via the <code>aria-live</code> region. The Space key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
 </tr>
 </tbody>
 </table>
@@ -89,7 +89,7 @@
 </tbody>
 </table>
 <auro-header level="3" id="keyEvents-calendarGrid">Calendar grid</auro-header>
-<p>When the calendar bib is open, DOM focus remains on a wrapper element (<code>#calendarGrid</code>) while <code>aria-activedescendant</code> points to a proxy element that mirrors the active cell's ARIA attributes. Arrow keys move the active cell indicator without wrapping — when a boundary is reached the calendar navigates to the adjacent month. A debounced live region announces the full date context after navigation pauses.</p>
+<p>When the calendar bib is open, DOM focus stays on the <code>#calendarGrid</code> wrapper. The active cell is tracked imperatively (an <code>active</code> property on the cell host and an <code>.activeCell</code> class on its button) — no <code>aria-activedescendant</code> or proxy element is used. Arrow keys move the active cell indicator without wrapping; when a boundary is reached the calendar navigates to the adjacent month. A debounced <code>aria-live</code> region announces the full date context after navigation pauses.</p>
 <table>
 <thead>
 <tr>

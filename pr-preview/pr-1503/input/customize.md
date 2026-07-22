@@ -232,21 +232,19 @@
 <auro-header level="3" id="localization">Localization</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/localization.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/localization.md -->
-<p>The component supports complete localization, including visible strings, screen reader announcements and locale based date formatting.</p>
-<auro-header level="4" id="localizationVisibleStrings">Visible strings</auro-header>
+<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
+<auro-header level="4" id="localizationVisibleStrings">Visible Strings</auro-header>
 <p>The visible strings rendered in the input are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
-<auro-input locale="ja-JP">
-<span slot="label">出発日</span>
-<span slot="helpText">日付を選択してください</span>
-<span slot="optionalLabel">（任意）</span>
-<span slot="ariaLabel.clear">入力をクリア</span>
-<span slot="ariaLabel.password.show">パスワードを表示</span>
-<span slot="ariaLabel.password.hide">パスワードを非表示</span>
-</auro-input>
+
+<pre class="language-diff"><code class="language-diff">  &lt;auro-input&gt;
++   &lt;span slot="label"&gt;出発日&lt;/span&gt;
++   &lt;span slot="helpText"&gt;日付を選択してください&lt;/span&gt;
++   &lt;span slot="optionalLabel"&gt;（任意）&lt;/span&gt;
+  &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="localizationA11yStrings">Screen reader strings</auro-header>
+<auro-header level="4" id="localizationA11yStrings">Screen Reader Strings</auro-header>
 <p>Assistive-technology announcements that are not visible in the UI are also exposed as named slots so they can be translated independently. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
@@ -261,7 +259,7 @@
   &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <p class="note"><strong>Note:</strong> Custom validation messages set via <code>setCustomValidity*</code> attributes are also not localized — supply translated strings yourself when using those properties.</p>
-<auro-header level="4" id="localizationDateFormatting">Date formatting</auro-header>
+<auro-header level="4" id="localizationDateFormatting">Date Formatting</auro-header>
 <p>When <code>type="date"</code> is set, the <code>locale</code> attribute drives the date format used by the input mask. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so <code>format</code> does not need to be set manually.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale.html -->
@@ -298,41 +296,43 @@
     &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
+<p>The following live example shows several locale configurations in action:</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/locale.html -->
-<div data-locale="de-DE">
-<auro-header level="4">en-GB Example</auro-header>
+<p class="body-sm"><strong>en-GB</strong></p>
 <auro-input type="date" locale="en-GB">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-GB Date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
-<auro-header level="4">en-US Example</auro-header>
+<p class="body-sm"><strong>en-US</strong></p>
 <auro-input type="date" locale="en-US">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-US Date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
-<auro-header level="4">zh-CN Example</auro-header>
+<p class="body-sm"><strong>zh-CN</strong></p>
 <auro-input type="date" locale="zh-CN">
 <span slot="ariaLabel.clear">全部清除</span>
 <span slot="label">中文日期</span>
 <span slot="helpText">帮助文本</span>
 <span slot="optionalLabel">（可选）</span>
 </auro-input>
-<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
-<auro-input type="date">
-<span slot="ariaLabel.clear">Alles löschen</span>
-<span slot="label">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
-<span slot="helpText">Hilfetext</span>
-<span slot="optionalLabel">(freiwillig)</span>
-</auro-input>
-<auro-header level="4">en-US with `yyyy.mm.dd` format Example</auro-header>
+<p class="body-sm"><strong>en-US with explicit <code>format="yyyy.mm.dd"</code></strong></p>
 <auro-input type="date" locale="en-US" format="yyyy.mm.dd">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-US with yyyy.mm.dd format</span>
 <span slot="helpText">Help Text</span>
+</auro-input>
+<p class="body-sm"><strong>Inherited de-DE (via <code>data-locale</code>)</strong></p>
+<div data-locale="de-DE">
+<auro-input type="date">
+<span slot="ariaLabel.clear">Alles löschen</span>
+<span slot="label">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
+</auro-input>
 </div>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -340,42 +340,43 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
-<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
-  &lt;auro-header level="4"&gt;en-GB Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-GB"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-  &lt;/auro-input&gt;
+<pre class="language-html"><code class="language-html">&lt;p class="body-sm"&gt;&lt;strong&gt;en-GB&lt;/strong&gt;&lt;/p&gt;
+&lt;auro-input type="date" locale="en-GB"&gt;
+  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;
 ​
-  &lt;auro-header level="4"&gt;en-US Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-US"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-  &lt;/auro-input&gt;
+&lt;p class="body-sm"&gt;&lt;strong&gt;en-US&lt;/strong&gt;&lt;/p&gt;
+&lt;auro-input type="date" locale="en-US"&gt;
+  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;
 ​
-  &lt;auro-header level="4"&gt;zh-CN Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="zh-CN"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
-    &lt;span slot="label"&gt;中文日期&lt;/span&gt;
-    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
-  &lt;/auro-input&gt;
+&lt;p class="body-sm"&gt;&lt;strong&gt;zh-CN&lt;/strong&gt;&lt;/p&gt;
+&lt;auro-input type="date" locale="zh-CN"&gt;
+  &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
+  &lt;span slot="label"&gt;中文日期&lt;/span&gt;
+  &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+  &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
+&lt;/auro-input&gt;
 ​
-  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
+&lt;p class="body-sm"&gt;&lt;strong&gt;en-US with explicit &lt;code&gt;format="yyyy.mm.dd"&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
+  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;
+​
+&lt;p class="body-sm"&gt;&lt;strong&gt;Inherited de-DE (via &lt;code&gt;data-locale&lt;/code&gt;)&lt;/strong&gt;&lt;/p&gt;
+&lt;div data-locale="de-DE"&gt;
   &lt;auro-input type="date"&gt;
     &lt;span slot="ariaLabel.clear"&gt;Alles löschen&lt;/span&gt;
-    &lt;span slot="label"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="label"&gt;Abreisedatum (geerbt aus `data-locale="de-DE"`)&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-input&gt;
-​
-  &lt;auro-header level="4"&gt;en-US with `yyyy.mm.dd` format Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -645,7 +646,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
 <!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
+<auro-input type="date" max="2025-12-31" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
 <span slot="label">Event Date</span>
 <span slot="helpText">Enter a date no later than 12/31/2025.</span>
 </auro-input>
@@ -655,7 +656,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="2025-12-31" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
   &lt;span slot="label"&gt;Event Date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Enter a date no later than 12/31/2025.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -666,7 +667,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
 <!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
+<auro-input type="date" min="2024-01-01" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
 <span slot="label">Start Date</span>
 <span slot="helpText">Enter a date no earlier than 01/01/2024.</span>
 </auro-input>
@@ -676,7 +677,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="2024-01-01" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
   &lt;span slot="label"&gt;Start Date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Enter a date no earlier than 01/01/2024.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -887,7 +888,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/max-date.html) -->
 <!-- The below content is automatically added from ../apiExamples/max-date.html -->
-<auro-input type="date" max="03/25/2023" setCustomValidityRangeOverflow="The selected date is past the defined maximum date.">
+<auro-input type="date" max="2023-03-25" setCustomValidityRangeOverflow="The selected date is past the defined maximum date.">
 <span slot="label">Choose a date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
@@ -897,7 +898,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/max-date.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/max-date.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="03/25/2023" setCustomValidityRangeOverflow="The selected date is past the defined maximum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="2023-03-25" setCustomValidityRangeOverflow="The selected date is past the defined maximum date."&gt;
   &lt;span slot="label"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -953,7 +954,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/min-date.html) -->
 <!-- The below content is automatically added from ../apiExamples/min-date.html -->
-<auro-input type="date" min="03/25/2023" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date.">
+<auro-input type="date" min="2023-03-25" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date.">
 <span slot="label">Choose a date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
@@ -963,7 +964,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/min-date.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/min-date.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="03/25/2023" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="2023-03-25" setCustomValidityRangeUnderflow="The selected date is before the defined minimum date."&gt;
   &lt;span slot="label"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>

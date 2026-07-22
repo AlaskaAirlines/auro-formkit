@@ -11,6 +11,7 @@
 <auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
 <auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
 <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
+<auro-anchorlink fluid href="#customBibWidth" class="level2 body-xs">Custom Bib Width</auro-anchorlink>
 <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
 <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
@@ -35,7 +36,7 @@
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
-<p>See the <a href="./design.html">Design page</a> for a detailed breakdown.</p>
+<p>See the <auro-hyperlink href="design">Design page</auro-hyperlink> for a detailed breakdown.</p>
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
@@ -59,7 +60,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-default.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-default.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Default Appearance&lt;/span&gt;
@@ -95,7 +95,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox appearance="inverse"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Inverse Appearance&lt;/span&gt;
@@ -120,23 +119,23 @@
 <span slot="label">Name</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
-      Apples
+                Apples
 <span slot="displayValue">🍎</span>
 </auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">
-      Oranges
+                Oranges
 <span slot="displayValue">🍊</span>
 </auro-menuoption>
 <auro-menuoption value="Peaches" id="option-2">
-      Peaches
+                Peaches
 <span slot="displayValue">🍑</span>
 </auro-menuoption>
 <auro-menuoption value="Grapes" id="option-3">
-      Grapes
+                Grapes
 <span slot="displayValue">🍇</span>
 </auro-menuoption>
 <auro-menuoption value="Cherries" id="option-4">
-      Cherries
+                Cherries
 <span slot="displayValue">🍒</span>
 </auro-menuoption>
 <auro-menuoption static nomatch>No matching option</auro-menuoption>
@@ -148,7 +147,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/display-value.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/display-value.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox layout="snowflake" shape="snowflake" size="xl" appearance="inverse" value="Apples"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -201,7 +199,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/checkmark.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/checkmark.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox checkmark&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
     &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -288,7 +285,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/floater-config.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/floater-config.html -->
-
 <pre class="language-html"><code class="language-html">&lt;div style="width: 350px"&gt;
   &lt;auro-combobox offset="20" noFlip placement="bottom-end"&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
@@ -369,7 +365,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/noflip.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/noflip.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox noFlip&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -383,6 +378,57 @@
     &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="customBibWidth">Custom Bib Width</auro-header>
+<p>By default the bib's width matches the trigger. To set a specific width, style the <code>dropdownSize</code> CSS shadow part.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-bib-width.html) -->
+<!-- The below content is automatically added from ./../apiExamples/custom-bib-width.html -->
+<auro-combobox id="customBibWidthExample">
+<span slot="ariaLabel.bib.close">Close combobox</span>
+<span slot="ariaLabel.input.clear">Clear All</span>
+<span slot="bib.fullscreen.headline">Departure Airport</span>
+<span slot="label">From</span>
+<auro-menu>
+<auro-menuoption value="SEA">Seattle, WA (SEA-Seattle/Tacoma Intl.)</auro-menuoption>
+<auro-menuoption value="PDX">Portland, OR (PDX-Portland Intl.)</auro-menuoption>
+<auro-menuoption value="SFO">San Francisco, CA (SFO-San Francisco Intl.)</auro-menuoption>
+<auro-menuoption value="LAX">Los Angeles, CA (LAX-Los Angeles Intl.)</auro-menuoption>
+<auro-menuoption value="JFK">New York, NY (JFK-John F. Kennedy Intl.)</auro-menuoption>
+<auro-menuoption value="ORD">Chicago, IL (ORD-Chicago O'Hare Intl.)</auro-menuoption>
+</auro-menu>
+</auro-combobox>
+<style>
+            #customBibWidthExample::part(dropdownSize) {
+              width: 400px;
+            }
+</style>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-bib-width.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom-bib-width.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-combobox id="customBibWidthExample"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
+  &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Departure Airport&lt;/span&gt;
+  &lt;span slot="label"&gt;From&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="SEA"&gt;Seattle, WA (SEA-Seattle/Tacoma Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="PDX"&gt;Portland, OR (PDX-Portland Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="SFO"&gt;San Francisco, CA (SFO-San Francisco Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="LAX"&gt;Los Angeles, CA (LAX-Los Angeles Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="JFK"&gt;New York, NY (JFK-John F. Kennedy Intl.)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="ORD"&gt;Chicago, IL (ORD-Chicago O'Hare Intl.)&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-combobox&gt;
+&lt;style&gt;
+  #customBibWidthExample::part(dropdownSize) {
+    width: 400px;
+  }
+&lt;/style&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="breakpoint">Fullscreen Breakpoint</auro-header>
@@ -409,7 +455,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fullscreen-breakpoint.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox fullscreenBreakpoint="lg"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -427,11 +472,10 @@
 </section>
 <section>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
-<p>The component may be restyled by changing the values of the following token(s) for the dropown, input and menu</p>
+<p>The component may be restyled by changing the values of the following token(s) for the dropdown, input and menu</p>
 <auro-header level="4" id="cssTokensDropdown">Dropdown</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../dropdown/src/styles/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../../dropdown/src/styles/tokens.scss -->
-
 <pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 ​
@@ -468,7 +512,6 @@
 <auro-header level="4" id="cssTokensInput">Input</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../input/src/styles/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../../input/src/styles/tokens.scss -->
-
 <pre class="language-scss"><code class="language-scss">/* stylelint-disable custom-property-empty-line-before */
 ​
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
@@ -502,7 +545,6 @@
 <auro-header level="4" id="cssTokensMenu">Menu</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../menu/src/styles/default/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../../menu/src/styles/default/tokens.scss -->
-
 <pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 ​
 :host {
@@ -540,25 +582,27 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ../apiExamples/css-parts.html -->
 <style>
-  auro-combobox.css-parts-demo::part(dropdownTrigger) {
-    border-color: orange;
-  }
-  auro-combobox.css-parts-demo::part(dropdownChevron) {
-    color: purple;
-  }
-  auro-combobox.css-parts-demo::part(helpText) {
-    color: green;
-  }
-  auro-combobox.css-parts-demo::part(dropdownSize) {
-    max-height: 200px;
-  }
+            auro-combobox.css-parts-demo::part(dropdownTrigger) {
+              border-color: orange;
+            }
+            auro-combobox.css-parts-demo::part(dropdownChevron) {
+              color: purple;
+            }
+            auro-combobox.css-parts-demo::part(helpText) {
+              color: green;
+            }
+            auro-combobox.css-parts-demo::part(dropdownSize) {
+              max-height: 200px;
+            }
 </style>
 <auro-combobox class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
 <span slot="helpText">This combobox has custom styles applied via CSS Shadow Parts.</span>
+<auro-menu>
 <auro-menuoption value="one">Option One</auro-menuoption>
 <auro-menuoption value="two">Option Two</auro-menuoption>
 <auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-menu>
 </auro-combobox>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -566,7 +610,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/css-parts.html -->
-
 <pre class="language-html"><code class="language-html">&lt;style&gt;
   auro-combobox.css-parts-demo::part(dropdownTrigger) {
     border-color: orange;
@@ -584,9 +627,11 @@
 &lt;auro-combobox class="css-parts-demo"&gt;
   &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
   &lt;span slot="helpText"&gt;This combobox has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -620,7 +665,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/suggestion.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/suggestion.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox behavior="suggestion"&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
@@ -660,7 +704,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/filter.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/filter.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox behavior="filter" setCustomValidityValueMissingFilter="Please select an option from the list"&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
@@ -678,7 +721,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="inputType">Input Type</auro-header>
-<p>When defined, the <code>auro-input</code> in the combobox trigger will use the defined <code>type</code>. Use the <code>triggerIcon</code> attribute to provide context to the user about the expected input type.</p>
+<p>When defined, the <code>auro-input</code> in the combobox trigger will use the defined <code>type</code>. Use the <code>triggerIcon</code> attribute to provide context to the user about the expected input type. Icon rendering is currently limited to <code>type="credit-card"</code>; <code>triggerIcon</code> without a supported type propagates the attribute but does not render a visible icon.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/type_credit-card.html) -->
 <!-- The below content is automatically added from ./../apiExamples/type_credit-card.html -->
@@ -688,23 +731,23 @@
 <auro-menu>
 <auro-menuoption value="4500000000000000" id="option-cc-0">
 <auro-icon category="payment" customcolor name="cc-visa"></auro-icon>
-      4000 0000 0000 0000
+                4500 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption value="340000000000000" id="option-cc-1">
 <auro-icon category="payment" customcolor name="cc-amex"></auro-icon>
-      3400 000000 00000
+                3400 000000 00000
 </auro-menuoption>
 <auro-menuoption value="30000000000000" id="option-cc-2">
 <auro-icon category="payment" customcolor name="credit-card"></auro-icon>
-      3000 000000 0000
+                3000 000000 0000
 </auro-menuoption>
 <auro-menuoption value="5100000000000000" id="option-cc-4">
 <auro-icon category="payment" customcolor name="cc-mastercard"></auro-icon>
-      5000 0000 0000 0000
+                5000 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption value="6011000000000000" id="option-cc-5">
 <auro-icon category="payment" customcolor name="cc-discover"></auro-icon>
-      6000 0000 0000 0000
+                6000 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption static nomatch>No matching credit card saved</auro-menuoption>
 </auro-menu>
@@ -715,14 +758,13 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/type_credit-card.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/type_credit-card.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox type="credit-card" triggerIcon&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Credit Card&lt;/span&gt;
   &lt;span slot="label"&gt;Credit Card Number&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="4500000000000000" id="option-cc-0"&gt;
       &lt;auro-icon category="payment" customcolor name="cc-visa"&gt;&lt;/auro-icon&gt;
-      4000 0000 0000 0000
+      4500 0000 0000 0000
     &lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="340000000000000" id="option-cc-1"&gt;
       &lt;auro-icon category="payment" customcolor name="cc-amex"&gt;&lt;/auro-icon&gt;
@@ -768,7 +810,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inputmode.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/inputmode.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox inputmode="numeric"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -784,7 +825,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="noFilter">Turn off Filtering</auro-header>
-<p>If set, combobox will not do suggestion filtering of the menuoptions. This option is useful when the <code>&lt;auro-menuoption&gt;</code> elements are being pre-filtered externally (e.g. using the citysearch API).</p>
+<p>If set, combobox will not do suggestion filtering of the menu options. This option is useful when the <code>&lt;auro-menuoption&gt;</code> elements are being pre-filtered externally (e.g. using the citysearch API).</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-filter.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-filter.html -->
@@ -806,7 +847,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-filter.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-filter.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox noFilter&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;noFilter Combobox Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -827,31 +867,31 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persist-input.html) -->
 <!-- The below content is automatically added from ./../apiExamples/persist-input.html -->
 <auro-combobox
-  required
-  persistInput
-  setCustomValidityValueMissing="Please select an option from the list."
-  >
+            required
+            persistInput
+            setCustomValidityValueMissing="Please select an option from the list."
+            >
 <span slot="bib.fullscreen.headline">Persistant Input</span>
 <span slot="label">Persistant Input</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
-      Apples
+                Apples
 <div slot="displayValue">Apples</div>
 </auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">
-      Oranges
+                Oranges
 <div slot="displayValue">Oranges</div>
 </auro-menuoption>
 <auro-menuoption value="Peaches" id="option-2">
-      Peaches
+                Peaches
 <div slot="displayValue">Peaches</div>
 </auro-menuoption>
 <auro-menuoption value="Grapes" id="option-3">
-      Grapes
+                Grapes
 <div slot="displayValue">Grapes</div>
 </auro-menuoption>
 <auro-menuoption value="Cherries" id="option-4">
-      Cherries
+                Cherries
 <div slot="displayValue">Cherries</div>
 </auro-menuoption>
 </auro-menu>
@@ -862,7 +902,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/persist-input.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/persist-input.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox
   required
   persistInput
@@ -918,7 +957,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox disabled&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -963,7 +1001,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled-option.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled-option.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -1002,7 +1039,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/required.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/required.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox required&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -1042,7 +1078,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox error="Custom error message"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -1088,7 +1123,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-validity-message.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/custom-validity-message.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox required setCustomValidityValueMissing="Please select a fruit from the list."&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -1128,7 +1162,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-validate.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-validate.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-combobox required noValidate&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;noValidate Combobox Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
@@ -1153,44 +1186,40 @@
 <!-- HTML example file -->
 <!-- ----------------- -->
 <auro-combobox
-  id="dynamicMenuExample"
-  value="TAN"
-  noFilter
-  persistInput
-  dvInputOnly
-  setCustomValidityValueMissing="Please select an option from the list."
-  required>
+            id="dynamicMenuExample"
+            value="TAN"
+            noFilter
+            setCustomValidityValueMissing="Please select an option from the list."
+            required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
 <span slot="label">First</span>
 <!--
-    The auro-combobox element requires an empty auro-menu element
-    due to the requirements of auro-dropdown and auro-input
-  -->
+              The auro-combobox element requires an empty auro-menu element
+              due to the requirements of auro-dropdown and auro-input
+            -->
 <auro-menu id="initMenu"></auro-menu>
 </auro-combobox>
 <br>
 <auro-combobox
-  id="dynamicMenuExampleTwo"
-  value="GER"
-  noFilter
-  persistInput
-  dvInputOnly
-  setCustomValidityValueMissing="Please select an option from the list."
-  required>
+            id="dynamicMenuExampleTwo"
+            value="GER"
+            noFilter
+            setCustomValidityValueMissing="Please select an option from the list."
+            required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
 <span slot="label">Second</span>
 <!--
-    The auro-combobox element requires an empty auro-menu element
-    due to the requirements of auro-dropdown and auro-input
-  -->
+              The auro-combobox element requires an empty auro-menu element
+              due to the requirements of auro-dropdown and auro-input
+            -->
 <auro-menu id="initMenuTwo"></auro-menu>
 </auro-combobox>
 <br>
 <auro-button id="dynamicMenuSwapButton">
-  Swap Values
+            Swap Values
 </auro-button>
 <auro-button id="dynamicMenuPersistButton">
-  Toggle Persist Input
+            Toggle Persist Input
 </auro-button>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1198,15 +1227,12 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dynamic-menu.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/dynamic-menu.html -->
-
 <pre class="language-html"><code class="language-html">&lt;!-- HTML example file --&gt;
 &lt;!-- ----------------- --&gt;
 &lt;auro-combobox
   id="dynamicMenuExample"
   value="TAN"
   noFilter
-  persistInput
-  dvInputOnly
   setCustomValidityValueMissing="Please select an option from the list."
   required&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic Combobox Header&lt;/span&gt;
@@ -1222,8 +1248,6 @@
   id="dynamicMenuExampleTwo"
   value="GER"
   noFilter
-  persistInput
-  dvInputOnly
   setCustomValidityValueMissing="Please select an option from the list."
   required&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic Combobox Header&lt;/span&gt;

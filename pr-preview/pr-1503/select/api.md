@@ -38,8 +38,9 @@ The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create
 | `shape`                         | `shape`                         | `'classic' \| 'pill' \| 'pill-left' \| 'pill-right' \| 'snowflake'` |                  | Determines the shape of the dropdown bib.        |
 | `shift`                         | `shift`                         | `boolean`                                        | false            | If set, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `size`                          | `size`                          | `'lg' \| 'xl'`                                   |                  | Determines the size of the dropdown bib. Only the `emphasized` layout supports size=`xl`, while all other layouts support size=`lg`. |
+| `typeaheadTimeoutMs`            | `typeaheadTimeoutMs`            | `number`                                         | "500"            | Milliseconds of keyboard inactivity before the type-ahead buffer resets.<br />Increase for users who type slowly. |
 | `validity`                      | `validity`                      | `string`                                         |                  | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `string`                                         |                  | Value selected for the component.                |
+| `value`                         | `value`                         | `string`                                         |                  | Value selected for the component. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable by value. |
 
 ## Methods
 
@@ -47,7 +48,7 @@ The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create
 |----------------------|----------------------------------------|--------------------------------------------------|
 | `hideBib`            | `(): void`                             | Hides the dropdown bib if its open.              |
 | `reset`              | `(): void`                             | Resets component to initial state.               |
-| `setMenuValue`       | `(value: any): void`                   |                                                  |
+| `setMenuValue`       | `(value: string): void`                | Sets the selected value by matching it against the menu options. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is rejected and `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable.<br /><br />**value**: The value to match against the menu options. |
 | `showBib`            | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `updateActiveOption` | `(index: number): void`                | Updates the active option in the menu.<br /><br />**index**: Index of the option to make active. |
 | `validate`           | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
