@@ -31,7 +31,7 @@ export function auroSelectLoadingExample() {
     load.id = setTimeout(() => {
       itemMenu.removeAttribute('loading');
       fillMenu(category);
-    }, 2 * 1000);
+    }, 5 * 1000);
   };
 
   categorySelect.addEventListener('input', (e) => {
