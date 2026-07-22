@@ -37,3 +37,13 @@
     height: 2rem;
   }
 }
+
+// Range: the calendar icon renders only in the From half, so at equal flex-basis
+// From's text area was narrower than To's and its label/date truncated first. Widen
+// From's basis by the icon footprint minus To's existing margin so both text areas
+// match and truncate in lockstep. To is unchanged. Scoped to classic (icon lives here).
+:host([layout*='classic'][range]) {
+  .inputContainer:first-of-type {
+    flex: 1 1 calc(var(--ds-size-400, 2rem) + var(--ds-size-100, 0.5rem) - var(--ds-size-150, 0.75rem));
+  }
+}
