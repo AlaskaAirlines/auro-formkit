@@ -1270,6 +1270,7 @@
 </auro-accordion>
 <auro-header level="3" id="loading">Loading</auro-header>
 <p>Use the <code>loading</code> attribute on <code>auro-menu</code> to display a loading state while menu options are being fetched. Define the <code>loadingIcon</code> and <code>loadingText</code> slots inside the menu to provide visual feedback during the loading state.</p>
+<p>In this example, the combobox will load for 5 seconds before displaying the options. </p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
 <!-- The below content is automatically added from ./../apiExamples/loading.html -->
