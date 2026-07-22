@@ -25,7 +25,7 @@ export function auroMenuLoadingExample() {
     load.id = setTimeout(() => {
       menu.removeAttribute('loading');
       fillMenu();
-    }, 2 * 1000);
+    }, 5 * 1000);
 
   };
 

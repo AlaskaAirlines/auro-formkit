@@ -1418,7 +1418,16 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleMenuLoadingChange(event) {
-    if (!event.detail.loading && this.isHiddenWhileLoading) {
+    if (event.detail.loading) {
+      // showBib() handles both cases: with placeholder → dropdown.show();
+      // without placeholder → sets isHiddenWhileLoading = true so the
+      // loading-finished branch below can reopen once data arrives.
+      if (this.input.value && this.input.hasFocus) {
+        this.showBib();
+      }
+    } else if (this.isHiddenWhileLoading) {
+      // Call dropdown.show() directly — showBib() guards on availableOptions
+      // being non-empty, which may not be true yet when loading ends.
       if (this.contains(document.activeElement)) {
         this.dropdown.show();
       }
