@@ -81,6 +81,7 @@
     "test:global:watch": "wtr --config \"./packages/config/src/web-test-runner.config-global.mjs\" --watch --port 7725"
   },
   "dependencies": {
+    "@aurodesignsystem-dev/auro-library": "^0.0.0-pr273.0",
     "@lit/context": "^1.1.6",
     "@lit/reactive-element": "^2.1.2",
     "lit": "^3.3.2",

@@ -10,7 +10,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { createRef, ref } from "lit/directives/ref.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
+import AuroFloatingUI from '@aurodesignsystem-dev/auro-library/scripts/runtime/floatingUI.mjs';
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
