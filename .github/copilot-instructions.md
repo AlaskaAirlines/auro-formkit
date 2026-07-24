@@ -187,7 +187,7 @@ Use the TRD, post-mortem(s), and context docs as review context — they describ
 
 ### Review from multiple personas
 
-Be adversarial. Review the diff from each persona below in turn, then reconcile their findings into a single consensus list. Find any gaps, performance, security, or other concerns. Assume every code path will be hit in production.
+Be adversarial. In a **single pass**, apply all nine persona lenses below to the diff and reconcile their concerns into one consensus list — don't re-read the diff once per persona; they're viewpoints on one reading, not nine separate reviews. Find any gaps, performance, security, or other concerns. Assume every code path will be hit in production. **Work from the diff hunks** — they already include the changed lines plus surrounding context; open a full source file only when a hunk's correctness depends on code not visible in it (a caller, a shared helper, a base-class method), never to re-read a file the diff already shows.
 
 | Persona | Focus | Catches what others miss |
 |---------|-------|--------------------------|
@@ -211,7 +211,7 @@ Be adversarial. Review the diff from each persona below in turn, then reconcile 
 6. **Framework integration** — behavior when React re-renders and recreates child elements mid-lifecycle, Svelte `{#key}` blocks destroying and remounting the component, framework-driven attribute updates that race with internal state, `slotchange` events firing multiple times during framework reconciliation, property vs attribute binding mismatches
 7. **Code clarity** — new or changed code that lacks comments explaining *what* it does and *why*. Another engineer reviewing this code should be able to understand the intent without tracing through the full call chain. Flag uncommented complex logic, non-obvious conditionals, workarounds, and magic values as 🟡 **Nit**.
 8. **Test coverage** — validate that new or changed code has adequate test coverage:
-   - **WTR unit tests** (`**/test/`): every new branch, conditional, and code path in the diff should have a corresponding unit test. Read the existing test files for the changed component(s) and flag any new logic that is not exercised. Flag missing coverage as 🟡 **Nit** for minor gaps or 🔴 **Bug** if a critical path (error handling, selection state, event dispatch) has no test at all.
+   - **WTR unit tests** (`**/test/`): every new branch, conditional, and code path in the diff should have a corresponding unit test. Don't read the whole test file (they run to thousands of lines) — `grep` the changed component's test file(s) for the symbols and behavior the diff touches (new/renamed methods, event names, attributes, option states) and read only the matching `describe`/`it` blocks to confirm coverage. Flag missing coverage as 🟡 **Nit** for minor gaps or 🔴 **Bug** if a critical path (error handling, selection state, event dispatch) has no test at all.
    - **Playwright framework tests** (`**/*.suite.ts`): if the change affects user-facing behavior (selection, keyboard navigation, value display, dropdown open/close), check whether a shared Playwright suite covers the scenario. Flag missing integration test coverage for behavioral changes as 🟡 **Nit**.
    - **Storybook stories** (`**/stories/`): if new public API surface is added (attributes, slots, events), check whether a corresponding story exists. Flag missing stories as 🟡 **Nit**.
 9. **Documentation accuracy** — check that existing documentation reflects the code changes in this PR:
