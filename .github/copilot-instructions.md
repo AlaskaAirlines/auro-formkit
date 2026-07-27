@@ -39,7 +39,7 @@
   - Important Patterns — Domain-specific patterns (selection delegation, dynamic options,
     nested menus) that are unique to this codebase and not part of Copilot's general training.
 
-  - Code Review Guidance — Mirrors the repository's /code-review skill so Copilot's PR review
+  - Code Review Guidance — Mirrors the /auro:code-review skill (from the auro-ai plugin) so Copilot's PR review
     gathers the same context (post-mortem + TRD), reviews from the same adversarial personas,
     and applies the same review guidelines and severity tags. Keeps automated and skill-driven
     reviews consistent.
@@ -171,7 +171,7 @@ Scope is typically the component name (e.g., `menu`, `select`, `combobox`).
 
 When reviewing a pull request, follow the same process the repository's `/code-review` skill uses, so Copilot's review and the skill-driven review stay consistent.
 
-> **Maintainers:** this section intentionally duplicates the review guidance in [`.claude/skills/code-review/SKILL.md`](../.claude/skills/code-review/SKILL.md) (personas, review checklist, "Do not flag", the convergence rule, post-mortem/TRD validation, and severity tags). The two are not auto-synced — when you change the review rules in one, update the other in the same PR so the skill-driven and Copilot reviews don't drift apart.
+> **Maintainers:** this section intentionally duplicates the review guidance in the `auro:code-review` skill, which lives in the [`AlaskaAirlines/auro-ai`](https://github.com/AlaskaAirlines/auro-ai) plugin marketplace at [`plugins/auro/skills/code-review/SKILL.md`](https://github.com/AlaskaAirlines/auro-ai/blob/main/plugins/auro/skills/code-review/SKILL.md) (personas, review checklist, "Do not flag", the convergence rule, post-mortem/TRD validation, and severity tags). The two are not auto-synced and live in separate repos — when you change the review rules in the `auro-ai` skill, update this file to match so the skill-driven and Copilot reviews don't drift apart.
 
 ### Gather context first
 

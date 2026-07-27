@@ -7,7 +7,7 @@
       }
     }
   },
-  "enabledPlugins": [
-    "auro@auro-ai"
-  ]
+  "enabledPlugins": {
+    "auro@auro-ai": true
+  }
 }
