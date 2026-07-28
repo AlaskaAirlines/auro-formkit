@@ -1,9 +1,31 @@
 /**
  * Framework-free single-select (select-only combobox) logic.
  * No React, no DOM access at module load. Follows the WAI-ARIA APG
- * "Select-Only Combobox" pattern. A Svelte/Vue adapter — or a future
- * combobox machine — can reuse this identical core and its pure helpers.
+ * "Select-Only Combobox" pattern. A Svelte/Vue adapter — or the sibling
+ * combobox machine — reuses this identical core and the shared `listbox/*`
+ * navigation + ARIA modules.
  */
+
+import {
+  firstEnabledIndex as firstEnabled,
+  fromOptions,
+  indexOfValue as indexOf,
+  lastEnabledIndex as lastEnabled,
+  nextEnabledIndex as nextEnabled,
+  prevEnabledIndex as prevEnabled,
+} from "../listbox/nav.ts";
+import {
+  type ListboxProps,
+  type OptionProps,
+  listboxIds,
+  listboxProps as buildListboxProps,
+  optionProps as buildOptionProps,
+} from "../listbox/aria.ts";
+
+// Re-export the shared listbox prop types under select's historical public names
+// so the barrel and any consumer importing `SelectListboxProps`/`SelectOptionProps`
+// keep working unchanged.
+export type { ListboxProps as SelectListboxProps, OptionProps as SelectOptionProps };
 
 /** One selectable option. `value` is the stable identity; `label` is display text. */
 export interface SelectOption {
@@ -33,25 +55,6 @@ export interface SelectTriggerProps {
   "data-disabled": "" | undefined;
 }
 
-/** Props the render layer spreads onto the popup listbox element. */
-export interface SelectListboxProps {
-  role: "listbox";
-  id: string;
-  "aria-activedescendant": string | undefined;
-  tabIndex: -1;
-}
-
-/** Props the render layer spreads onto each option element. */
-export interface SelectOptionProps {
-  id: string;
-  role: "option";
-  "aria-selected": boolean;
-  "aria-disabled": boolean | undefined;
-  "data-active": "" | undefined;
-  "data-disabled": "" | undefined;
-  "data-state": "selected" | "unselected";
-}
-
 /** The resolved, ready-to-render view of a select. */
 export interface SelectApi {
   isOpen: boolean;
@@ -61,51 +64,37 @@ export interface SelectApi {
   /** Display text for the trigger; empty string when nothing is selected. */
   selectedLabel: string;
   triggerProps: SelectTriggerProps;
-  listboxProps: SelectListboxProps;
-  getOptionProps: (index: number) => SelectOptionProps;
+  listboxProps: ListboxProps;
+  getOptionProps: (index: number) => OptionProps;
 }
 
-/** Deterministic ids derived from a base id — SSR-safe, no id storage in state. */
-function listboxId(baseId: string): string {
-  return `${baseId}-listbox`;
-}
-function optionId(baseId: string, index: number): string {
-  return `${baseId}-option-${index}`;
-}
+// The 5 navigation helpers now live in `listbox/nav.ts`, generalized over a
+// `Collection`. These thin wrappers preserve select's original `SelectOption[]`
+// signatures so the public API — and every internal caller below — is unchanged.
 
 /** Index of the option whose value matches, else -1. */
 export function indexOfValue(options: SelectOption[], value: string | null): number {
-  if (value === null) return -1;
-  return options.findIndex((o) => o.value === value);
+  return indexOf(options, value, (o, v) => o.value === v);
 }
 
 /** First enabled option index, or -1 if none. */
 export function firstEnabledIndex(options: SelectOption[]): number {
-  return options.findIndex((o) => !o.disabled);
+  return firstEnabled(fromOptions(options));
 }
 
 /** Last enabled option index, or -1 if none. */
 export function lastEnabledIndex(options: SelectOption[]): number {
-  for (let i = options.length - 1; i >= 0; i--) {
-    if (!options[i].disabled) return i;
-  }
-  return -1;
+  return lastEnabled(fromOptions(options));
 }
 
 /** Next enabled index after `from` (no wrap; clamps by keeping `from` if none follows). */
 export function nextEnabledIndex(options: SelectOption[], from: number): number {
-  for (let i = from + 1; i < options.length; i++) {
-    if (!options[i].disabled) return i;
-  }
-  return from >= 0 && from < options.length && !options[from].disabled ? from : firstEnabledIndex(options);
+  return nextEnabled(fromOptions(options), from);
 }
 
 /** Previous enabled index before `from` (no wrap; clamps by keeping `from` if none precedes). */
 export function prevEnabledIndex(options: SelectOption[], from: number): number {
-  for (let i = from - 1; i >= 0; i--) {
-    if (!options[i].disabled) return i;
-  }
-  return from >= 0 && from < options.length && !options[from].disabled ? from : lastEnabledIndex(options);
+  return prevEnabled(fromOptions(options), from);
 }
 
 /** The index the highlight should seed to when opening. */
@@ -202,6 +191,7 @@ export function isSelectKey(key: string): boolean {
 /**
  * Resolve raw state into everything the render layer needs. Framework-agnostic:
  * the returned prop bags are plain data a React/Svelte adapter can spread.
+ * Prop construction is delegated to the shared `listbox/aria.ts` builders.
  */
 export function connect(state: SelectState, options: SelectOption[], baseId: string): SelectApi {
   const { open: isOpen, activeIndex, disabled } = state;
@@ -209,7 +199,7 @@ export function connect(state: SelectState, options: SelectOption[], baseId: str
   const selectedOption = selectedIdx >= 0 ? options[selectedIdx] : undefined;
   const activeDescendant =
     isOpen && activeIndex >= 0 && activeIndex < options.length
-      ? optionId(baseId, activeIndex)
+      ? listboxIds.option(baseId, activeIndex)
       : undefined;
 
   return {
@@ -222,33 +212,19 @@ export function connect(state: SelectState, options: SelectOption[], baseId: str
       role: "combobox",
       "aria-haspopup": "listbox",
       "aria-expanded": isOpen,
-      "aria-controls": listboxId(baseId),
+      "aria-controls": listboxIds.listbox(baseId),
       "aria-activedescendant": activeDescendant,
       "aria-disabled": disabled || undefined,
       tabIndex: disabled ? -1 : 0,
       "data-state": isOpen ? "open" : "closed",
       "data-disabled": disabled ? "" : undefined,
     },
-    listboxProps: {
-      role: "listbox",
-      id: listboxId(baseId),
-      "aria-activedescendant": activeDescendant,
-      tabIndex: -1,
-    },
-    getOptionProps: (index: number): SelectOptionProps => {
-      const option = options[index];
-      const isSelected = selectedIdx === index;
-      const isActive = isOpen && activeIndex === index;
-      const isDisabledOption = Boolean(option?.disabled);
-      return {
-        id: optionId(baseId, index),
-        role: "option",
-        "aria-selected": isSelected,
-        "aria-disabled": isDisabledOption || undefined,
-        "data-active": isActive ? "" : undefined,
-        "data-disabled": isDisabledOption ? "" : undefined,
-        "data-state": isSelected ? "selected" : "unselected",
-      };
-    },
+    listboxProps: buildListboxProps(baseId, activeDescendant),
+    getOptionProps: (index: number): OptionProps =>
+      buildOptionProps(baseId, index, {
+        selected: selectedIdx === index,
+        active: isOpen && activeIndex === index,
+        disabled: Boolean(options[index]?.disabled),
+      }),
   };
 }

@@ -5,7 +5,7 @@
   "title": "Auro Checkbox",
   "description": "Typed, accessible tri-state checkbox. Logic lives in the framework-free @auro/headless core; the React render layer is copied into your repo and yours to edit.",
   "dependencies": ["@auro/headless@*"],
-  "registryDependencies": [],
+  "registryDependencies": ["use-listbox"],
   "files": [
     {
       "path": "src/components/ui/auro-checkbox.tsx",

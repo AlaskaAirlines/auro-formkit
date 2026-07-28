@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-listbox",
+  "type": "registry:lib",
+  "title": "Auro useListbox",
+  "description": "Presentation-agnostic listbox mechanics — open state, roving activeIndex, element refs, and outside-pointer dismissal — shared by the select and combobox render layers. Consumed by use-machine.ts.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/lib/auro/use-listbox.ts",
+      "type": "registry:lib",
+      "target": "src/lib/auro/use-listbox.ts"
+    }
+  ],
+  "auro": {
+    "tokensPackage": "@aurodesignsystem/design-tokens",
+    "docs": "Internal hook consumed by useSelect (and, later, useCombobox). Provides the roving activeIndex, the open flag, the container/trigger/listbox refs, and portal-safe outside-dismiss. Not intended for direct use."
+  }
+}

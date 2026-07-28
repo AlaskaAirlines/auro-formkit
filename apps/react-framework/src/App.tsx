@@ -25,6 +25,7 @@ import ComboboxCitySearchPreselected from './pages/ComboboxCitySearchPreselected
 import ComboboxCitySearchPreselectedNavigate from './pages/ComboboxCitySearchPreselectedNavigate';
 import AuroCheckboxNative from './pages/AuroCheckboxNative';
 import AuroSelectNative from './pages/AuroSelectNative';
+import AuroComboboxNative from './pages/AuroComboboxNative';
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
       <Route path="/checkbox-interaction" component={CheckboxInteraction} />
       <Route path="/auro-checkbox-native" component={AuroCheckboxNative} />
       <Route path="/auro-select-native" component={AuroSelectNative} />
+      <Route path="/auro-combobox-native" component={AuroComboboxNative} />
       <Route path="/dropdown-interaction" component={DropdownInteraction} />
       <Route path="/form-interaction" component={FormInteraction} />
       <Route path="/input-interaction" component={InputInteraction} />

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "popover",
+  "type": "registry:ui",
+  "title": "Auro Popover",
+  "description": "Positioning + portal primitive. Owns Floating UI geometry (offset / flip / shift / width-matching + autoUpdate) and portals its content. The headless core stays DOM-free; this primitive computes coordinates. Shared by select and combobox.",
+  "dependencies": ["@floating-ui/react@^0.27.0"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/ui/auro-popover.tsx",
+      "type": "registry:ui",
+      "target": "src/components/ui/auro-popover.tsx"
+    },
+    {
+      "path": "src/components/ui/auro-popover.css",
+      "type": "registry:file",
+      "target": "src/components/ui/auro-popover.css"
+    }
+  ],
+  "auro": {
+    "tokensPackage": "@aurodesignsystem/design-tokens",
+    "docs": "Wrap overlay content in <Popover anchorRef={ref} open={open}>. Anchors to the referenced element, flips/shifts to stay in view, matches the anchor's width, and renders through a portal. Requires the @floating-ui/react peer dependency."
+  }
+}

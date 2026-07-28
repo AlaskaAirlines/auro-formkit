@@ -9,6 +9,7 @@
     "src/components/ui/**/*.tsx",
     "src/lib/auro/**/*.ts",
     "src/pages/AuroCheckboxNative.tsx",
-    "src/pages/AuroSelectNative.tsx"
+    "src/pages/AuroSelectNative.tsx",
+    "src/pages/AuroComboboxNative.tsx"
   ]
 }

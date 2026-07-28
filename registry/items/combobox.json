@@ -1,0 +1,66 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "combobox",
+  "type": "registry:ui",
+  "title": "Auro Combobox",
+  "description": "Typed, accessible editable combobox with list autocomplete. Logic lives in the framework-free @auro/headless core; the React render layer is copied into your repo and yours to edit. Built on the same shared primitives as Select.",
+  "dependencies": ["@auro/headless@*"],
+  "registryDependencies": ["use-listbox", "popover"],
+  "files": [
+    {
+      "path": "src/components/ui/auro-combobox.tsx",
+      "type": "registry:ui",
+      "target": "src/components/ui/auro-combobox.tsx"
+    },
+    {
+      "path": "src/components/ui/auro-combobox.css",
+      "type": "registry:file",
+      "target": "src/components/ui/auro-combobox.css"
+    },
+    {
+      "path": "src/lib/auro/use-machine.ts",
+      "type": "registry:lib",
+      "target": "src/lib/auro/use-machine.ts"
+    },
+    {
+      "path": "src/styles/auro-tokens.css",
+      "type": "registry:file",
+      "target": "src/styles/auro-tokens.css"
+    }
+  ],
+  "cssVars": {
+    "theme": {
+      "--ds-auro-combobox-trigger-border-color": "var(--ds-basic-color-border-bold)",
+      "--ds-auro-combobox-trigger-bg": "var(--ds-basic-color-surface-default)",
+      "--ds-auro-combobox-listbox-bg": "var(--ds-basic-color-surface-default)",
+      "--ds-auro-combobox-option-hover-bg": "var(--ds-advanced-color-state-background-hover)",
+      "--ds-auro-combobox-option-selected-bg": "var(--ds-advanced-color-state-selected)"
+    }
+  },
+  "auro": {
+    "tokensPackage": "@aurodesignsystem/design-tokens",
+    "a11y": {
+      "role": "combobox + listbox",
+      "ariaAutocomplete": "list — the input filters the options; focus stays in the input",
+      "ariaActivedescendant": "input tracks the highlighted option; focus never leaves the input",
+      "keyboard": [
+        "Typing filters the list and reseeds the highlight to the first match",
+        "ArrowDown/ArrowUp open the listbox and move the highlight (skipping disabled options)",
+        "Home/End jump to first/last enabled option",
+        "Enter commits the highlighted option and closes",
+        "Escape closes the listbox, keeping the current value"
+      ]
+    },
+    "props": [
+      { "name": "options", "type": "Array<{ value: string; label: string; disabled?: boolean }>", "description": "The selectable options." },
+      { "name": "value", "type": "string", "description": "Controlled selected value." },
+      { "name": "defaultValue", "type": "string", "description": "Initial value when uncontrolled." },
+      { "name": "placeholder", "type": "string", "description": "Placeholder shown in the empty input." },
+      { "name": "disabled", "type": "boolean", "description": "Disables the whole control." }
+    ],
+    "events": [
+      { "name": "onValueChange", "signature": "(value: string) => void", "description": "Fired with the selected option's value when the user commits a selection (empty string on clear)." }
+    ],
+    "docs": "Import { Combobox } and pass `options`. Control it via `value` + `onValueChange`, or use `defaultValue` for uncontrolled usage. The input filters options by label as the user types. Set `placeholder` for the empty state and `disabled` to inactivate the control."
+  }
+}

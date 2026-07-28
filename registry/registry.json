@@ -16,6 +16,27 @@
       "title": "Auro Select",
       "description": "Typed, accessible single-select listbox. Headless core + React render layer.",
       "path": "items/select.json"
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Auro Combobox",
+      "description": "Typed, accessible editable combobox with list autocomplete. Headless core + React render layer, on the same shared primitives as select.",
+      "path": "items/combobox.json"
+    },
+    {
+      "name": "use-listbox",
+      "type": "registry:lib",
+      "title": "Auro useListbox",
+      "description": "Shared listbox mechanics hook (roving highlight + outside-dismiss) consumed by select and combobox.",
+      "path": "items/use-listbox.json"
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Auro Popover",
+      "description": "Floating UI positioning + portal primitive shared by select and combobox overlays.",
+      "path": "items/popover.json"
     }
   ]
 }

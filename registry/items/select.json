@@ -5,7 +5,7 @@
   "title": "Auro Select",
   "description": "Typed, accessible single-select listbox. Logic lives in the framework-free @auro/headless core; the React render layer is copied into your repo and yours to edit.",
   "dependencies": ["@auro/headless@*"],
-  "registryDependencies": [],
+  "registryDependencies": ["use-listbox", "popover"],
   "files": [
     {
       "path": "src/components/ui/auro-select.tsx",

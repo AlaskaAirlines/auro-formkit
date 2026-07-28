@@ -56,9 +56,6 @@
 }
 
 .auro-select__listbox {
-  position: absolute;
-  inset-block-start: calc(100% + 0.25rem);
-  inset-inline: 0;
   margin: 0;
   padding: 0.25rem;
   list-style: none;
@@ -66,7 +63,7 @@
   border: 1px solid var(--ds-auro-select-trigger-border-color, #585e67);
   border-radius: var(--ds-auro-select-radius, 0.25rem);
   box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
-  z-index: 10;
+  box-sizing: border-box;
 }
 
 .auro-select__option {

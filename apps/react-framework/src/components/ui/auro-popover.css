@@ -1,0 +1,4 @@
+.auro-popover {
+  z-index: var(--ds-auro-popover-z-index, 1000);
+  overflow-y: auto;
+}
