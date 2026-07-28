@@ -70,6 +70,25 @@ apps/react-framework       packages/mcp (auro-registry)  → agents call list/ge
 4. **MCP server** (`@auro/mcp`, id `auro-registry`) reuses the CLI's registry resolver and exposes
    three tools to agents: `list_components`, `get_component_details`, `get_install_command`.
 
+### Why separate logic from rendering
+
+The core architectural bet is splitting each component into a **framework-free headless core** (the
+state machine + a11y contract) and a **thin render layer** (framework-specific markup + event
+wiring). This separation is what makes the whole approach pay off:
+
+- **Multi-framework reuse.** The core is plain TypeScript with no framework and no DOM at module
+  load, so a Svelte/Vue/vanilla adapter reuses the *exact same* logic instead of re-implementing it.
+  React never leaks into a Svelte consumer's bundle.
+- **Testability.** Pure functions like `connect(state)` and `toggle(checked)` are tested with plain
+  assertions — no DOM, no render harness, no framework test runner needed.
+- **Behavior & a11y consistency.** WAI-ARIA roles, `aria-checked` computation, and keyboard handling
+  live in one place. Every render layer inherits identical behavior, so adapters can't silently
+  drift apart.
+- **Independent evolution.** A keyboard or a11y bug is fixed once in the core and every framework
+  adapter gets the fix — no per-framework duplication to keep in sync.
+- **Thin, replaceable render layer.** The React `.tsx` is just markup and event binding, so it's
+  small to review, cheap to audit, and inexpensive to re-author for a new framework.
+
 ### Registry format
 
 Extends shadcn's schema (`registry.json` + `registry-item.json`) so shadcn's existing agent/registry
