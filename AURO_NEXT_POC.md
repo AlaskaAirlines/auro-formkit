@@ -325,14 +325,17 @@ contract — `checked: boolean | "indeterminate"`, `onCheckedChange: (checked: b
 guessing, no hallucinated props.
 
 **2 — Install.** The agent runs (or Dana runs) the command the MCP server handed back:
+
 ```bash
 npx auro init          # one-time: writes components.json, wires Auro design tokens into the app
 npx auro add checkbox  # copies typed source into the repo, rewrites imports, merges token vars
 ```
+
 Files land at `src/components/ui/auro-checkbox.tsx` (+ its CSS), `src/lib/auro/use-machine.ts`, and
 `src/styles/auro-tokens.css`. The token `@import`s are added to the app's entry stylesheet.
 
 **3 — Use it — with real types.** Dana imports the component like any local component:
+
 ```tsx
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/auro-checkbox";
@@ -348,6 +351,7 @@ export function TermsGate() {
   // <Checkbox checked="yes" /> would be a COMPILE ERROR, not a runtime surprise.
 }
 ```
+
 Autocomplete lists `checked`, `defaultChecked`, `disabled`, `onCheckedChange`. The tri-state
 `checked="indeterminate"` renders the mixed indicator with `aria-checked="mixed"`.
 
@@ -369,6 +373,7 @@ shadow-DOM web components).
 
 **Today (interim, honest):** there is **no Svelte render layer in this POC**. Sam's realistic options
 right now are:
+
 - Consume the **existing Auro web component** (`<auro-checkbox>` from `@aurodesignsystem/auro-formkit`)
   directly — Svelte handles custom elements natively, so this works, but Sam gets the *old* weak
   typing story (no typed props/events) and a shadow-DOM boundary.
@@ -376,9 +381,11 @@ right now are:
 
 **Intended future flow (planned — not yet implemented):** the CLI grows a framework flag that copies
 a Svelte render layer which imports the **exact same** framework-free core:
+
 ```bash
 npx auro add checkbox --framework svelte   # PLANNED — copies a .svelte layer over @auro/headless
 ```
+
 ```svelte
 <!-- src/lib/components/AuroCheckbox.svelte  (illustrative, planned) -->
 <script lang="ts">
@@ -405,6 +412,7 @@ npx auro add checkbox --framework svelte   # PLANNED — copies a .svelte layer 
   <slot />
 </label>
 ```
+
 ```svelte
 <!-- usage (planned) -->
 <script lang="ts">
@@ -422,3 +430,56 @@ and token variables — so behavior and accessibility can't drift between framew
 React component into Svelte (via `svelte-preprocess-react` or manual `ReactDOM` mounting) is
 technically possible but drags React's runtime into every Svelte bundle and loses Svelte's
 reactivity/SSR ergonomics — so it is explicitly a non-goal.
+
+### 11.3 Vanilla JS / no framework
+
+> **Priya** ships a plain HTML/JS marketing page — no React, no Svelte, no build step. Can she use
+> this?
+
+**The copied POC component: no.** What `auro add checkbox` copies today is a React `.tsx` file — it
+imports `react`, uses hooks, and returns JSX. Without React it will not run. This POC is deliberately
+a **React-first** track, so its *render layer* assumes React.
+
+**But a vanilla team has two real answers:**
+
+1. **Use the existing Auro web components — this is the vanilla-native path today.** The current
+   `@aurodesignsystem/auro-*` line is exactly for this: register the element and use it as an HTML
+   tag, no framework required. This is unchanged by the POC and remains the recommended option for
+   framework-free consumers.
+
+   ```html
+   <script type="module">
+     import "@aurodesignsystem/auro-formkit/auro-checkbox";
+   </script>
+   <auro-checkbox value="agree">I agree to the terms</auro-checkbox>
+   ```
+
+2. **Use the framework-free core (`@auro/headless`) directly and render yourself.** The logic,
+   accessibility, and token contract are all in plain TS/JS with no framework dependency, so Priya
+   can drive her own DOM from it. There is no ready-made vanilla component in the POC — this is
+   DIY, but it shows the core genuinely is framework-agnostic:
+
+   ```js
+   import { connect, toggle } from "@auro/headless/checkbox";
+
+   let state = { checked: false, disabled: false };
+   const el = document.querySelector("#agree");
+
+   function paint() {
+     const api = connect(state);
+     el.setAttribute("role", "checkbox");
+     el.setAttribute("aria-checked", api.rootProps["aria-checked"]);
+     el.dataset.state = api.rootProps["data-state"];
+   }
+   el.addEventListener("click", () => {
+     state = { ...state, checked: toggle(state.checked) };
+     paint();
+   });
+   paint();
+   ```
+
+**Roadmap implication.** Because the core is framework-free, a first-class **vanilla adapter** (or a
+generated custom-element wrapper) is a plausible future registry target — e.g.
+`auro add checkbox --framework vanilla`. Until then, the honest guidance is: **framework-free teams
+should use the existing Auro web components**, and this React-first line is additive, not a
+replacement for them.
