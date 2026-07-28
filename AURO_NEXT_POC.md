@@ -130,6 +130,7 @@ package.json                         workspaces: added "registry"
 
 packages/headless-core/              @auro/headless — framework-free TS core
   src/checkbox/machine.ts            connect(), toggle(), isToggleKey(), typed state
+  src/select/machine.ts              connect(), handleKey(), exported *EnabledIndex() nav helpers
   src/index.ts
 packages/cli/                        @auro/cli — bin "auro"
   src/index.js                       commander program (init | list | add)
@@ -142,11 +143,14 @@ packages/mcp/                        @auro/mcp — bin "auro-mcp"
 registry/                            @auro/registry — the source of truth
   registry.json                      component index
   items/checkbox.json                per-item metadata (shadcn schema + auro block)
+  items/select.json                  per-item metadata (shadcn schema + auro block)
   tsconfig.json                      CI type-gate for the shippable source
   src/components/ui/auro-checkbox.tsx
   src/components/ui/auro-checkbox.css
-  src/lib/auro/use-machine.ts        React binding to @auro/headless
-  src/styles/auro-tokens.css         --ds-auro-* token bridge
+  src/components/ui/auro-select.tsx
+  src/components/ui/auro-select.css
+  src/lib/auro/use-machine.ts        React bindings (useCheckbox + useSelect) to @auro/headless
+  src/styles/auro-tokens.css         --ds-auro-* token bridge (checkbox + select vars)
   src/css.d.ts
 
 apps/react-framework/                consumer harness (React 19 + Vite 8)
@@ -154,9 +158,11 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
   tsconfig.auro.json                 scoped typecheck gate for Auro-native files
   src/index.css                      token imports wired by `auro init`
   src/components/ui/auro-checkbox.*  copied by `auro add checkbox`
-  src/lib/auro/use-machine.ts        copied by `auro add checkbox`
-  src/styles/auro-tokens.css         copied by `auro add checkbox`
+  src/components/ui/auro-select.*    copied by `auro add select`
+  src/lib/auro/use-machine.ts        copied by `auro add checkbox` / `auro add select`
+  src/styles/auro-tokens.css         copied by `auro add checkbox` / `auro add select`
   src/pages/AuroCheckboxNative.tsx   demo page (route: /auro-checkbox-native)
+  src/pages/AuroSelectNative.tsx     demo page (route: /auro-select-native)
 ```
 
 ## 5. Strengths
@@ -179,9 +185,17 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
 
 ## 6. Weaknesses & known limitations
 
-- **Single component.** Only `checkbox` is implemented. Breadth (Auro has ~27 components with
-  ~217 API surface items) is unproven; complex components (select/combobox/datepicker) will stress
-  the headless-core model far more than a checkbox does.
+- **Two components.** `checkbox` and `select` are implemented — `select` adds a stateful
+  open/highlight/value machine and the full WAI-ARIA select-only combobox pattern, which stresses
+  the headless-core model far harder than the checkbox. Breadth is still unproven (Auro has ~27
+  components with ~217 API surface items), and the hardest cases (combobox/datepicker) remain.
+- **Composition groundwork is seeded, not finished.** `select` exports its navigation logic as
+  reusable pure functions (`nextEnabledIndex`, `prevEnabledIndex`, `firstEnabledIndex`,
+  `lastEnabledIndex`, `indexOfValue`) so a future combobox machine reuses them instead of
+  reimplementing. But the ARIA prop-builders (`getOptionProps`/`listboxProps`) are still embedded
+  in `connect()` rather than promoted to standalone exports, and there is **no extracted shared
+  `listbox`/`popover` primitive** yet. A combobox would need both before it could be composed
+  cleanly (see roadmap). `select`'s popup is also inline — no portal, no collision/flip positioning.
 - **CLI/MCP authored in JS, not TS.** Pragmatic for the POC (matches repo convention, no build
   step), but the tooling itself isn't typesafe. Should be ported to TS for production.
 - **Local registry only.** The registry resolves from a local monorepo path. No hosted registry,
@@ -219,10 +233,16 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
 ## 8. Forward-looking roadmap
 
 **Near term (harden the POC)**
-- Add a second, dependency-chaining component (**Counter/NumberField**) to prove the core
-  generalizes and that `registryDependencies` resolution works across items.
+- Add a dependency-chaining component that actually uses `registryDependencies` (e.g.
+  **Counter/NumberField**, or a shared `field` wrapper) to prove cross-item resolution end to end.
+  (`checkbox` and `select` are both leaf items today.)
+- **Extract shared primitives for composite components.** Before building **combobox**, promote
+  `select`'s option/listbox ARIA prop-builders out of `connect()` into standalone exports, and
+  extract a shared `listbox` render primitive + a `popover` positioning primitive (wrapping
+  floating-ui) as their own registry items. Combobox then lists them in `registryDependencies` and
+  reuses `select`'s `*EnabledIndex` navigation helpers, rather than re-implementing a monolith.
 - Port the CLI + MCP server to TypeScript.
-- Add unit tests for the headless machine and a Playwright smoke test for the demo page.
+- Add unit tests for the headless machines and a Playwright smoke test for the demo pages.
 - Add `auro add --overwrite` UX plus a dry-run mode.
 
 **Mid term (make it consumable outside the monorepo)**
@@ -309,6 +329,28 @@ EOF
 ```
 Expected tools: `list_components`, `get_component_details`, `get_install_command`. The details call
 returns the typed props, the `onCheckedChange` signature, the a11y contract, and the file list.
+Swap `name: "checkbox"` for `name: "select"` and the same call returns the select's typed
+`options`/`value` props, the `onValueChange: (value: string) => void` signature, and its
+combobox/listbox a11y contract.
+
+### 9.6 The select component (second, stateful proof)
+```bash
+# Same pipeline, harder component. From repo root:
+./node_modules/.bin/tsc -p packages/headless-core/tsconfig.json   # select machine compiles
+./node_modules/.bin/tsc -p registry/tsconfig.json                 # select React source compiles
+node packages/cli/src/index.js list                               # lists checkbox AND select
+cd apps/react-framework && node ../../packages/cli/src/index.js add select --overwrite
+npm run typecheck:auro                                            # scoped gate, exits 0
+../../node_modules/.bin/vite build                                # bundles select too
+npm run dev:app                                                   # open /auro-select-native
+```
+On the page, verify: the trigger shows the selected label (or placeholder); click or **Enter/Space/
+ArrowDown** opens the listbox; **ArrowUp/ArrowDown** move the highlight and skip the disabled
+Anchorage option; **Home/End** jump to first/last; **Enter** commits and closes; **Escape** closes
+keeping the value; clicking outside closes; focus returns to the trigger on close; and the trigger
+carries `role="combobox"`, `aria-expanded`, and `aria-activedescendant` pointing at the active
+option. Type-realness is proven the same way as the checkbox: `<Select value={123} />` or
+`onValueChange={(v: number) => v}` are genuine compile errors, not `any`.
 
 ## 10. Design notes / FAQ
 

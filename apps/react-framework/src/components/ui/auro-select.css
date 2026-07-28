@@ -1,0 +1,91 @@
+.auro-select {
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+  min-inline-size: 12rem;
+}
+
+.auro-select[data-disabled] {
+  opacity: 0.4;
+}
+
+.auro-select__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  inline-size: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ds-auro-select-trigger-border-color, #585e67);
+  border-radius: var(--ds-auro-select-radius, 0.25rem);
+  background: var(--ds-auro-select-trigger-bg, #ffffff);
+  color: var(--ds-auro-select-trigger-text-color, #2a2a2a);
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.auro-select__trigger:focus-visible {
+  outline: 2px solid var(--ds-auro-select-focus-color, #0074c8);
+  outline-offset: 2px;
+}
+
+.auro-select__trigger[data-disabled] {
+  cursor: not-allowed;
+}
+
+.auro-select__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auro-select__value[data-placeholder] {
+  color: var(--ds-auro-select-placeholder-color, #6b7280);
+}
+
+.auro-select__caret {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.auro-select__listbox {
+  position: absolute;
+  inset-block-start: calc(100% + 0.25rem);
+  inset-inline: 0;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--ds-auro-select-listbox-bg, #ffffff);
+  border: 1px solid var(--ds-auro-select-trigger-border-color, #585e67);
+  border-radius: var(--ds-auro-select-radius, 0.25rem);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
+  z-index: 10;
+}
+
+.auro-select__option {
+  padding: 0.5rem 0.75rem;
+  border-radius: calc(var(--ds-auro-select-radius, 0.25rem) - 0.125rem);
+  cursor: pointer;
+  color: var(--ds-auro-select-trigger-text-color, #2a2a2a);
+}
+
+.auro-select__option[data-active] {
+  background: var(--ds-auro-select-option-hover-bg, #f2f2f2);
+}
+
+.auro-select__option[data-state="selected"] {
+  background: var(--ds-auro-select-option-selected-bg, #01426a);
+  color: var(--ds-auro-select-option-selected-text-color, #ffffff);
+}
+
+.auro-select__option[data-disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

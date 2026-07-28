@@ -9,6 +9,13 @@
       "title": "Auro Checkbox",
       "description": "Typed, accessible tri-state checkbox. Headless core + React render layer.",
       "path": "items/checkbox.json"
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Auro Select",
+      "description": "Typed, accessible single-select listbox. Headless core + React render layer.",
+      "path": "items/select.json"
     }
   ]
 }

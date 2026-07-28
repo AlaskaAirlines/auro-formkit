@@ -1,0 +1,65 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "title": "Auro Select",
+  "description": "Typed, accessible single-select listbox. Logic lives in the framework-free @auro/headless core; the React render layer is copied into your repo and yours to edit.",
+  "dependencies": ["@auro/headless@*"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/ui/auro-select.tsx",
+      "type": "registry:ui",
+      "target": "src/components/ui/auro-select.tsx"
+    },
+    {
+      "path": "src/components/ui/auro-select.css",
+      "type": "registry:file",
+      "target": "src/components/ui/auro-select.css"
+    },
+    {
+      "path": "src/lib/auro/use-machine.ts",
+      "type": "registry:lib",
+      "target": "src/lib/auro/use-machine.ts"
+    },
+    {
+      "path": "src/styles/auro-tokens.css",
+      "type": "registry:file",
+      "target": "src/styles/auro-tokens.css"
+    }
+  ],
+  "cssVars": {
+    "theme": {
+      "--ds-auro-select-trigger-border-color": "var(--ds-basic-color-border-bold)",
+      "--ds-auro-select-trigger-bg": "var(--ds-basic-color-surface-default)",
+      "--ds-auro-select-listbox-bg": "var(--ds-basic-color-surface-default)",
+      "--ds-auro-select-option-hover-bg": "var(--ds-advanced-color-state-background-hover)",
+      "--ds-auro-select-option-selected-bg": "var(--ds-advanced-color-state-selected)"
+    }
+  },
+  "auro": {
+    "tokensPackage": "@aurodesignsystem/design-tokens",
+    "a11y": {
+      "role": "combobox + listbox",
+      "ariaActivedescendant": "trigger tracks the highlighted option; focus stays on the trigger",
+      "keyboard": [
+        "Enter/Space/ArrowDown/ArrowUp open the listbox and seed the highlight",
+        "ArrowDown/ArrowUp move the highlight (skipping disabled options)",
+        "Home/End jump to first/last enabled option",
+        "Enter/Space commit the highlighted option and close",
+        "Escape closes the listbox, keeping the current value"
+      ]
+    },
+    "props": [
+      { "name": "options", "type": "Array<{ value: string; label: string; disabled?: boolean }>", "description": "The selectable options." },
+      { "name": "value", "type": "string", "description": "Controlled selected value." },
+      { "name": "defaultValue", "type": "string", "description": "Initial value when uncontrolled." },
+      { "name": "placeholder", "type": "string", "description": "Text shown when no option is selected." },
+      { "name": "disabled", "type": "boolean", "description": "Disables the whole control." }
+    ],
+    "events": [
+      { "name": "onValueChange", "signature": "(value: string) => void", "description": "Fired with the selected option's value when the user makes a selection." }
+    ],
+    "docs": "Import { Select } and pass `options`. Control it via `value` + `onValueChange`, or use `defaultValue` for uncontrolled usage. Set `placeholder` for the empty state and `disabled` to inactivate the control."
+  }
+}
