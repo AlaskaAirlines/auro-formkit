@@ -36,22 +36,21 @@ We surveyed the libraries the POC is modeled on, plus the canonical headless-sta
 
 | Library | Select vs. Combobox | What is shared | Takeaway for us |
 |---|---|---|---|
-| **Base UI** (base-ui.com) | Select is standalone; **Combobox and Autocomplete share one core** (`AriaCombobox`, differentiated by a `selectionMode` param). | A **compound-parts anatomy** (`Root · Trigger · Value · Positioner · Popup · List · Item · Group · Separator …`) and a shared `useAnchorPositioning` (Floating UI) layer. `Positioner/Popup/List/Item/Group` are structurally identical across Select and Combobox. | Adopt its **anatomy naming** and its **shared positioning + listbox layer**. |
+| **Base UI** (base-ui.com) | **Three distinct components**: Select (button trigger, no filtering), **Combobox** (predefined items, filterable input, **no free-form text**), and **Autocomplete** (free-form text + search, async-friendly). Select and Combobox are siblings, not parent/child. | A **compound-parts anatomy** (`Root · Trigger · Value · Positioner · Popup · List · Item · Group · Separator · Backdrop · Arrow · ItemIndicator …`) and a shared Floating UI positioning layer. `Positioner/Popup/List/Item/Group` are structurally identical across all three. Distributes as `@base-ui/react` (npm, no bundled CSS). **Note:** shadcn/ui is migrating from Radix UI to Base UI (2024–), so this anatomy is becoming the cross-registry standard. | Adopt its **anatomy naming** (we already do). Our `auro-combobox` — free-form input + filter + commit — maps to their **Autocomplete** pattern, not their Combobox. Worth aligning terminology in a future rename. |
 | **Astryx** (astryx.atmeta.com) | Same family: compound, parts-based combo components. | Parts-based composition; primitives shared across the overlay-list family. | Confirms the parts model is the house style we want to match. |
 | **Ark UI / zag.js** (ark-ui.com, zagjs.com) | **Three separate machines**: `select`, `combobox`, **and a distinct `listbox` machine**, plus a shared `@zag-js/collection` data layer. Combobox does **not** derive from select. | `listbox` (navigation/highlight) and `collection` (typed data + next/prev helpers) are shared *modules*; each component owns its own state chart. | This is our exact model. **Separate machines that import shared modules** — not one machine with flags. |
 | **Downshift** | Explicit `useSelect` vs. `useCombobox` hook split. | Deliberately separate hooks. | Reinforces: keep the two APIs siblings, not an inheritance. |
 | **Radix UI** | Separate Select and Combobox (Combobox via community/`cmdk`). | Popper/Portal primitives shared. | Same shape as Base UI. |
 
-**Where the leaders disagree:** Base UI unifies Combobox+Autocomplete under one core while keeping
-Select separate; zag keeps all three fully separate. **Our pick:** follow **zag's machine separation**
-(small, readable state charts — which is also better for AI legibility, a core POC goal) *and* Base
-UI's **shared-primitive render layer** (the expensive positioning/listbox/a11y wiring written once).
-Best of both.
+**Where the leaders agree:** Select, Combobox, and Autocomplete are all separate components — Base
+UI, zag, and Downshift all keep them as siblings with shared primitives, not a hierarchy. **Our
+pick:** follow **zag's machine separation** (small, readable state charts — better for AI legibility,
+a core POC goal) *and* Base UI's **shared-primitive render layer** (the expensive
+positioning/listbox/a11y wiring written once). Best of both.
 
 Sources: [Base UI Select](https://base-ui.com/react/components/select) ·
-[Base UI Combobox](https://base-ui.com/react/components/combobox) ·
-[Base UI Autocomplete](https://base-ui.com/react/components/autocomplete) ·
-[Base UI selection internals](https://deepwiki.com/mui/base-ui/4-selection-components) ·
+[Base UI Combobox](https://base-ui.com/react/components/combobox) (predefined items, no free-form) ·
+[Base UI Autocomplete](https://base-ui.com/react/components/autocomplete) (free-form + search) ·
 [zag Select](https://zagjs.com/components/react/select) ·
 [zag Combobox](https://zagjs.com/components/react/combobox) ·
 [@zag-js/collection](https://www.npmjs.com/package/@zag-js/collection) ·
