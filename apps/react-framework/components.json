@@ -1,0 +1,10 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "registry": "/Users/Chris.Friedberg@alaskaair.com/Dev/auro-formkit/registry",
+  "srcRoot": "src",
+  "entryCss": "src/index.css",
+  "tokens": {
+    "package": "@aurodesignsystem/design-tokens",
+    "theme": "alaska"
+  }
+}

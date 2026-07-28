@@ -1,0 +1,12 @@
+{
+  "extends": "@aurodesignsystem/typescript/base.json",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2023"]
+  },
+  "include": ["src"]
+}

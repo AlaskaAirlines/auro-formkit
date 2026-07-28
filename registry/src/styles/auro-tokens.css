@@ -1,0 +1,15 @@
+/**
+ * Auro token bridge. Maps Auro design-token custom properties (--ds-*) onto the
+ * component-scoped variables the copied components read. Hard hex fallbacks keep
+ * components rendering even before @aurodesignsystem/design-tokens is loaded.
+ * Imported once at the app root by `auro init`.
+ */
+:root {
+  --ds-auro-checkbox-border-color: var(--ds-basic-color-border-bold, #585e67);
+  --ds-auro-checkbox-checked-bg: var(--ds-advanced-color-boolean-istrue, #0074c8);
+  --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator, #ffffff);
+  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-default, #2a2a2a);
+  --ds-auro-checkbox-focus-color: var(--ds-basic-color-border-active, #0074c8);
+  --ds-auro-checkbox-size: 1.25rem;
+  --ds-auro-checkbox-radius: 0.25rem;
+}

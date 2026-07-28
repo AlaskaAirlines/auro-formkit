@@ -23,6 +23,7 @@ import ComboboxCitySearch from './pages/ComboboxCitySearch';
 import ComboboxCitySearchFull from './pages/ComboboxCitySearchFull';
 import ComboboxCitySearchPreselected from './pages/ComboboxCitySearchPreselected';
 import ComboboxCitySearchPreselectedNavigate from './pages/ComboboxCitySearchPreselectedNavigate';
+import AuroCheckboxNative from './pages/AuroCheckboxNative';
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
       <Route path="/datepicker-fullscreen" component={DatepickerFullscreen} />
       <Route path="/datepicker-interaction" component={DatepickerInteraction} />
       <Route path="/checkbox-interaction" component={CheckboxInteraction} />
+      <Route path="/auro-checkbox-native" component={AuroCheckboxNative} />
       <Route path="/dropdown-interaction" component={DropdownInteraction} />
       <Route path="/form-interaction" component={FormInteraction} />
       <Route path="/input-interaction" component={InputInteraction} />

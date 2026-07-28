@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "tsBuildInfoFile": null
+  },
+  "include": [
+    "src/components/ui/**/*.tsx",
+    "src/lib/auro/**/*.ts",
+    "src/pages/AuroCheckboxNative.tsx"
+  ]
+}

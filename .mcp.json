@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "auro-registry": {
+      "command": "node",
+      "args": ["packages/mcp/src/index.js"]
+    }
+  }
+}

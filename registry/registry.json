@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "auro",
+  "homepage": "https://auro.alaskaair.com",
+  "items": [
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Auro Checkbox",
+      "description": "Typed, accessible tri-state checkbox. Headless core + React render layer.",
+      "path": "items/checkbox.json"
+    }
+  ]
+}

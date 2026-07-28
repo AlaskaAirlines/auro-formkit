@@ -1,0 +1,18 @@
+{
+  "extends": "@aurodesignsystem/typescript/base.json",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

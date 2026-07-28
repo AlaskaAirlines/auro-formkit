@@ -1,0 +1,20 @@
+{
+  "name": "@auro/registry",
+  "description": "Source-of-truth registry of typed Auro components copied into consumer repos by the auro CLI.",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@auro/headless": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "react": "^19.2.4"
+  },
+  "engines": {
+    "node": "^20.x || ^22.x"
+  }
+}

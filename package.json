@@ -23,7 +23,8 @@
   "workspaces": [
     "apps/*",
     "components/*",
-    "packages/*"
+    "packages/*",
+    "registry"
   ],
   "files": [
     "components/*/dist/**/*",

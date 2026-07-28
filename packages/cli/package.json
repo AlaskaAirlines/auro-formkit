@@ -1,0 +1,20 @@
+{
+  "name": "@auro/cli",
+  "description": "The `auro` CLI: install typed Auro components into a project, shadcn-style.",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "auro": "./src/index.js"
+  },
+  "exports": {
+    "./registry": "./src/registry.js"
+  },
+  "dependencies": {
+    "commander": "^13.0.0",
+    "zod": "^3.23.0"
+  },
+  "engines": {
+    "node": "^20.x || ^22.x"
+  }
+}

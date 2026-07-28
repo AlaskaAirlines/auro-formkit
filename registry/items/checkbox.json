@@ -1,0 +1,55 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "type": "registry:ui",
+  "title": "Auro Checkbox",
+  "description": "Typed, accessible tri-state checkbox. Logic lives in the framework-free @auro/headless core; the React render layer is copied into your repo and yours to edit.",
+  "dependencies": ["@auro/headless@*"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/ui/auro-checkbox.tsx",
+      "type": "registry:ui",
+      "target": "src/components/ui/auro-checkbox.tsx"
+    },
+    {
+      "path": "src/components/ui/auro-checkbox.css",
+      "type": "registry:file",
+      "target": "src/components/ui/auro-checkbox.css"
+    },
+    {
+      "path": "src/lib/auro/use-machine.ts",
+      "type": "registry:lib",
+      "target": "src/lib/auro/use-machine.ts"
+    },
+    {
+      "path": "src/styles/auro-tokens.css",
+      "type": "registry:file",
+      "target": "src/styles/auro-tokens.css"
+    }
+  ],
+  "cssVars": {
+    "theme": {
+      "--ds-auro-checkbox-border-color": "var(--ds-basic-color-border-bold)",
+      "--ds-auro-checkbox-checked-bg": "var(--ds-advanced-color-boolean-istrue)",
+      "--ds-auro-checkbox-checkmark-color": "var(--ds-advanced-color-boolean-indicator)"
+    }
+  },
+  "auro": {
+    "tokensPackage": "@aurodesignsystem/design-tokens",
+    "a11y": {
+      "role": "checkbox",
+      "ariaChecked": "tristate",
+      "keyboard": ["Space toggles the checkbox"]
+    },
+    "props": [
+      { "name": "checked", "type": "boolean | \"indeterminate\"", "description": "Controlled checked value." },
+      { "name": "defaultChecked", "type": "boolean | \"indeterminate\"", "description": "Initial value when uncontrolled." },
+      { "name": "disabled", "type": "boolean", "description": "Disables interaction." }
+    ],
+    "events": [
+      { "name": "onCheckedChange", "signature": "(checked: boolean) => void", "description": "Fired with the resolved boolean when the user toggles." }
+    ],
+    "docs": "Import { Checkbox } and control it via `checked` + `onCheckedChange`, or use `defaultChecked` for uncontrolled usage. Set `checked=\"indeterminate\"` for the mixed state."
+  }
+}

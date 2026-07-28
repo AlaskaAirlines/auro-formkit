@@ -1,3 +1,5 @@
+@import './styles/auro-tokens.css';
+@import '@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css';
 :root {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
