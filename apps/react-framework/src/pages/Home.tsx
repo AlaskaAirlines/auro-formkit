@@ -1,5 +1,12 @@
 import { Link } from '../router';
 
+const AURO_NEXT: { label: string; path: string }[] = [
+  { label: 'Checkbox + Select + Combobox', path: '/auro-next' },
+  { label: 'Checkbox (standalone)', path: '/auro-checkbox-native' },
+  { label: 'Select (standalone)', path: '/auro-select-native' },
+  { label: 'Combobox (standalone)', path: '/auro-combobox-native' },
+];
+
 const SUITES: { label: string; path: string }[] = [
   { label: 'auro-checkbox: interaction', path: '/checkbox-interaction' },
   { label: 'auro-combobox: interaction', path: '/combobox-interaction' },
@@ -31,6 +38,17 @@ export default function Home() {
     <main>
       <h1>React</h1>
       <p>Framework Test Harness</p>
+
+      <h2 style={{ fontSize: '1rem', margin: '1.5rem 0 0.5rem' }}>Auro Next (React-first, typesafe)</h2>
+      <ul>
+        {AURO_NEXT.map(({ label, path }) => (
+          <li key={path}>
+            <Link to={path}>{label}</Link>
+          </li>
+        ))}
+      </ul>
+
+      <h2 style={{ fontSize: '1rem', margin: '1.5rem 0 0.5rem' }}>Lit web components</h2>
       <ul>
         {SUITES.map(({ label, path }) => (
           <li key={path}>
