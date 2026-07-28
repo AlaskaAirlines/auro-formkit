@@ -55,11 +55,26 @@ apps/react-framework       packages/mcp (auro-registry)  → agents call list/ge
 
 ### The pipeline, concretely
 
-1. **Headless core** (`@auro/headless`) exposes a pure `connect(state)` that returns
-   `rootProps` (role, `aria-checked`, `data-state`, `tabIndex`) plus a `toggle()` transition. No
-   framework, no DOM access at module load — so it is reusable by any future adapter.
+1. **Headless core** (`@auro/headless`) — three subpath exports:
+   - `@auro/headless/checkbox` — `connect(state)`, `toggle()`, `isToggleKey()`.
+   - `@auro/headless/select` — `connect()`, `handleKey()`, navigation helpers; now delegates to…
+   - `@auro/headless/listbox` — shared `Collection`-based navigation (`firstEnabledIndex`,
+     `nextEnabledIndex`, etc.) and pure ARIA prop-builders (`listboxProps`, `optionProps`,
+     `listboxIds`) used by **both** select and combobox.
+   - `@auro/headless/combobox` — `connect()`, `filterOptions()`, `handleKey()`, `selectIndex()`.
+     Navigates over the *filtered* view via the same `listbox/nav` helpers; builds ARIA props via
+     the same `listbox/aria` builders. No code duplication with select.
+   No framework, no DOM access at module load — reusable by any future adapter.
 2. **Registry source** (`registry/src`) is **real, compiling TSX** — not string templates. It is
    type-gated in CI (`registry/tsconfig.json`). Imports use the `@/` alias (shadcn convention).
+   Components follow the **compound-parts + preset** pattern (e.g. `<Select.Root>`,
+   `<Select.Trigger>`, `<Select.List>`, `<Select.Item>` composable individually; `<Select options>`
+   as a one-line preset). Shared React primitives:
+   - `use-listbox` hook — open flag, `activeIndex`, the three element refs, and outside-pointer
+     dismissal. Shared by `useSelect` and `useCombobox`; generic over the trigger element type.
+   - `auro-popover` primitive — wraps `@floating-ui/react` (`offset/flip/shift/size` + `autoUpdate`)
+     and portals its content. Wires `anchorRef → setReference` via `useLayoutEffect`. Used by both
+     `<SelectPositioner>` and `<ComboboxPositioner>`.
 3. **CLI** (`auro`):
    - `auro init` writes a shadcn-compatible `components.json` and wires the Auro design-token theme
      CSS into the app's entry stylesheet.
@@ -130,8 +145,13 @@ package.json                         workspaces: added "registry"
 
 packages/headless-core/              @auro/headless — framework-free TS core
   src/checkbox/machine.ts            connect(), toggle(), isToggleKey(), typed state
-  src/select/machine.ts              connect(), handleKey(), exported *EnabledIndex() nav helpers
-  src/index.ts
+  src/select/machine.ts              connect(), handleKey(); delegates nav + ARIA to listbox/*
+  src/combobox/machine.ts            connect(), filterOptions(), handleKey(), selectIndex()
+  src/listbox/nav.ts                 Collection interface + enabled-index navigation (shared)
+  src/listbox/aria.ts                listboxProps(), optionProps(), listboxIds (shared)
+  src/listbox/index.ts               barrel
+  src/index.ts                       barrel (combobox + listbox re-exported)
+  vitest.config.ts                   node test project (30 tests: 12 nav + 18 combobox)
 packages/cli/                        @auro/cli — bin "auro"
   src/index.js                       commander program (init | list | add)
   src/registry.js                    shared, zod-validated registry resolver (also used by MCP)
@@ -141,16 +161,24 @@ packages/mcp/                        @auro/mcp — bin "auro-mcp"
   src/index.js                       MCP stdio server, 3 tools
 
 registry/                            @auro/registry — the source of truth
-  registry.json                      component index
+  registry.json                      component index (5 items)
   items/checkbox.json                per-item metadata (shadcn schema + auro block)
-  items/select.json                  per-item metadata (shadcn schema + auro block)
+  items/select.json                  per-item metadata; registryDependencies: use-listbox, popover
+  items/combobox.json                per-item metadata; registryDependencies: use-listbox, popover
+  items/use-listbox.json             shared hook registry item (type: registry:lib)
+  items/popover.json                 shared primitive; dependency: @floating-ui/react
   tsconfig.json                      CI type-gate for the shippable source
   src/components/ui/auro-checkbox.tsx
   src/components/ui/auro-checkbox.css
-  src/components/ui/auro-select.tsx
+  src/components/ui/auro-select.tsx  compound parts (Root/Trigger/Value/Positioner/List/Item) + preset
   src/components/ui/auro-select.css
-  src/lib/auro/use-machine.ts        React bindings (useCheckbox + useSelect) to @auro/headless
-  src/styles/auro-tokens.css         --ds-auro-* token bridge (checkbox + select vars)
+  src/components/ui/auro-combobox.tsx compound parts (Root/Input/Clear/Positioner/List/Item/Empty) + preset
+  src/components/ui/auro-combobox.css
+  src/components/ui/auro-popover.tsx  Floating UI positioning + FloatingPortal primitive
+  src/components/ui/auro-popover.css
+  src/lib/auro/use-machine.ts        React bindings (useCheckbox + useSelect + useCombobox)
+  src/lib/auro/use-listbox.ts        shared open/activeIndex/refs/dismiss hook (generic trigger type)
+  src/styles/auro-tokens.css         --ds-auro-* token bridge (all component vars)
   src/css.d.ts
 
 apps/react-framework/                consumer harness (React 19 + Vite 8)
@@ -159,10 +187,14 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
   src/index.css                      token imports wired by `auro init`
   src/components/ui/auro-checkbox.*  copied by `auro add checkbox`
   src/components/ui/auro-select.*    copied by `auro add select`
-  src/lib/auro/use-machine.ts        copied by `auro add checkbox` / `auro add select`
-  src/styles/auro-tokens.css         copied by `auro add checkbox` / `auro add select`
+  src/components/ui/auro-combobox.*  copied by `auro add combobox`
+  src/components/ui/auro-popover.*   copied as shared dependency of select + combobox
+  src/lib/auro/use-machine.ts        copied (contains useCheckbox + useSelect + useCombobox)
+  src/lib/auro/use-listbox.ts        copied as shared dependency
+  src/styles/auro-tokens.css         copied
   src/pages/AuroCheckboxNative.tsx   demo page (route: /auro-checkbox-native)
   src/pages/AuroSelectNative.tsx     demo page (route: /auro-select-native)
+  src/pages/AuroComboboxNative.tsx   demo page (route: /auro-combobox-native)
 ```
 
 ## 5. Strengths
@@ -185,17 +217,15 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
 
 ## 6. Weaknesses & known limitations
 
-- **Two components.** `checkbox` and `select` are implemented — `select` adds a stateful
-  open/highlight/value machine and the full WAI-ARIA select-only combobox pattern, which stresses
-  the headless-core model far harder than the checkbox. Breadth is still unproven (Auro has ~27
-  components with ~217 API surface items), and the hardest cases (combobox/datepicker) remain.
-- **Composition groundwork is seeded, not finished.** `select` exports its navigation logic as
-  reusable pure functions (`nextEnabledIndex`, `prevEnabledIndex`, `firstEnabledIndex`,
-  `lastEnabledIndex`, `indexOfValue`) so a future combobox machine reuses them instead of
-  reimplementing. But the ARIA prop-builders (`getOptionProps`/`listboxProps`) are still embedded
-  in `connect()` rather than promoted to standalone exports, and there is **no extracted shared
-  `listbox`/`popover` primitive** yet. A combobox would need both before it could be composed
-  cleanly (see roadmap). `select`'s popup is also inline — no portal, no collision/flip positioning.
+- **Three components, breadth still limited.** `checkbox`, `select`, and `combobox` are implemented.
+  Combobox is the hardest case in the POC — filtered list, `aria-autocomplete="list"`, input-driven
+  highlight, portal positioning — and proves the shared-primitive model holds. But Auro has ~27
+  components with ~217 API surface items; datepicker, dialog, and form-association remain untested.
+- **Shared primitives are complete but browser interaction is unverified headlessly.** The
+  `listbox/nav`, `listbox/aria`, `useListbox`, and `Popover` modules are extracted and both select
+  and combobox build on them. Keyboard roving, `aria-activedescendant` across the Floating UI portal,
+  outside-dismiss, and focus-return require a real browser (Playwright) to verify — they have been
+  reasoned about but not end-to-end tested.
 - **CLI/MCP authored in JS, not TS.** Pragmatic for the POC (matches repo convention, no build
   step), but the tooling itself isn't typesafe. Should be ported to TS for production.
 - **Local registry only.** The registry resolves from a local monorepo path. No hosted registry,
@@ -209,8 +239,10 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
   typings, so the whole-app `tsc -b` fails. The POC is validated via a **scoped** typecheck instead
   (see below). This is old debt, not caused by the POC — but it means there is no single green
   whole-repo typecheck today.
-- **No automated tests yet.** Verification was manual (typecheck + build + MCP client). No unit
-  tests for the machine, no Playwright coverage for the demo page.
+- **Unit tests for the headless machines, no Playwright coverage yet.** 30 passing vitest unit tests
+  cover the `listbox/nav` helpers and the full combobox machine (filter, navigation, commit, ARIA
+  prop output). No automated browser tests for keyboard interaction or visual rendering on any of the
+  three demo pages.
 - **Design parity unverified.** Visual/interaction parity with the canonical Auro checkbox
   (focus rings, motion, density, dark theme) has not been audited.
 
@@ -233,17 +265,17 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
 ## 8. Forward-looking roadmap
 
 **Near term (harden the POC)**
-- Add a dependency-chaining component that actually uses `registryDependencies` (e.g.
-  **Counter/NumberField**, or a shared `field` wrapper) to prove cross-item resolution end to end.
-  (`checkbox` and `select` are both leaf items today.)
-- **Extract shared primitives for composite components.** Before building **combobox**, promote
-  `select`'s option/listbox ARIA prop-builders out of `connect()` into standalone exports, and
-  extract a shared `listbox` render primitive + a `popover` positioning primitive (wrapping
-  floating-ui) as their own registry items. Combobox then lists them in `registryDependencies` and
-  reuses `select`'s `*EnabledIndex` navigation helpers, rather than re-implementing a monolith.
+- ~~Add a dependency-chaining component that actually uses `registryDependencies`.~~ ✅ Done —
+  `select` and `combobox` both declare `registryDependencies: ["use-listbox", "popover"]`; the CLI
+  resolves and deduplicate-copies them in topological order.
+- ~~**Extract shared primitives for composite components.**~~ ✅ Done — `listbox/nav.ts` + `listbox/aria.ts`
+  extracted; `use-listbox` hook and `auro-popover` primitive are their own registry items; `combobox`
+  reuses them all without reimplementing anything.
+- ~~Add unit tests for the headless machines.~~ ✅ Done — 30 passing vitest tests (listbox nav + combobox machine).
+- ~~Add `auro add --overwrite` UX.~~ ✅ Done — `--overwrite` flag is live.
+- Add a **Playwright smoke test** for at least one demo page (keyboard interaction + ARIA spot-check).
 - Port the CLI + MCP server to TypeScript.
-- Add unit tests for the headless machines and a Playwright smoke test for the demo pages.
-- Add `auro add --overwrite` UX plus a dry-run mode.
+- Add a dry-run mode (`auro add --dry-run`).
 
 **Mid term (make it consumable outside the monorepo)**
 - Host the registry as static JSON + source over HTTPS (or GitHub raw), with item versioning.
@@ -264,6 +296,15 @@ apps/react-framework/                consumer harness (React 19 + Vite 8)
 ## 9. How to test the new features
 
 All commands are run from the repo root unless noted. `apps/react-framework` is the consumer harness.
+
+### 9.0 Run the headless unit tests
+```bash
+cd packages/headless-core && npm test
+```
+Expected: 30 tests pass — 12 covering `listbox/nav` navigation helpers (first/last/next/prev
+enabled, all-disabled, wrap/clamp, `fromOptions`, `indexOfValue`) and 18 covering the combobox
+machine (`filterOptions`, `open`, `setInputValue`, keyboard navigation over the filtered view,
+`selectIndex`, `connect` ARIA output, `isEmpty`).
 
 ### 9.1 Type-gate the source of truth
 ```bash
@@ -338,7 +379,7 @@ combobox/listbox a11y contract.
 # Same pipeline, harder component. From repo root:
 ./node_modules/.bin/tsc -p packages/headless-core/tsconfig.json   # select machine compiles
 ./node_modules/.bin/tsc -p registry/tsconfig.json                 # select React source compiles
-node packages/cli/src/index.js list                               # lists checkbox AND select
+node packages/cli/src/index.js list                               # lists all 5 items
 cd apps/react-framework && node ../../packages/cli/src/index.js add select --overwrite
 npm run typecheck:auro                                            # scoped gate, exits 0
 ../../node_modules/.bin/vite build                                # bundles select too
@@ -351,6 +392,53 @@ keeping the value; clicking outside closes; focus returns to the trigger on clos
 carries `role="combobox"`, `aria-expanded`, and `aria-activedescendant` pointing at the active
 option. Type-realness is proven the same way as the checkbox: `<Select value={123} />` or
 `onValueChange={(v: number) => v}` are genuine compile errors, not `any`.
+
+The listbox popup is rendered through a Floating UI portal (offset, flip, shift, size middleware;
+`autoUpdate` so it repositions on scroll/resize). Verify it stays anchored to the trigger when the
+viewport is resized or the page is scrolled.
+
+### 9.7 The combobox component (third proof — shared primitives, editable input)
+
+```bash
+cd apps/react-framework && node ../../packages/cli/src/index.js add combobox --overwrite
+```
+
+Expected resolver output:
+
+```text
+Added "combobox":
+  + src/lib/auro/use-listbox.ts
+  + src/components/ui/auro-popover.tsx / .css
+  + src/components/ui/auro-combobox.tsx / .css
+  + src/lib/auro/use-machine.ts
+  + src/styles/auro-tokens.css
+Install required dependencies:
+  npm install @floating-ui/react@^0.27.0
+```
+
+The CLI resolves `use-listbox → popover → combobox` topologically, deduplicates shared files (they
+match what select already wrote), and surfaces only the external dep.
+
+```bash
+npm run typecheck:auro    # exits 0 (includes AuroComboboxNative.tsx)
+../../node_modules/.bin/vite build
+npm run dev:app           # open /auro-combobox-native
+```
+
+On the page, verify:
+
+- Typing in the input narrows the list in real time (case-insensitive label substring match).
+- **ArrowDown/ArrowUp** move the roving highlight, skipping disabled options.
+- **Enter** commits the highlighted option, sets the input to its label, and closes the list.
+- **Escape** closes keeping the current value.
+- The clear button (×) appears when the field has text; clicking it resets the value and refocuses
+  the input.
+- The "No results" empty state appears when nothing matches.
+- The input carries `role="combobox"`, `aria-autocomplete="list"`, `aria-expanded`, and
+  `aria-activedescendant` pointing at the active option in the portal.
+- Clicking outside the input + popup closes the list.
+- Type-realness: `<Combobox options={[{value:1,label:"x"}]} />` is a compile error (`value` must
+  be `string`).
 
 ## 10. Design notes / FAQ
 
