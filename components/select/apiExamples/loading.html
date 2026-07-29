@@ -1,0 +1,17 @@
+<auro-select id="loadingSelectCategory">
+  <span slot="bib.fullscreen.headline">Select Category</span>
+  <span slot="label">Category</span>
+  <auro-menu>
+    <auro-menuoption value="Fruit">Fruit</auro-menuoption>
+    <auro-menuoption value="Vegetable">Vegetable</auro-menuoption>
+    <auro-menuoption value="Protein">Protein</auro-menuoption>
+  </auro-menu>
+</auro-select>
+<auro-select id="loadingSelectItem" disabled>
+  <span slot="bib.fullscreen.headline">Select Item</span>
+  <span slot="label">Item</span>
+  <auro-menu id="loadingSelectItemMenu">
+    <auro-loader slot="loadingIcon" orbit xs></auro-loader>
+    <span slot="loadingText">Loading...</span>
+  </auro-menu>
+</auro-select>

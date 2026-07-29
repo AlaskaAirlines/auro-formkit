@@ -2458,8 +2458,8 @@ export class AuroDatePicker extends AuroElement {
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
+        <span slot="bib.fullscreen.fromStr" class="body-default">${AuroInputUtil.toFormattedValue(this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="bib.fullscreen.toStr" class="body-default">${AuroInputUtil.toFormattedValue(this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

@@ -10,6 +10,7 @@ import { html } from "lit/static-html.js";
 
 import tokens from "./styles/tokens-css.js";
 import counterGroupStyles from "./styles/counter-group-css.js";
+import colorCss from "./styles/counter-group-color-css.js";
 import shapeSizeCss from "./styles/shapeSize-css.js";
 
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
@@ -127,6 +128,7 @@ export class AuroCounterGroup extends AuroElement {
   static get styles() {
     return [
       tokens,
+      colorCss,
       counterGroupStyles,
       shapeSizeCss
     ];

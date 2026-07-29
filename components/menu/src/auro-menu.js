@@ -1121,9 +1121,10 @@ export class AuroMenu extends AuroElement {
           <auro-menuoption
             disabled
             loadingplaceholder
+            nocheckmark
             class="${this.hasLoadingPlaceholder ? "" : "empty"}"
           >
-            <div>
+            <div class="loadingWrapper">
               <slot name="loadingIcon" class="body-lg"></slot>
               <slot name="loadingText"></slot>
             </div>

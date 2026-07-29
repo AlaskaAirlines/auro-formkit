@@ -253,7 +253,7 @@ export class AuroDropdown extends AuroElement {
         const assigned = slot.assignedElements();
         for (const el of assigned) {
           if (el.hasAttribute('disabled')) {
-            continue;
+            continue; // eslint-disable-line no-continue
           }
           // Try finding a focusable descendant first (handles non-focusable
           // wrappers like <div> containing a <button>). If none found, try
@@ -650,9 +650,16 @@ export class AuroDropdown extends AuroElement {
     this.clearTriggerFocusEventBinding();
   }
 
+  // eslint-disable-next-line complexity
   updated(changedProperties) {
     super.updated(changedProperties);
     this.floater.handleUpdate(changedProperties);
+
+    // Close the dropdown if the disabled property is set to true
+    if (changedProperties.has('disabled') && this.disabled && this.isPopoverVisible) {
+      this.hide();
+      this.isPopoverVisible = false;
+    }
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
     // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"

@@ -5,8 +5,8 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 
-:host {
-  ::slotted(*:not(:first-child)) {
-    border-color: var(--ds-auro-counter-divider-color);
+.counters {
+  ::slotted(auro-counter:not(:first-of-type)), ::slotted([auro-counter]:not(:first-of-type)) {
+    border-top-color: var(--ds-auro-counter-divider-color);
   }
 }

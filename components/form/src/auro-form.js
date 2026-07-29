@@ -731,15 +731,23 @@ export class AuroForm extends LitElement {
    * @private
    */
   handleKeyDown(event) {
-    if (event.key === 'Enter' && this.isFormElement(event.target)) {
+
+    /**
+     * Use `currentTarget` because it is the tracked form element
+     * handling the event, while `target` may be an inner radio,
+     * checkbox, or counter inside that form control.
+     */
+    const formElement = event.currentTarget;
+
+    if (event.key === 'Enter' && this.isFormElement(formElement)) {
       // Disabled controls do not submit a form natively.
-      if (this._isDisabled(event.target)) {
+      if (this._isDisabled(formElement)) {
         return;
       }
 
       // Don't submit if it's a textarea (allow new lines)
-      if (event.target.tagName.toLowerCase() === 'textarea' ||
-          event.target.hasAttribute('textarea')) {
+      if (formElement.tagName.toLowerCase() === 'textarea' ||
+          formElement.hasAttribute('textarea')) {
         return;
       }
 

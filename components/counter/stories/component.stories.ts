@@ -352,7 +352,7 @@ export const CounterInverseDisabled: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
-  <auro-counter-group>
+  <auro-counter-group appearance="inverse">
     <auro-counter appearance="inverse" disabled>Short label</auro-counter>
     <auro-counter appearance="inverse" disabled>
       Long label example

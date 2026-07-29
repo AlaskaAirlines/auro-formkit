@@ -44,24 +44,23 @@
   }
 
   [loadingplaceholder] {
+    padding: var(--ds-size-150, vac.$ds-size-150) 0;
+
     &.empty {
       opacity: 0;
       position: absolute;
     }
 
-    slot[name="loadingIcon"] {
-      vertical-align: middle;
-      display: inline-block;
-      margin-bottom: var(--ds-size-25, vac.$ds-size-25);
-
-      &::slotted(*) {
-        margin-right: var(--ds-size-150, vac.$ds-size-150);
-      }
+    .loadingWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--ds-size-150, vac.$ds-size-150);
     }
   }
 }
 
-:host([root]) { 
+:host([root]) {
   .menuWrapper {
     &.lg {
       padding: var(--ds-size-150, vac.$ds-size-150);

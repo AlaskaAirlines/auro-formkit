@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+import { html } from 'lit-html';
 
 import { AuroDropdown } from '../../src/index';
 
@@ -26,9 +27,13 @@ export default meta;
 
 type Story = StoryObj<AuroDropdown & typeof args>;
 
-export const Combobox: Story = {
-  render: (args) => template(args),
-  // args: {
-  //   'default-slot': 'Label',
-  // },
+export const Dropdown: Story = {
+  render: (args) =>
+    template(
+      args,
+      html`
+        <div slot="trigger">Trigger</div>
+        <div>Dropdown content</div>
+      `,
+    ),
 };

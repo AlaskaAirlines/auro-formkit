@@ -52,6 +52,12 @@ const specialConfigs = {
     },
     tags: ['!autodocs'],
   },
+  'appearance-inverse-group-custom': {
+    globals: {
+      backgrounds: { value: 'dark' },
+    },
+    tags: ['!autodocs'],
+  },
   'appearance-inverse-helptext': {
     globals: {
       backgrounds: { value: 'dark' },
@@ -95,6 +101,7 @@ export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
 export const AppearanceInverseDropdown = stories.AppearanceInverseDropdown;
 export const AppearanceInverseError = stories.AppearanceInverseError;
 export const AppearanceInverseGroup = stories.AppearanceInverseGroup;
+export const AppearanceInverseGroupCustom = stories.AppearanceInverseGroupCustom;
 export const AppearanceInverseHelptext = stories.AppearanceInverseHelptext;
 export const AppearanceInverseSnowflake = stories.AppearanceInverseSnowflake;
 export const Basic = stories.Basic;

@@ -102,7 +102,7 @@ label {
   flex-direction: column;
   gap: var(--ds-size-300, vac.$ds-size-300);
 
-  ::slotted(auro-counter:not(:first-of-type)) {
+  ::slotted(auro-counter:not(:first-of-type)), ::slotted([auro-counter]:not(:first-of-type)) {
     padding-top: var(--ds-size-300, vac.$ds-size-300);
     border-top-width: 1px;
     border-top-style: solid;

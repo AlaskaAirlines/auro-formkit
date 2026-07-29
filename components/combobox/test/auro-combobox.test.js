@@ -2998,33 +2998,100 @@ function runFullTest(mobileView) {
       window.matchMedia = origMatchMedia;
     });
 
-    it('handleMenuLoadingChange shows dropdown when loading finishes and combobox has focus', async () => {
+    it('handleMenuLoadingChange shows bib when loading starts with input value and focus', async () => {
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <span slot="loadingIcon">⏳</span>
+            <span slot="loadingText">Loading...</span>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+
+      el.input.value = 'test';
+      el.input.focus();
+      el.menu.setAttribute('loading', 'loading');
+      await elementUpdated(el);
+
+      el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
+        detail: {
+          loading: true,
+          hasLoadingPlaceholder: true
+        }
+      }));
+
+      expect(el.dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it('handleMenuLoadingChange does not show bib when loading starts with no input value', async () => {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Reach the deferred-open state by invoking the public flag. The
-      // showBib() path that arms it is covered by the previous test; here
-      // we exercise just the loading-finished branch.
-      el.isHiddenWhileLoading = true;
       el.input.focus();
+      el.menu.setAttribute('loading', 'loading');
       await elementUpdated(el);
 
-      // Spy on dropdown.show() so we can verify the deferred open actually
-      // fires once loading completes — there is no other observable for
-      // "loading-finish ran the deferred open" since `isPopoverVisible` is
-      // driven by dropdown.show() itself.
-      let showCalled = false;
-      const origShow = el.dropdown.show;
-      el.dropdown.show = () => { showCalled = true; };
+      el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
+        detail: {
+          loading: true,
+          hasLoadingPlaceholder: false
+        }
+      }));
+
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+
+    it('handleMenuLoadingChange does not show bib when loading starts without focus', async () => {
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      el.input.value = 'test';
+      el.menu.setAttribute('loading', 'loading');
+      el.blur();
+      await elementUpdated(el);
+
+      el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
+        detail: {
+          loading: true,
+          hasLoadingPlaceholder: false
+        }
+      }));
+
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+
+    it('handleMenuLoadingChange re-shows bib when loading finishes and isHiddenWhileLoading is true', async () => {
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="alaska">Alaska</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+
+      el.input.value = 'alaska';
+      await elementUpdated(el);
+
+      // Simulate the state produced when showBib() was called while loading was
+      // already active and no placeholder was present: the bib was kept hidden
+      // and this flag was set. The loading: false branch is the only path that
+      // clears it and re-opens the bib once options arrive.
+      el.isHiddenWhileLoading = true;
+
+      // Reflect the post-loading state: attribute removed, options now available.
+      el.availableOptions = [el.menu.querySelector('auro-menuoption')];
 
       el.handleMenuLoadingChange(new CustomEvent('auroMenu-loadingChange', {
         detail: { loading: false, hasLoadingPlaceholder: false }
       }));
+      await elementUpdated(el);
 
-      expect(showCalled).to.be.true;
-
-      // Cleanup
-      el.dropdown.show = origShow;
+      expect(el.isHiddenWhileLoading).to.be.false;
+      expect(el.dropdown.isPopoverVisible).to.be.true;
     });
 
     it('handleInputValueChange hides bib when input value is truthy with length 0 in desktop view only', async () => {
