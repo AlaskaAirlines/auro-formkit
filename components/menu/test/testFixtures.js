@@ -69,6 +69,57 @@ export async function emptyItemsFixture() {
   `);
 }
 
+export async function duplicateValueFixture() {
+  return await fixture(html`
+    <div>
+      <auro-menu aria-label="test">
+        <auro-menuoption value="SEA">Seattle-Tacoma (SEA)</auro-menuoption>
+        <auro-menuoption value="SEA">Seattle Paine Field (SEA)</auro-menuoption>
+        <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+      </auro-menu>
+    </div>
+  `);
+}
+
+export async function multiSelectDuplicateValueFixture() {
+  return await fixture(html`
+    <div>
+      <auro-menu multiSelect aria-label="test">
+        <auro-menuoption value="SEA">Seattle-Tacoma (SEA)</auro-menuoption>
+        <auro-menuoption value="SEA">Seattle Paine Field (SEA)</auro-menuoption>
+        <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+      </auro-menu>
+    </div>
+  `);
+}
+
+export async function multiSelectDisabledDuplicateValueFixture() {
+  return await fixture(html`
+    <div>
+      <auro-menu multiSelect aria-label="test">
+        <auro-menuoption value="SEA">Seattle-Tacoma (SEA)</auro-menuoption>
+        <auro-menuoption disabled value="SEA">Seattle Paine Field (SEA)</auro-menuoption>
+        <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+      </auro-menu>
+    </div>
+  `);
+}
+
+export async function nestedDuplicateValueFixture() {
+  return await fixture(html`
+    <div>
+      <auro-menu aria-label="test">
+        <auro-menuoption value="SEA">Top-level SEA</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="SEA">Nested SEA</auro-menuoption>
+          <auro-menuoption value="PDX">Nested PDX</auro-menuoption>
+        </auro-menu>
+        <auro-menuoption value="LAX">Top-level LAX</auro-menuoption>
+      </auro-menu>
+    </div>
+  `);
+}
+
 export async function multiSelectFixture() {
   return await fixture(html`
     <div>
