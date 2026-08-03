@@ -123,6 +123,35 @@ export async function defaultFixture(mobileView) {
 }
 
 /**
+ * Testing fixture whose first two options share a value but render distinct labels.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with duplicate-value options.
+ */
+export async function duplicateValueFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Airport</span>
+    <auro-menu>
+      <auro-menuoption value="SEA" id="dup-option-0">Seattle-Tacoma (SEA)</auro-menuoption>
+      <auro-menuoption value="SEA" id="dup-option-1">Seattle Paine Field (PAE)</auro-menuoption>
+      <auro-menuoption value="PDX" id="dup-option-2">Portland (PDX)</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+}
+
+/**
  * Testing fixture whose second option is disabled, for programmatic value rejection.
  * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
  * @returns {Promise<HTMLElement>} The auro-combobox element with a disabled option.

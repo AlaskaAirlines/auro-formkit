@@ -1114,6 +1114,38 @@ function runTest(mobileView) {
           expect(triggerValueEl.textContent.trim()).to.equal('');
         });
 
+        it('displays the label of the exact option selected when two options share a value', async () => {
+          // Two options carry value="SEA" but render distinct labels. The trigger
+          // label is derived from the selected element (menu.optionSelected), so
+          // selecting the SECOND must surface ITS label — not the first value match.
+          // Guards the getOptionLabel(menu.optionSelected) display path for the
+          // duplicate-value fix (AB#1602086) from the consumer side.
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="label">Airport</span>
+              <auro-menu>
+                <auro-menuoption value="SEA">Seattle-Tacoma (SEA)</auro-menuoption>
+                <auro-menuoption value="SEA">Seattle Paine Field (PAE)</auro-menuoption>
+                <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          const opts = menu.querySelectorAll('auro-menuoption');
+
+          opts[1].click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          await expect(el.value).to.equal('SEA');
+          await expect(el.optionSelected).to.equal(opts[1]);
+
+          const triggerText = el.shadowRoot.querySelector('#value').textContent.trim();
+          await expect(triggerText).to.equal('Seattle Paine Field (PAE)');
+        });
+
         it('should apply value from host attribute on initial render', async () => {
           const el = await fixture(html`
             <auro-select value="bar">

@@ -6,7 +6,7 @@ import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-class
 import '../src/registered.js';
 
 const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
-import { arrayConverter, arraysAreEqual, isOptionInteractive, isSelectableByValue } from '../src/auro-menu-utils.js';
+import { arrayConverter, arraysAreEqual, isOptionInteractive, isSelectableByValue, resolveSelectedOption, resolveSelectedOptions } from '../src/auro-menu-utils.js';
 import {
   defaultFixture,
   noninteractiveOptionsFixture,
@@ -14,6 +14,10 @@ import {
   customEventFixture,
   emptyItemsFixture,
   multiSelectFixture,
+  duplicateValueFixture,
+  multiSelectDuplicateValueFixture,
+  multiSelectDisabledDuplicateValueFixture,
+  nestedDuplicateValueFixture,
 } from './testFixtures.js';
 import { getOptions } from './testFunctions.js';
 
@@ -3026,6 +3030,558 @@ function runFullTest(mobileView) {
       // firstUpdated should have fallen back to 'sm' and 'box' with null parent
       expect(option.size).to.equal('sm');
       expect(option.shape).to.equal('box');
+    });
+  });
+
+  describe('unique option keys (duplicate values)', () => {
+    it('assigns a unique _optionKey to every option', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      const keys = options.map((option) => option._optionKey);
+      keys.forEach((key) => expect(key).to.be.a('string'));
+      expect(new Set(keys).size).to.equal(keys.length);
+    });
+
+    it('tracks the exact option clicked when values are duplicated (single-select)', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Click the SECOND option that shares value "SEA".
+      options[1].click();
+      await elementUpdated(menu);
+
+      // Resolution must land on the exact element clicked, not the first value match.
+      expect(menu.optionSelected).to.equal(options[1]);
+      expect(menu.optionSelected).to.not.equal(options[0]);
+      expect(menu.value).to.equal('SEA');
+      expect(menu._selectedKey).to.equal(options[1]._optionKey);
+    });
+
+    it('keeps tracking the correct option after a subsequent updated() cycle', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      options[1].click();
+      await elementUpdated(menu);
+
+      // Force another reactive cycle without re-flagging `value`; a re-render
+      // that does not change `value` must preserve the selection-driven key so
+      // the pick still resolves to options[1]. (A cycle that *does* re-flag
+      // `value` is a programmatic set and intentionally drops the key — covered
+      // by the 'direct value assignment' test.)
+      menu.requestUpdate();
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected === options[1], 'selection-driven key survives a re-render').to.be.true;
+    });
+
+    it('falls back to first-by-value for programmatic selectByValue with duplicates', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      menu.selectByValue('SEA');
+      await elementUpdated(menu);
+
+      // No positional intent in a programmatic set → first match by DOM order.
+      expect(menu.optionSelected).to.equal(options[0]);
+    });
+
+    it('programmatic selectByValue clears a stale key and resolves first-by-value', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // User clicks the SECOND SEA, so _selectedKey points at options[1].
+      options[1].click();
+      await elementUpdated(menu);
+      expect(menu.optionSelected).to.equal(options[1]);
+
+      // Clearing the key happens synchronously in selectByValue, regardless of
+      // whether the value ends up changing.
+      menu.selectByValue('SEA');
+      expect(menu._selectedKey).to.be.undefined;
+
+      // Move away and back programmatically: with the stale key gone, the return
+      // to 'SEA' carries no positional intent and resolves first-by-value rather
+      // than snapping back to the previously-clicked duplicate.
+      menu.selectByValue('PDX');
+      await elementUpdated(menu);
+      expect(menu.optionSelected).to.equal(options[2]);
+
+      menu.selectByValue('SEA');
+      await elementUpdated(menu);
+      expect(menu.optionSelected).to.equal(options[0]);
+    });
+
+    it('direct value assignment drops a stale key and resolves first-by-value', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // User clicks the SECOND SEA, so _selectedKey points at options[1].
+      // Compare by identity as a boolean: a failing `.to.equal(domElement)`
+      // makes chai serialize the LitElement for its diff, which hangs.
+      options[1].click();
+      await elementUpdated(menu);
+      expect(menu.optionSelected === options[1], 'click tracks the second SEA').to.be.true;
+
+      // A consumer's direct `value` property assignment carries no positional
+      // intent, so the leftover key must be dropped and resolution fall back to
+      // first-by-value — a prior click on a duplicate must not bias it.
+      menu.value = 'PDX';
+      await elementUpdated(menu);
+      expect(menu.optionSelected === options[2], 'PDX resolves to the only PDX').to.be.true;
+
+      menu.value = 'SEA';
+      await elementUpdated(menu);
+      expect(menu.optionSelected === options[0], 'programmatic SEA resolves first-by-value').to.be.true;
+    });
+
+    it('honors the user pick across a re-render when value does not change', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Click the second duplicate, then force a re-render without changing
+      // `value`. The selection-driven key must survive so the user's pick is not
+      // reset to the first-by-value option.
+      options[1].click();
+      await elementUpdated(menu);
+      menu.requestUpdate();
+      await elementUpdated(menu);
+      expect(menu.optionSelected === options[1], 'user pick survives a value-preserving re-render').to.be.true;
+    });
+
+    it('tracks duplicate-value options independently in multi-select', async () => {
+      const el = await multiSelectDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      options[0].click();
+      await elementUpdated(menu);
+      options[1].click();
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(2);
+      expect(menu.optionSelected).to.include(options[0]);
+      expect(menu.optionSelected).to.include(options[1]);
+      expect(JSON.parse(menu.value)).to.eql([
+        'SEA',
+        'SEA'
+      ]);
+    });
+
+    it('deselects one of two duplicate-value options by identity', async () => {
+      const el = await multiSelectDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Select both SEA options, then deselect the FIRST one. The survivor must be
+      // the second SEA — removal is by element identity (selected !== option), not
+      // by value, and `_sortSelectedByDomOrder()` rebuilds `value`/`_selectedKey`
+      // from that survivor. A value-vs-identity regression would drop the wrong SEA.
+      options[0].click();
+      await elementUpdated(menu);
+      options[1].click();
+      await elementUpdated(menu);
+      options[0].click();
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[1], 'the surviving SEA is the second element').to.be.true;
+      expect(menu._selectedKey).to.eql([options[1]._optionKey]);
+      expect(JSON.parse(menu.value)).to.eql(['SEA']);
+    });
+
+    it('stores multi-select selections in DOM order, not click order', async () => {
+      const el = await multiSelectDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Select PDX (index 2) first, then the first SEA (index 0).
+      options[2].click();
+      await elementUpdated(menu);
+      options[0].click();
+      await elementUpdated(menu);
+
+      // Stored order must be DOM order [SEA(0), PDX(2)], not click order [PDX, SEA].
+      expect(menu.optionSelected[0]).to.equal(options[0]);
+      expect(menu.optionSelected[1]).to.equal(options[2]);
+      expect(menu._selectedKey).to.eql([
+        options[0]._optionKey,
+        options[2]._optionKey
+      ]);
+      expect(JSON.parse(menu.value)).to.eql([
+        'SEA',
+        'PDX'
+      ]);
+    });
+
+    it('reconciles a rejected disabled value out of a multi-select selection without looping', async () => {
+      const el = await multiSelectFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Pair a selectable value with a disabled one (option4 is disabled). The
+      // reconcile branch drops the non-selectable entry and reassigns `value`,
+      // scheduling a re-entrant updated() cycle. That cycle preserves the
+      // selection-driven flag so it does not re-drop `_selectedKey` and loop —
+      // it must settle on just the selectable option.
+      menu.value = JSON.stringify([
+        'option1',
+        'option4'
+      ]);
+      await elementUpdated(menu);
+
+      expect(JSON.parse(menu.value)).to.eql(['option1']);
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[0], 'only the selectable option survives').to.be.true;
+    });
+
+    it('keeps an enabled selection when a disabled sibling shares its value', async () => {
+      const el = await multiSelectDisabledDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Click the ENABLED "SEA" (index 0). A disabled "SEA" sibling (index 1)
+      // shares its value. The value-level reconcile must not treat "SEA" as a
+      // rejected value wholesale and collapse the selection — it must keep the
+      // enabled option resolved. A presence-based reject would drop 'SEA'
+      // entirely and reverse the click.
+      options[0].click();
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[0], 'the enabled SEA survives reconcile').to.be.true;
+      expect(JSON.parse(menu.value)).to.eql(['SEA']);
+    });
+
+    it('drops a duplicate occurrence with no selectable option left but keeps the enabled one', async () => {
+      const el = await multiSelectDisabledDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Request "SEA" twice: only one selectable "SEA" exists (the other is
+      // disabled). Count-based reconcile keeps a single occurrence resolved to
+      // the enabled option and drops the surplus, rather than keeping both or
+      // dropping all.
+      menu.value = JSON.stringify([
+        'SEA',
+        'SEA'
+      ]);
+      await elementUpdated(menu);
+
+      expect(JSON.parse(menu.value)).to.eql(['SEA']);
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[0], 'the enabled SEA is the survivor').to.be.true;
+    });
+
+    it('preserves a live _selectedKey through a reconcile re-entrant cycle without looping', async () => {
+      const el = await multiSelectDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Select both SEA duplicates and PDX. `_selectedKey` now holds live keys
+      // for the exact clicked elements, including the SECOND SEA (options[1]).
+      options[0].click();
+      await elementUpdated(menu);
+      options[1].click();
+      await elementUpdated(menu);
+      options[2].click();
+      await elementUpdated(menu);
+
+      // Disable the FIRST SEA out from under the live selection. It stays in
+      // optionSelected/value until the next reconcile makes it unsatisfiable.
+      options[0].setAttribute('disabled', '');
+      await elementUpdated(options[0]);
+
+      // Deselecting PDX is selection-driven: it re-serializes `value` with the
+      // flag set and `_selectedKey` still live. updated() now finds one 'SEA'
+      // occurrence unsatisfiable (options[0] is disabled) and reconciles it out,
+      // scheduling a re-entrant updated() cycle. That reconcile must PRESERVE the
+      // selection-driven flag so the re-entrant cycle keeps `_selectedKey` and
+      // resolves through the live keys — if it dropped the flag mid-cascade,
+      // resolution would flip and loop (this await would time out).
+      options[2].click();
+      await elementUpdated(menu);
+
+      // Settles (no loop) on the still-selectable second SEA, by identity.
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[1], 'the live-keyed second SEA survives reconcile').to.be.true;
+      expect(JSON.parse(menu.value)).to.eql(['SEA']);
+    });
+
+    it('tracks the exact duplicate option selected via keyboard Enter (single-select)', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Move the active index to the SECOND option sharing value "SEA".
+      menu.navigateOptions('down');
+      await elementUpdated(menu);
+      menu.navigateOptions('down');
+      await elementUpdated(menu);
+
+      // Enter routes through handleKeyDown → makeSelection → handleSelectState —
+      // the same identity path as a click — so the exact active element is
+      // tracked, not the first value match.
+      menu.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true
+      }));
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected === options[1], 'Enter selects the exact active duplicate').to.be.true;
+      expect(menu.value).to.equal('SEA');
+      expect(menu._selectedKey).to.equal(options[1]._optionKey);
+    });
+
+    it('tracks the exact duplicate option selected via keyboard Tab (multi-select)', async () => {
+      const el = await multiSelectDuplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+
+      // Activate the second "SEA" and commit it with Tab (which also selects via
+      // makeSelection while letting focus leave the menu).
+      menu.navigateOptions('down');
+      await elementUpdated(menu);
+      menu.navigateOptions('down');
+      await elementUpdated(menu);
+      menu.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Tab',
+        bubbles: true
+      }));
+      await elementUpdated(menu);
+
+      expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+      expect(menu.optionSelected[0] === options[1], 'Tab selects the exact active duplicate').to.be.true;
+      expect(menu._selectedKey).to.eql([options[1]._optionKey]);
+      expect(JSON.parse(menu.value)).to.eql(['SEA']);
+    });
+
+    it('keeps option keys stable across re-renders', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+      const options = getOptions(menu);
+      const keysBefore = options.map((option) => option._optionKey);
+
+      // Trigger re-renders via an attribute change and an explicit initItems pass.
+      menu.matchWord = 'SEA';
+      await elementUpdated(menu);
+      menu.initItems();
+      await elementUpdated(menu);
+
+      const keysAfter = getOptions(menu).map((option) => option._optionKey);
+      expect(keysAfter).to.eql(keysBefore);
+    });
+
+    it('isolates keys across separate menu instances', async () => {
+      const elA = await duplicateValueFixture();
+      const elB = await duplicateValueFixture();
+      const menuA = elA.querySelector('auro-menu');
+      const menuB = elB.querySelector('auro-menu');
+      await elementUpdated(menuA);
+      await elementUpdated(menuB);
+
+      expect(menuA._menuInstanceId).to.not.equal(menuB._menuInstanceId);
+
+      const keysA = getOptions(menuA).map((option) => option._optionKey);
+      const keysB = getOptions(menuB).map((option) => option._optionKey);
+      const overlap = keysA.filter((key) => keysB.includes(key));
+      expect(overlap).to.be.empty;
+    });
+
+    it('assigns fresh keys to dynamically rebuilt options and resolves duplicates', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const originalKeys = getOptions(menu).map((option) => option._optionKey);
+
+      // Simulate a combobox-style rebuild: replace the slotted options entirely.
+      menu.innerHTML = `
+        <auro-menuoption value="LAX">Los Angeles (LAX)</auro-menuoption>
+        <auro-menuoption value="LAX">Hollywood Burbank (LAX)</auro-menuoption>
+      `;
+      await oneEvent(menu, 'auroMenu-optionsChange');
+      await elementUpdated(menu);
+
+      const newOptions = getOptions(menu);
+      // New elements receive keys never used by the original set (counter never resets).
+      newOptions.forEach((option) => {
+        expect(option._optionKey).to.be.a('string');
+        expect(originalKeys).to.not.include(option._optionKey);
+      });
+
+      // Duplicate values in the new set remain unambiguous.
+      newOptions[1].click();
+      await elementUpdated(menu);
+      expect(menu.optionSelected).to.equal(newOptions[1]);
+    });
+
+    it('tracks the correct nested option when values duplicate across levels', async () => {
+      const el = await nestedDuplicateValueFixture();
+      const rootMenu = el.querySelector('auro-menu');
+      await elementUpdated(rootMenu);
+
+      const nestedSeaOption = el.querySelector('auro-menu auro-menu auro-menuoption[value="SEA"]');
+      const topSeaOption = el.querySelector('auro-menu > auro-menuoption[value="SEA"]');
+
+      // Both SEA options are in the root's flat items list with distinct keys.
+      expect(nestedSeaOption._optionKey).to.be.a('string');
+      expect(nestedSeaOption._optionKey).to.not.equal(topSeaOption._optionKey);
+
+      nestedSeaOption.click();
+      await elementUpdated(rootMenu);
+
+      expect(rootMenu.optionSelected).to.equal(nestedSeaOption);
+      expect(rootMenu.value).to.equal('SEA');
+    });
+
+    it('assigns keys to a dynamically inserted nested submenu', async () => {
+      const el = await duplicateValueFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const submenu = document.createElement('auro-menu');
+      submenu.innerHTML = `<auro-menuoption value="SEA">Nested SEA</auro-menuoption>`;
+      menu.appendChild(submenu);
+      await oneEvent(menu, 'auroMenu-optionsChange');
+      await elementUpdated(menu);
+
+      const nestedOption = submenu.querySelector('auro-menuoption');
+      expect(nestedOption._optionKey).to.be.a('string');
+
+      nestedOption.click();
+      await elementUpdated(menu);
+      expect(menu.optionSelected).to.equal(nestedOption);
+    });
+  });
+
+  describe('resolveSelectedOption / resolveSelectedOptions utils', () => {
+    const makeOption = (value, key) => ({
+      value,
+      _optionKey: key,
+      hasAttribute: () => false
+    });
+
+    it('resolveSelectedOption prefers the keyed option over first-by-value', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      expect(resolveSelectedOption(items, 'SEA', 'k2')).to.equal(items[1]);
+    });
+
+    it('resolveSelectedOption falls back to value when the key is stale', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      expect(resolveSelectedOption(items, 'SEA', 'gone')).to.equal(items[0]);
+    });
+
+    it('resolveSelectedOption falls back to value when the keyed value no longer matches', () => {
+      const items = [
+        makeOption('PDX', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      expect(resolveSelectedOption(items, 'SEA', 'k1')).to.equal(items[1]);
+    });
+
+    it('resolveSelectedOptions returns matches in DOM order regardless of key order', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('PDX', 'k2')
+      ];
+      const resolved = resolveSelectedOptions(items, [
+        'SEA',
+        'PDX'
+      ], [
+        'k2',
+        'k1'
+      ]);
+      expect(resolved).to.eql([
+        items[0],
+        items[1]
+      ]);
+    });
+
+    it('resolveSelectedOptions resolves duplicate values to distinct elements', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      const resolved = resolveSelectedOptions(items, [
+        'SEA',
+        'SEA'
+      ], undefined);
+      expect(resolved).to.eql([
+        items[0],
+        items[1]
+      ]);
+    });
+
+    it('resolveSelectedOptions matches duplicates by count when only one is keyed', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      // Two 'SEA' values but only the second option is resolved by key; the
+      // remaining occurrence must still fall back to the first option by count,
+      // not be dropped because a 'SEA' was already resolved.
+      const resolved = resolveSelectedOptions(items, [
+        'SEA',
+        'SEA'
+      ], [
+        'k2'
+      ]);
+      expect(resolved).to.eql([
+        items[0],
+        items[1]
+      ]);
+    });
+
+    it('resolveSelectedOptions bounds key resolution by count when more keys survive than values requested', () => {
+      const items = [
+        makeOption('SEA', 'k1'),
+        makeOption('SEA', 'k2')
+      ];
+      // Both duplicate options are still keyed (e.g. `value` was set directly to a
+      // single 'SEA' without clearing `_selectedKey`), but only one 'SEA' is now
+      // requested. Resolution must honor the value count and return exactly one
+      // option, not over-resolve both keys.
+      const resolved = resolveSelectedOptions(items, [
+        'SEA'
+      ], [
+        'k1',
+        'k2'
+      ]);
+      expect(resolved).to.eql([
+        items[0]
+      ]);
     });
   });
 

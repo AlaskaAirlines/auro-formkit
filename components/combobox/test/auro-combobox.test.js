@@ -8,6 +8,7 @@ import {
   shiftTabFixture,
   shiftTabDisabledFirstFixture,
   defaultFixture,
+  duplicateValueFixture,
   disabledOptionFixture,
   presetDisabledValueFixture,
   nestedMenuFixture,
@@ -766,6 +767,39 @@ function runFullTest(mobileView) {
       await expect(right.value).to.equal('a');
       await expect(left.input.value).to.equal('b');
       await expect(right.input.value).to.equal('a');
+    });
+
+    // Regression (AB#1602086): two options share a value but render distinct
+    // labels. Selecting the SECOND must keep ITS identity through combobox's
+    // value↔menu sync — previously combobox.updated() cleared the menu
+    // selection (input shows the label, this.value the machine value), and the
+    // value-only re-resolution collapsed onto the FIRST same-value option.
+    it('keeps the exact option selected when two options share a value', async () => {
+      const el = await duplicateValueFixture(mobileView);
+      await elementUpdated(el);
+
+      // Type "Seattle" so both duplicate options stay visible, open, then
+      // click the second — the true duplicate-disambiguation path.
+      el.focus();
+      await elementUpdated(el);
+      await sendKeys({ type: 'Seattle' });
+      el.input.click();
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      const menu = el.querySelector('auro-menu');
+      const opts = menu.querySelectorAll('auro-menuoption');
+
+      opts[1].click();
+      await elementUpdated(opts[1]);
+      await elementUpdated(menu);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('SEA');
+      await expect(el.optionSelected).to.equal(opts[1]);
+      await expect(el.menu.optionSelected).to.equal(opts[1]);
+      await expect(el.input.value).to.equal('Seattle Paine Field (PAE)');
     });
 
     // Regression: with persistInput + framework re-mount (Svelte `{#key}`),
