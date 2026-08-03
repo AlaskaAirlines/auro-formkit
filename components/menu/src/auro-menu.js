@@ -17,9 +17,19 @@ import {
   isOptionInteractive,
   isSelectableByValue,
   dispatchMenuEvent,
-  serializeMultiSelectValue
+  serializeMultiSelectValue,
+  resolveSelectedOption,
+  resolveSelectedOptions
 } from './auro-menu-utils.js';
 import { classMap } from "lit/directives/class-map.js";
+
+/**
+ * Monotonically increasing counter used to give each menu instance a unique
+ * `_menuInstanceId` prefix. Auto-generating the id (rather than using a random
+ * string) keeps option keys deterministic and collision-free across menus.
+ * @private
+ */
+let menuInstanceIdCounter = 0;
 
 
 /**
@@ -92,9 +102,8 @@ export class AuroMenu extends AuroElement {
 
     // Instance properties (non-reactive)
 
-    /**
-     * @private
-     */
+    menuInstanceIdCounter += 1;
+
     Object.assign(this, {
       // Root-level menu (true) or a nested submenu (false)
       rootMenu: true,
@@ -104,6 +113,21 @@ export class AuroMenu extends AuroElement {
       nestingSpacer: '<span class="nestingSpacer"></span>',
       // Loading indicator for slot elements
       loadingSlots: null,
+      // Unique id for this menu instance; prefixes every auto-generated option
+      // key so keys never collide across menus in the same document.
+      _menuInstanceId: `menu-${menuInstanceIdCounter}`,
+      // Monotonically increasing counter for option key generation. Never
+      // resets, so a key is never reused within this instance's lifetime.
+      _optionKeyCounter: 0,
+      // Key(s) of the option(s) the user has actively selected. A single string
+      // in single-select, an array in multi-select, undefined when nothing is
+      // user-selected. Used to disambiguate options that share a `value`.
+      _selectedKey: undefined,
+      // True only for the one updated() cycle following a user selection, so
+      // reconciliation trusts `_selectedKey`. A `value` change from a consumer's
+      // direct property assignment leaves this false, dropping the stale key so
+      // reconciliation falls back to first-by-value (see updated()).
+      _valueChangeFromSelection: false,
     });
   }
 
@@ -323,6 +347,13 @@ export class AuroMenu extends AuroElement {
       return;
     }
 
+    // A programmatic value set carries no positional intent, so drop any
+    // `_selectedKey` left over from a prior user click. This makes reconciliation
+    // in updated() fall back to first-by-value (single) / value-in-DOM-order
+    // (multi), matching the documented contract for programmatic selection even
+    // when a stale key would still resolve to a duplicate-value option.
+    this._selectedKey = undefined;
+
     // `value` is a String property; stringify arrays so attribute reflection and `formattedValue` parsing stay correct.
     this.value = Array.isArray(value) ? JSON.stringify(value) : value;
   }
@@ -370,6 +401,17 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    // Consume the selection-driven flag for THIS cycle up front. Clearing it
+    // unconditionally — not only inside the `value` branch below — prevents it
+    // from lingering `true` when a selection produces a serialized `value`
+    // byte-identical to the current one, in which case Lit schedules no
+    // `value`-change cycle to consume it. A lingering flag would misclassify a
+    // later consumer's programmatic `value` set as selection-driven and keep a
+    // stale `_selectedKey`. The reconcile path below re-sets the instance flag
+    // after this point, so its intentional cross-cycle hand-off still works.
+    const valueChangeFromSelection = this._valueChangeFromSelection;
+    this._valueChangeFromSelection = false;
+
     // Single source of truth for 'auroMenu-selectedOption'. Selection handlers
     // mutate optionSelected and let Lit's update cycle dispatch here; the prior
     // .value comparison missed multi-select array changes and combined with the
@@ -393,6 +435,17 @@ export class AuroMenu extends AuroElement {
         this.initItems();
       }
 
+      // Distinguish a selection-driven `value` change (a user click, which set
+      // the flag in handleSelectState / _sortSelectedByDomOrder) from a
+      // programmatic assignment by a consumer. A programmatic set carries no
+      // positional intent, so drop any leftover `_selectedKey` and let
+      // reconciliation fall back to first-by-value (single) / value-in-DOM-order
+      // (multi) — the same contract selectByValue() guarantees, even when a
+      // stale key would otherwise still resolve to a duplicate-value option.
+      if (!valueChangeFromSelection) {
+        this._selectedKey = undefined;
+      }
+
       // Set when reconciliation reassigns `value` below. That reassignment schedules a
       // second updated() cycle, so the `event`-attribute dispatch is deferred to that
       // cycle to avoid firing option custom events twice on the same selection.
@@ -410,19 +463,55 @@ export class AuroMenu extends AuroElement {
           // Defensive default: `formattedValue` can be undefined for unexpected value types,
           // and calling `.includes` on undefined would throw during reconciliation.
           const valueArray = this.formattedValue || [];
-          const matchingOptions = this.items ? this.items.filter((item) => isSelectableByValue(item) && valueArray.includes(item.value)) : [];
+          // Resolve by key first (the user's exact picks), then fall back to
+          // value matching for any values not resolved by key — so pre-selection
+          // and programmatic value sets keep working. Result is DOM-ordered.
+          const matchingOptions = resolveSelectedOptions(this.items, valueArray, this._selectedKey);
           newSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
 
-          // Reconcile `value` with the selectable set. Drop only entries whose option is
-          // loaded but non-selectable (disabled/static) — leaving them would desync `value`
-          // from `optionSelected`, and the toggle handlers rebuild `value` from `formattedValue`,
-          // so the rejected entry would resurface on the next select/deselect. Entries with no
-          // matching item yet are preserved so async preselection still works once options render.
-          const rejectedValues = this.items
-            ? this.items.filter((item) => !isSelectableByValue(item) && valueArray.includes(item.value)).map((item) => item.value)
-            : [];
-          if (rejectedValues.length > 0) {
-            const reconciled = valueArray.filter((val) => !rejectedValues.includes(val));
+          // Reconcile `value` with the selectable set. An occurrence is dropped
+          // only when it is loaded but no selectable option can satisfy it —
+          // every loaded item sharing that value is non-selectable, or the value
+          // recurs more often than it has selectable options (a duplicate value
+          // whose extra siblings are disabled/static). This is count-based, not
+          // presence-based, so an enabled option is kept even when a disabled
+          // sibling shares its value — mirroring how `resolveSelectedOptions`
+          // resolves the same set. Entries with no matching item yet are
+          // preserved so async preselection still works, and the toggle handlers
+          // rebuild `value` from `formattedValue`, so a rejected entry cannot
+          // resurface on the next select/deselect.
+          const selectableByValue = new Map();
+          const loadedValues = new Set();
+          if (this.items) {
+            this.items.forEach((item) => {
+              loadedValues.add(item.value);
+              if (isSelectableByValue(item)) {
+                selectableByValue.set(item.value, (selectableByValue.get(item.value) || 0) + 1);
+              }
+            });
+          }
+
+          const reconciled = valueArray.filter((val) => {
+            // Not loaded yet (async preselection) — keep for a later cycle.
+            if (!loadedValues.has(val)) {
+              return true;
+            }
+            // Consume one selectable option per occurrence; drop once exhausted.
+            const remaining = selectableByValue.get(val) || 0;
+            if (remaining > 0) {
+              selectableByValue.set(val, remaining - 1);
+              return true;
+            }
+            return false;
+          });
+
+          if (reconciled.length !== valueArray.length) {
+            // This is an internal correction, not a consumer's programmatic set,
+            // so preserve the selection-driven flag through the re-entrant
+            // updated() cycle it schedules. Otherwise that cycle would treat the
+            // reassignment as programmatic and drop `_selectedKey` mid-cascade,
+            // flipping resolution and looping.
+            this._valueChangeFromSelection = true;
             this.value = serializeMultiSelectValue(reconciled);
             valueReconciled = true;
           }
@@ -434,7 +523,11 @@ export class AuroMenu extends AuroElement {
           // `hidden` is intentionally NOT excluded: the combobox toggles
           // `hidden` as its type-ahead filter, so a filtered-out option is
           // still a valid programmatic selection.
-          const matchingOption = this.items ? this.items.find((item) => isSelectableByValue(item) && item.value === this.value) : undefined;
+          // Prefer the option the user actually selected (tracked by
+          // `_selectedKey`) so a click on the second of two options sharing a
+          // `value` resolves back to that exact element instead of the first
+          // value match. Falls back to first-by-value for programmatic sets.
+          const matchingOption = resolveSelectedOption(this.items, this.value, this._selectedKey);
 
           if (matchingOption) {
             newSelected = matchingOption;
@@ -662,6 +755,14 @@ export class AuroMenu extends AuroElement {
       }
     });
 
+    // Assign private keys once items are populated. Only the root menu assigns
+    // keys: its `items` is a deep query that already includes nested submenu
+    // options, so a single pass keys the entire tree. Nested menus skip this
+    // and inherit keys from the root.
+    if (this.rootMenu) {
+      this._assignOptionKeys();
+    }
+
     if (this.noCheckmark) {
       this.updateItemsState(new Map([
         [
@@ -678,6 +779,31 @@ export class AuroMenu extends AuroElement {
     }));
   }
 
+  /**
+   * Assigns a private, auto-generated unique key (`_optionKey`) to each menu
+   * option that does not already have one. Keys are internal state on the
+   * element instance — never reflected as an attribute or exposed publicly —
+   * and let selection tracking distinguish options that share the same `value`.
+   *
+   * The `_optionKey === undefined` guard makes this idempotent: options keep the
+   * key they were first assigned across re-renders and slot changes, and if a
+   * nested menu's lifecycle runs a pass before the root, options simply wait for
+   * the root to key them (or keep whatever key they already hold).
+   * @private
+   */
+  _assignOptionKeys() {
+    if (!this.items) {
+      return;
+    }
+
+    this.items.forEach((option) => {
+      if (option._optionKey === undefined) {
+        this._optionKeyCounter += 1;
+        option._optionKey = `${this._menuInstanceId}-${this._optionKeyCounter}`;
+      }
+    });
+  }
+
   // Logic Methods
 
   /**
@@ -687,24 +813,28 @@ export class AuroMenu extends AuroElement {
    */
   handleSelectState(option) {
     if (this.multiSelect) {
-      const currentValue = this.formattedValue || [];
       const currentSelected = this.optionSelected || [];
 
-      if (!currentValue.includes(option.value)) {
-        this.value = serializeMultiSelectValue([
-          ...currentValue,
-          option.value
-        ]);
-      }
       if (!currentSelected.includes(option)) {
         this.optionSelected = [
           ...currentSelected,
           option
         ];
       }
+
+      // Re-sort by DOM order and rebuild `_selectedKey`/`value` from the
+      // selected set so display order stays consistent with the menu, not with
+      // click order.
+      this._sortSelectedByDomOrder();
     } else {
       this.value = option.value;
       this.optionSelected = option;
+      // Track the specific option the user selected so the value→option
+      // reconciliation in updated() resolves back to this exact element even
+      // when another option shares the same `value`.
+      this._selectedKey = option._optionKey;
+      // Mark this `value` change as selection-driven so updated() trusts the key.
+      this._valueChangeFromSelection = true;
     }
 
     this._index = this.items.indexOf(option);
@@ -717,18 +847,22 @@ export class AuroMenu extends AuroElement {
    */
   handleDeselectState(option) {
     if (this.multiSelect) {
-      // Remove this option from array; an empty result collapses `value` to undefined.
-      const newFormattedValue = (this.formattedValue || []).filter((val) => val !== option.value);
-      this.value = serializeMultiSelectValue(newFormattedValue);
-
-      this.optionSelected = this.optionSelected.filter((val) => val !== option);
+      // Remove this exact element from the selection (identity, not value — two
+      // options can share a `value`), then rebuild `value`/`_selectedKey` from
+      // the remaining set in DOM order. An empty result collapses to undefined.
+      this.optionSelected = this.optionSelected.filter((selected) => selected !== option);
       if (this.optionSelected.length === 0) {
         this.optionSelected = undefined;
+        this._selectedKey = undefined;
+        this.value = undefined;
+      } else {
+        this._sortSelectedByDomOrder();
       }
     } else {
       // For single-select: Back to undefined when deselected
       this.value = undefined;
       this.optionSelected = undefined;
+      this._selectedKey = undefined;
     }
 
     // Update the index tracking
@@ -752,7 +886,36 @@ export class AuroMenu extends AuroElement {
   clearSelection() {
     this.optionSelected = undefined;
     this.value = undefined;
+    this._selectedKey = undefined;
     this._index = -1;
+  }
+
+  /**
+   * Re-sorts the multi-select selection into DOM order and rebuilds the derived
+   * `_selectedKey` and `value` from `optionSelected`. Selection is always stored
+   * and serialized in the order options appear in the menu, never in click
+   * order — so selecting C then A yields `[A, C]`.
+   * @private
+   */
+  _sortSelectedByDomOrder() {
+    if (!this.multiSelect || !Array.isArray(this.optionSelected) || !this.items) {
+      return;
+    }
+
+    const indexMap = new Map(this.items.map((item, index) => [
+      item,
+      index
+    ]));
+
+    // Sort any element no longer in `items` (a stale selection left over from a
+    // dynamic rebuild that the consumer has not cleared) to the END rather than
+    // the front, so it never displaces a live option to the head of the
+    // serialized order. Value reconciliation drops it on the next updated() cycle.
+    this.optionSelected.sort((optionA, optionB) => (indexMap.get(optionA) ?? this.items.length) - (indexMap.get(optionB) ?? this.items.length));
+    this._selectedKey = this.optionSelected.map((option) => option._optionKey);
+    this.value = serializeMultiSelectValue(this.optionSelected.map((option) => option.value));
+    // Mark this `value` change as selection-driven so updated() trusts the keys.
+    this._valueChangeFromSelection = true;
   }
 
   /**
@@ -764,6 +927,7 @@ export class AuroMenu extends AuroElement {
     // Reset to undefined - initial state
     this.value = undefined;
     this.optionSelected = undefined;
+    this._selectedKey = undefined;
     this._index = -1;
 
     // Clear active option state so a follow-up open/navigation starts fresh
