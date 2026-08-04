@@ -300,6 +300,38 @@ function runFullTest(mobileView) {
         });
       });
 
+      it('should re-select via Enter after deselecting the last selected option in multi-select mode', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const options = getOptions(menuEl);
+
+        // Highlight and select the first option so it becomes the only selection.
+        menuEl.index = 0;
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(JSON.parse(menuEl.value)).to.eql(['option1']);
+        expect(options[0].hasAttribute('selected')).to.be.true;
+
+        // Deselect it without moving the highlight. This empties the whole
+        // selection, so value collapses to undefined and updated() resets
+        // `_index` to -1 while `optionActive` still points at option 0.
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.value).to.be.undefined;
+        expect(options[0].hasAttribute('selected')).to.be.false;
+
+        // Pressing Enter again on the still-highlighted option must re-select it,
+        // without first moving the highlight away and back.
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(JSON.parse(menuEl.value)).to.eql(['option1']);
+        expect(options[0].hasAttribute('selected')).to.be.true;
+        expect(options[0].getAttribute('aria-selected')).to.equal('true');
+      });
+
       it('should not allow selection of disabled options in multi-select mode', async () => {
         const el = await multiSelectFixture();
         const menuEl = el.querySelector('auro-menu');
