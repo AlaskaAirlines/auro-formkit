@@ -1146,6 +1146,42 @@ function runTest(mobileView) {
           await expect(triggerText).to.equal('Seattle Paine Field (PAE)');
         });
 
+        it('holds two options that share a value as distinct selections in multiselect', async () => {
+          // Multi-select peer of the single-select duplicate-value guard above.
+          // Two options carry value="SEA"; selecting BOTH must keep them as two
+          // distinct elements (by identity) stored in DOM order, not collapse into
+          // one. Guards the duplicate-value fix (AB#1602086) from the consumer side
+          // for multiselect, mirroring duplicate-values-multiselect.html.
+          const el = await fixture(html`
+            <auro-select multiselect>
+              <span slot="label">Airport</span>
+              <auro-menu>
+                <auro-menuoption value="SEA">Seattle-Tacoma (SEA)</auro-menuoption>
+                <auro-menuoption value="SEA">Seattle Paine Field (PAE)</auro-menuoption>
+                <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          const opts = menu.querySelectorAll('auro-menuoption');
+
+          // Select the SECOND SEA first, then the FIRST — DOM order must win
+          // regardless of click order, and each must keep its own identity.
+          opts[1].click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+          opts[0].click();
+          await elementUpdated(menu);
+          await elementUpdated(el);
+
+          await expect(el.optionSelected.length).to.equal(2);
+          await expect(el.optionSelected[0]).to.equal(opts[0]);
+          await expect(el.optionSelected[1]).to.equal(opts[1]);
+          await expect(JSON.parse(el.value)).to.eql(['SEA', 'SEA']);
+        });
+
         it('should apply value from host attribute on initial render', async () => {
           const el = await fixture(html`
             <auro-select value="bar">
