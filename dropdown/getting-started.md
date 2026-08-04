@@ -402,8 +402,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
   const triggerInput = document.querySelector('#showExampleTriggerInput');
   const dropdownElem = document.querySelector('#showMethodExample');
 ​
-  triggerInput?.addEventListener('keydown', () =&gt; {
-    dropdownElem?.show();
+  triggerInput.addEventListener('keydown', () =&gt; {
+    dropdownElem.show();
   });
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -452,8 +452,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
   const btn = document.querySelector('#hideExampleBtn');
   const dropdown = document.querySelector('#hideExample');
 ​
-  btn?.addEventListener('click', () =&gt; {
-    dropdown?.hide();
+  btn.addEventListener('click', () =&gt; {
+    dropdown.hide();
   });
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

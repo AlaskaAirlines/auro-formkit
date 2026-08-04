@@ -504,7 +504,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-width.html) -->
 <!-- The below content is automatically added from ./../apiExamples/match-width.html -->
-<auro-dropdown id="matchWidth" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
+<auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
 <div style="padding: var(--ds-size-150);">
             Lorem ipsum solar
 <br />
@@ -525,7 +525,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-width.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/match-width.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="matchWidth" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader"&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
     Lorem ipsum solar
     &lt;br /&gt;
@@ -664,7 +664,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/error.html -->
-<auro-dropdown id="error" layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
+<auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
 <div style="padding: var(--ds-size-150);">
             Lorem ipsum solar
 <br />
@@ -711,7 +711,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="error" layout="classic" shape="classic" size="lg" error id="errorDropdownExample"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample"&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
     Lorem ipsum solar
     &lt;br /&gt;
