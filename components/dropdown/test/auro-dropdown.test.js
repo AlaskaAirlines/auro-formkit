@@ -3263,6 +3263,37 @@ function runFullTest(mobileView) {
       el.noFocusRestoreOnClose = false;
     });
   });
+
+  describe('DOM Re-mount', () => {
+    it('should open the bib after being moved to a new parent (AB#1611656)', async () => {
+      const container = await fixture(html`
+        <div>
+          <div id="original">
+            <auro-dropdown>
+              <div slot="trigger" tabindex="0">Trigger</div>
+              <div>Bib content</div>
+            </auro-dropdown>
+          </div>
+          <div id="destination"></div>
+        </div>
+      `);
+      await elementUpdated(container);
+
+      const el = container.querySelector('auro-dropdown');
+      const destination = container.querySelector('#destination');
+
+      // Move the dropdown to a new parent — simulates what auro-drawer does
+      destination.append(el);
+      await elementUpdated(el);
+
+      // Trigger click must still open the bib after reattachment
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      trigger.click();
+      await elementUpdated(el);
+
+      expectPopoverShown(el);
+    });
+  });
 }
 
 // Desktop Test Suite
