@@ -907,6 +907,14 @@ export class AuroMenu extends AuroElement {
       index
     ]));
 
+    // Sorting in place mutates `optionSelected` without a new array reference,
+    // which Lit's `===` change-detection cannot see on its own — but that is
+    // intentional and safe: both callers (handleSelectState / handleDeselectState)
+    // assign a fresh `optionSelected` array immediately before calling, so Lit
+    // already has a changed reference to react to, and the `value` write below
+    // schedules the updated() cycle that re-derives `optionSelected` in DOM order
+    // via resolveSelectedOptions. Do not "fix" this into a new-array assignment.
+    //
     // Sort any element no longer in `items` (a stale selection left over from a
     // dynamic rebuild that the consumer has not cleared) to the END rather than
     // the front, so it never displaces a live option to the head of the
@@ -990,11 +998,13 @@ export class AuroMenu extends AuroElement {
     }
 
     // Recover `_index` from the highlighted option when it has been reset to -1.
-    // In multi-select, deselecting the last remaining option collapses the value
-    // to undefined, and the updated() reconciliation resets `_index = -1` even
-    // though `optionActive` still points at the highlighted option. Without this,
-    // reading `items[-1]` returns undefined and the re-select no-ops until the
-    // highlight is moved away and back. Mirrors auro-combobox's reconcileMenuIndex.
+    // The updated() reconciliation resets `_index = -1` whenever the value
+    // collapses to undefined while `optionActive` still points at the highlighted
+    // option — e.g. deselecting the last remaining option in multi-select, or a
+    // programmatic clearSelection() in single-select while keyboard focus is on an
+    // option. Without this, reading `items[-1]` returns undefined and the re-select
+    // no-ops until the highlight is moved away and back. Mirrors auro-combobox's
+    // reconcileMenuIndex.
     if (this._index < 0 && this.optionActive && this.items) {
       const activeIndex = this.items.indexOf(this.optionActive);
       if (activeIndex >= 0) {
