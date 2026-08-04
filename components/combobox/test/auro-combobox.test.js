@@ -800,6 +800,27 @@ function runFullTest(mobileView) {
       await expect(el.optionSelected).to.equal(opts[1]);
       await expect(el.menu.optionSelected).to.equal(opts[1]);
       await expect(el.input.value).to.equal('Seattle Paine Field (PAE)');
+
+      // ...and a subsequent PROGRAMMATIC value reconcile to that same shared
+      // value must NOT collapse the selection onto the FIRST match. This is the
+      // divergence from auro-menu.selectByValue('SEA') (which always snaps to
+      // the first same-value option): combobox.updated() guards it via
+      // `menuSelectionMatchesValue` — when the menu's selected option already
+      // carries the incoming value, the menu selection is left intact rather
+      // than cleared-and-value-re-resolved, so the exact element the user chose
+      // survives. A plain `el.value = 'SEA'` is a Lit no-op here (value is
+      // already 'SEA') and never re-enters updated(), so force the value-change
+      // reconcile cycle to run — the cycle a framework drives when it re-writes
+      // `value` on re-render. Without the guard, updated() clears the menu and
+      // value-only resolution collapses onto opts[0].
+      el.value = 'SEA';
+      el.requestUpdate('value', 'PDX');
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('SEA');
+      await expect(el.optionSelected).to.equal(opts[1]);
+      await expect(el.menu.optionSelected).to.equal(opts[1]);
+      await expect(el.input.value).to.equal('Seattle Paine Field (PAE)');
     });
 
     // Regression: with persistInput + framework re-mount (Svelte `{#key}`),
