@@ -8,9 +8,19 @@ import { AuroDropdown } from '../src/auro-dropdown.js';
 AuroDropdown.register();
 AuroDropdown.register('custom-dropdown');
 
-export function initExamples() {
+export function initExamples(initCount) {
   // javascript example function calls to be added here upon creation to test examples
-  classicExample();
-  classicInverseExample();
-  customExample();
+  initCount = initCount || 0;
+
+  try {
+    classicExample();
+    classicInverseExample();
+    customExample();
+  } catch {
+    if (initCount <= 20) {
+      setTimeout(() => {
+        initExamples(initCount + 1);
+      }, 100);
+    }
+  }
 }
