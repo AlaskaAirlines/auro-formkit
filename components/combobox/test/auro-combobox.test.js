@@ -4533,14 +4533,23 @@ function runFullTest(mobileView) {
           const el = drawer.querySelector('auro-combobox');
           await elementUpdated(el);
 
+          // auro-drawer's drawerBib schedules a requestAnimationFrame to call
+          // focusFirstElement() when it becomes visible, which steals focus
+          // before sendKeys runs. Let that rAF fire first, then re-focus so
+          // sendKeys lands on the native input.
           el.focus();
-          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          el.focus();
           await sendKeys({ press: 'a' });
           el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+          el.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'Escape',
+            bubbles: true,
+            composed: true
+          }));
           await elementUpdated(el);
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           await elementUpdated(el);
