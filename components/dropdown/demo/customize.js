@@ -5,8 +5,17 @@ AuroDropdown.register();
 AuroDropdown.register('custom-dropdown');
 
 import { fullscreenBreakpointExample } from '../apiExamples/fullscreen-breakpoint.js';
-export function initExamples() {
+export function initExamples(initCount) {
   // javascript example function calls to be added here upon creation to test examples
+  initCount = initCount || 0;
 
-  fullscreenBreakpointExample();
+  try {
+    fullscreenBreakpointExample();
+  } catch {
+    if (initCount <= 20) {
+      setTimeout(() => {
+        initExamples(initCount + 1);
+      }, 100);
+    }
+  }
 }
