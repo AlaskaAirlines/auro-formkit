@@ -1779,6 +1779,9 @@ export class AuroCombobox extends AuroElement {
         // does NOT match the new value.
         const menuSelectionMatchesValue =
           this.menu.optionSelected &&
+          // optionSelected is a single element here (scalar `.value`). A multiselect
+          // menu exposes it as an ARRAY, which has no scalar `.value` to compare, so
+          // that shape can't be a single-option match — fall through to the clear path.
           !Array.isArray(this.menu.optionSelected) &&
           this.menu.optionSelected.value === this.value;
 
