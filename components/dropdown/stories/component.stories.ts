@@ -508,6 +508,48 @@ export const DropdownInDrawerBibOpen: Story = {
   },
 };
 
+// ─── AB#1611656 — trigger still works after DOM re-mount ────────────────────
+// Regression guard: auro-drawer (PR131+) moves its light DOM children into an
+// internal element on every update, disconnecting and reconnecting the dropdown.
+// Before the fix, disconnectedCallback() stripped the trigger's click listener
+// and firstUpdated() never re-ran to restore it — the bib was permanently
+// non-openable after re-mount. This story exercises that exact path:
+// it moves the dropdown to a new parent (simulating what auro-drawer does),
+// then verifies the trigger click still opens the bib.
+export const DropdownReopenAfterReparent: Story = {
+  tags: ['!autodocs'],
+  render: () => html`
+<div style="display: flex; gap: 1rem; align-items: flex-start;">
+  <div id="origin" style="border: 1px dashed #aaa; padding: 0.5rem; min-width: 200px;">
+    <p style="margin: 0 0 0.5rem; font-size: 0.75rem; color: #888;">Original parent</p>
+    <auro-dropdown id="dropdown-reparent" chevron aria-label="reparent test">
+      <span slot="label">Select option</span>
+      <div slot="trigger">Trigger</div>
+      <div style="padding: 1rem;">Bib still opens after re-mount ✓</div>
+    </auro-dropdown>
+  </div>
+  <div id="destination" style="border: 1px dashed #ccc; padding: 0.5rem; min-width: 200px;">
+    <p style="margin: 0 0 0.5rem; font-size: 0.75rem; color: #888;">Destination parent (receives element after move)</p>
+  </div>
+</div>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-dropdown')!;
+    const destination = canvasElement.querySelector('#destination')!;
+
+    // Move the dropdown — this triggers disconnectedCallback() which strips
+    // trigger listeners. The fix in connectedCallback() restores them.
+    destination.append(el);
+    await wait(50);
+
+    // Trigger must still open the bib after re-mount
+    const trigger = el.shadowRoot!.querySelector('#trigger') as HTMLElement;
+    trigger.click();
+    await wait(100);
+    await expect(el).toHaveAttribute('open');
+  },
+};
+
 // Counter-group interaction stories live in components/counter/stories/component.stories.ts
 
 // ─── Hover pseudo-state on a dropdown trigger ────────────────────────────────
