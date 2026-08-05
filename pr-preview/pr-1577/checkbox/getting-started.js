@@ -1,6 +1,8 @@
 import { AuroCheckbox } from '../src/auro-checkbox.js';
 import { AuroCheckboxGroup } from '../src/auro-checkbox-group.js';
 
+import { resetStateExample } from '../apiExamples/reset-state.js';
+
 AuroCheckbox.register(); // registering to `auro-checkbox`
 AuroCheckboxGroup.register(); // registering to `auro-checkbox-group`
 
@@ -11,7 +13,7 @@ export function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
-    // Add any example initialization code here.
+    resetStateExample();
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {
