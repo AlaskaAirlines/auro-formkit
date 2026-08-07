@@ -1,0 +1,35 @@
+summaryOverride: >
+  Generic disclosure — a trigger that toggles a bib/panel of content. Native
+  closest is <details>/<summary> or a <button> with aria-expanded controlling a region.
+
+tiers:
+  open: enhanced
+  chevron: enhanced
+  autoPlacement: wc-only
+  desktopModal: wc-only
+  disableEventShow: wc-only
+  disableKeyboardHandling: wc-only
+  dropdownWidth: wc-only
+  focusShow: wc-only
+  isBibFullscreen: wc-only
+  hoverToggle: wc-only
+  hasTriggerContent: wc-only
+  fullscreenBreakpoint: wc-only
+  matchWidth: wc-only
+  noFlip: wc-only
+  shift: wc-only
+  noHideOnThisFocusLoss: wc-only
+  noToggle: wc-only
+  offset: wc-only
+  parentBorder: wc-only
+  placement: wc-only
+
+nativeEquiv:
+  disabled: disabled
+
+behavior:
+  a11y:
+    - The trigger is a <button> with aria-expanded and aria-controls pointing to the panel id.
+    - The panel is a region whose visibility follows aria-expanded.
+  keyboard:
+    - Enter/Space toggles the panel; Esc closes it and returns focus to the trigger.

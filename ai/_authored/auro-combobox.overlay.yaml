@@ -1,0 +1,37 @@
+summaryOverride: >
+  Combobox — a text input that filters a listbox of options. The web platform has
+  no full equivalent; the closest is <input list> + <datalist>, which cannot style
+  the option panel or render rich option content.
+
+tiers:
+  value: core
+  placeholder: core
+  required: core
+  disabled: core
+  inputmode: core
+  autocomplete: core
+  availableOptions: wc-only
+  behavior: wc-only
+  checkmark: wc-only
+  matchWidth: wc-only
+  noFilter: wc-only
+  noFlip: wc-only
+  offset: wc-only
+  optionSelected: wc-only
+  persistInput: wc-only
+  placement: wc-only
+  shift: wc-only
+  triggerIcon: wc-only
+  typedValue: wc-only
+  autoPlacement: wc-only
+  fullscreenBreakpoint: wc-only
+  largeFullscreenHeadline: wc-only
+
+behavior:
+  a11y:
+    - The input has role="combobox", aria-expanded, aria-controls pointing to the listbox id, and aria-activedescendant pointing to the highlighted option.
+    - The listbox uses role="listbox" with role="option" children and aria-selected on the chosen option.
+  keyboard:
+    - Down opens/enters the list; Up/Down move the active option; Enter selects; Esc closes.
+  validation:
+    - Enforce "must select a listed option" in script; native <datalist> does not restrict input to its options.

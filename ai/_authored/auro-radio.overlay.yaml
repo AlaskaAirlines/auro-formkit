@@ -1,0 +1,19 @@
+summaryOverride: >
+  Radio button for selecting exactly one option from a set; composes into a
+  radio-group. Native equivalent is a set of <input type="radio"> sharing a name.
+
+tiers:
+  role: enhanced
+  label: enhanced
+
+nativeEquiv:
+  label: associate a <label> via for/id (label is not a native attribute)
+
+behavior:
+  a11y:
+    - Use native <input type="radio"> elements that share the same `name` to form one group.
+    - Wrap the group in a <fieldset> with a <legend> as the group label.
+  keyboard:
+    - Arrow keys move selection within the group; only the checked radio is in the tab order (native roving).
+  validation:
+    - Mark one radio in the group `required` to require a selection (native).

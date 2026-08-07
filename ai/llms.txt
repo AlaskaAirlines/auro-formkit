@@ -1,0 +1,26 @@
+# Auro FormKit — AI Implementation Standard
+
+> Reimplement Auro form components in plain HTML/CSS/JS using Auro design
+> tokens, for teams that cannot consume the web components. Specs are generated
+> from source on every release, so they never drift from the real component.
+
+## Non-negotiable rules
+- Style ONLY with Auro `--ds-*` tokens via `var(--ds-x, fallback)`; never bare hex/px.
+- Every control needs an associated `<label>` and full ARIA wiring.
+- `tier: wc-only` features are NOT reproducible in plain HTML — report, never fake.
+
+## Component specs
+- [auro-checkbox](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-checkbox.spec.yaml): Checkbox for selecting one or more options; also composes into a checkbox-group for grouped selection. Native equivalent is <input type="checkbox"> + <label>.
+- [auro-combobox](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-combobox.spec.yaml): Combobox — a text input that filters a listbox of options. The web platform has no full equivalent; the closest is <input list> + <datalist>, which cannot style the option panel or render rich option content.
+- [auro-counter](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-counter.spec.yaml): Numeric stepper with increment/decrement buttons; composes into a counter-group. Native closest is <input type="number"> or a role="spinbutton" with real +/- buttons.
+- [auro-datepicker](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-datepicker.spec.yaml): Date / date-range picker — a text input plus a calendar popup. Native closest is <input type="date"> (single date only; no range or blackout dates, and the browser's picker cannot be styled with Auro tokens).
+- [auro-dropdown](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-dropdown.spec.yaml): Generic disclosure — a trigger that toggles a bib/panel of content. Native closest is <details>/<summary> or a <button> with aria-expanded controlling a region.
+- [auro-form](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-form.spec.yaml): Form coordinator that validates and manages child fields. Native equivalent is the <form> element with native submit/reset and constraint validation.
+- [auro-input](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-input.spec.yaml): Single-line text input (types text, email, password, number) with built-in validation, required/error states, and a bordered theme.
+- [auro-menu](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-menu.spec.yaml): Selectable option list; native closest is a <ul role="listbox"> with role="option" items, or the <option>s inside a native <select>.
+- [auro-radio](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-radio.spec.yaml): Radio button for selecting exactly one option from a set; composes into a radio-group. Native equivalent is a set of <input type="radio"> sharing a name.
+- [auro-select](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/specs/auro-select.spec.yaml): Select control (wraps auro-dropdown + auro-menu). Native equivalent is a <select> with <option>/<optgroup>; the option panel cannot be styled natively.
+
+## Global contracts
+- [Prompt template](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/_prompt-template.md)
+- [Accessibility baseline](https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/ai/_a11y-baseline.md)

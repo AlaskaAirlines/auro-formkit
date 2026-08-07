@@ -1,0 +1,22 @@
+summaryOverride: >
+  Checkbox for selecting one or more options; also composes into a checkbox-group
+  for grouped selection. Native equivalent is <input type="checkbox"> + <label>.
+
+tiers:
+  tabindex: core
+  role: enhanced
+  aria-checked: enhanced
+  aria-disabled: enhanced
+
+nativeEquiv:
+  tabindex: tabindex
+
+behavior:
+  a11y:
+    - Use a native <input type="checkbox"> with an associated <label>.
+    - Group related checkboxes in a <fieldset> with a <legend> as the group label.
+    - Reflect checked state natively; do not add aria-checked to a native checkbox.
+  keyboard:
+    - Space toggles the focused checkbox (native).
+  validation:
+    - Group-level "select at least one" is not native — script it and expose the error with role="alert".

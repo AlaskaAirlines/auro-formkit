@@ -1,0 +1,81 @@
+# Default overlay applied to every component before its own overlay.
+# These are the judgment calls the generator cannot derive from source.
+# A per-component overlay (auro-<tag>.overlay.yaml) deep-merges on top of this.
+
+# Tier inference (used when a per-component overlay does not set a tier):
+#   1. attribute has a nativeEquiv below -> core
+#   2. attribute name matches a wcOnlyHint  -> wc-only
+#   3. otherwise                            -> enhanced
+tierPolicy:
+  # Standard HTML attributes that map 1:1 onto a native element. These are core.
+  nativeEquiv:
+    value: value
+    type: type
+    name: name
+    required: required
+    disabled: disabled
+    readonly: "readonly (+ aria-readonly=\"true\")"
+    placeholder: placeholder
+    pattern: pattern
+    min: min
+    max: max
+    step: step
+    minLength: minlength
+    maxLength: maxlength
+    inputmode: inputmode
+    autocomplete: autocomplete
+    autocapitalize: autocapitalize
+    autocorrect: autocorrect
+    spellcheck: spellcheck
+    id: id
+    lang: lang
+    checked: checked
+    multiple: multiple
+    hideLabelVisually: "visually-hidden <label> class"
+  # Auro-specific behavior with no native analogue. These are wc-only:
+  # do not fake them, report them in the fidelity gaps.
+  wcOnlyHints:
+    - format
+    - layout
+    - shape
+    - appearance
+    - simple
+    - onDark
+    - ondark
+    - nested
+    - icon
+    - displayValue
+    - dvInputOnly
+    - activeLabel
+    - showPassword
+    - validateOnInput
+    - noValidate
+    - validity
+    - error
+    - errorMessage
+    - setCustomValidity
+
+# Accessibility rules that apply to every form field. Per-component overlays
+# append component-specific rules.
+behavior:
+  a11y:
+    - Every control MUST have a programmatically associated <label> (for/id or wrapping).
+    - Link help text via aria-describedby so it is announced after the label.
+    - Reflect invalid state with aria-invalid="true|false" on the control.
+    - Render validation errors with role="alert" aria-live="assertive" so they announce immediately.
+  keyboard:
+    - All interactive affordances are real, focusable elements in DOM order.
+
+# Machine-checkable assertions the AI output must pass. Per-component overlays add more.
+verify:
+  - "every color, size, spacing, radius, and font value uses var(--ds-*)"
+  - "each control has an associated <label>"
+  - "controls with aria-invalid=\"true\" have a role=\"alert\" message referenced by aria-describedby"
+  - "axe: label, aria-valid-attr-value, color-contrast pass"
+
+# The single rule AI most often violates.
+visual:
+  rule: >
+    NEVER hardcode a hex, px, rem, or font-family value. Every visual value MUST
+    be an Auro --ds-* token via var(--ds-token, fallback). Literal values are
+    allowed only as the second argument (fallback) of var().
