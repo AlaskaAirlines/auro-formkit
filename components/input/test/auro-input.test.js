@@ -586,11 +586,54 @@ function runFullTest(mobileView) {
     });
 
     describe('activeLabel', () => {
-      it('should keep the label in the active position when set', async () => {
+      it('should reflect the property to the attribute', async () => {
         const el = await fixture(html`<auro-input activeLabel label="Test"></auro-input>`);
 
         expect(el.activeLabel).to.be.true;
         expect(el.hasAttribute('activeLabel')).to.be.true;
+      });
+
+      it('should render the label in the active (small) position when empty and unfocused in the classic layout', async () => {
+        const el = await fixture(html`<auro-input activeLabel label="Test"></auro-input>`);
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+
+        // Active label uses the small (body-xs) type, not the large placeholder (body-default) type.
+        expect(label.classList.contains('body-xs'), 'label should use active/small font').to.be.true;
+        expect(label.classList.contains('body-default'), 'label should not use the large placeholder font').to.be.false;
+
+        // The input row must be visible so the label sits raised above it rather than centered as a placeholder.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'input should be visible so the label raises').to.be.false;
+      });
+
+      it('should keep the label in the default (large) position when activeLabel is not set', async () => {
+        const el = await fixture(html`<auro-input label="Test"></auro-input>`);
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+
+        // Baseline: without activeLabel an empty, unfocused classic input shows the large placeholder-style label.
+        expect(label.classList.contains('body-default'), 'label should use the large placeholder font').to.be.true;
+        expect(label.classList.contains('body-xs'), 'label should not use the active/small font').to.be.false;
+      });
+
+      it('should be a no-op in the emphasized layout (label stays inside the field)', async () => {
+        const el = await fixture(html`<auro-input activeLabel layout="emphasized" label="Test"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+
+        // activeLabel is intentionally scoped to classic/default: an empty, unfocused emphasized
+        // input keeps its input row hidden and its large in-field label size (accent-xl), rather
+        // than the small active size (body-xs) that the classic layout would apply.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'emphasized input should remain hidden').to.be.true;
+        expect(label.classList.contains('accent-xl'), 'emphasized label should keep its large in-field size').to.be.true;
+        expect(label.classList.contains('body-xs'), 'emphasized label should not take the classic active size').to.be.false;
+      });
+
+      it('should be a no-op in the snowflake layout (label stays inside the field)', async () => {
+        const el = await fixture(html`<auro-input activeLabel layout="snowflake" label="Test"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+
+        // Same as emphasized: activeLabel must not flip the input from hidden to visible here.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'snowflake input should remain hidden').to.be.true;
       });
     });
 
