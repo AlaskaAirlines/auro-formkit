@@ -177,6 +177,8 @@ export default class BaseInput extends AuroElement {
 
       /**
        * If set, the label will remain fixed in the active position.
+       * Only applies to the classic/default layout; the emphasized and snowflake
+       * layouts always render the label inside the field, so this has no effect there.
        */
       activeLabel: {
         type: Boolean,
