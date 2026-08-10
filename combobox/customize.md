@@ -29,6 +29,7 @@
 <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
 <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
+<auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-Unique Option Values</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -1292,6 +1293,45 @@
   &lt;span slot="label"&gt;Please select a preference&lt;/span&gt;
   &lt;auro-menu id="loadingExampleComboboxMenu"&gt;
     &lt;auro-loader slot="loadingIcon" orbit xs&gt;&lt;/auro-loader&gt;&lt;span slot="loadingText"&gt;Loading...&lt;/span&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="nonUniqueValues">Non-Unique Option Values</auro-header>
+<p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label &mdash; for example, several airports that all serve the same city. When the user filters the list and selects one of several options that share a <code>value</code>, the combobox resolves to the exact option chosen, so the correct label is displayed even though the underlying <code>value</code> is duplicated.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values.html) -->
+<!-- The below content is automatically added from ./../apiExamples/duplicate-values.html -->
+<auro-combobox>
+<span slot="ariaLabel.bib.close">Close combobox</span>
+<span slot="ariaLabel.input.clear">Clear All</span>
+<span slot="bib.fullscreen.headline">Choose an airport</span>
+<span slot="label">Departure airport</span>
+<auro-menu>
+<auro-menuoption value="seattle" suggest="seattle sea seatac tacoma">Seattle&ndash;Tacoma International (SEA)</auro-menuoption>
+<auro-menuoption value="seattle" suggest="seattle pae paine field everett">Seattle Paine Field (PAE)</auro-menuoption>
+<auro-menuoption value="portland" suggest="portland pdx oregon">Portland International (PDX)</auro-menuoption>
+<auro-menuoption value="spokane" suggest="spokane geg washington">Spokane International (GEG)</auro-menuoption>
+<auro-menuoption static nomatch>No matching airport</auro-menuoption>
+</auro-menu>
+</auro-combobox>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/duplicate-values.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
+  &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Choose an airport&lt;/span&gt;
+  &lt;span slot="label"&gt;Departure airport&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="seattle" suggest="seattle sea seatac tacoma"&gt;Seattle&amp;ndash;Tacoma International (SEA)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="seattle" suggest="seattle pae paine field everett"&gt;Seattle Paine Field (PAE)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="portland" suggest="portland pdx oregon"&gt;Portland International (PDX)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="spokane" suggest="spokane geg washington"&gt;Spokane International (GEG)&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching airport&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
