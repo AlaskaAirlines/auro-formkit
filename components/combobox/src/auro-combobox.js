@@ -1493,7 +1493,17 @@ export class AuroCombobox extends AuroElement {
       return;
     }
 
-    this.value = this.input.value;
+    // Skip this write during a display-value sync: that path sets the input to
+    // the selected option's LABEL, which is not its machine value. When an
+    // option's label differs from its value (and especially when several
+    // options share a value but render distinct labels — AB#1602086), writing
+    // the label back into this.value clobbers the machine value the selection
+    // listener just set (this.value = optionSelected.value), collapsing the
+    // selection. _syncingBibValue still tracks (that mirrors user-typed text
+    // from the fullscreen bib, where value should follow the input).
+    if (!this._syncingDisplayValue) {
+      this.value = this.input.value;
+    }
 
     // Ignore re-entrant input events caused by programmatic value sets.
     if (this._syncingBibValue || this._syncingDisplayValue) {
@@ -1757,33 +1767,53 @@ export class AuroCombobox extends AuroElement {
       }
 
       if (this.input.value !== this.value) {
-        // Clear menu.value AND menu.optionSelected together. Clearing only
-        // menu.value leaves the previously-selected option element pinned
-        // as menu.optionSelected; a later auroMenu-selectedOption event
-        // would then write its stale .value back into combobox.value
-        // (e.g. Tab-after-Backspace re-selecting the prior option).
-        if (this.menu.value || this.menu.optionSelected) {
-          this.menu.clearSelection();
-        }
+        // A fresh user selection leaves the input showing the option's LABEL
+        // while this.value holds its machine value, so input.value !== this.value
+        // is expected whenever label ≠ value. In that case the menu's current
+        // selection is authoritative — and when several options share a value it
+        // is the ONLY thing that records WHICH same-value option the user picked
+        // (the menu tracks it by element identity via `_selectedKey`). Clearing
+        // it here drops that key; the ensuing value-only re-resolution then
+        // collapses the selection onto the first same-value option (AB#1602086).
+        // So only treat the divergence as a stale menu when the selected option
+        // does NOT match the new value.
+        const menuSelectionMatchesValue =
+          this.menu.optionSelected &&
+          // optionSelected is a single element here (scalar `.value`). A multiselect
+          // menu exposes it as an ARRAY, which has no scalar `.value` to compare, so
+          // that shape can't be a single-option match — fall through to the clear path.
+          !Array.isArray(this.menu.optionSelected) &&
+          this.menu.optionSelected.value === this.value;
 
-        if (!this.persistInput) {
-          this.syncInputValuesAcrossTriggerAndBib(this.value || '');
-        }
+        if (!menuSelectionMatchesValue) {
+          // Clear menu.value AND menu.optionSelected together. Clearing only
+          // menu.value leaves the previously-selected option element pinned
+          // as menu.optionSelected; a later auroMenu-selectedOption event
+          // would then write its stale .value back into combobox.value
+          // (e.g. Tab-after-Backspace re-selecting the prior option).
+          if (this.menu.value || this.menu.optionSelected) {
+            this.menu.clearSelection();
+          }
 
-        // Programmatic value with no matching option: updateFilter will close
-        // the bib silently (see line 648 — no noMatchOption + 0 results
-        // hides). Announce so screen-reader users hear the request was
-        // dropped. Gated on `input.value !== this.value` so this never fires
-        // for user typing — that path always reconciles input.value to
-        // this.value before updated() runs.
-        if (
-          this.value &&
-          this.menu &&
-          this.menu.options &&
-          this.menu.options.length > 0 &&
-          !this.menu.options.some((opt) => opt.value === this.value)
-        ) {
-          announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${this.value}`);
+          if (!this.persistInput) {
+            this.syncInputValuesAcrossTriggerAndBib(this.value || '');
+          }
+
+          // Programmatic value with no matching option: updateFilter will close
+          // the bib silently (see line 648 — no noMatchOption + 0 results
+          // hides). Announce so screen-reader users hear the request was
+          // dropped. Gated on `input.value !== this.value` so this never fires
+          // for user typing — that path always reconciles input.value to
+          // this.value before updated() runs.
+          if (
+            this.value &&
+            this.menu &&
+            this.menu.options &&
+            this.menu.options.length > 0 &&
+            !this.menu.options.some((opt) => opt.value === this.value)
+          ) {
+            announceToScreenReader(this._getAnnouncementRoot(), `No matching option for ${this.value}`);
+          }
         }
       }
 

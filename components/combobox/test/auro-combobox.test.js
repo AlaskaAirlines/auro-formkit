@@ -8,6 +8,7 @@ import {
   shiftTabFixture,
   shiftTabDisabledFirstFixture,
   defaultFixture,
+  duplicateValueFixture,
   disabledOptionFixture,
   presetDisabledValueFixture,
   nestedMenuFixture,
@@ -766,6 +767,60 @@ function runFullTest(mobileView) {
       await expect(right.value).to.equal('a');
       await expect(left.input.value).to.equal('b');
       await expect(right.input.value).to.equal('a');
+    });
+
+    // Regression (AB#1602086): two options share a value but render distinct
+    // labels. Selecting the SECOND must keep ITS identity through combobox's
+    // value↔menu sync — previously combobox.updated() cleared the menu
+    // selection (input shows the label, this.value the machine value), and the
+    // value-only re-resolution collapsed onto the FIRST same-value option.
+    it('keeps the exact option selected when two options share a value', async () => {
+      const el = await duplicateValueFixture(mobileView);
+      await elementUpdated(el);
+
+      // Type "Seattle" so both duplicate options stay visible, open, then
+      // click the second — the true duplicate-disambiguation path.
+      el.focus();
+      await elementUpdated(el);
+      await sendKeys({ type: 'Seattle' });
+      el.input.click();
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      const menu = el.querySelector('auro-menu');
+      const opts = menu.querySelectorAll('auro-menuoption');
+
+      opts[1].click();
+      await elementUpdated(opts[1]);
+      await elementUpdated(menu);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('SEA');
+      await expect(el.optionSelected).to.equal(opts[1]);
+      await expect(el.menu.optionSelected).to.equal(opts[1]);
+      await expect(el.input.value).to.equal('Seattle Paine Field (PAE)');
+
+      // ...and a subsequent PROGRAMMATIC value reconcile to that same shared
+      // value must NOT collapse the selection onto the FIRST match. This is the
+      // divergence from auro-menu.selectByValue('SEA') (which always snaps to
+      // the first same-value option): combobox.updated() guards it via
+      // `menuSelectionMatchesValue` — when the menu's selected option already
+      // carries the incoming value, the menu selection is left intact rather
+      // than cleared-and-value-re-resolved, so the exact element the user chose
+      // survives. A plain `el.value = 'SEA'` is a Lit no-op here (value is
+      // already 'SEA') and never re-enters updated(), so force the value-change
+      // reconcile cycle to run — the cycle a framework drives when it re-writes
+      // `value` on re-render. Without the guard, updated() clears the menu and
+      // value-only resolution collapses onto opts[0].
+      el.value = 'SEA';
+      el.requestUpdate('value', 'PDX');
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('SEA');
+      await expect(el.optionSelected).to.equal(opts[1]);
+      await expect(el.menu.optionSelected).to.equal(opts[1]);
+      await expect(el.input.value).to.equal('Seattle Paine Field (PAE)');
     });
 
     // Regression: with persistInput + framework re-mount (Svelte `{#key}`),
@@ -4533,14 +4588,23 @@ function runFullTest(mobileView) {
           const el = drawer.querySelector('auro-combobox');
           await elementUpdated(el);
 
+          // auro-drawer's drawerBib schedules a requestAnimationFrame to call
+          // focusFirstElement() when it becomes visible, which steals focus
+          // before sendKeys runs. Let that rAF fire first, then re-focus so
+          // sendKeys lands on the native input.
           el.focus();
-          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          el.focus();
           await sendKeys({ press: 'a' });
           el.input.click();
           await elementUpdated(el);
           await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+          el.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'Escape',
+            bubbles: true,
+            composed: true
+          }));
           await elementUpdated(el);
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           await elementUpdated(el);

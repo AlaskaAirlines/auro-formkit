@@ -33,6 +33,7 @@
       <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
       <auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
       <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
+      <auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-Unique Option Values</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -389,6 +390,27 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="nonUniqueValues">Non-Unique Option Values</auro-header>
+        <p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label &mdash; for example, several airports that all serve the same city. The component tracks the specific option a user selects, so the correct label is displayed even when the underlying <code>value</code> is duplicated.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <p>In <code>multiselect</code> mode, options that share a <code>value</code> are tracked independently, so each can be selected and removed on its own. Selections are stored in DOM order regardless of the order in which they were chosen.</p>
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values-multiselect.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values-multiselect.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>

@@ -29,6 +29,7 @@
       <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
       <auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
       <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
+      <auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-Unique Option Values</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -328,6 +329,17 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="nonUniqueValues">Non-Unique Option Values</auro-header>
+        <p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label &mdash; for example, several airports that all serve the same city. When the user filters the list and selects one of several options that share a <code>value</code>, the combobox resolves to the exact option chosen, so the correct label is displayed even though the underlying <code>value</code> is duplicated.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>

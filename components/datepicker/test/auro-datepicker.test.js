@@ -1922,6 +1922,71 @@ function runFullTest(mobileView) {
         await expect(getInput(el, 1).value).to.equal('2023-02-28');
       });
 
+      // Regression: a long fromLabel/toLabel used to stretch the first input and push the
+      // range-end input out of view. The end input must stay within the component's box
+      // (labels truncate via ellipsis instead), and the two inputs' text areas must be
+      // equal so the labels truncate in lockstep.
+      it('keeps both range inputs on-screen and evenly sized when labels are long', async () => {
+        const longLabel = 'Departure with an extremely long label that should truncate rather than expand the input beyond its allotted half of the row';
+
+        const el = await fixture(html`
+          <auro-datepicker range style="display: block; width: 320px;">
+            <span slot="fromLabel">${longLabel}</span>
+            <span slot="toLabel">${longLabel}</span>
+          </auro-datepicker>
+        `);
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const hostRect = el.getBoundingClientRect();
+        const fromRect = getInput(el, 0).getBoundingClientRect();
+        const toRect = getInput(el, 1).getBoundingClientRect();
+
+        // The range-end input must not be pushed outside the component (allow 1px rounding).
+        await expect(toRect.right).to.be.at.most(hostRect.right + 1);
+
+        // Both inputs render with real width.
+        await expect(fromRect.width).to.be.greaterThan(0);
+        await expect(toRect.width).to.be.greaterThan(0);
+
+        // The two inputs' text areas (.mainContent) are equal so the labels truncate
+        // symmetrically. The From container is intentionally wider than To to offset the
+        // calendar icon in its accent-left, so the *container* widths are not 50/50.
+        const fromMain = getInput(el, 0).shadowRoot.querySelector('.mainContent').getBoundingClientRect().width;
+        const toMain = getInput(el, 1).shadowRoot.querySelector('.mainContent').getBoundingClientRect().width;
+        await expect(Math.abs(fromMain - toMain)).to.be.at.most(1);
+      });
+
+      // Regression: the calendar icon renders only in the range-start (From) input, so with
+      // equal container widths the From date/placeholder truncated well before the To one.
+      // The From container is now widened by the icon's footprint, so both inputs' text areas
+      // (.mainContent) are equal and the dates truncate in lockstep. Pre-fix the From text
+      // area was ~28px narrower than the To's at this width.
+      it('gives both range inputs equal text width so the dates truncate in lockstep', async () => {
+        const el = await fixture(html`
+          <auro-datepicker range value="2026-07-30" valueEnd="2026-08-06" style="display: block; width: 200px;">
+            <span slot="fromLabel">Departure</span>
+            <span slot="toLabel">Return</span>
+          </auro-datepicker>
+        `);
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const fromMain = getInput(el, 0).shadowRoot.querySelector('.mainContent');
+        const toMain = getInput(el, 1).shadowRoot.querySelector('.mainContent');
+
+        await expect(fromMain).to.exist;
+        await expect(toMain).to.exist;
+
+        const fromWidth = fromMain.getBoundingClientRect().width;
+        const toWidth = toMain.getBoundingClientRect().width;
+
+        await expect(fromWidth).to.be.greaterThan(0);
+        await expect(Math.abs(fromWidth - toWidth)).to.be.at.most(1);
+      });
+
     });
 
     describe('referenceDates', () => {

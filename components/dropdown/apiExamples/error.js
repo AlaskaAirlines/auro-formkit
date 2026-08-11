@@ -1,8 +1,8 @@
 export function errorExample() {
   const btn = document.querySelector('#errorButton');
-  const dropdown = document.querySelector('#error');
+  const dropdown = document.querySelector('#errorDropdownExample');
 
-  btn?.addEventListener('click', () => {
-    dropdown?.hide();
+  btn.addEventListener('click', () => {
+    dropdown.hide();
   });
 }
