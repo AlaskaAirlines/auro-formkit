@@ -23,6 +23,7 @@
 <auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-Select</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset Value (Multi)</auro-anchorlink>
+<auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-Unique Option Values</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -860,6 +861,55 @@
   &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="nonUniqueValues">Non-Unique Option Values</auro-header>
+<p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label &mdash; for example, several airports that all serve the same city. The menu tracks the specific option a user selects rather than resolving by <code>value</code> alone, so selecting one of several options that share a <code>value</code> highlights exactly the option that was chosen.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values.html) -->
+<!-- The below content is automatically added from ./../apiExamples/duplicate-values.html -->
+<auro-menu>
+<auro-menuoption value="seattle">Seattle&ndash;Tacoma International (SEA)</auro-menuoption>
+<auro-menuoption value="seattle">Seattle Paine Field (PAE)</auro-menuoption>
+<auro-menuoption value="portland">Portland International (PDX)</auro-menuoption>
+<auro-menuoption value="spokane">Spokane International (GEG)</auro-menuoption>
+</auro-menu>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/duplicate-values.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu&gt;
+  &lt;auro-menuoption value="seattle"&gt;Seattle&amp;ndash;Tacoma International (SEA)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="seattle"&gt;Seattle Paine Field (PAE)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="portland"&gt;Portland International (PDX)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="spokane"&gt;Spokane International (GEG)&lt;/auro-menuoption&gt;
+&lt;/auro-menu&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<p>In <code>multiselect</code> mode, options that share a <code>value</code> are tracked independently, so each can be selected and removed on its own. Selections are stored in DOM order regardless of the order in which they were chosen.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values-multiselect.html) -->
+<!-- The below content is automatically added from ./../apiExamples/duplicate-values-multiselect.html -->
+<auro-menu multiselect>
+<auro-menuoption value="seattle">Seattle&ndash;Tacoma International (SEA)</auro-menuoption>
+<auro-menuoption value="seattle">Seattle Paine Field (PAE)</auro-menuoption>
+<auro-menuoption value="portland">Portland International (PDX)</auro-menuoption>
+<auro-menuoption value="spokane">Spokane International (GEG)</auro-menuoption>
+</auro-menu>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/duplicate-values-multiselect.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/duplicate-values-multiselect.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-menu multiselect&gt;
+  &lt;auro-menuoption value="seattle"&gt;Seattle&amp;ndash;Tacoma International (SEA)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="seattle"&gt;Seattle Paine Field (PAE)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="portland"&gt;Portland International (PDX)&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="spokane"&gt;Spokane International (GEG)&lt;/auro-menuoption&gt;
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
