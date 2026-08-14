@@ -44,7 +44,7 @@
 <section>
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="activeLabel">Active Label</auro-header>
-<p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position.</p>
+<p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position. This applies to the classic/default layout only; the emphasized and snowflake layouts always render the label inside the field and are unaffected.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/active-label.html) -->
 <!-- The below content is automatically added from ../apiExamples/active-label.html -->
