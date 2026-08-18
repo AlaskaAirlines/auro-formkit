@@ -1021,7 +1021,9 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('focusin', this.handleFocusin);
 
     this.addEventListener('blur', () => {
-      this.validate();
+      if (!this.noValidate) {
+        this.validate();
+      }
       this.hasFocus = false;
       this._clearTypeaheadBuffer();
     });

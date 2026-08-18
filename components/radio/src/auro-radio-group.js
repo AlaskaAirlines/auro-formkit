@@ -273,7 +273,9 @@ export class AuroRadioGroup extends LitElement {
    */
   handleRadioBlur() {
     this.touched = true;
-    this.validation.validate(this);
+    if (!this.noValidate) {
+      this.validation.validate(this);
+    }
   }
 
   /**

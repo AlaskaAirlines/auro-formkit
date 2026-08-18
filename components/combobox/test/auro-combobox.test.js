@@ -1670,22 +1670,41 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('noValidate')).to.be.true;
       });
 
-    // This test should pass but currently fails due to a bug
-    //   it('should not validate on blur when noValidate is set', async () => {
-    //     const el = await requiredFixture(mobileView);
-    //     el.noValidate = true;
-    //     await elementUpdated(el);
+      it('should not validate on blur when noValidate is set', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
 
-    //     // Focus and blur without selecting a value
-    //     el.input.focus();
-    //     await elementUpdated(el);
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
 
-    //     el.input.blur();
-    //     await elementUpdated(el);
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
 
-    //     // With noValidate, validity should not be set
-    //     await expect(el.hasAttribute('validity')).to.be.false;
-    //   });
+      it('should still validate when force is true and noValidate is set', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valueMissing on blur when noValidate is not set', async () => {
+        const el = await requiredFixture(mobileView);
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
     });
 
     describe('offset', () => {

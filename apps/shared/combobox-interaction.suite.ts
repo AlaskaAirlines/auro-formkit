@@ -603,5 +603,44 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       // Wait for it to be cleared (announceToScreenReader uses a ~1000ms timer)
       await expect.poll(readLiveRegion, { timeout: 5_000 }).toBe('');
     });
+
+    // ── noValidate ─────────────────────────────────────────────────────────
+
+    test.describe('noValidate', () => {
+      test.beforeEach(async ({ page }) => {
+        await page.goto(route);
+        await waitForCombobox(page);
+      });
+
+      test('does not set validity on blur when noValidate is set', async ({ page }) => {
+        await combobox(page, 'filter').evaluate((el: any) => { el.noValidate = true; });
+
+        await focusCombobox(page, 'filter');
+        await page.locator('#outside-element').focus();
+
+        const validity = await combobox(page, 'filter').evaluate((el: any) => el.validity);
+        expect(validity == null || validity === undefined).toBe(true);
+      });
+
+      test('validate(true) still runs when noValidate is set', async ({ page }) => {
+        await combobox(page, 'filter').evaluate((el: any) => { el.noValidate = true; });
+        await combobox(page, 'filter').evaluate((el: any) => el.validate(true));
+
+        await expect.poll(
+          () => combobox(page, 'filter').evaluate((el: any) => el.validity),
+          { timeout: 3_000 },
+        ).toBe('valueMissing');
+      });
+
+      test('sets valueMissing on blur when noValidate is not set', async ({ page }) => {
+        await focusCombobox(page, 'filter');
+        await page.locator('#outside-element').focus();
+
+        await expect.poll(
+          () => combobox(page, 'filter').evaluate((el: any) => el.validity),
+          { timeout: 3_000 },
+        ).toBe('valueMissing');
+      });
+    });
   });
 }
