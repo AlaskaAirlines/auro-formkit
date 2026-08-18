@@ -280,6 +280,55 @@ function runFullTest(mobileView) {
         // With noValidate, validity should NOT be set to valueMissing
         expect(el.hasAttribute('validity')).to.be.false;
       });
+
+      it('should still validate when force is true and noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        // validation is a private property; accessed directly here to test the
+        // force path without relying on a public method that might check noValidate itself
+        el.validation.validate(el, true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valueMissing when blur handler runs and noValidate is not set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        // Dispatch the custom event that the radio fires on blur — more reliable than
+        // focus simulation in WTR
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should still validate on selection even when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        el.querySelector('#r1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valid');
+      });
     });
 
     describe('onDark', () => {

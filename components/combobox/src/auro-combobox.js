@@ -1382,7 +1382,7 @@ export class AuroCombobox extends AuroElement {
       // and validating against the pre-selection value flashes a stale error
       // between mousedown and mouseup. The next focusout fires after the
       // dropdown closes and validates against the post-selection value.
-      if (!this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
+      if (!this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
         this.validate();
       }
     });

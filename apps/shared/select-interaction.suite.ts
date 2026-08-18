@@ -650,6 +650,40 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         }, { timeout: 5_000 }).toBe('');
       });
     });
+
+    // ── noValidate ───────────────────────────────────────────────────────────
+
+    test.describe('noValidate', () => {
+      test('does not set validity on blur when noValidate is set', async ({ page }) => {
+        await select(page, 'required').evaluate((el: any) => { el.noValidate = true; });
+
+        await focusTrigger(page, 'required');
+        await page.keyboard.press('Tab');
+
+        const validity = await select(page, 'required').evaluate((el: any) => el.validity);
+        expect(validity == null || validity === undefined).toBe(true);
+      });
+
+      test('validate(true) still runs when noValidate is set', async ({ page }) => {
+        await select(page, 'required').evaluate((el: any) => { el.noValidate = true; });
+        await select(page, 'required').evaluate((el: any) => el.validate(true));
+
+        await expect.poll(
+          () => select(page, 'required').evaluate((el: any) => el.validity),
+          { timeout: 3_000 },
+        ).toBe('valueMissing');
+      });
+
+      test('sets valueMissing on blur when noValidate is not set', async ({ page }) => {
+        await focusTrigger(page, 'required');
+        await page.keyboard.press('Tab');
+
+        await expect.poll(
+          () => select(page, 'required').evaluate((el: any) => el.validity),
+          { timeout: 3_000 },
+        ).toBe('valueMissing');
+      });
+    });
   });
 
   // ─── Mobile / fullscreen tests ──────────────────────────────────────────

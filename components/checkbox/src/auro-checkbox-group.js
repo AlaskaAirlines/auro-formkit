@@ -246,11 +246,14 @@ export class AuroCheckboxGroup extends LitElement {
     const checkFocusWithin = function(evt) {
       if (document.auroCheckboxGroupActive && !document.auroCheckboxGroupActive.contains(evt.target)) {
         // if focus has left the group, cleanup and validate
-        document.auroCheckboxGroupActive.focusWithin = false;
+        const group = document.auroCheckboxGroupActive;
+        group.focusWithin = false;
         window.removeEventListener('focusin', checkFocusWithin);
         document.removeEventListener('click', checkFocusWithin);
         // execute the validation
-        document.auroCheckboxGroupActive.validation.validate(document.auroCheckboxGroupActive);
+        if (!group.noValidate) {
+          group.validation.validate(group);
+        }
       }
     };
 

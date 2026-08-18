@@ -417,6 +417,54 @@ function runFullTest(mobileView) {
         // With noValidate, validity should NOT be set to valueMissing
         expect(el.hasAttribute('validity')).to.be.false;
       });
+
+      it('should still validate when force is true and noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valueMissing when validate runs and noValidate is not set', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        // Mark as touched then call validate directly — the checkbox focus-leave
+        // handler is difficult to simulate reliably in WTR
+        el.touched = true;
+        el.validate();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should still validate on check/uncheck even when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        el.querySelector('#cb1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valid');
+      });
     });
 
     describe('onDark', () => {
