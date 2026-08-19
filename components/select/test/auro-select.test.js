@@ -733,6 +733,93 @@ function runTest(mobileView) {
 
           await expect(el.getAttribute('validity')).to.equal('valueMissing');
         });
+
+        it('should suppress validation when noValidate is added after a value change', async () => {
+          const el = await fixture(html`
+            <auro-select required novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Programmatic value change does not validate when noValidate is set
+          el.value = 'Apples';
+          await elementUpdated(el);
+
+          await expect(el.hasAttribute('validity')).to.be.false;
+        });
+
+        it('should resume validation on blur when noValidate is removed', async () => {
+          const el = await fixture(html`
+            <auro-select required novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Confirm blur is suppressed while noValidate is set
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+          await expect(el.hasAttribute('validity')).to.be.false;
+
+          // Remove noValidate — blur should now validate
+          el.noValidate = false;
+          await elementUpdated(el);
+          // focusin primes the component state (mirrors the passing "set valueMissing" test)
+          el.dispatchEvent(new Event('focusin'));
+          await elementUpdated(el);
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+        });
+
+        it('should not set aria-invalid when blur is suppressed by noValidate', async () => {
+          const el = await fixture(html`
+            <auro-select required novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.hasAttribute('validity')).to.be.false;
+          await expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+        });
+
+        it('should clear stale error state on blur when noValidate is set after validate(true)', async () => {
+          const el = await fixture(html`
+            <auro-select required novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Simulate a form submit that forces an error
+          el.validate(true);
+          await elementUpdated(el);
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+          // Blur under noValidate — stale error should be cleared
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.hasAttribute('validity')).to.be.false;
+        });
       });
 
       describe('offset', () => {

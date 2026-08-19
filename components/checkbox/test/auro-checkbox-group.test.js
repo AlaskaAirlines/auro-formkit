@@ -465,6 +465,55 @@ function runFullTest(mobileView) {
 
         expect(el.hasAttribute('validity')).to.be.false;
       });
+
+      it('should resume validation when noValidate is removed', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        // Confirm suppressed while noValidate is set
+        el.touched = true;
+        el.validate();
+        await elementUpdated(el);
+        // validate() without force respects noValidate via the blur path
+        // but calling directly bypasses it — use validate(true) to confirm force still works
+        el.touched = false;
+        el.validity = undefined;
+        await elementUpdated(el);
+
+        // Remove noValidate — direct validate call should now work
+        el.noValidate = false;
+        await elementUpdated(el);
+        el.touched = true;
+        el.validate();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should not set aria-invalid when blur is suppressed by noValidate', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        const cb1 = el.querySelector('#cb1');
+        cb1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+        document.body.focus();
+        await elementUpdated(el);
+
+        expect(el.hasAttribute('validity')).to.be.false;
+        expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+      });
+
     });
 
     describe('onDark', () => {

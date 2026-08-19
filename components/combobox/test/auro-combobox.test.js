@@ -1705,6 +1705,73 @@ function runFullTest(mobileView) {
 
         await expect(el.getAttribute('validity')).to.equal('valueMissing');
       });
+
+      it('should resume validation on blur when noValidate is removed', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        // Blur suppressed while noValidate is set
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+        await expect(el.hasAttribute('validity')).to.be.false;
+
+        // Remove noValidate — blur should now validate
+        el.noValidate = false;
+        await elementUpdated(el);
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should suppress blur validation in filter mode when noValidate is set', async () => {
+        const el = await filterFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should clear stale error state on blur when noValidate is set after validate(true)', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should not set aria-invalid when blur is suppressed by noValidate', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+        await expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+      });
     });
 
     describe('offset', () => {
