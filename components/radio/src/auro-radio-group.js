@@ -263,7 +263,9 @@ export class AuroRadioGroup extends LitElement {
 
     this.optionSelected = event.target;
 
-    this.validation.validate(this, this.optionSelected !== undefined);
+    if (!this.noValidate) {
+      this.validation.validate(this, this.optionSelected !== undefined);
+    }
   }
 
   /**
@@ -452,7 +454,9 @@ export class AuroRadioGroup extends LitElement {
     this.value = event.target.value;
     this.optionSelected = event.target;
 
-    this.validation.validate(this);
+    if (!this.noValidate) {
+      this.validation.validate(this);
+    }
   }
 
   /**

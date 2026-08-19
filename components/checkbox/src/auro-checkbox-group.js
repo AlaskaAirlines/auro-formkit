@@ -235,7 +235,9 @@ export class AuroCheckboxGroup extends LitElement {
       composed: true,
     }));
 
-    this.validate(true);
+    if (!this.noValidate) {
+      this.validate(true);
+    }
   }
 
   firstUpdated() {
