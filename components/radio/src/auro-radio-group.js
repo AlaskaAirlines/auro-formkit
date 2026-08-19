@@ -277,6 +277,10 @@ export class AuroRadioGroup extends LitElement {
     this.touched = true;
     if (!this.noValidate) {
       this.validation.validate(this);
+    } else if (this.validity !== undefined) {
+      // Clear stale error state left by a previous validate(true) call
+      this.validity = undefined;
+      this.errorMessage = '';
     }
   }
 

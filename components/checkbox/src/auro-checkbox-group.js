@@ -255,6 +255,10 @@ export class AuroCheckboxGroup extends LitElement {
         // execute the validation
         if (!group.noValidate) {
           group.validation.validate(group);
+        } else if (group.validity !== undefined) {
+          // Clear stale error state left by a previous validate(true) call
+          group.validity = undefined;
+          group.errorMessage = '';
         }
       }
     };

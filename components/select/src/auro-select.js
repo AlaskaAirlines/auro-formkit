@@ -1023,6 +1023,10 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('blur', () => {
       if (!this.noValidate) {
         this.validate();
+      } else if (this.validity !== undefined) {
+        // Clear stale error state left by a previous validate(true) call
+        this.validity = undefined;
+        this.errorMessage = '';
       }
       this.hasFocus = false;
       this._clearTypeaheadBuffer();
@@ -1358,7 +1362,9 @@ export class AuroSelect extends AuroElement {
       this.setMenuValue(this.value);
 
       this._updateNativeSelect();
-      this.validate();
+      if (!this.noValidate) {
+        this.validate();
+      }
       if (!this.multiSelect) {
         this.hideBib();
       }
