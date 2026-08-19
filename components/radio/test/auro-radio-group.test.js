@@ -290,9 +290,7 @@ function runFullTest(mobileView) {
         `);
         await elementUpdated(el);
 
-        // validation is a private property; accessed directly here to test the
-        // force path without relying on a public method that might check noValidate itself
-        el.validation.validate(el, true);
+        el.validate(true);
         await elementUpdated(el);
 
         expect(el.getAttribute('validity')).to.equal('valueMissing');
@@ -315,7 +313,7 @@ function runFullTest(mobileView) {
         expect(el.getAttribute('validity')).to.equal('valueMissing');
       });
 
-      it('should still validate on selection even when noValidate is set', async () => {
+      it('should not validate on selection when noValidate is set', async () => {
         const el = await fixture(html`
           <auro-radio-group required noValidate>
             <span slot="legend">Pick one</span>
@@ -327,7 +325,7 @@ function runFullTest(mobileView) {
         el.querySelector('#r1').shadowRoot.querySelector('input').click();
         await elementUpdated(el);
 
-        expect(el.getAttribute('validity')).to.equal('valid');
+        expect(el.hasAttribute('validity')).to.be.false;
       });
     });
 

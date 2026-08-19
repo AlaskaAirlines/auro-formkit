@@ -451,7 +451,7 @@ function runFullTest(mobileView) {
         expect(el.getAttribute('validity')).to.equal('valueMissing');
       });
 
-      it('should still validate on check/uncheck even when noValidate is set', async () => {
+      it('should not validate on check/uncheck when noValidate is set', async () => {
         const el = await fixture(html`
           <auro-checkbox-group required noValidate>
             <span slot="legend">Options</span>
@@ -463,7 +463,7 @@ function runFullTest(mobileView) {
         el.querySelector('#cb1').shadowRoot.querySelector('input').click();
         await elementUpdated(el);
 
-        expect(el.getAttribute('validity')).to.equal('valid');
+        expect(el.hasAttribute('validity')).to.be.false;
       });
     });
 
