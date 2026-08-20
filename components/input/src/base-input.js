@@ -1329,6 +1329,20 @@ export default class BaseInput extends AuroElement {
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-discover',
         maskFormat: "0000 0000 0000 0000"
+      },
+      {
+        // China UnionPay is variable length (16-19 digits). It must come after
+        // Discover so the last-match-wins loop below gives its 62 prefix
+        // precedence over the generic `6` that resolves to Discover. 81 is used
+        // by UnionPay cards issued outside mainland China and overlaps no other
+        // brand. 60 is intentionally excluded (it overlaps real Discover 6011).
+        name: 'China UnionPay',
+        regex: /^(?<num>62|81)\d{0}/u,
+        formatMinLength: 19,
+        formatLength: 23,
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-unionpay',
+        maskFormat: "0000 0000 0000 0000 000"
       }
     ];
 
@@ -1346,7 +1360,12 @@ export default class BaseInput extends AuroElement {
       }
     });
 
-    this.validationCCLength = type.formatLength;
+    // Variable-length brands (both min and max defined, e.g. UnionPay) validate
+    // against the minimum masked length so shorter-but-valid entries are not
+    // flagged tooShort. Fixed-length brands keep their single formatLength.
+    this.validationCCLength = type.formatMinLength && type.formatLength
+      ? type.formatMinLength
+      : type.formatLength;
 
     return type;
   }
