@@ -22,7 +22,7 @@
 <p>There is no native way to detect a credit card type from input, apply the correct formatting mask, or display the appropriate card icon.</p>
 <p><code>auro-input</code> with <code>type="credit-card"</code> provides:</p>
 <ul>
-<li><strong>Auto-detection</strong> — Identifies Visa, Mastercard, American Express, Discover, Diners Club, and Alaska Airlines cards from the first digits typed.</li>
+<li><strong>Auto-detection</strong> — Identifies Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits typed.</li>
 <li><strong>Dynamic formatting</strong> — Applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex).</li>
 <li><strong>Card icon</strong> — Displays the detected card brand icon automatically.</li>
 <li><strong>Luhn validation</strong> — Validates the card number using the Luhn algorithm.</li>
