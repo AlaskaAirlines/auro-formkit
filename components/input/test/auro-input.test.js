@@ -369,6 +369,87 @@ function runFullTest(mobileView) {
         expect(el.minLength).to.not.be.ok;
       });
 
+      it('should identify card starting with "35" as JCB', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '35';
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-jcb');
+        // JCB is variable length, sharing UnionPay's 4-4-4-4-3 range machinery.
+        expect(el.format).to.equal('0000 0000 0000 0000 000');
+        expect(el.maxLength).to.equal(23);
+        expect(el.minLength).to.equal(19);
+      });
+
+      it('should accept JCB numbers across the 16-19 digit range', async () => {
+        const validLengths = [
+          '3528 0000 0000 0007',      // 16 digits
+          '3528 0000 0000 0007 891'   // 19 digits
+        ];
+
+        for (const value of validLengths) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = '35';
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          el.validate(true);
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          expect(el.value, `"${value}" should be preserved`).to.equal(value);
+          expect(el.getAttribute('validity'), `"${value}" (${value.replace(/\s/gu, '').length} digits) should be valid`).to.equal('valid');
+        }
+      });
+
+      it('should flag a JCB number shorter than 16 digits as tooShort', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '35';
+        await elementUpdated(el);
+
+        el.value = '3528 0000 0000 000'; // 15 digits
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('tooShort');
+      });
+
+      it('should not let JCB (35) hijack Amex (34/37) or Diners (36/38/30) detection', async () => {
+        const cases = [
+          { value: '34', icon: 'cc-amex' },
+          { value: '37', icon: 'cc-amex' },
+          { value: '36', icon: 'cc-dinersclub' },
+          { value: '38', icon: 'cc-dinersclub' },
+          { value: '3000', icon: 'cc-dinersclub' }
+        ];
+
+        for (const { value, icon } of cases) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          expect(el.shadowRoot.querySelector('.accentIcon'), `value "${value}" should stay ${icon}`).to.have.attribute('name', icon);
+        }
+      });
+
       it('does not throw or warn when value is set programmatically across format changes', async () => {
         // Locks in the imask cursorPos throw fix (re-entrancy guard on
         // configureAutoFormatting) and the patched-setter early-return that
