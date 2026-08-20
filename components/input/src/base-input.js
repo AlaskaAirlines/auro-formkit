@@ -1299,6 +1299,18 @@ export default class BaseInput extends AuroElement {
         maskFormat: "0000 000000 0000"
       },
       {
+        // JCB is variable length (16-19 digits), like UnionPay, so it reuses the
+        // formatMinLength/formatLength range machinery. The 35 prefix overlaps no
+        // other brand (Amex is 34|37, Diners is 30[0-5]|36|38).
+        name: 'JCB',
+        regex: /^(?<num>35)\d{0}/u,
+        formatMinLength: 19,
+        formatLength: 23,
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-jcb',
+        maskFormat: "0000 0000 0000 0000 000"
+      },
+      {
         name: 'Visa',
         regex: /^(?<num>4)\d{0}/u,
         formatLength: 19,

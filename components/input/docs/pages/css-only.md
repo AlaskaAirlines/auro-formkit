@@ -112,7 +112,7 @@
 
 <auro-header level="3">Credit-card formatting and detection</auro-header>
 
-<p><code>auro-input</code> with <code>type="credit-card"</code> auto-detects Visa, Mastercard, American Express, Discover, Diners Club, and Alaska Airlines cards from the first digits, applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex), displays the matching card brand icon, and validates with the Luhn algorithm. None of this is available natively.</p>
+<p><code>auro-input</code> with <code>type="credit-card"</code> auto-detects Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits, applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex), and displays the matching card brand icon. None of this is available natively.</p>
 
 <auro-header level="3">Password show/hide toggle</auro-header>
 
@@ -186,7 +186,7 @@
     <tr>
       <td>Credit-card detection and formatting</td>
       <td>Not supported</td>
-      <td>Auto-detect with icon and Luhn check</td>
+      <td>Auto-detect with icon</td>
     </tr>
     <tr>
       <td>Password show/hide toggle</td>
