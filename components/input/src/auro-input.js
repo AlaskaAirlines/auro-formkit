@@ -459,7 +459,10 @@ export class AuroInput extends BaseInput {
    */
   definePattern() {
     if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
-      return `.{${this.maxLength},${this.maxLength}}`;
+      // Variable-length brands (e.g. UnionPay) set minLength, so accept a range;
+      // fixed-length brands leave minLength undefined and keep an exact length.
+      const minPatternLength = this.minLength || this.maxLength;
+      return `.{${minPatternLength},${this.maxLength}}`;
     }
 
     return this.pattern;

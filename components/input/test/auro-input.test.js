@@ -257,6 +257,118 @@ function runFullTest(mobileView) {
         expect(el.format).to.equal('0000 000000 0000');
       });
 
+      it('should identify card starting with "62" as China UnionPay', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-unionpay');
+        // UnionPay is variable length: 4-4-4-4-3 mask (23 masked chars max),
+        // with a 19-masked-char (16-digit) minimum.
+        expect(el.format).to.equal('0000 0000 0000 0000 000');
+        expect(el.maxLength).to.equal(23);
+        expect(el.minLength).to.equal(19);
+        expect(el.validationCCLength).to.equal(19);
+      });
+
+      it('should identify card starting with "81" as China UnionPay', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '81';
+        await elementUpdated(el);
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-unionpay');
+      });
+
+      it('should keep other "6" prefixes as Discover (UnionPay does not hijack Discover)', async () => {
+        const cases = [
+          '6',
+          '6011',
+          '64',
+          '65'
+        ];
+
+        for (const value of cases) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          expect(el.shadowRoot.querySelector('.accentIcon'), `value "${value}" should stay Discover`).to.have.attribute('name', 'cc-discover');
+        }
+      });
+
+      it('should accept UnionPay numbers across the 16-19 digit range', async () => {
+        const validLengths = [
+          '6234 5678 9012 3456',      // 16 digits
+          '6234 5678 9012 3456 7',    // 17 digits
+          '6234 5678 9012 3456 78',   // 18 digits
+          '6234 5678 9012 3456 789'   // 19 digits
+        ];
+
+        for (const value of validLengths) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          // Establish the UnionPay mask before applying the full value.
+          el.value = '62';
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          el.validate(true);
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          expect(el.value, `"${value}" should be preserved`).to.equal(value);
+          expect(el.getAttribute('validity'), `"${value}" (${value.replace(/\s/gu, '').length} digits) should be valid`).to.equal('valid');
+        }
+      });
+
+      it('should flag a UnionPay number shorter than 16 digits as tooShort', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+
+        el.value = '6234 5678 9012 345'; // 15 digits
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('tooShort');
+      });
+
+      it('should reset to a fixed length when switching from UnionPay to a fixed-length brand', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+        expect(el.minLength).to.equal(19);
+
+        el.value = '4'; // Visa — fixed length
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-visa');
+        expect(el.maxLength).to.equal(19);
+        expect(el.minLength).to.not.be.ok;
+      });
+
       it('does not throw or warn when value is set programmatically across format changes', async () => {
         // Locks in the imask cursorPos throw fix (re-entrancy guard on
         // configureAutoFormatting) and the patched-setter early-return that
