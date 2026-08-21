@@ -22,17 +22,16 @@
 <p>There is no native way to detect a credit card type from input, apply the correct formatting mask, or display the appropriate card icon.</p>
 <p><code>auro-input</code> with <code>type="credit-card"</code> provides:</p>
 <ul>
-<li><strong>Auto-detection</strong> — Identifies Visa, Mastercard, American Express, Discover, Diners Club, and Alaska Airlines cards from the first digits typed.</li>
+<li><strong>Auto-detection</strong> — Identifies Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits typed.</li>
 <li><strong>Dynamic formatting</strong> — Applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex).</li>
 <li><strong>Card icon</strong> — Displays the detected card brand icon automatically.</li>
-<li><strong>Luhn validation</strong> — Validates the card number using the Luhn algorithm.</li>
 </ul>
 <auro-header level="2" id="validation">Validation</auro-header>
 <p>Native input validation provides <code>required</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>maxlength</code>, and <code>pattern</code>, but error messages are browser-controlled and cannot be customized.</p>
 <p><code>auro-input</code> provides:</p>
 <ul>
 <li>Custom error messages for every validity state: <code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityTooLong</code>, <code>setCustomValidityTooShort</code>, <code>setCustomValidityBadInput</code>, <code>setCustomValidityCustomError</code>, <code>setCustomValidityForType</code></li>
-<li>Type-specific validation (email format, credit card Luhn, phone format, date format)</li>
+<li>Type-specific validation (email format, credit card format, phone format, date format)</li>
 <li>Validation timing control: on blur (default), on every input (<code>validateOnInput</code>), or disabled (<code>noValidate</code>)</li>
 <li>Programmatic vs. user input distinction — the component tracks whether a value change was user-initiated or programmatic</li>
 </ul>
