@@ -1384,8 +1384,9 @@ export class AuroCombobox extends AuroElement {
       // dropdown closes and validates against the post-selection value.
       if (!this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
         this.validate();
-      } else if (this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen && this.validity !== undefined) {
-        // Clear stale error state left by a previous validate(true) call
+      } else if (this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen && this.validity !== undefined && !this.error) {
+        // Clear stale error state left by a previous validate(true) call.
+        // Do not clear when the error attribute is set — that is an externally forced error.
         this.validity = undefined;
         this.errorMessage = null;
       }

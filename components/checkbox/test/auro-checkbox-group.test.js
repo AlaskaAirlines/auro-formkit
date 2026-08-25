@@ -514,6 +514,26 @@ function runFullTest(mobileView) {
         expect(el.getAttribute('aria-invalid')).to.not.equal('true');
       });
 
+      it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group error="Server error" noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+
+        // Trigger focus then validate-on-blur path
+        el.touched = true;
+        el.validate();
+        await elementUpdated(el);
+
+        // error attribute error must survive — noValidate must not clear it
+        expect(el.getAttribute('validity')).to.equal('customError');
+      });
+
     });
 
     describe('onDark', () => {
