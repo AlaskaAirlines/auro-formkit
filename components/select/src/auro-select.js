@@ -1023,8 +1023,9 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('blur', () => {
       if (!this.noValidate) {
         this.validate();
-      } else if (this.validity !== undefined) {
-        // Clear stale error state left by a previous validate(true) call
+      } else if (this.validity !== undefined && !this.error) {
+        // Clear stale error state left by a previous validate(true) call.
+        // Do not clear when the error attribute is set — that is an externally forced error.
         this.validity = undefined;
         this.errorMessage = '';
       }

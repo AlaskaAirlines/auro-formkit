@@ -1772,6 +1772,23 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('validity')).to.be.false;
         await expect(el.getAttribute('aria-invalid')).to.not.equal('true');
       });
+
+      it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
+        const el = await defaultFixture(mobileView);
+        el.error = 'Server error';
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        // error attribute error must survive the blur — noValidate must not clear it
+        await expect(el.getAttribute('validity')).to.equal('customError');
+      });
     });
 
     describe('offset', () => {
