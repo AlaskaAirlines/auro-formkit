@@ -537,6 +537,27 @@ function runFullTest(mobileView) {
         expect(el.getAttribute('validity')).to.equal('customError');
       });
 
+      it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+        // error="" is falsy so !group.error would pass — hasAttribute('error') is the correct guard
+        const el = await fixture(html`
+          <auro-checkbox-group error="" noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+
+        const cb1 = el.querySelector('#cb1');
+        cb1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+        document.body.focus();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+      });
+
     });
 
     describe('onDark', () => {

@@ -405,6 +405,24 @@ function runFullTest(mobileView) {
         // error attribute error must survive the blur — noValidate must not clear it
         expect(el.getAttribute('validity')).to.equal('customError');
       });
+
+      it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+        // error="" is falsy so !this.error would pass — hasAttribute('error') is the correct guard
+        const el = await fixture(html`
+          <auro-radio-group error="" noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+      });
     });
 
     describe('onDark', () => {
