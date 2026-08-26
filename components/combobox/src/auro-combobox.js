@@ -1382,8 +1382,13 @@ export class AuroCombobox extends AuroElement {
       // and validating against the pre-selection value flashes a stale error
       // between mousedown and mouseup. The next focusout fires after the
       // dropdown closes and validates against the post-selection value.
-      if (!this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
+      if (!this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen) {
         this.validate();
+      } else if (this.noValidate && !this.componentHasFocus && !this._inFullscreenTransition && !this.dropdownOpen && this.validity !== undefined && !this.hasAttribute('error')) {
+        // Clear stale error state left by a previous validate(true) call.
+        // Do not clear when the error attribute is set — that is an externally forced error.
+        this.validity = undefined;
+        this.errorMessage = null;
       }
     });
 
@@ -1522,7 +1527,7 @@ export class AuroCombobox extends AuroElement {
     // interaction). In fullscreen dialog mode, componentHasFocus returns false
     // because focus is inside the top-layer dialog, so also check
     // dropdownOpen and the fullscreen transition flag.
-    if (!this.componentHasFocus && !this.dropdownOpen && !this._inFullscreenTransition) {
+    if (!this.noValidate && !this.componentHasFocus && !this.dropdownOpen && !this._inFullscreenTransition) {
       this.validate();
     }
 

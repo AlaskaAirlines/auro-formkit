@@ -1,6 +1,6 @@
 /* eslint-disable no-undef, max-lines, max-statements, no-unused-expressions */
 
-import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
+import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
@@ -279,6 +279,149 @@ function runFullTest(mobileView) {
 
         // With noValidate, validity should NOT be set to valueMissing
         expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should still validate when force is true and noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valueMissing when blur handler runs and noValidate is not set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        // Dispatch the custom event that the radio fires on blur — more reliable than
+        // focus simulation in WTR
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should not validate on selection when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        el.querySelector('#r1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should resume validation on blur when noValidate is removed', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        // Blur suppressed while noValidate is set
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+        expect(el.hasAttribute('validity')).to.be.false;
+
+        // Remove noValidate — blur should now validate
+        el.noValidate = false;
+        await elementUpdated(el);
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should clear stale error state on blur when noValidate is set after validate(true)', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+        expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should not set aria-invalid when blur is suppressed by noValidate', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        const r1 = el.querySelector('#r1');
+        r1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+        document.body.focus();
+        await elementUpdated(el);
+
+        expect(el.hasAttribute('validity')).to.be.false;
+        expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+      });
+
+      it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Server error" noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        // error attribute error must survive the blur — noValidate must not clear it
+        expect(el.getAttribute('validity')).to.equal('customError');
+      });
+
+      it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+        // error="" is falsy so !this.error would pass — hasAttribute('error') is the correct guard
+        const el = await fixture(html`
+          <auro-radio-group error="" noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.querySelector('#r1').dispatchEvent(new CustomEvent('auroRadio-blur', { bubbles: true }));
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
       });
     });
 

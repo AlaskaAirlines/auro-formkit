@@ -30,7 +30,7 @@
       <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
       <auro-anchorlink fluid href="#minLength" class="level2 body-xs">Min Length</auro-anchorlink>
       <auro-anchorlink fluid href="#name" class="level2 body-xs">Name</auro-anchorlink>
-      <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validate</auro-anchorlink>
+      <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
       <auro-anchorlink fluid href="#pattern" class="level2 body-xs">Pattern</auro-anchorlink>
       <auro-anchorlink fluid href="#readonly" class="level2 body-xs">Readonly</auro-anchorlink>
       <auro-anchorlink fluid href="#required" class="level2 body-xs">Required</auro-anchorlink>
@@ -44,7 +44,7 @@
       <section>
         <auro-header level="2" id="appearance">Appearance</auro-header>
         <auro-header level="3" id="activeLabel">Active Label</auro-header>
-        <p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position.</p>
+        <p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position. This applies to the classic/default layout only; the emphasized and snowflake layouts always render the label inside the field and are unaffected.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/active-label.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -435,7 +435,7 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/name.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="noValidate">No Validate</auro-header>
+        <auro-header level="3" id="noValidate">noValidate</auro-header>
         <p>For use cases where the field is <code>required</code>, but live validation is not wanted, use the <code>noValidate</code> attribute.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/no-validate.html) -->

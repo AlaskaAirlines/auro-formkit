@@ -263,7 +263,9 @@ export class AuroRadioGroup extends LitElement {
 
     this.optionSelected = event.target;
 
-    this.validation.validate(this, this.optionSelected !== undefined);
+    if (!this.noValidate) {
+      this.validation.validate(this, this.optionSelected !== undefined);
+    }
   }
 
   /**
@@ -273,7 +275,14 @@ export class AuroRadioGroup extends LitElement {
    */
   handleRadioBlur() {
     this.touched = true;
-    this.validation.validate(this);
+    if (!this.noValidate) {
+      this.validation.validate(this);
+    } else if (this.validity !== undefined && !this.hasAttribute('error')) {
+      // Clear stale error state left by a previous validate(true) call.
+      // Do not clear when the error attribute is set — that is an externally forced error.
+      this.validity = undefined;
+      this.errorMessage = '';
+    }
   }
 
   /**
@@ -450,7 +459,9 @@ export class AuroRadioGroup extends LitElement {
     this.value = event.target.value;
     this.optionSelected = event.target;
 
-    this.validation.validate(this);
+    if (!this.noValidate) {
+      this.validation.validate(this);
+    }
   }
 
   /**

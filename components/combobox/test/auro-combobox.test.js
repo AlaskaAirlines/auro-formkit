@@ -1670,22 +1670,142 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('noValidate')).to.be.true;
       });
 
-    // This test should pass but currently fails due to a bug
-    //   it('should not validate on blur when noValidate is set', async () => {
-    //     const el = await requiredFixture(mobileView);
-    //     el.noValidate = true;
-    //     await elementUpdated(el);
+      it('should not validate on blur when noValidate is set', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
 
-    //     // Focus and blur without selecting a value
-    //     el.input.focus();
-    //     await elementUpdated(el);
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
 
-    //     el.input.blur();
-    //     await elementUpdated(el);
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
 
-    //     // With noValidate, validity should not be set
-    //     await expect(el.hasAttribute('validity')).to.be.false;
-    //   });
+      it('should still validate when force is true and noValidate is set', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valueMissing on blur when noValidate is not set', async () => {
+        const el = await requiredFixture(mobileView);
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should resume validation on blur when noValidate is removed', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        // Blur suppressed while noValidate is set
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+        await expect(el.hasAttribute('validity')).to.be.false;
+
+        // Remove noValidate — blur should now validate
+        el.noValidate = false;
+        await elementUpdated(el);
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should suppress blur validation in filter mode when noValidate is set', async () => {
+        const el = await filterFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should clear stale error state on blur when noValidate is set after validate(true)', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+      });
+
+      it('should not set aria-invalid when blur is suppressed by noValidate', async () => {
+        const el = await requiredFixture(mobileView);
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.hasAttribute('validity')).to.be.false;
+        await expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+      });
+
+      it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
+        const el = await defaultFixture(mobileView);
+        el.error = 'Server error';
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        // error attribute error must survive the blur — noValidate must not clear it
+        await expect(el.getAttribute('validity')).to.equal('customError');
+      });
+
+      it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+        // error="" is falsy so !this.error would pass — hasAttribute('error') is the correct guard
+        const el = await defaultFixture(mobileView);
+        el.error = '';
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+      });
     });
 
     describe('offset', () => {

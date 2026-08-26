@@ -5,6 +5,71 @@ The latest release is expanded by default. Select any release below to expand it
 Complete changelog history may be viewed [here](https://github.com/AlaskaAirlines/auro-formkit/releases).
 
 <auro-accordion expanded>
+<span slot="trigger">FormKit v6.1.0</span>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.01.00.md) -->
+<!-- The below content is automatically added from ./docs/releases/06.01.00.md -->
+
+# Release Notes
+
+This document outlines all changes since the 6.0.3 release.
+
+Version 6.1.0 is a **minor release** that adds credit-card brand support for **JCB** and **China UnionPay** to `auro-input`, makes `noValidate` behave consistently across every FormKit form component, and repairs `auro-input`'s `activeLabel` attribute. All changes are additive and backward compatible — no breaking API changes.
+
+## Summary
+
+- **`auro-input` now recognizes JCB and China UnionPay credit cards.** Both brands render their own icon (matching Visa, Mastercard, Amex, Discover, and Diners Club), and China UnionPay accepts the full 16–19 digit range with `4-4-4-4-3` grouping. Every existing card brand is detected and formatted exactly as before.
+- **`noValidate` is now honored consistently on blur across all six form components.** `auro-select`, `auro-combobox`, `auro-radio-group`, and `auro-checkbox-group` previously ignored `noValidate` and validated on every blur, producing a false error state (and screen-reader announcement) for consumers using deferred-validation flows such as multi-step forms and wizards. They now match how `auro-input` and `auro-datepicker` already behaved.
+- **Selection-triggered validation also respects `noValidate`.** Checking a checkbox on then off, or selecting a radio, no longer forces an error state when `noValidate` is set.
+- **`auro-input`'s `activeLabel` attribute works.** The documented, reflected attribute was a no-op; setting it now keeps the label pinned in the active (raised, small) position, scoped to the classic/default layout.
+
+All changes are backward compatible. No public attributes, properties, events, or slots were removed or changed. Consumers should update without migration work.
+
+## New Features
+
+### AURO-INPUT
+
+- **JCB credit-card brand support** — [AB#1550294](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1550294)
+
+    JCB card numbers (prefix `35`) previously fell through to the generic `credit-card` icon because JCB had no entry in the credit-card detection table. A new `creditCardTypes` entry in `matchInputValueToCreditCard()` (`base-input.js`) maps the `35` prefix to the `cc-jcb` icon (which already shipped in `@alaskaairux/icons`, payment category). JCB is 16–19 digits, so it reuses the variable-length masking machinery added for China UnionPay. The `35` prefix overlaps no existing brand (Amex `34|37`, Diners `30[0-5]|36|38`), so no other card type's detection changes.
+
+- **China UnionPay credit-card brand support** — [AB#1551772](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1551772)
+
+    China UnionPay cards (prefixes `62` and `81`) are variable length — up to 19 digits — but the credit-card field capped input at 16 digits and mislabeled `62…` numbers with the Discover icon (the Discover rule matched *any* number starting with `6`). UnionPay is now a first-class brand: a new detection entry placed after Discover (detection is last-match-wins) gives `62`/`81` precedence, the `cc-unionpay` icon is wired up, and validation was widened from an exact length to a range so 16–19 digit numbers are all valid and group as `4-4-4-4-3`. The `60` prefix is intentionally excluded so genuine Discover cards (which begin `6011`) are unaffected, and every other `6*` number still resolves to Discover. See the decision record at [`docs/post-mortem/1551772.md`](../post-mortem/1551772.md) for the detection-precedence and variable-length details.
+
+## Bug Fixes
+
+_Note: Bug fixes do not require migration steps. Updating to this version is all that is necessary to implement these changes._
+
+### AURO-SELECT, AURO-COMBOBOX, AURO-RADIO-GROUP, AURO-CHECKBOX-GROUP
+
+- **`noValidate` is now honored on blur** — [AB#1594311](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1594311)
+
+    `auro-select`, `auro-combobox`, `auro-radio-group`, and `auro-checkbox-group` exposed a `noValidate` setting that had no effect on blur: each component validated the field every time focus left, unconditionally, marking a required empty field invalid and announcing the error to screen readers even when `noValidate` was set. A per-component `noValidate` guard was added to each blur/focusout handler, following the pattern `auro-input` and `auro-datepicker` already used — the shared `@aurodesignsystem/form-validation` library is a general-purpose runner and is intentionally left unchanged. Forced validation (`validate(true)`), including `auro-form`'s submit path, still runs regardless of `noValidate`, so required fields remain gated at submit time. This also resolves [AB#1545706](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1545706), [AB#1551569](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1551569), and [AB#1551658](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1551658).
+
+- **Selection-triggered validation now respects `noValidate`** — [#1588](https://github.com/AlaskaAirlines/auro-formkit/pull/1588)
+
+    Building on the blur-path fix above, selection-triggered validation in `auro-checkbox-group` (`handleValueUpdate`) and `auro-radio-group` (`handleSelection`) still called `validate()` unconditionally, so checking a checkbox on then off, or selecting a radio, showed an error state even with `noValidate` set. Both paths are now guarded with `!this.noValidate`, consistent with the blur guards.
+
+### AURO-INPUT
+
+- **`activeLabel` now has a visual effect** — [AB#1494433](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1494433)
+
+    `activeLabel` is a documented, reflected boolean attribute intended to keep the label pinned in the active (raised, smaller) position even when the input is empty and unfocused. It was a no-op: the attribute reflected to the DOM but was never wired into the logic that decides label position and size, and its only consumer was an invalid `?activeLabel` binding on the native `<input>`. `activeLabel` is now folded into the `inputHidden` and `labelFontClass` getters as an additional trigger of the raised state, scoped through a shared `isClassicLayout` getter. The behavior is intentionally limited to the classic/default layout — the emphasized and snowflake layouts always render the label in-field, so there is no large-to-raised transition to freeze; this scope is now documented in the property JSDoc and the customize docs.
+
+## Test Coverage
+
+- **input:** added credit-card detection tests for JCB (`35` → `cc-jcb`, 16/19-digit acceptance) and China UnionPay (`62`/`81` → `cc-unionpay`, the 16–19 digit range, a 15-digit `tooShort` case, and a Discover no-hijack regression confirming `6`/`6011`/`64`/`65` stay `cc-discover`). Extended the `activeLabel` test beyond attribute reflection to assert the computed rendered state (small `body-xs` font, visible input) on an empty unfocused classic input, with baseline and emphasized/snowflake no-op cases locking the classic-only scope.
+- **select / combobox / radio / checkbox:** added `noValidate + required` (no error on blur) and `required` without `noValidate` (still errors on blur) regression tests to all four components; two previously commented-out select and combobox tests were restored. Added selection-triggered `noValidate` coverage for radio and checkbox.
+- **form:** added integration coverage confirming a `noValidate` child's blur does not flip form validity while submit still validates every child.
+- **Playwright:** added `noValidate` describe blocks to `apps/shared/select-interaction.suite.ts` and `apps/shared/combobox-interaction.suite.ts` for the real-browser focus→blur path.
+
+## Documentation
+
+- `auro-input` docs (`why-input`, `css-only`, `customize`) now list JCB and China UnionPay among the supported card brands, and the input customize "No Validate" heading was renamed "No Validation" for consistency with other components.
+- Added post-mortems under [`docs/post-mortem/`](../post-mortem/): [1494433](../post-mortem/1494433.md), [1550294](../post-mortem/1550294.md), [1551772](../post-mortem/1551772.md), and [1594311](../post-mortem/1594311.md).
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-accordion>
 <span slot="trigger">FormKit v6.0.3</span>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.00.03.md) -->
 <!-- The below content is automatically added from ./docs/releases/06.00.03.md -->

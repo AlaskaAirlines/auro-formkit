@@ -138,8 +138,9 @@
 
 ### `noValidate`
 
-- [ ] Set noValidate — verify no auto-validation fires on blur
-- [ ] Remove noValidate — verify auto-validation resumes
+- [ ] Set `required` and `novalidate` on the select, focus it without selecting a value, then Tab away — verify **no** `validity` attribute appears on the element and **no** error message renders
+- [ ] With `novalidate` still set, call `validate(true)` from the console — verify `validity` becomes `"valueMissing"` (forced validation bypasses `noValidate`)
+- [ ] Remove `novalidate`, focus and blur without selecting — verify the `valueMissing` error appears (auto-validation resumes)
 
 ### `error`
 

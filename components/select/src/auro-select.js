@@ -1021,7 +1021,14 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('focusin', this.handleFocusin);
 
     this.addEventListener('blur', () => {
-      this.validate();
+      if (!this.noValidate) {
+        this.validate();
+      } else if (this.validity !== undefined && !this.hasAttribute('error')) {
+        // Clear stale error state left by a previous validate(true) call.
+        // Do not clear when the error attribute is set — that is an externally forced error.
+        this.validity = undefined;
+        this.errorMessage = '';
+      }
       this.hasFocus = false;
       this._clearTypeaheadBuffer();
     });
@@ -1356,7 +1363,9 @@ export class AuroSelect extends AuroElement {
       this.setMenuValue(this.value);
 
       this._updateNativeSelect();
-      this.validate();
+      if (!this.noValidate) {
+        this.validate();
+      }
       if (!this.multiSelect) {
         this.hideBib();
       }

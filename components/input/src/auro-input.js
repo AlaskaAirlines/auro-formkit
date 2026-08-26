@@ -138,13 +138,33 @@ export class AuroInput extends BaseInput {
    * @private
    */
   get inputHidden() {
+    // In the classic/default layout, activeLabel keeps the input row visible so
+    // the label stays raised rather than collapsing to the centered placeholder
+    // position. Emphasized/snowflake always render the label inside the field,
+    // so activeLabel does not apply there. This only overrides the empty/
+    // unfocused clause — the display-value clause (combobox/datepicker) is
+    // preserved regardless.
+    const activeLabelRaisesInput = this.activeLabel && this.isClassicLayout;
+
     return (
       this.hasDisplayValueContent && !this.hasFocus && this.hasValue) ||
       (
+        !activeLabelRaisesInput &&
         (!this.value || this.value.length === 0) &&
         !this.hasFocus &&
         (!this.placeholderStr || this.placeholderStr === '')
       );
+  }
+
+  /**
+   * Whether the component is rendering the classic/default layout, meaning not
+   * emphasized and not snowflake. Kept as a single source of truth so
+   * layout-scoped behavior such as activeLabel stays consistent across getters.
+   * @returns {boolean} - True for the classic/default layout.
+   * @private
+   */
+  get isClassicLayout() {
+    return !this.layout.startsWith('emphasized') && this.layout !== 'snowflake';
   }
 
   /**
@@ -192,7 +212,7 @@ export class AuroInput extends BaseInput {
     }
 
     // classic layout (default)
-    return ((!this.value || this.value.length === 0) && !this.placeholderStr && !this.hasFocus) ? 'body-default' : 'body-xs';
+    return ((!this.value || this.value.length === 0) && !this.placeholderStr && !this.hasFocus && !this.activeLabel) ? 'body-default' : 'body-xs';
   }
 
   /**
@@ -288,7 +308,8 @@ export class AuroInput extends BaseInput {
       'wrapper': true,
       'simple': this.simple,
       'withValue': this.hasValue,
-      'hasFocus': this.hasFocus
+      'hasFocus': this.hasFocus,
+      'activeLabel': this.activeLabel
     };
   }
 
@@ -438,7 +459,10 @@ export class AuroInput extends BaseInput {
    */
   definePattern() {
     if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
-      return `.{${this.maxLength},${this.maxLength}}`;
+      // Variable-length brands (e.g. UnionPay) set minLength, so accept a range;
+      // fixed-length brands leave minLength undefined and keep an exact length.
+      const minPatternLength = this.minLength || this.maxLength;
+      return `.{${minPatternLength},${this.maxLength}}`;
     }
 
     return this.pattern;
@@ -499,7 +523,6 @@ export class AuroInput extends BaseInput {
         @input="${this.handleInput}"
         .placeholder=${this.placeholderStr}
         .role=${this.a11yRole}
-        ?activeLabel="${this.activeLabel}"
         ?disabled="${this.disabled}"
         ?required="${this.required}"
         aria-activedescendant=${ifDefined(this.a11yActivedescendant)}

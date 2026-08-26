@@ -257,6 +257,199 @@ function runFullTest(mobileView) {
         expect(el.format).to.equal('0000 000000 0000');
       });
 
+      it('should identify card starting with "62" as China UnionPay', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-unionpay');
+        // UnionPay is variable length: 4-4-4-4-3 mask (23 masked chars max),
+        // with a 19-masked-char (16-digit) minimum.
+        expect(el.format).to.equal('0000 0000 0000 0000 000');
+        expect(el.maxLength).to.equal(23);
+        expect(el.minLength).to.equal(19);
+        expect(el.validationCCLength).to.equal(19);
+      });
+
+      it('should identify card starting with "81" as China UnionPay', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '81';
+        await elementUpdated(el);
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-unionpay');
+      });
+
+      it('should keep other "6" prefixes as Discover (UnionPay does not hijack Discover)', async () => {
+        const cases = [
+          '6',
+          '6011',
+          '64',
+          '65'
+        ];
+
+        for (const value of cases) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          expect(el.shadowRoot.querySelector('.accentIcon'), `value "${value}" should stay Discover`).to.have.attribute('name', 'cc-discover');
+        }
+      });
+
+      it('should accept UnionPay numbers across the 16-19 digit range', async () => {
+        const validLengths = [
+          '6234 5678 9012 3456',      // 16 digits
+          '6234 5678 9012 3456 7',    // 17 digits
+          '6234 5678 9012 3456 78',   // 18 digits
+          '6234 5678 9012 3456 789'   // 19 digits
+        ];
+
+        for (const value of validLengths) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          // Establish the UnionPay mask before applying the full value.
+          el.value = '62';
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          el.validate(true);
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          expect(el.value, `"${value}" should be preserved`).to.equal(value);
+          expect(el.getAttribute('validity'), `"${value}" (${value.replace(/\s/gu, '').length} digits) should be valid`).to.equal('valid');
+        }
+      });
+
+      it('should flag a UnionPay number shorter than 16 digits as tooShort', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+
+        el.value = '6234 5678 9012 345'; // 15 digits
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('tooShort');
+      });
+
+      it('should reset to a fixed length when switching from UnionPay to a fixed-length brand', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '62';
+        await elementUpdated(el);
+        expect(el.minLength).to.equal(19);
+
+        el.value = '4'; // Visa — fixed length
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-visa');
+        expect(el.maxLength).to.equal(19);
+        expect(el.minLength).to.not.be.ok;
+      });
+
+      it('should identify card starting with "35" as JCB', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '35';
+        await elementUpdated(el);
+
+        expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-jcb');
+        // JCB is variable length, sharing UnionPay's 4-4-4-4-3 range machinery.
+        expect(el.format).to.equal('0000 0000 0000 0000 000');
+        expect(el.maxLength).to.equal(23);
+        expect(el.minLength).to.equal(19);
+      });
+
+      it('should accept JCB numbers across the 16-19 digit range', async () => {
+        const validLengths = [
+          '3528 0000 0000 0007',      // 16 digits
+          '3528 0000 0000 0007 891'   // 19 digits
+        ];
+
+        for (const value of validLengths) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = '35';
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          el.validate(true);
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+
+          expect(el.value, `"${value}" should be preserved`).to.equal(value);
+          expect(el.getAttribute('validity'), `"${value}" (${value.replace(/\s/gu, '').length} digits) should be valid`).to.equal('valid');
+        }
+      });
+
+      it('should flag a JCB number shorter than 16 digits as tooShort', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '35';
+        await elementUpdated(el);
+
+        el.value = '3528 0000 0000 000'; // 15 digits
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('tooShort');
+      });
+
+      it('should not let JCB (35) hijack Amex (34/37) or Diners (36/38/30) detection', async () => {
+        const cases = [
+          { value: '34', icon: 'cc-amex' },
+          { value: '37', icon: 'cc-amex' },
+          { value: '36', icon: 'cc-dinersclub' },
+          { value: '38', icon: 'cc-dinersclub' },
+          { value: '3000', icon: 'cc-dinersclub' }
+        ];
+
+        for (const { value, icon } of cases) {
+          // eslint-disable-next-line no-await-in-loop
+          const el = await fixture(html`
+            <auro-input type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+          `);
+
+          el.value = value;
+          // eslint-disable-next-line no-await-in-loop
+          await elementUpdated(el);
+          expect(el.shadowRoot.querySelector('.accentIcon'), `value "${value}" should stay ${icon}`).to.have.attribute('name', icon);
+        }
+      });
+
       it('does not throw or warn when value is set programmatically across format changes', async () => {
         // Locks in the imask cursorPos throw fix (re-entrancy guard on
         // configureAutoFormatting) and the patched-setter early-return that
@@ -586,11 +779,54 @@ function runFullTest(mobileView) {
     });
 
     describe('activeLabel', () => {
-      it('should keep the label in the active position when set', async () => {
+      it('should reflect the property to the attribute', async () => {
         const el = await fixture(html`<auro-input activeLabel label="Test"></auro-input>`);
 
         expect(el.activeLabel).to.be.true;
         expect(el.hasAttribute('activeLabel')).to.be.true;
+      });
+
+      it('should render the label in the active (small) position when empty and unfocused in the classic layout', async () => {
+        const el = await fixture(html`<auro-input activeLabel label="Test"></auro-input>`);
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+
+        // Active label uses the small (body-xs) type, not the large placeholder (body-default) type.
+        expect(label.classList.contains('body-xs'), 'label should use active/small font').to.be.true;
+        expect(label.classList.contains('body-default'), 'label should not use the large placeholder font').to.be.false;
+
+        // The input row must be visible so the label sits raised above it rather than centered as a placeholder.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'input should be visible so the label raises').to.be.false;
+      });
+
+      it('should keep the label in the default (large) position when activeLabel is not set', async () => {
+        const el = await fixture(html`<auro-input label="Test"></auro-input>`);
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+
+        // Baseline: without activeLabel an empty, unfocused classic input shows the large placeholder-style label.
+        expect(label.classList.contains('body-default'), 'label should use the large placeholder font').to.be.true;
+        expect(label.classList.contains('body-xs'), 'label should not use the active/small font').to.be.false;
+      });
+
+      it('should be a no-op in the emphasized layout (label stays inside the field)', async () => {
+        const el = await fixture(html`<auro-input activeLabel layout="emphasized" label="Test"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+        const label = el.shadowRoot.querySelector('label[part="label"]');
+
+        // activeLabel is intentionally scoped to classic/default: an empty, unfocused emphasized
+        // input keeps its input row hidden and its large in-field label size (accent-xl), rather
+        // than the small active size (body-xs) that the classic layout would apply.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'emphasized input should remain hidden').to.be.true;
+        expect(label.classList.contains('accent-xl'), 'emphasized label should keep its large in-field size').to.be.true;
+        expect(label.classList.contains('body-xs'), 'emphasized label should not take the classic active size').to.be.false;
+      });
+
+      it('should be a no-op in the snowflake layout (label stays inside the field)', async () => {
+        const el = await fixture(html`<auro-input activeLabel layout="snowflake" label="Test"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input[part="input"]');
+
+        // Same as emphasized: activeLabel must not flip the input from hidden to visible here.
+        expect(input.classList.contains('util_displayHiddenVisually'), 'snowflake input should remain hidden').to.be.true;
       });
     });
 
