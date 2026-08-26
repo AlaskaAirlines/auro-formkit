@@ -525,9 +525,12 @@ function runFullTest(mobileView) {
 
         expect(el.getAttribute('validity')).to.equal('customError');
 
-        // Trigger focus then validate-on-blur path
-        el.touched = true;
-        el.validate();
+        // Simulate focus entering and leaving the group to exercise checkFocusWithin,
+        // which is where the !group.error guard actually lives
+        const cb1 = el.querySelector('#cb1');
+        cb1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+        document.body.focus();
         await elementUpdated(el);
 
         // error attribute error must survive — noValidate must not clear it
