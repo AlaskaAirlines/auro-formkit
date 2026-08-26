@@ -1789,6 +1789,23 @@ function runFullTest(mobileView) {
         // error attribute error must survive the blur — noValidate must not clear it
         await expect(el.getAttribute('validity')).to.equal('customError');
       });
+
+      it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+        // error="" is falsy so !this.error would pass — hasAttribute('error') is the correct guard
+        const el = await defaultFixture(mobileView);
+        el.error = '';
+        el.noValidate = true;
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+
+        el.input.focus();
+        await elementUpdated(el);
+        el.input.blur();
+        await elementUpdated(el);
+
+        await expect(el.getAttribute('validity')).to.equal('customError');
+      });
     });
 
     describe('offset', () => {

@@ -818,6 +818,26 @@ function runTest(mobileView) {
           await expect(el.getAttribute('validity')).to.equal('customError');
         });
 
+        it('should not clear error="" (empty string) attribute state on blur when noValidate is set', async () => {
+          // error="" is falsy so !this.error would pass — hasAttribute('error') is the correct guard
+          const el = await fixture(html`
+            <auro-select error="" novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('customError');
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('customError');
+        });
+
         it('should clear stale error state on blur when noValidate is set after validate(true)', async () => {
           const el = await fixture(html`
             <auro-select required novalidate>

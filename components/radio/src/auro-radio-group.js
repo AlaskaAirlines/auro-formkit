@@ -277,7 +277,7 @@ export class AuroRadioGroup extends LitElement {
     this.touched = true;
     if (!this.noValidate) {
       this.validation.validate(this);
-    } else if (this.validity !== undefined && !this.error) {
+    } else if (this.validity !== undefined && !this.hasAttribute('error')) {
       // Clear stale error state left by a previous validate(true) call.
       // Do not clear when the error attribute is set — that is an externally forced error.
       this.validity = undefined;
