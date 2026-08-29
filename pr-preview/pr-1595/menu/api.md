@@ -13,7 +13,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `disabled`              | `disabled`    |           | `boolean`                              |             | When true, the entire menu and all options are disabled. |
 | `hasLoadingPlaceholder` |               | readonly  | `boolean`                              |             | Getter for loading placeholder state.            |
 | `index`                 |               |           | `number`                               |             |                                                  |
-| `layout`                |               |           | `string`                               |             |                                                  |
+| `layout`                | `layout`      |           | `string`                               |             | Applies a named layout variant to the menu. Free-form string consumed by the shared architecture helpers; menu defines no closed value set. |
 | `loading`               | `loading`     |           | `boolean`                              | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | `matchWord`             | `matchword`   |           | `string`                               | "undefined" | Specifies a string used to highlight matched string parts in options. |
 | `multiSelect`           | `multiselect` |           | `boolean`                              | false       | When true, the selected option can be multiple options. |
