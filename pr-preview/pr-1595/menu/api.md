@@ -18,8 +18,8 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `matchWord`             | `matchword`   |           | `string`                               | "undefined" | Specifies a string used to highlight matched string parts in options. |
 | `multiSelect`           | `multiselect` |           | `boolean`                              | false       | When true, the selected option can be multiple options. |
 | `noCheckmark`           | `nocheckmark` |           | `boolean`                              | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          |               |           | `object`                               | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        |               |           | `object`                               | "undefined" | The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s. |
+| `optionActive`          |               |           | `HTMLElement`                          | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`        |               |           | `HTMLElement \| HTMLElement[]`         | "undefined" | The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s. |
 | `options`               |               | readonly  | `HTMLElement[]`                        |             |                                                  |
 | `selectedOption`        |               | readonly  | `HTMLElement \| null`                  |             | Gets the first selected option, or null if none. |
 | `selectedOptions`       |               | readonly  | `HTMLElement[]`                        |             | Gets the currently selected options as an array. |
@@ -44,7 +44,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
-| `auroMenu-optionsChange`      | `CustomEvent<{ options: Array }>`                | Notifies that the set of available menu options has changed. |
+| `auroMenu-optionsChange`      | `CustomEvent<{ options: Array<HTMLElement> }>`   | Notifies that the set of available menu options has changed. |
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
 | `auroMenu-selectValueReset`   | `CustomEvent<any>`                               | Notifies that the component value has been reset. |
 | `auroMenu-selectedOption`     | `CustomEvent<any>`                               | Notifies that a new menuoption selection has been made. |
@@ -72,6 +72,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
 |---------------|---------------|-----------|-----------|---------|--------------------------------------------------|
 | `disabled`    | `disabled`    |           | `boolean` | false   | When true, the option is disabled and cannot be selected. |
+| `event`       | `event`       |           | `string`  |         | When set, selecting this option dispatches a custom event of the given name from the parent `auro-menu` (and an `auroMenu-customEventFired` event) instead of selecting the option. |
 | `iconTag`     |               |           |           |         |                                                  |
 | `isActive`    |               | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable. |
 | `layout`      |               |           | `string`  |         |                                                  |

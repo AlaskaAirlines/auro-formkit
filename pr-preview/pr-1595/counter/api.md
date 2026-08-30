@@ -28,7 +28,7 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 | `size`                    | `size`                    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`           | "'xl'"           | Sets the size of the counter group when it is a dropdown. |
 | `total`                   | `total`                   | `number`                                         | "undefined"      | The total value of the counters.                 |
 | `validity`                | `validity`                | `string`                                         | "undefined"      | Reflects the validity state.                     |
-| `value`                   | `value`                   | `object`                                         | "undefined"      | The current individual values of the nested counters. |
+| `value`                   | `value`                   | `Record<string, number>`                         | "undefined"      | The current individual values of the nested counters. |
 
 ## Methods
 

@@ -15,7 +15,7 @@ The `auro-radio-group` element is used to group a set `auro-radio` elements.
 | `horizontal`                    | `horizontal`                    | `boolean`                |             | If true, displays radio buttons horizontally.    |
 | `noValidate`                    | `novalidate`                    | `boolean`                |             | If true, disables auto-validation on blur.       |
 | `onDark`                        | `ondark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| `optionSelected`                | `optionselected`                | `object`                 |             | Specifies the current selected radio button.     |
+| `optionSelected`                | `optionselected`                | `HTMLElement`            |             | Specifies the current selected radio button.     |
 | `required`                      | `required`                      | `boolean`                |             | Populates the `required` attribute on the element. Used for client-side validation. |
 | `setCustomValidity`             | `setcustomvalidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setcustomvaliditycustomerror`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
