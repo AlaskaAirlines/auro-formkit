@@ -28,8 +28,11 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - The default slot for the checkbox label.
  *
- * @fires change - (Deprecated) Notifies when checked value is changed.
+ * @fires change - Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead.
  * @fires input - Notifies when when checked value is changed by user's interface.
+ * @event auroCheckbox-input - Notifies when the checked value is changed by user interaction. **DEPRECATED** - Use the `input` event instead.
+ * @event auroCheckbox-focusin - Notifies when the checkbox receives focus.
+ * @event auroCheckbox-focusout - Notifies when the checkbox loses focus.
  */
 /* eslint-enable jsdoc/no-undefined-types */
 
@@ -130,9 +133,11 @@ export class AuroCheckbox extends LitElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 

@@ -39,6 +39,7 @@ let menuInstanceIdCounter = 0;
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
+ * @event {CustomEvent<{ options: Array<HTMLElement> }>} auroMenu-optionsChange - Notifies that the set of available menu options has changed.
  * @event {CustomEvent<any>} auroMenu-selectValueFailure - Notifies that an attempt to select a menuoption by matching a value has failed.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
@@ -53,15 +54,7 @@ export class AuroMenu extends AuroElement {
 
     // State properties (reactive)
 
-    /**
-     * @private
-     */
-    this.shape = "box";
-
-    /**
-     * @private
-     */
-    this.size = "sm";
+    this.initializeArchitectureDefaults();
 
     // Value of the selected options
     this.value = undefined;
@@ -102,8 +95,6 @@ export class AuroMenu extends AuroElement {
 
     // Instance properties (non-reactive)
 
-    menuInstanceIdCounter += 1;
-
     Object.assign(this, {
       // Root-level menu (true) or a nested submenu (false)
       rootMenu: true,
@@ -115,7 +106,7 @@ export class AuroMenu extends AuroElement {
       loadingSlots: null,
       // Unique id for this menu instance; prefixes every auto-generated option
       // key so keys never collide across menus in the same document.
-      _menuInstanceId: `menu-${menuInstanceIdCounter}`,
+      _menuInstanceId: `menu-${menuInstanceIdCounter += 1}`,
       // Monotonically increasing counter for option key generation. Never
       // resets, so a key is never reused within this instance's lifetime.
       _optionKeyCounter: 0,
@@ -131,9 +122,49 @@ export class AuroMenu extends AuroElement {
     });
   }
 
+  // Defaults for the layout/shape/size architecture props are set in a helper
+  // (not the constructor body) so the CEM analyzer keeps their `@type` unions
+  // instead of inferring `string` from a constructor-literal assignment.
+  // See AlaskaAirlines/discussions#653.
+  initializeArchitectureDefaults() {
+    this.shape = "box";
+    this.size = "sm";
+  }
+
   static get properties() {
     return {
       ...super.properties,
+
+      /**
+       * Applies a named layout variant to the menu. Free-form string consumed by the shared architecture helpers; menu defines no closed value set.
+       */
+      layout: {
+        type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the menu options.
+       * @type {'box' | 'pill' | 'snowflake'}
+       * @default 'box'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the menu options.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'sm'
+       */
+      size: {
+        type: String,
+        attribute: "size",
+        reflect: true
+      },
 
       /**
        * When true, the entire menu and all options are disabled.
@@ -190,6 +221,7 @@ export class AuroMenu extends AuroElement {
       /**
        * Specifies the current active menuOption.
        * @readonly
+       * @type {HTMLElement}
        */
       optionActive: {
         type: Object,
@@ -199,6 +231,7 @@ export class AuroMenu extends AuroElement {
       /**
        * The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s.
        * @readonly
+       * @type {HTMLElement | HTMLElement[]}
        */
       optionSelected: {
         // Allow HTMLElement, HTMLElement[] arrays and undefined

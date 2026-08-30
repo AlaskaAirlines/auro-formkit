@@ -43,11 +43,17 @@ import iconVersion from "./iconVersion.js";
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
+ *
+ * @csspart dropdown - The dropdown element rendered when `isDropdown` is true.
+ * @csspart helpText - The help text and error message container.
+ *
+ * @event input - Notifies that the counter group's value has changed.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
     super();
 
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.max = undefined;
     this.min = undefined;
@@ -155,6 +161,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: "autoplacement",
         reflect: true
       },
 
@@ -187,6 +194,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
@@ -194,7 +202,8 @@ export class AuroCounterGroup extends AuroElement {
        * If true, the counter group is displayed as a dropdown.
        */
       isDropdown: {
-        type: Boolean
+        type: Boolean,
+        attribute: "isdropdown"
       },
 
       /**
@@ -204,6 +213,29 @@ export class AuroCounterGroup extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the counter group when it is a dropdown.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the counter group when it is a dropdown.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'xl'
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -213,6 +245,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: "matchwidth",
         reflect: true
       },
 
@@ -238,6 +271,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: "largefullscreenheadline",
         reflect: true
       },
 
@@ -247,6 +281,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: "noflip",
         reflect: true
       },
 
@@ -269,9 +304,11 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance` instead.
+       * @deprecated Use `appearance` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: "ondark",
         reflect: true
       },
 
@@ -302,6 +339,7 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * The current individual values of the nested counters.
+       * @type {Record<string, number>}
        */
       value: {
         type: Object,

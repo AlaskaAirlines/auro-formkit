@@ -87,7 +87,8 @@ function getOptionLabel(option) {
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
- * @event auroCombobox-valueSet - (Deprecated) Notifies that the component has a new value set.
+ * @csspart helpText - The help text and error message content container.
+ * @event auroCombobox-valueSet - Notifies that the component has a new value set. **DEPRECATED** - Use the `input` event instead.
  * @event input - Notifies that the component has a new value set.
  * @event inputValue - Notifies that the components internal HTML5 input value has changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
@@ -106,6 +107,7 @@ export class AuroCombobox extends AuroElement {
    */
   _initializeDefaults() {
     // Defaults that effect the combobox behavior and state
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.disabled = false;
     this.msgSelectionMissing = 'Please select an option.';
@@ -191,7 +193,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default' | 'inverse'} appearance - The visual appearance of the component.
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -212,6 +214,7 @@ export class AuroCombobox extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: 'autoplacement',
         reflect: true
       },
 
@@ -219,9 +222,11 @@ export class AuroCombobox extends AuroElement {
        * Array of available options to display in the dropdown.
        * This array contains all non-hidden options (e.g., hidden by filtering on input value).
        * @private
+       * @type {HTMLElement[]}
        */
       availableOptions: {
         state: true,
+        attribute: false,
         type: Array,
         reflect: false,
         hasChanged(newVal, oldVal) {
@@ -291,6 +296,7 @@ export class AuroCombobox extends AuroElement {
        */
       dvInputOnly: {
         type: Boolean,
+        attribute: 'dvinputonly',
         reflect: true
       },
 
@@ -324,6 +330,29 @@ export class AuroCombobox extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the combobox.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the combobox.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'xl'
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -333,6 +362,7 @@ export class AuroCombobox extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: 'matchwidth',
         reflect: true
       },
 
@@ -341,6 +371,7 @@ export class AuroCombobox extends AuroElement {
        */
       noFilter: {
         type: Boolean,
+        attribute: 'nofilter',
         reflect: true
       },
 
@@ -350,6 +381,7 @@ export class AuroCombobox extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: 'noflip',
         reflect: true
       },
 
@@ -366,6 +398,7 @@ export class AuroCombobox extends AuroElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
@@ -380,9 +413,11 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -391,7 +426,8 @@ export class AuroCombobox extends AuroElement {
        * @type {HTMLElement}
        */
       optionSelected: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
@@ -401,6 +437,7 @@ export class AuroCombobox extends AuroElement {
        */
       persistInput: {
         type: Boolean,
+        attribute: 'persistinput',
         reflect: true
       },
 
@@ -434,28 +471,32 @@ export class AuroCombobox extends AuroElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing` due to the user not choosing a menu option when behavior = "filter".
        */
       setCustomValidityValueMissingFilter: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissingfilter'
       },
 
       /**
@@ -475,11 +516,13 @@ export class AuroCombobox extends AuroElement {
        */
       triggerIcon: {
         type: Boolean,
+        attribute: 'triggericon',
         reflect: true
       },
 
       /**
        * Applies the defined value as the type attribute on `auro-input`.
+       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
        */
       type: {
         type: String,
@@ -491,6 +534,7 @@ export class AuroCombobox extends AuroElement {
        */
       typedValue: {
         type: String,
+        attribute: 'typedvalue',
         reflect: true
       },
 
@@ -516,6 +560,7 @@ export class AuroCombobox extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: 'largefullscreenheadline',
         reflect: true
       },
       /* eslint-enable jsdoc/require-description-complete-sentence */
@@ -530,12 +575,14 @@ export class AuroCombobox extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
       /**
        * Specifies the currently active option.
        * @private
+       * @type {HTMLElement}
        */
       optionActive: {
         type: Object,
@@ -973,7 +1020,7 @@ export class AuroCombobox extends AuroElement {
           // focus, which fires focusout on the child auro-input before the
           // bib input receives focus. That focusout triggers the input's own
           // validate(), which dispatches a composed auroFormElement-validated
-          // event. Because composed events are retargetted at each shadow DOM
+          // event. Because composed events are re-targeted at each shadow DOM
           // boundary, the event appears to originate from the combobox itself
           // and its listener unconditionally sets this.validity — causing
           // premature validation. This flag suppresses all validation paths
@@ -1236,7 +1283,7 @@ export class AuroCombobox extends AuroElement {
           this.optionSelected = selected;
         }
 
-        // Skip writeback when this event is the echo of our own setMenuValue —
+        // Skip write-back when this event is the echo of our own setMenuValue —
         // otherwise it cascades against handleInputValueChange in suggestion mode.
         if (this._pendingMenuValueSync) {
           this._pendingMenuValueSync = false;
@@ -1598,7 +1645,7 @@ export class AuroCombobox extends AuroElement {
       // Ignore dispatches from the bib (fullscreen) input. It's re-validated
       // inside this.validate()'s auroInputElements loop with its own
       // (often undefined) validity, and the event is composed/bubbles up to
-      // this listener with `target` retargeted to the combobox. Letting it
+      // this listener with `target` re-targeted to the combobox. Letting it
       // through would overwrite the trigger input's correct validity with
       // the bib input's stale one (e.g. wiping `tooShort` during typing).
       if (this.inputInBib && evt.composedPath()[0] === this.inputInBib && this.inputInBib !== this.input) {

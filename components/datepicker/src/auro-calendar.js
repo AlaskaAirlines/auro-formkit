@@ -28,8 +28,10 @@ import buttonVersion from './buttonVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
+ * The `auro-calendar` component renders the calendar month(s) shown inside the datepicker dropdown and manages date selection, range preview, and keyboard navigation.
  * @event auroCalendar-dateSelected - Notifies that a date has been selected in the calendar.
  * @event auroCalendar-monthChanged - Notifies that the visible calendar month(s) have changed.
+ * @event narrow-changedProperties - Notifies that the calendar's narrow (mobile) layout state has changed.
  */
 export class AuroCalendar extends RangeDatepicker {
   constructor() {
@@ -104,6 +106,10 @@ export class AuroCalendar extends RangeDatepicker {
     // Initialize the backing field directly so the constructor's default
     // empty array doesn't trigger the deprecation warning. Assignments from
     // consumers still route through the setter below.
+    /**
+     * @private
+     * @type {number[]}
+     */
     this._disabledDays = [];
 
     /**
@@ -112,7 +118,9 @@ export class AuroCalendar extends RangeDatepicker {
     this.numCalendars = undefined;
 
     /**
+     * Captured light-DOM slot nodes, keyed by slot name, forwarded into the bib.
      * @private
+     * @type {Record<string, Node[]>}
      */
     this.slots = {};
 
@@ -191,6 +199,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       calendarEndMonth: {
         type: String,
+        attribute: 'calendarendmonth',
         reflect: true
       },
 
@@ -199,6 +208,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       calendarStartMonth: {
         type: String,
+        attribute: 'calendarstartmonth',
         reflect: true
       },
 
@@ -207,6 +217,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       centralDate: {
         type: String,
+        attribute: 'centraldate',
         reflect: true
       },
 
@@ -214,19 +225,22 @@ export class AuroCalendar extends RangeDatepicker {
        * The starting date of the selected range.
        */
       dateFrom: {
-        type: String
+        type: String,
+        attribute: 'datefrom'
       },
 
       /**
        * The ending date of the selected range.
        */
       dateTo: {
-        type: String
+        type: String,
+        attribute: 'dateto'
       },
 
       /**
        * Dropdown element that contains the calendar.
        * @private
+       * @type {HTMLElement}
        */
       dropdown: {
         type: Object
@@ -237,6 +251,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       isFullscreen: {
         type: Boolean,
+        attribute: 'isfullscreen',
         reflect: true
       },
 
@@ -246,6 +261,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: 'largefullscreenheadline',
         reflect: true
       },
 
@@ -254,6 +270,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       maxDate: {
         type: String,
+        attribute: 'maxdate',
         reflect: true
       },
 
@@ -262,6 +279,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       minDate: {
         type: String,
+        attribute: 'mindate',
         reflect: true
       },
 
@@ -271,6 +289,7 @@ export class AuroCalendar extends RangeDatepicker {
        */
       mobileBreakpoint: {
         type: Number,
+        attribute: 'mobilebreakpoint',
         reflect: false
       },
 
@@ -280,7 +299,8 @@ export class AuroCalendar extends RangeDatepicker {
        * @private
        */
       monthFirst: {
-        type: Boolean
+        type: Boolean,
+        attribute: 'monthfirst'
       },
 
       /**
@@ -288,7 +308,8 @@ export class AuroCalendar extends RangeDatepicker {
        * @private
        */
       numCalendars: {
-        type: Number
+        type: Number,
+        attribute: 'numcalendars'
       },
 
       /**
@@ -304,14 +325,17 @@ export class AuroCalendar extends RangeDatepicker {
        * as wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts and pass the locale down to calendar-month elements.
        */
       localeCode: {
-        type: String
+        type: String,
+        attribute: 'localecode'
       },
 
       /**
        * Names of all 12 months. When omitted, names are derived from `localeCode`.
+       * @type {string[]}
        */
       monthNames: {
-        type: Array
+        type: Array,
+        attribute: 'monthnames'
       }
     };
   }
