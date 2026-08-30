@@ -37,6 +37,13 @@ import { keyboardStrategy } from './keyboardStrategy.js';
  * @slot ariaLabel.plus - Accessible label for the increment button.
  * @slot helpText - Help text content for the counter.
  * @slot description - Descriptive content for the counter.
+ *
+ * @csspart counterControl - The container for the counter's spinbutton controls and value.
+ * @csspart controlMinus - The decrement button.
+ * @csspart controlPlus - The increment button.
+ * @csspart helpText - The help text and error message container.
+ *
+ * @event input - Notifies that the counter's value has changed.
  */
 export class AuroCounter extends LitElement {
   static get shadowRootOptions() {
@@ -148,7 +155,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       defaultSlot: {
-        type: String
+        type: String,
+        attribute: "defaultslot"
       },
 
       /**
@@ -164,7 +172,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMax: {
-        type: Boolean
+        type: Boolean,
+        attribute: "disablemax"
       },
 
       /**
@@ -172,7 +181,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMin: {
-        type: Boolean
+        type: Boolean,
+        attribute: "disablemin"
       },
 
       /**
@@ -202,9 +212,11 @@ export class AuroCounter extends LitElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: "ondark",
         reflect: true
       },
 

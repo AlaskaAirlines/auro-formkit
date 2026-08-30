@@ -25,11 +25,14 @@ import formkitVersion from '@aurodesignsystem/version';
  * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
  * @customElement auro-checkbox-group
  *
+ * @csspart helpText - Apply css to the help text element that displays helper or error messages.
+ *
  * @slot legend - Allows for the legend to be overridden.
  * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot helpText - Allows for the helper text to be overridden.
  * @slot default - The default slot for the checkbox items.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
+ * @event input - Notifies when the group's value changes due to a checkbox selection being added or removed.
  */
 
 export class AuroCheckboxGroup extends LitElement {
@@ -142,14 +145,17 @@ export class AuroCheckboxGroup extends LitElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -165,21 +171,24 @@ export class AuroCheckboxGroup extends LitElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**

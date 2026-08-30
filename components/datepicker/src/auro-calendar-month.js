@@ -44,6 +44,11 @@ const getWeekdayNames = (locale, weekday) => {
 };
 
 
+/**
+ * The `auro-calendar-month` component renders a single localized month grid of selectable day cells within the calendar.
+ * @event hovered-date-changed - Notifies that the date currently hovered within the month grid has changed.
+ * @event calendar-month-mouseleave - Notifies that the mouse has left the month's date grid so the range hover preview can be cleared.
+ */
 export class AuroCalendarMonth extends RangeDatepickerCalendar {
   static get styles() {
     return [
@@ -58,10 +63,11 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     return {
 
       /**
-       * @private
+       * When set, the month name is displayed before the year in the header.
        */
       monthFirst: {
         type: Boolean,
+        attribute: 'monthfirst',
         reflect: true
       },
 
@@ -70,14 +76,17 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
        * As wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts.
        */
       localeCode: {
-        type: String
+        type: String,
+        attribute: 'localecode'
       },
 
       /**
        * Names of all 12 months. When omitted, names are derived from `localeCode`.
+       * @type {string[]}
        */
       monthNames: {
-        type: Array
+        type: Array,
+        attribute: 'monthnames'
       }
     };
   }

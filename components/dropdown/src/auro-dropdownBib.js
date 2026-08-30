@@ -28,8 +28,11 @@ const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
 ];
 
 /**
+ * The `auro-dropdownbib` element renders the dropdown's bib as a dialog/popover container and manages its fullscreen and modal display.
  * @prop { String } fullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
  * @csspart bibContainer - Apply css to the bib container.
+ * @event auro-dropdownbib-connected - Notifies that the dropdown bib has connected to the DOM, passing a reference to the element in the event detail.
+ * @event auro-bib-cancel - Notifies that the bib was cancelled (e.g. via the ESC key) so parent components can close it.
  */
 
 export class AuroDropdownBib extends LitElement {
@@ -44,9 +47,17 @@ export class AuroDropdownBib extends LitElement {
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
 
-    this.shape = "rounded";
     this.matchWidth = false;
     this.hasActiveDescendant = false;
+
+    this.initializeArchitectureDefaults();
+  }
+
+  // The `shape` default is set in a helper (not the constructor body) so the CEM
+  // analyzer keeps its `@type` union instead of inferring `string` from a
+  // constructor-literal assignment. See AlaskaAirlines/discussions#653.
+  initializeArchitectureDefaults() {
+    this.shape = "rounded";
   }
 
   static get styles() {
@@ -65,6 +76,7 @@ export class AuroDropdownBib extends LitElement {
        */
       isFullscreen: {
         type: Boolean,
+        attribute: 'isfullscreen',
         reflect: true
       },
 
@@ -90,6 +102,7 @@ export class AuroDropdownBib extends LitElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: 'matchwidth',
         reflect: true
       },
 
@@ -105,11 +118,18 @@ export class AuroDropdownBib extends LitElement {
        * A reference to the associated bib template element.
        */
       bibTemplate: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
+      /**
+       * Sets the shape of the dropdown bib.
+       * @type {'box' | 'classic' | 'pill' | 'rounded' | 'snowflake'}
+       * @default 'rounded'
+       */
       shape: {
         type: String,
+        attribute: "shape",
         reflect: true
       },
 
@@ -121,7 +141,8 @@ export class AuroDropdownBib extends LitElement {
        * @private
        */
       dialogLabel: {
-        type: String
+        type: String,
+        attribute: 'dialoglabel'
       },
 
       /**
@@ -132,7 +153,8 @@ export class AuroDropdownBib extends LitElement {
        * @private
        */
       dialogRole: {
-        type: String
+        type: String,
+        attribute: 'dialogrole'
       },
 
       /**
@@ -140,7 +162,8 @@ export class AuroDropdownBib extends LitElement {
        * @private
        */
       hasActiveDescendant: {
-        type: Boolean
+        type: Boolean,
+        attribute: 'hasactivedescendant'
       }
     };
   }

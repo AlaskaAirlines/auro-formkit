@@ -14,7 +14,7 @@ import styleCss from "./styles/auro-radio-group-css.js";
 import colorCss from './styles/groupColor-css.js';
 import tokenCss from './styles/tokens-css.js';
 
-// Import formvalidation class
+// Import formValidation class
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 // Import library runtime utils
@@ -32,6 +32,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * @customElement auro-radio-group
  *
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
+ * @csspart helpText - Apply css to the help text element that displays helper or error messages.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
@@ -146,22 +147,27 @@ export class AuroRadioGroup extends LitElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
       /**
        * Specifies the current selected radio button.
+       * @type {HTMLElement}
        */
       optionSelected: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
@@ -176,21 +182,24 @@ export class AuroRadioGroup extends LitElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**

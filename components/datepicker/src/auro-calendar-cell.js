@@ -17,6 +17,14 @@ import { isBlackoutTimestamp } from './blackoutUtils.js';
 
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
+/**
+ * The `auro-calendar-cell` component renders a single selectable day button within a calendar month grid.
+ *
+ * @event calendar-cell-activate - Notifies that this cell has been activated via click or tap.
+ * @event date-is-hovered - Notifies that this cell's date is being hovered.
+ * @event calendar-cell-focused - Notifies that this cell's button has received focus.
+ * @csspart dateSlot - Use for customizing the style of the date slot content container.
+ */
 export class AuroCalendarCell extends LitElement {
   constructor() {
     super();
@@ -29,6 +37,8 @@ export class AuroCalendarCell extends LitElement {
     this.min = null;
     this.max = null;
     this.disabled = false;
+
+    /** @type {number[]} */
     this.disabledDays = [];
     this.isCurrentDate = false;
     this._locale = null;
@@ -52,31 +62,107 @@ export class AuroCalendarCell extends LitElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * The day object for this cell, containing its Unix timestamp (`date`) and day-of-month title.
+       */
       day:           { type: Object },
+
+      /**
+       * Whether this cell's date is currently selected.
+       */
       selected:      { type: Boolean },
-      dateTo:        { type: String },
-      dateFrom:      { type: String },
+
+      /**
+       * The end (return) date of the selected range as a Unix-timestamp string.
+       */
+      dateTo:        {
+        type: String,
+        attribute: 'dateto'
+      },
+
+      /**
+       * The start (depart) date of the selected range as a Unix-timestamp string.
+       */
+      dateFrom:      {
+        type: String,
+        attribute: 'datefrom'
+      },
+
+      /**
+       * The month this cell belongs to.
+       */
       month:         { type: String },
+
+      /**
+       * The minimum selectable date as a Unix timestamp.
+       */
       min:           { type: Number },
+
+      /**
+       * The maximum selectable date as a Unix timestamp.
+       */
       max:           { type: Number },
+
+      /**
+       * Whether this cell is disabled because its date falls outside the min/max range.
+       */
       disabled:      {
         type: Boolean,
         reflect: true
       },
+
       /**
+       * Legacy array of Unix-timestamp dates that cannot be selected.
        * @deprecated Propagated from the legacy `auro-calendar.disabledDays`
        * Unix-timestamp array. The cell honors it for backward compatibility
        * (see the divergence-check fallback inside `isBlackout`), but
        * consumers should migrate to `auro-datepicker.blackoutDates`
        * (YYYY-MM-DD ISO strings). The calendar emits a one-time
        * deprecation warning the first time a non-empty value is observed.
+       * @type {number[]}
        */
-      disabledDays:  { type: Array },
-      isCurrentDate: { type: Boolean },
+      disabledDays:  {
+        type: Array,
+        attribute: 'disableddays'
+      },
+
+      /**
+       * Whether this cell represents the current date (today).
+       */
+      isCurrentDate: {
+        type: Boolean,
+        attribute: 'iscurrentdate'
+      },
+
+      /**
+       * The BCP 47 locale tag used to format the cell's date.
+       */
       locale:        { type: String },
-      dateStr:       { type: String },
-      renderForDateSlot: { type: Boolean },
-      hasPopoverContent: { type: Boolean }
+
+      /**
+       * The cell's date formatted as a `YYYY_MM_DD` slot-name string.
+       */
+      dateStr:       {
+        type: String,
+        attribute: 'datestr'
+      },
+
+      /**
+       * Whether to render the numerical date off-center to leave room below for date slot content.
+       */
+      renderForDateSlot: {
+        type: Boolean,
+        attribute: 'renderfordateslot'
+      },
+
+      /**
+       * Whether this cell has popover slot content to display.
+       */
+      hasPopoverContent: {
+        type: Boolean,
+        attribute: 'haspopovercontent'
+      }
     };
   }
 
