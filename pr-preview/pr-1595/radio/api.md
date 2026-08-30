@@ -83,9 +83,9 @@ The `auro-radio` element is used to a button that allows the user to select one 
 |----------------------|--------------------|--------------------------------------------------|
 | `auroRadio-blur`     | `CustomEvent<any>` | Notifies that the component has lost focus.      |
 | `auroRadio-selected` | `CustomEvent<any>` | Notifies that the component has been marked as checked/selected. |
-| `change`             | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
+| `change`             | `CustomEvent<any>` | Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead. |
 | `focusSelected`      | `CustomEvent<any>` | Notifies that the component has gained focus.    |
-| `input`              | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
+| `input`              | `InputEvent`       | Notifies when checked value is changed by user's interface. |
 | `resetRadio`         | `CustomEvent<any>` | Notifies that the component has reset the checked/selected state. |
 | `toggleSelected`     | `CustomEvent<any>` | Notifies that the component has toggled the checked/selected state. |
 

@@ -64,7 +64,7 @@ The `auro-combobox` element provides users with a way to select an option from a
 
 | Event                       | Type                                             | Description                                      |
 |-----------------------------|--------------------------------------------------|--------------------------------------------------|
-| `auroCombobox-valueSet`     | `CustomEvent<any>`                               | (Deprecated) Notifies that the component has a new value set. |
+| `auroCombobox-valueSet`     | `CustomEvent<any>`                               | Notifies that the component has a new value set. **DEPRECATED** - Use the `input` event instead. |
 | `auroFormElement-validated` |                                                  | Notifies that the component value(s) have been validated. |
 | `input`                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies that the component has a new value set. |
 | `inputValue`                | `CustomEvent<{ value: string \| undefined; }>`   | Notifies that the components internal HTML5 input value has changed. |
