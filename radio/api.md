@@ -13,13 +13,13 @@ The `auro-radio-group` element is used to group a set `auro-radio` elements.
 | `disabled`                      | `disabled`                      | `boolean`                |             | If true, all radio buttons will be disabled.     |
 | `error`                         | `error`                         | `string`                 |             | If true, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `horizontal`                    | `horizontal`                    | `boolean`                |             | If true, displays radio buttons horizontally.    |
-| `noValidate`                    | `noValidate`                    | `boolean`                |             | If true, disables auto-validation on blur.       |
-| `onDark`                        | `onDark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| `optionSelected`                | `optionSelected`                | `object`                 |             | Specifies the current selected radio button.     |
+| `noValidate`                    | `novalidate`                    | `boolean`                |             | If true, disables auto-validation on blur.       |
+| `onDark`                        | `ondark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `optionSelected`                |                                 | `HTMLElement`            |             | Specifies the current selected radio button.     |
 | `required`                      | `required`                      | `boolean`                |             | Populates the `required` attribute on the element. Used for client-side validation. |
-| `setCustomValidity`             | `setCustomValidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                 |             | Custom help text message to display when validity = `valueMissing`. |
+| `setCustomValidity`             | `setcustomvalidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setcustomvaliditycustomerror`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setcustomvalidityvaluemissing` | `string`                 |             | Custom help text message to display when validity = `valueMissing`. |
 | `validity`                      | `validity`                      | `string`                 |             | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `string`                 |             | Specifies the current value of the selected radio button. |
 
@@ -49,6 +49,7 @@ The `auro-radio-group` element is used to group a set `auro-radio` elements.
 
 | Part          | Description                                      |
 |---------------|--------------------------------------------------|
+| `helpText`    | Apply css to the help text element that displays helper or error messages. |
 | `radio-group` | Apply css to the fieldset element in the shadow DOM |
 
 # auro-radio
@@ -66,7 +67,7 @@ The `auro-radio` element is used to a button that allows the user to select one 
 | `id`         | `id`         | `string`                 |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `label`      | `label`      | `string`                 |             | Label for the radio button.                      |
 | `name`       | `name`       | `string`                 |             | Name for the radio button group.                 |
-| `onDark`     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `onDark`     | `ondark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
 | `required`   | `required`   | `boolean`                |             | Defines element as required.                     |
 | `value`      | `value`      | `string`                 |             | The value of the radio button.                   |
 
@@ -82,9 +83,9 @@ The `auro-radio` element is used to a button that allows the user to select one 
 |----------------------|--------------------|--------------------------------------------------|
 | `auroRadio-blur`     | `CustomEvent<any>` | Notifies that the component has lost focus.      |
 | `auroRadio-selected` | `CustomEvent<any>` | Notifies that the component has been marked as checked/selected. |
-| `change`             | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
+| `change`             | `CustomEvent<any>` | Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead. |
 | `focusSelected`      | `CustomEvent<any>` | Notifies that the component has gained focus.    |
-| `input`              | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
+| `input`              | `InputEvent`       | Notifies when checked value is changed by user's interface. |
 | `resetRadio`         | `CustomEvent<any>` | Notifies that the component has reset the checked/selected state. |
 | `toggleSelected`     | `CustomEvent<any>` | Notifies that the component has toggled the checked/selected state. |
 
