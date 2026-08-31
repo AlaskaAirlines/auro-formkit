@@ -23,8 +23,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @customElement auro-radio
  *
  * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
- * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
- * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
+ * @event {CustomEvent<any>} change - Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead.
+ * @event {InputEvent} input - Notifies when checked value is changed by user's interface.
  * @event focusSelected - Notifies that the component has gained focus.
  * @event auroRadio-blur - Notifies that the component has lost focus.
  * @event resetRadio - Notifies that the component has reset the checked/selected state.
@@ -133,9 +133,11 @@ export class AuroRadio extends LitElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
