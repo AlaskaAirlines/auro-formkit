@@ -294,6 +294,11 @@ export class AuroCounter extends LitElement {
   focusControl() {
     const control = this.shadowRoot?.querySelector('[part="counterControl"]');
     if (control && !this.disabled) {
+      // `focusVisible` is a progressive enhancement: it is not yet in the standard
+      // FocusOptions interface (Chrome 86+, Firefox 116+, Safari 15.4+). Browsers
+      // that do not recognize it still move focus correctly — they simply do not
+      // render the `:focus-visible` ring. Do not treat a missing ring on an older
+      // engine as a regression.
       control.focus({ focusVisible: true });
     }
   }

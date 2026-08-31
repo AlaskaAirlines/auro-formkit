@@ -1322,6 +1322,39 @@ function runFullTest(mobileView) {
 
           expect(el.dropdown.isPopoverVisible).to.be.false;
         });
+
+        bibIt('re-registers pointerdown tracking after disconnect and reconnect (AB#1634231)', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="3">Counter 1</auro-counter>
+              <auro-counter value="3">Counter 2</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          // Detach and reattach the element, as an SPA route change or keyed
+          // remount would. firstUpdated ran on the initial connect and won't run
+          // again; connectedCallback must re-add the document pointerdown listener
+          // that disconnectedCallback removed.
+          const parent = el.parentNode;
+          parent.removeChild(el);
+          parent.appendChild(el);
+          await elementUpdated(el);
+
+          // The document-level capture listener must be live again: a composed
+          // pointerdown originating inside the group flips the tracking flag.
+          // Before the connectedCallback fix this stayed false after remount,
+          // silently disabling the focusout safety net.
+          el.pointerdownInsideGroup = false;
+          el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+          expect(el.pointerdownInsideGroup).to.be.true;
+
+          // A pointerdown that begins outside the group must not set the flag,
+          // so genuine outside clicks still close the bib after a remount.
+          el.pointerdownInsideGroup = false;
+          document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+          expect(el.pointerdownInsideGroup).to.be.false;
+        });
       }
     });
 

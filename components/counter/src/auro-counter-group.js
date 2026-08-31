@@ -505,6 +505,21 @@ export class AuroCounterGroup extends AuroElement {
     this.pointerdownInsideGroup = event.composedPath().includes(this);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    // firstUpdated performs the initial pointerdown registration, but it runs
+    // only once per instance and disconnectedCallback removes the listener. On a
+    // later reconnect (SPA route change, keyed remount) firstUpdated does not run
+    // again, so re-add the document-level listener here. hasUpdated is false
+    // during the initial connect — firstUpdated owns that case — and true on any
+    // reconnect. remove-before-add keeps it idempotent. (AB#1634231)
+    if (this.hasUpdated && this.isDropdown) {
+      document.removeEventListener('pointerdown', this.trackPointerdown, true);
+      document.addEventListener('pointerdown', this.trackPointerdown, true);
+    }
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('pointerdown', this.trackPointerdown, true);
