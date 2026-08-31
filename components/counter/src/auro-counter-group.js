@@ -64,12 +64,15 @@ export class AuroCounterGroup extends AuroElement {
 
     this.matchWidth = false;
     this.isDropdown = false;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
     this.largeFullscreenHeadline = false;
     this.autoPlacement = false;
     this.noFlip = false;
     this.shift = false;
 
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
 
     /**

@@ -117,20 +117,31 @@ export class AuroCombobox extends AuroElement {
     this.persistInput = false;
     this.required = false;
     this.typedValue = undefined;
+
+    /** @type {'filter' | 'suggestion'} */
     this.behavior = "suggestion";
     this.clearBtnFocused = false;
 
     // Defaults that effect the overall layout of the combobox
     this.checkmark = false;
     this.dvInputOnly = false;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
+
+    /** @type {'classic' | 'emphasized' | 'snowflake'} */
     this.layout = 'classic';
     this.matchWidth = true;
+
+    /** @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'} */
     this.shape = 'classic';
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'} */
     this.size = 'xl';
     this.triggerIcon = false;
 
     // Defaults that effect the dropdown
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;

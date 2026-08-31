@@ -147,9 +147,12 @@ export class AuroDatePicker extends AuroElement {
     this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
     this._validLocale = 'en-US';
     // floaterConfig
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
