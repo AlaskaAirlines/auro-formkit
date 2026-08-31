@@ -284,6 +284,36 @@ export class AuroCounter extends LitElement {
   }
 
   /**
+   * Moves focus to the spinbutton control container.
+   * The +/- buttons are internal `tabindex="-1"` controls; the container is the
+   * widget's single focusable element. `focusVisible: true` forces the container's
+   * `:focus-visible` ring to render even though the interaction was a pointer
+   * click, so focus stays visible on the counter after using its buttons.
+   * @private
+   */
+  focusControl() {
+    const control = this.shadowRoot?.querySelector('[part="counterControl"]');
+    if (control && !this.disabled) {
+      control.focus({ focusVisible: true });
+    }
+  }
+
+  /**
+   * Handles a pointer click on a control button.
+   * A pointer click focuses the clicked button, so if the value change disables
+   * that button at an extreme the browser would drop focus to the document body.
+   * Move focus to the spinbutton container first, then change the value: focus is
+   * no longer on the button when it becomes disabled, so it is never lost and the
+   * counter (and any enclosing dropdown) stays operable (AB#1634231).
+   * @param {'increment' | 'decrement'} action - The control action to perform.
+   * @private
+   */
+  handleControlClick(action) {
+    this.focusControl();
+    this[action]();
+  }
+
+  /**
    * Initializes the value of the counter.
    * If the current value is undefined, it sets the value to the minimum value.
    * @private
@@ -425,7 +455,7 @@ export class AuroCounter extends LitElement {
               .tabindex="${'-1'}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlMinus"
-              @click="${() => this.decrement()}"
+              @click="${() => this.handleControlClick('decrement')}"
               ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
@@ -439,7 +469,7 @@ export class AuroCounter extends LitElement {
               .tabindex="${'-1'}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlPlus"
-              @click="${() => this.increment()}"
+              @click="${() => this.handleControlClick('increment')}"
               ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
