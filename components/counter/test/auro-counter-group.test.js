@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { setViewport, sendMouse } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '@aurodesignsystem/auro-dialog';
@@ -1268,6 +1268,61 @@ function runFullTest(mobileView) {
 
         expect(el.dropdown.isPopoverVisible).to.be.true;
       });
+
+      // Real pointer clicks (sendMouse) move focus the way a browser does, which
+      // synthetic .click() does not — required to reproduce AB#1634231, where a
+      // counter button that disables itself at an extreme blurs and closed the bib.
+      if (!mobileView) {
+        bibIt('should keep the bib open when a counter button disables itself on click (AB#1634231)', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="1">Counter 1</auro-counter>
+              <auro-counter value="3">Counter 2</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Counter 1 value 1 -> 0 hits min, disabling its decrement button.
+          const [counter1] = el.counters;
+          const minusBtn = counter1.shadowRoot.querySelector('[part="controlMinus"]');
+          const rect = minusBtn.getBoundingClientRect();
+          await sendMouse({
+            type: 'click',
+            position: [Math.floor(rect.x + (rect.width / 2)), Math.floor(rect.y + (rect.height / 2))]
+          });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          expect(counter1.value).to.equal(0);
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        bibIt('should still close the bib when clicking outside the group', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="5">Counter 1</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Click empty page space away from the group and its bib.
+          await sendMouse({ type: 'click', position: [400, 400] });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+      }
     });
 
     describe('Disabled Group', () => {
