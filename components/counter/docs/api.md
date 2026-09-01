@@ -32,6 +32,7 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
+| `reset`    | `(): void`                             | Resets the counter group to its initial state by resetting each child counter and clearing validity.<br />Each child reset dispatches an `input` event, which triggers `updateValue()` to recompute `value`/`total`. |
 | `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
@@ -84,6 +85,7 @@ The `auro-counter` element provides a flexible counter interface with increment 
 |-------------|----------------------------------------|--------------------------------------------------|
 | `decrement` | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
 | `increment` | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
+| `reset`     | `(): void`                             | Resets the counter to its default state, clearing validity/touched state and returning<br />the value to `min` — matching the clear-on-reset behavior of the other Auro form elements. |
 | `validate`  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events

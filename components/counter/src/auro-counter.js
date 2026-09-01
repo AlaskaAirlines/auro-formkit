@@ -357,6 +357,17 @@ export class AuroCounter extends LitElement {
     this.validation.validate(this, force);
   }
 
+  /**
+   * Resets the counter to its default state, clearing validity/touched state and returning
+   * the value to `min` — matching the clear-on-reset behavior of the other Auro form elements.
+   * @returns {void}
+   */
+  reset() {
+    // validation.reset() clears validity/touched and sets value to undefined; initValue() then restores the min floor.
+    this.validation.reset(this);
+    this.initValue();
+  }
+
   firstUpdated() {
     this.initValue();
     this.setTagAttribute("auro-counter");
