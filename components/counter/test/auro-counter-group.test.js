@@ -1355,6 +1355,38 @@ function runFullTest(mobileView) {
           document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
           expect(el.pointerdownInsideGroup).to.be.false;
         });
+
+        bibIt('closes the bib on a non-pointer focus loss that follows an inside pointer interaction (#1600)', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="5">Counter 1</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // A benign pointer interaction inside the group sets the flag true.
+          el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+          expect(el.pointerdownInsideGroup).to.be.true;
+
+          // The immediate null-relatedTarget focusout (e.g. a self-disabling
+          // button) keeps the bib open and consumes the flag.
+          el.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+          expect(el.pointerdownInsideGroup).to.be.false;
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // A later non-pointer focus loss (programmatic blur, a11y focus trap)
+          // with no intervening pointerdown must now close the bib rather than
+          // read a stale "inside" flag.
+          el.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
       }
     });
 
