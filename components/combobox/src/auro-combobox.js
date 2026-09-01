@@ -1771,6 +1771,14 @@ export class AuroCombobox extends AuroElement {
     // retry would otherwise keep rescheduling itself indefinitely.
     this._pendingTimers.forEach((id) => clearTimeout(id));
     this._pendingTimers.clear();
+
+    // Cancelling the timers above drops the macrotask that would have reset
+    // _clearBtnActivated, so reset it here too. Otherwise a disconnect inside
+    // the clear-click -> macrotask window strands the flag `true`; instance
+    // state survives reconnect, and the first matching input event (including
+    // an SPA-preselect echo) would then bypass the guard in
+    // handleInputValueChange and silently clear value/optionSelected (AB#1634257).
+    this._clearBtnActivated = false;
   }
 
   firstUpdated() {

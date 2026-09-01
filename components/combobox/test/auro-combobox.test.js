@@ -4115,6 +4115,55 @@ function runFullTest(mobileView) {
             fakeBtn.remove();
           });
 
+          // AB#1634257 (hardening): the direct complement to the macrotask
+          // auto-clear test above. If the element disconnects INSIDE the
+          // clear-click -> macrotask window, disconnectedCallback cancels the
+          // timer that would reset the flag. Without also resetting the flag
+          // there, it stays `true`; instance state survives reconnect, so the
+          // first SPA-preselect echo (isProgrammatic + set value + empty input)
+          // would bypass the guard and silently clear value/optionSelected.
+          it('resets the clear-button flag on disconnect so a post-reconnect preselect echo cannot clobber the value', async () => {
+            const el = await defaultFixture(mobileView);
+            await elementUpdated(el);
+
+            const parent = el.parentNode;
+            const nextSibling = el.nextSibling;
+
+            // Abandoned activation on the trigger input: the capture listener
+            // sets the flag and schedules the macrotask reset, but nothing
+            // consumes it synchronously.
+            const fakeBtn = document.createElement('span');
+            fakeBtn.className = 'clearBtn';
+            el.input.shadowRoot.appendChild(fakeBtn);
+            fakeBtn.click();
+            expect(el._clearBtnActivated, 'capture phase set the flag').to.be.true;
+
+            // Disconnect inside the window, before the macrotask fires. This
+            // cancels the reset timer, so disconnectedCallback must reset the
+            // flag itself.
+            parent.removeChild(el);
+            expect(el._clearBtnActivated, 'disconnect reset the stranded flag').to.be.false;
+
+            // Reconnect — web-component instance state survives.
+            parent.insertBefore(el, nextSibling);
+            await elementUpdated(el);
+
+            // Shape a committed selection with an empty input so an SPA-preselect
+            // echo matches the guard.
+            el.value = 'Apples';
+            el.optionSelected = { value: 'Apples' };
+            el.input.value = '';
+
+            el.handleInputValueChange({ target: el.input, isProgrammatic: true });
+
+            // With the flag correctly reset on disconnect, the echo bails at the
+            // guard and leaves the selection intact instead of silently clearing it.
+            expect(el.value, 'value must survive the preselect echo').to.equal('Apples');
+            expect(el.optionSelected, 'optionSelected must survive the preselect echo').to.be.ok;
+
+            fakeBtn.remove();
+          });
+
           if (mobileView) {
             it('should clear the trigger input value when its clear button is clicked', async () => {
               const el = await defaultFixture(mobileView);
