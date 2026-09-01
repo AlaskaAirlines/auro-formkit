@@ -394,6 +394,55 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>Programmatically moves focus to the combobox trigger input.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
 <p>Resets the component to its initial state, clearing the value, input text, and validation state.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br /><br />
+<auro-combobox id="resetStateExample" required>
+<span slot="bib.fullscreen.headline">Bib Header</span>
+<span slot="label">Name</span>
+<auro-menu>
+<auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+<auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+<auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+<auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+<auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+<auro-menuoption static nomatch>No matching option</auro-menuoption>
+</auro-menu>
+</auro-combobox>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
+&lt;br /&gt;&lt;br /&gt;
+&lt;auro-combobox id="resetStateExample" required&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
+  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Peaches" id="option-2"&gt;Peaches&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Grapes" id="option-3"&gt;Grapes&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Cherries" id="option-4"&gt;Cherries&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
+<pre class="language-js"><code class="language-js">export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+​
+  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+    elem.reset();
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="validate">validate()</auro-header>
 <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
 <auro-header level="3" id="hideBib">hideBib()</auro-header>

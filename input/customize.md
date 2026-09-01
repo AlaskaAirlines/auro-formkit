@@ -1432,43 +1432,6 @@
 </auro-accordion>
 </section>
 <section>
-<auro-header level="2" id="resetState">Reset State</auro-header>
-<p>Use the <code>reset()</code> method to reset the <code>&lt;auro-input&gt;</code>'s <code>value</code> and <code>validity</code> state. Doing so will preserve all other attributes and properties.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/reset-state.html) -->
-<!-- The below content is automatically added from ../apiExamples/reset-state.html -->
-<auro-button id="resetStateBtn">Reset</auro-button>
-<br /><br />
-<auro-input id="resetStateExample" minlength="12" value="Auro Team" setCustomValidityTooShort="Please enter your full name!">
-<span slot="label">Full Name</span>
-<span slot="helpText">Please enter your full name.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/reset-state.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/reset-state.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
-&lt;br /&gt;&lt;br /&gt;
-&lt;auro-input id="resetStateExample" minlength="12" value="Auro Team" setCustomValidityTooShort="Please enter your full name!"&gt;
-  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/reset-state.js) -->
-<!-- The below code snippet is automatically added from ../apiExamples/reset-state.js -->
-<pre class="language-js"><code class="language-js">export function resetStateExample() {
-  const elem = document.querySelector('#resetStateExample');
-​
-  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
-    elem.reset();
-  });
-}</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-</section>
-<section>
 <auro-header level="2" id="swapValues">Swapping Values Between Inputs</auro-header>
 <p>Example illustrates using a JavaScript function attached to an <code>auro-button</code> component <code>click</code> event to swap the values of two <code>auro-input</code> elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.</p>
 <div class="exampleWrapper">

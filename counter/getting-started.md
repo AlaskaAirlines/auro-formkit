@@ -27,6 +27,7 @@
 <auro-anchorlink fluid href="#validate" class="level2 body-xs">validate()</auro-anchorlink>
 <auro-anchorlink fluid href="#increment" class="level2 body-xs">increment()</auro-anchorlink>
 <auro-anchorlink fluid href="#decrement" class="level2 body-xs">decrement()</auro-anchorlink>
+<auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -477,6 +478,54 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>Increments the counter value by 1. Optionally pass a number to increment by a specific amount.</p>
 <auro-header level="3" id="decrement">decrement()</auro-header>
 <p>Decrements the counter value by 1. Optionally pass a number to decrement by a specific amount.</p>
+<auro-header level="3" id="reset">reset()</auro-header>
+<p>Resets the counter or counter group, clearing each counter to its <code>min</code> value and clearing validation state — the same clear-on-reset behavior used by the other Auro form elements. This is also what <code>&lt;auro-form&gt;</code> calls when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br/><br/>
+<auro-counter-group id="resetStateGroup" name="passengers" max="9">
+<auro-counter name="adults" min="1" max="9">
+              Adults
+<span slot="description">Age 18+</span>
+</auro-counter>
+<auro-counter name="children" min="0" max="8">
+              Children
+<span slot="description">Age 2–17</span>
+</auro-counter>
+</auro-counter-group>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
+&lt;br/&gt;&lt;br/&gt;
+&lt;auro-counter-group id="resetStateGroup" name="passengers" max="9"&gt;
+  &lt;auro-counter name="adults" min="1" max="9"&gt;
+    Adults
+    &lt;span slot="description"&gt;Age 18+&lt;/span&gt;
+  &lt;/auro-counter&gt;
+  &lt;auro-counter name="children" min="0" max="8"&gt;
+    Children
+    &lt;span slot="description"&gt;Age 2–17&lt;/span&gt;
+  &lt;/auro-counter&gt;
+&lt;/auro-counter-group&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
+<pre class="language-js"><code class="language-js">export function resetStateExample() {
+  const group = document.querySelector('#resetStateGroup');
+​
+  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+    // Clears every counter in the group back to its min value.
+    group.reset();
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 </section>
 </div>
 </div>

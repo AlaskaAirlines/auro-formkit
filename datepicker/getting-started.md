@@ -351,6 +351,45 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <p>Programmatically hides the dropdown bib (calendar) if it is currently open.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
 <p>Resets the component to its initial state, clearing the selected date(s) and validation state.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br />
+<auro-datepicker id="resetStateExample" range minDate="2025-06-30" calendarStartDate="2025-06-30" calendarFocusDate="2025-06-30" value="2025-02-14" valueEnd="2025-04-05" setCustomValidityRangeUnderflow="The date you entered is too early.">
+<span slot="bib.fullscreen.headline">Reset Example</span>
+<span slot="fromLabel">Departure</span>
+<span slot="toLabel">Return</span>
+<span slot="bib.fullscreen.fromLabel">Departure</span>
+<span slot="bib.fullscreen.toLabel">Return</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
+&lt;br /&gt;
+&lt;auro-datepicker id="resetStateExample" range minDate="2025-06-30" calendarStartDate="2025-06-30" calendarFocusDate="2025-06-30" value="2025-02-14" valueEnd="2025-04-05" setCustomValidityRangeUnderflow="The date you entered is too early."&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Reset Example&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
+  &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
+<pre class="language-js"><code class="language-js">export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+​
+  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+    elem.reset();
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="showBib">showBib()</auro-header>
 <p>Programmatically shows the dropdown bib (calendar) if it is not already open.</p>
 <auro-header level="3" id="validate">validate()</auro-header>
