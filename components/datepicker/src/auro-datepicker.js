@@ -1232,6 +1232,15 @@ export class AuroDatePicker extends AuroElement {
     // a top-layer popover where :focus-within on the dropdown host returns false).
     this.dropdown.noHideOnThisFocusLoss = true;
 
+    // Suppress the dropdown's generic focus restoration on close — the
+    // datepicker manages its own focus in the auroDropdown-toggled handler
+    // below (respecting hasFocus / _restoreFocusOnClose, and deferring to the
+    // fullscreen dialog's native restoration on touch devices). Without this,
+    // the dropdown's setTimeout(focusTrigger) fires a second, gesture-decoupled
+    // programmatic focus on close, which on iOS Safari swallows the user's next
+    // tap and forces a second tap to reopen the calendar (AB#1634252).
+    this.dropdown.noFocusRestoreOnClose = true;
+
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
     // screen readers announce it as just "dialog" with no context.
@@ -1334,7 +1343,19 @@ export class AuroDatePicker extends AuroElement {
         this.dropdown.trigger.inert = false;
         const shouldRestoreFocus = this.hasFocus || this._restoreFocusOnClose;
         this._restoreFocusOnClose = false;
-        if (shouldRestoreFocus) {
+        // On coarse-pointer (touch) devices closing the fullscreen modal, rely
+        // on the <dialog>'s native focus restoration instead of forcing focus
+        // back onto the input. showModal() returns focus to the trigger anchor
+        // as part of the closing gesture, so a11y focus is preserved. Re-running
+        // .focus() here is a gesture-decoupled programmatic focus that iOS
+        // Safari penalizes: it swallows the user's next tap, so reopening the
+        // calendar takes two taps instead of one (AB#1634252). Fine-pointer
+        // (desktop) layouts keep the explicit restore for keyboard/SR
+        // correctness, and non-fullscreen bibs (no showModal, no native
+        // restoration) always restore explicitly.
+        const useNativeFocusRestoration =
+          this.dropdown.isBibFullscreen && window.matchMedia('(pointer: coarse)').matches;
+        if (shouldRestoreFocus && !useNativeFocusRestoration) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
               this.inputList[0].focus();
