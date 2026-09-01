@@ -921,6 +921,22 @@ export class AuroMenu extends AuroElement {
     this.value = undefined;
     this._selectedKey = undefined;
     this._index = -1;
+
+    // Eagerly sync the option DOM to the now-empty selection. Nulling the
+    // reactive properties above normally schedules updated() → updateItemsState,
+    // but that only runs when a property actually changes. If an option still
+    // carries a stale `selected`/`aria-selected` attribute while these
+    // properties are already undefined (e.g. options were rebuilt after a value
+    // was set), no re-render fires and the option keeps rendering as selected.
+    // Strip that state now so no option looks selected after a clear (AB#1634259).
+    // Intentionally leaves `active`/`optionActive` untouched so a highlighted
+    // option remains keyboard-re-selectable after emptying the value (AB#1606433).
+    this.updateItemsState(new Map([
+      [
+        'optionSelected',
+        true
+      ]
+    ]));
   }
 
   /**

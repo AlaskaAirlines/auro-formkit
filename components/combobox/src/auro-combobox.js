@@ -1869,6 +1869,14 @@ export class AuroCombobox extends AuroElement {
       }
       if (this.menu.value || this.menu.optionSelected) {
         this.menu.reset();
+      } else {
+        // The menu's selection properties are already cleared, but option
+        // elements can still carry a stale `selected` attribute (e.g. the menu
+        // options were rebuilt after the value was set, orphaning the DOM from
+        // the now-null optionSelected). reset() is skipped above in that case,
+        // so re-sync the option DOM directly to guarantee no option renders as
+        // selected once the field is cleared (AB#1634259).
+        this.menu.clearSelection();
       }
     } finally {
       this._clearing = false;
