@@ -44,9 +44,11 @@
     <script type="module">
       import { renderPage } from './demo-support.min.js';
       await renderPage('./getting-started.md');
+      import { initExamples } from './getting-started.min.js';
+      initExamples();
     </script>
 
     <!-- Component scripts -->
-    <script type="module" src="./index.min.js"></script>
+    <script src="./getting-started.min.js" data-demo-script="true" type="module"></script>
   </body>
 </html>
