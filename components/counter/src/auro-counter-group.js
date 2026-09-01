@@ -102,16 +102,6 @@ export class AuroCounterGroup extends AuroElement {
     this.updateValidity = this.updateValidity.bind(this);
 
     /**
-     * Whether the most recent pointerdown began inside this group's composed tree.
-     * Used to keep the dropdown open when a counter button disables itself on click.
-     * @private
-     */
-    this.pointerdownInsideGroup = false;
-
-    /** @private */
-    this.trackPointerdown = this.trackPointerdown.bind(this);
-
-    /**
      * Generate unique names for dependency components.
      * @private
      */
@@ -497,35 +487,6 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Records whether a pointerdown originated inside this group's composed tree.
-   * @param {PointerEvent} event - The pointerdown event.
-   * @private
-   */
-  trackPointerdown(event) {
-    this.pointerdownInsideGroup = event.composedPath().includes(this);
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    // firstUpdated performs the initial pointerdown registration, but it runs
-    // only once per instance and disconnectedCallback removes the listener. On a
-    // later reconnect (SPA route change, keyed remount) firstUpdated does not run
-    // again, so re-add the document-level listener here. hasUpdated is false
-    // during the initial connect — firstUpdated owns that case — and true on any
-    // reconnect. remove-before-add keeps it idempotent. (AB#1634231)
-    if (this.hasUpdated && this.isDropdown) {
-      document.removeEventListener('pointerdown', this.trackPointerdown, true);
-      document.addEventListener('pointerdown', this.trackPointerdown, true);
-    }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.removeEventListener('pointerdown', this.trackPointerdown, true);
-  }
-
-  /**
    * Hides the dropdown bib if its open.
    * @returns {void}
    */
@@ -722,12 +683,6 @@ export class AuroCounterGroup extends AuroElement {
     if (this.isDropdown) {
       applyKeyboardStrategy(this, counterGroupKeyboardStrategy);
 
-      // Track where the most recent pointer interaction began so the focusout
-      // handler below can tell a counter-button click apart from an outside
-      // click. Capture phase + composedPath so clicks inside the bib's nested
-      // shadow roots still resolve to this group. (AB#1634231)
-      document.addEventListener('pointerdown', this.trackPointerdown, true);
-
       // noHideOnThisFocusLoss=true on the dropdown prevents handleFocusLoss from
       // closing the bib when focus moves out via Tab. Close explicitly via focusout:
       // if relatedTarget is outside the counter-group's light DOM, focus has left.
@@ -738,29 +693,6 @@ export class AuroCounterGroup extends AuroElement {
 
         // Focus moved to a specific element still inside the group — keep the bib open.
         if (event.relatedTarget && this.contains(event.relatedTarget)) {
-          return;
-        }
-
-        // A null relatedTarget means focus was dropped without landing on a
-        // specific element. This fires when a counter's +/- button becomes
-        // disabled at an extreme immediately after being clicked: the browser
-        // blurs the now-disabled button, closing the bib as an unwanted side
-        // effect of using the counters. If that blur was triggered by a pointer
-        // interaction that began inside the group, keep the bib open. A genuine
-        // outside click also yields a null relatedTarget, but its pointerdown
-        // originated outside the group, so we still close. (AB#1634231)
-        if (!event.relatedTarget) {
-          // Consume the flag: it describes the interaction that just ended, not
-          // a lasting state. Resetting here prevents a later non-pointer focus
-          // loss (a programmatic blur, an a11y focus trap) with no intervening
-          // pointerdown from reading a stale "inside" value and wrongly keeping
-          // the bib open. (#1600)
-          const pointerdownStartedInside = this.pointerdownInsideGroup;
-          this.pointerdownInsideGroup = false;
-          if (pointerdownStartedInside) {
-            return;
-          }
-          this.hideBib();
           return;
         }
 
