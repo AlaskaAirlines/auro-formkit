@@ -396,6 +396,34 @@ function runFullTest(mobileView) {
         await expect(el.validity).to.not.equal('customError');
       });
     });
+
+    describe('reset', () => {
+      it('should clear the counter back to its min, ignoring any preset value', async () => {
+        const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>`);
+        await elementUpdated(el);
+
+        el.increment(3);
+        expect(el.value).to.equal(8);
+
+        el.reset();
+        await elementUpdated(el);
+        // Matches the clear-on-reset behavior of other Auro form elements: value returns to min (0), not the preset 5.
+        expect(el.value).to.equal(0);
+      });
+
+      it('should clear to min when a custom min is set', async () => {
+        const el = await fixture(html`<auro-counter min="2">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.equal(2);
+
+        el.increment(4);
+        expect(el.value).to.equal(6);
+
+        el.reset();
+        await elementUpdated(el);
+        expect(el.value).to.equal(2);
+      });
+    });
   });
 
   describe('Events', () => {

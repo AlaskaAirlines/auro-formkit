@@ -653,6 +653,19 @@ export class AuroCounterGroup extends AuroElement {
     this.validation.validate(this, force);
   }
 
+  /**
+   * Resets the counter group to its initial state by resetting each child counter and clearing validity.
+   * Each child reset dispatches an `input` event, which triggers `updateValue()` to recompute `value`/`total`.
+   * @returns {void}
+   */
+  reset() {
+    if (this.counters) {
+      this.counters.forEach((counter) => counter.reset());
+    }
+
+    this.validation.reset(this);
+  }
+
   updated(changedProperties) {
     if (changedProperties.has("value")) {
       this.validate();

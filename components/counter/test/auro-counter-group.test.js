@@ -821,6 +821,55 @@ function runFullTest(mobileView) {
         await expect(el.validity).to.equal('valid');
       });
     });
+
+    describe('reset', () => {
+      it('should clear each counter to its min and recompute total/value', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter name="adults" min="1" value="2">Adults</auro-counter>
+            <auro-counter name="children" min="0" value="1">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        await Promise.all(Array.from(el.counters).map((counter) => counter.updateComplete));
+        await elementUpdated(el);
+
+        el.counters[0].increment();
+        el.counters[1].increment();
+        await elementUpdated(el);
+        expect(el.total).to.equal(5);
+
+        el.reset();
+        await elementUpdated(el);
+
+        // Each counter clears to its min (1 and 0), ignoring the presets (2 and 1), matching other Auro form elements.
+        expect(el.counters[0].value).to.equal(1);
+        expect(el.counters[1].value).to.equal(0);
+        expect(el.total).to.equal(1);
+        expect(el.value).to.deep.equal({ adults: 1, children: 0 });
+      });
+
+      it('should clear counters to min in the dropdown configuration', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="label">Passengers</span>
+            <auro-counter name="adults" min="1" value="2">Adults</auro-counter>
+            <auro-counter name="children" min="0" value="3">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await Promise.all(Array.from(el.counters).map((counter) => counter.updateComplete));
+
+        el.counters[0].increment();
+        await elementUpdated(el);
+
+        el.reset();
+        await elementUpdated(el);
+
+        expect(el.counters[0].value).to.equal(1);
+        expect(el.counters[1].value).to.equal(0);
+      });
+    });
   });
 
   describe('Events', () => {
