@@ -122,6 +122,11 @@ export class AuroCombobox extends AuroElement {
     this.behavior = "suggestion";
     this.clearBtnFocused = false;
 
+    // One-shot: set when the input's clear button is activated so the
+    // SPA-preselect guard in handleInputValueChange doesn't swallow the
+    // genuine clear (AB#1634257).
+    this._clearBtnActivated = false;
+
     // Defaults that effect the overall layout of the combobox
     this.checkmark = false;
     this.dvInputOnly = false;
@@ -1079,6 +1084,13 @@ export class AuroCombobox extends AuroElement {
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
 
+    // Mirror the trigger's clear-button tracking onto the fullscreen bib input
+    // so clearing there also fully resets the combobox (AB#1634257). See
+    // trackClearBtnActivation for why this must run in the capture phase.
+    if (this.inputInBib && this.inputInBib !== this.input) {
+      this.trackClearBtnActivation(this.inputInBib);
+    }
+
     // Pass label text to the dropdown bib for accessible dialog naming
     const labelElement = this.querySelector('[slot="label"]');
     if (labelElement) {
@@ -1464,6 +1476,52 @@ export class AuroCombobox extends AuroElement {
         this.clearBtnFocused = false;
       }
     });
+
+    this.trackClearBtnActivation(this.input);
+  }
+
+  /**
+   * Flags genuine clear-button activations on an auro-input so the SPA-preselect
+   * guard in handleInputValueChange doesn't swallow them.
+   *
+   * The auro-input clear button fires an `isProgrammatic` input event (via
+   * notifyValueChanged) that is indistinguishable in shape from the
+   * SPA-preselect echo that guard bails on (isProgrammatic + set value + empty
+   * input). Without this one-shot flag, clicking clear would leave
+   * this.value/optionSelected stale (AB#1634257).
+   *
+   * Delegated on the shadow root so it works regardless of when .clearBtn
+   * renders (it only exists after a value is set), and covers both real clicks
+   * and programmatic clearBtn.click() (which no focusin precedes). Registered in
+   * the CAPTURE phase so the flag is set BEFORE the button's own @click
+   * (handleClickClear) fires its synchronous input event — which is when
+   * handleInputValueChange reads the flag.
+   * @private
+   * @param {Element} inputEl - The auro-input whose clear button to track.
+   * @returns {void}
+   */
+  trackClearBtnActivation(inputEl) {
+    if (!inputEl || !inputEl.shadowRoot) {
+      return;
+    }
+    inputEl.shadowRoot.addEventListener('click', (event) => {
+      if (event.target.closest('.clearBtn')) {
+        this._clearBtnActivated = true;
+
+        // Bound the flag's lifetime to this synchronous clear -> input window.
+        // auro-input's handleClickClear fires its input event synchronously
+        // (before any macrotask runs), so handleInputValueChange consumes the
+        // flag first and this reset is a harmless no-op. It only does real work
+        // if that input event never arrives (e.g. auro-input throws mid-clear),
+        // guaranteeing the flag can't survive to be misread as a genuine clear
+        // by a later unrelated event such as an SPA-preselect echo (AB#1634257).
+        // Scheduled via _scheduleTimer so disconnectedCallback cancels it if the
+        // component tears down inside that window.
+        this._scheduleTimer(() => {
+          this._clearBtnActivated = false;
+        }, 0);
+      }
+    }, true);
   }
 
   /**
@@ -1505,6 +1563,17 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
+    // Consume the one-shot clear-button flag on EVERY entry, before any branch
+    // below can early-return. trackClearBtnActivation sets it in the capture
+    // phase right before auro-input's clear button fires its synchronous input
+    // event; reading and immediately clearing it here guarantees the flag never
+    // survives a handleInputValueChange call to leak into a later event (e.g.
+    // the bib branch bailing at _syncingDisplayValue, or an SPA-preselect echo)
+    // where it would defeat the guard below. Held in a local so that guard can
+    // still tell a genuine clear from the init-render echo (AB#1634257).
+    const clearBtnActivated = this._clearBtnActivated;
+    this._clearBtnActivated = false;
+
     // When the event comes from the fullscreen bib input, sync the value to
     // the trigger input. Setting trigger.value triggers Lit's updated()
     // (async, microtask) which fires notifyValueChanged() → another 'input'
@@ -1552,7 +1621,12 @@ export class AuroCombobox extends AuroElement {
     // to the exact shape of that echo (isProgrammatic + non-empty combobox
     // value + empty input.value) so it doesn't affect the swap/typed paths
     // where value/input already track each other through the sync helpers.
-    if (event && event.isProgrammatic && this.value && !this.input.value) {
+    // The clear button's echo has the same shape (isProgrammatic + set value +
+    // empty input) but is a genuine user clear that MUST reset this.value and
+    // optionSelected below. clearBtnActivated (consumed at the top of this
+    // method) is true only for that genuine clear, so only the real
+    // SPA-preselect echo bails (AB#1634257).
+    if (event && event.isProgrammatic && this.value && !this.input.value && !clearBtnActivated) {
       return;
     }
 
