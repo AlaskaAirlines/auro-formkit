@@ -750,7 +750,14 @@ export class AuroCounterGroup extends AuroElement {
         // outside click also yields a null relatedTarget, but its pointerdown
         // originated outside the group, so we still close. (AB#1634231)
         if (!event.relatedTarget) {
-          if (this.pointerdownInsideGroup) {
+          // Consume the flag: it describes the interaction that just ended, not
+          // a lasting state. Resetting here prevents a later non-pointer focus
+          // loss (a programmatic blur, an a11y focus trap) with no intervening
+          // pointerdown from reading a stale "inside" value and wrongly keeping
+          // the bib open. (#1600)
+          const pointerdownStartedInside = this.pointerdownInsideGroup;
+          this.pointerdownInsideGroup = false;
+          if (pointerdownStartedInside) {
             return;
           }
           this.hideBib();
