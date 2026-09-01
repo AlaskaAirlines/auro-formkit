@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-import { setViewport, sendMouse } from '@web/test-runner-commands';
+import { setViewport, sendMouse, sendKeys } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '@aurodesignsystem/auro-dialog';
@@ -1558,6 +1558,88 @@ function runFullTest(mobileView) {
 
         expect(el.dropdown.isPopoverVisible).to.be.true;
       });
+
+      if (!mobileView) {
+        // Reverse-tabbing out of the first counter must skip the trigger (which
+        // precedes the bib content in the flattened tab order) and land on the
+        // previous page element, closing the bib in a single press.
+        it('should close the bib and move focus to the previous element on Shift+Tab from the first counter', async () => {
+          const wrapper = await fixture(html`
+            <div>
+              <button id="before-counter-group">Before</button>
+              <auro-counter-group isDropdown>
+                <auro-counter value="2">Counter 1</auro-counter>
+                <auro-counter value="3">Counter 2</auro-counter>
+              </auro-counter-group>
+            </div>
+          `);
+          const el = wrapper.querySelector('auro-counter-group');
+          const beforeBtn = wrapper.querySelector('#before-counter-group');
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Place focus on the first focusable element inside the bib.
+          const firstControl = el.counters[0].shadowRoot.querySelector('[part="counterControl"]');
+          firstControl.focus();
+          await elementUpdated(el);
+
+          await sendKeys({ down: 'Shift' });
+          await sendKeys({ press: 'Tab' });
+          await sendKeys({ up: 'Shift' });
+
+          // Wait for the doubleRaf-scheduled focus move to run.
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          // Compare via `===` rather than chai's DOM matcher: on failure chai
+          // stringifies the element's shadow tree, which can hang the runner.
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+          expect(
+            document.activeElement === beforeBtn,
+            'focus should return to the element preceding the counter-group'
+          ).to.be.true;
+        });
+
+        // Reverse-tabbing from a later counter must not exit the bib; the handler
+        // should leave the event alone so the browser moves to the previous counter.
+        it('should not close the bib on Shift+Tab from a later counter', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="2">Counter 1</auro-counter>
+              <auro-counter value="3">Counter 2</auro-counter>
+            </auro-counter-group>
+          `);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await el.updateComplete;
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          const secondControl = el.counters[1].shadowRoot.querySelector('[part="counterControl"]');
+          secondControl.focus();
+
+          // Dispatch Shift+Tab directly on the second counter. `sendKeys` performs
+          // the native focus move before the keydown is observed in this harness,
+          // which misreports the focused counter; a synthetic keydown keeps focus
+          // on the second counter so the handler sees the true event origin.
+          const evt = new KeyboardEvent('keydown', {
+            key: 'Tab',
+            shiftKey: true,
+            bubbles: true,
+            composed: true,
+            cancelable: true
+          });
+          secondControl.dispatchEvent(evt);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          // Guard against the handler over-firing: it must take the
+          // `activeIndex !== 0` early return, leaving the bib open and the event
+          // untouched so native navigation reaches the previous counter.
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+          expect(evt.defaultPrevented).to.be.false;
+        });
+      }
     });
   });
 }
