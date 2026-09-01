@@ -4034,6 +4034,41 @@ function runFullTest(mobileView) {
             await expect(el.menu.value).to.not.be.ok;
           });
 
+          // AB#1634259: clearing must refresh the open menu so no option keeps
+          // its selected styling. If the menu options were rebuilt after a value
+          // was set, an option can still carry a stale `selected` attribute while
+          // menu.value/optionSelected are already null — clear()'s reset() guard
+          // is skipped in that case, so the option kept rendering as selected.
+          // clear() must strip that stale DOM regardless of the null properties.
+          it('removes stale selected styling from all options on clear', async () => {
+            const el = await presetValueFixture(mobileView);
+            await elementUpdated(el);
+            await el.menu.updateComplete;
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            const apples = el.menu.querySelector('auro-menuoption[value="Apples"]');
+            expect(apples.hasAttribute('selected')).to.be.true;
+
+            // Simulate a dynamic option rebuild that orphaned the DOM from the
+            // menu's selection state: the reactive selection properties have been
+            // reconciled to null, but the option element still carries the stale
+            // `selected`/`aria-selected` attributes from before the rebuild.
+            el.menu.optionSelected = undefined;
+            el.menu.value = undefined;
+            el.menu._selectedKey = undefined;
+            await el.menu.updateComplete;
+            apples.setAttribute('selected', '');
+            apples.setAttribute('aria-selected', 'true');
+
+            el.clear();
+            await elementUpdated(el);
+            await el.menu.updateComplete;
+
+            const stillSelected = [...el.menu.querySelectorAll('auro-menuoption[selected]')];
+            expect(stillSelected, 'no option should keep the selected attribute').to.be.empty;
+            expect(apples.getAttribute('aria-selected')).to.equal('false');
+          });
+
           // AB#1634257 (hardening): the clear-button flag is a one-shot that must
           // never survive a handleInputValueChange call. Even when the fullscreen
           // bib branch bails early on _syncingDisplayValue (before the original
