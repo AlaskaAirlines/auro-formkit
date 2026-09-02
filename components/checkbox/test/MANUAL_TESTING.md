@@ -103,6 +103,10 @@
 [ ] Verify the optional label text is announced when the group is not required
 [ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify focus indicators are clearly visible on each checkbox
+[ ] Leave a required group with nothing checked and blur to trigger `valueMissing` — verify a screen reader (VoiceOver + Safari, and NVDA + Firefox or Chrome) announces the group as invalid and reads the error message when the group is entered
+[ ] With the group invalid, move between checkboxes — verify the invalid state continues to be conveyed on each checkbox, not just on initial group entry
+
+> **Known/expected:** `aria-invalid` is set on both the group's fieldset and each individual checkbox (by design — see AB#1636704). On Tab-in to an invalid group, VoiceOver may say "invalid data" twice in one utterance (once for the fieldset, once for the checkbox you land on). This is not a bug — it's the redundancy that keeps the invalid state conveyed on every subsequent move between checkboxes, not just on initial entry. Do not "fix" this by removing the per-checkbox `aria-invalid`.
 
 ### Slots
 
