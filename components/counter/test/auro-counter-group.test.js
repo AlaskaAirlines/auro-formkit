@@ -1,6 +1,6 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, fixtureSync, html, expect, elementUpdated, aTimeout, waitUntil } from '@open-wc/testing';
 import { setViewport, sendMouse, sendKeys } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
@@ -1515,7 +1515,11 @@ function runFullTest(mobileView) {
         // precedes the bib content in the flattened tab order) and land on the
         // previous page element, closing the bib in a single press.
         it('should close the bib and move focus to the previous element on Shift+Tab from the first counter', async () => {
-          const wrapper = await fixture(html`
+          // `fixtureSync` rather than `fixture`: for a non-Lit root like this
+          // <div>, `fixture` waits on `nextFrame()`, and requestAnimationFrame
+          // never fires while web-test-runner has this page backgrounded
+          // behind another test file. Await the Lit element directly instead.
+          const wrapper = fixtureSync(html`
             <div>
               <button id="before-counter-group">Before</button>
               <auro-counter-group isDropdown>
@@ -1526,6 +1530,7 @@ function runFullTest(mobileView) {
           `);
           const el = wrapper.querySelector('auro-counter-group');
           const beforeBtn = wrapper.querySelector('#before-counter-group');
+          await elementUpdated(el);
 
           el.dropdown.show();
           await elementUpdated(el);
@@ -1540,16 +1545,15 @@ function runFullTest(mobileView) {
           await sendKeys({ press: 'Tab' });
           await sendKeys({ up: 'Shift' });
 
-          // Wait for the doubleRaf-scheduled focus move to run.
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-          // Compare via `===` rather than chai's DOM matcher: on failure chai
-          // stringifies the element's shadow tree, which can hang the runner.
-          expect(el.dropdown.isPopoverVisible).to.be.false;
-          expect(
-            document.activeElement === beforeBtn,
+          // The handler moves focus via doubleRaf. Poll on a timer rather than
+          // awaiting requestAnimationFrame so a stalled frame surfaces as a
+          // clear waitUntil failure instead of a Mocha timeout.
+          await waitUntil(
+            () => document.activeElement === beforeBtn,
             'focus should return to the element preceding the counter-group'
-          ).to.be.true;
+          );
+
+          expect(el.dropdown.isPopoverVisible).to.be.false;
         });
 
         // Reverse-tabbing from a later counter must not exit the bib; the handler
@@ -1582,7 +1586,9 @@ function runFullTest(mobileView) {
             cancelable: true
           });
           secondControl.dispatchEvent(evt);
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // Timer-based wait: requestAnimationFrame does not fire while the
+          // page is backgrounded behind another test file.
+          await aTimeout(100);
 
           // Guard against the handler over-firing: it must take the
           // `activeIndex !== 0` early return, leaving the bib open and the event
