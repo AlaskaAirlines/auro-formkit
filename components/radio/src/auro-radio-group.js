@@ -5,6 +5,7 @@
 import { LitElement } from "lit";
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 // Import touch detection lib
 import 'focus-visible/dist/focus-visible.min.js';
@@ -20,6 +21,7 @@ import AuroFormValidation from '@aurodesignsystem/form-validation';
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
@@ -88,6 +90,11 @@ export class AuroRadioGroup extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-radio-helptext', formkitVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.uniqueId = new UniqueId().create();
   }
 
   static get styles() {
@@ -341,16 +348,14 @@ export class AuroRadioGroup extends LitElement {
 
     if (changedProperties.has('validity')) {
       if (this.validity && this.validity !== 'valid') {
-        this.setAttribute('aria-invalid', 'true');
-
         this.items.forEach((el) => {
           el.setAttribute('error', true);
+          el.setAttribute('aria-invalid', 'true');
         });
       } else {
-        this.removeAttribute('aria-invalid');
-
         this.items.forEach((el) => {
           el.removeAttribute('error');
+          el.removeAttribute('aria-invalid');
         });
       }
     }
@@ -558,7 +563,13 @@ export class AuroRadioGroup extends LitElement {
     };
 
     return html`
-      <fieldset class="${classMap(groupClasses)}" part="radio-group" role="radiogroup">
+      <fieldset
+        class="${classMap(groupClasses)}"
+        part="radio-group"
+        role="radiogroup"
+        aria-invalid="${ifDefined(this.validity && this.validity !== 'valid' ? 'true' : undefined)}"
+        aria-describedby="${this.uniqueId}"
+      >
         <legend class="${classMap(legendClasses)}">
           <slot name="legend" @slotchange=${this.handleLegendSlotChange}></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
@@ -568,11 +579,11 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" error aria-live="assertive" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

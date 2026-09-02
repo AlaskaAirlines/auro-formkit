@@ -138,6 +138,81 @@ export function accessibilityTreeSuite(framework: string) {
       await expect(blue).toHaveAttribute('aria-checked', 'true');
       await expect(red).toHaveAttribute('aria-checked', 'false');
     });
+
+    // ── Invalid-group ARIA association (AB#1344690) ──────────────────────
+
+    test('invalid required radio group exposes aria-invalid on the fieldset, not the host', async ({ page }) => {
+      const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+      await yesRadio.evaluate((el: any) => el.focus());
+      await expect.poll(() =>
+        yesRadio.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await page.click('#outside-element');
+
+      const group = fixture(page, 'required', 'auro-radio-group');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+
+      await expect(group).not.toHaveAttribute('aria-invalid');
+      await expect.poll(() =>
+        group.evaluate((el: any) => el.shadowRoot?.querySelector('fieldset')?.getAttribute('aria-invalid')),
+      ).toBe('true');
+    });
+
+    test('invalid radio group fieldset has aria-describedby resolving to the error message', async ({ page }) => {
+      const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+      await yesRadio.evaluate((el: any) => el.focus());
+      await expect.poll(() =>
+        yesRadio.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await page.click('#outside-element');
+
+      const group = fixture(page, 'required', 'auro-radio-group');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+
+      await expect.poll(() =>
+        group.evaluate((el: any) => {
+          const fieldset = el.shadowRoot?.querySelector('fieldset');
+          const id = fieldset?.getAttribute('aria-describedby');
+          return !!id && !!el.shadowRoot.getElementById(id);
+        }),
+      ).toBe(true);
+    });
+
+    test('radios in an invalid required group expose aria-invalid=true', async ({ page }) => {
+      const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+      await yesRadio.evaluate((el: any) => el.focus());
+      await expect.poll(() =>
+        yesRadio.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await page.click('#outside-element');
+
+      await expect.poll(() =>
+        fixture(page, 'required', 'auro-radio-group').evaluate((el: any) => el.validity),
+        { timeout: 5_000 },
+      ).toBe('valueMissing');
+
+      await expect.poll(() => yesRadio.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    test('radios in a valid group do not expose aria-invalid', async ({ page }) => {
+      const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+      await yesRadio.click();
+
+      await expect.poll(() =>
+        fixture(page, 'required', 'auro-radio-group').evaluate((el: any) => el.validity),
+      ).toBe('valid');
+
+      await expect(yesRadio).not.toHaveAttribute('aria-invalid');
+    });
   });
 
   // ── Input ───────────────────────────────────────────────────────────────

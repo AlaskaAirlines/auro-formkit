@@ -385,7 +385,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.hasAttribute('validity')).to.be.false;
-        expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.not.equal('true');
       });
 
       it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
@@ -558,7 +558,7 @@ function runFullTest(mobileView) {
         expect(el.validity).to.be.undefined;
       });
 
-      it('should set aria-invalid when validity is not valid', async () => {
+      it('should set aria-invalid on the radiogroup fieldset when validity is not valid', async () => {
         const el = await fixture(html`
           <auro-radio-group error="Error">
             <span slot="legend">Pick one</span>
@@ -566,10 +566,11 @@ function runFullTest(mobileView) {
           </auro-radio-group>
         `);
 
-        expect(el.getAttribute('aria-invalid')).to.equal('true');
+        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
       });
 
-      it('should remove aria-invalid when validity becomes valid', async () => {
+      it('should remove aria-invalid from the radiogroup fieldset when validity becomes valid', async () => {
         const el = await fixture(html`
           <auro-radio-group error="Error">
             <span slot="legend">Pick one</span>
@@ -577,12 +578,45 @@ function runFullTest(mobileView) {
           </auro-radio-group>
         `);
 
-        expect(el.getAttribute('aria-invalid')).to.equal('true');
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
 
         el.removeAttribute('error');
         await elementUpdated(el);
 
-        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
+      });
+
+      it('should associate the radiogroup fieldset with its help/error text via aria-describedby', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const fieldset = el.shadowRoot.querySelector('fieldset');
+        const describedById = fieldset.getAttribute('aria-describedby');
+
+        expect(describedById).to.exist;
+        expect(el.shadowRoot.getElementById(describedById)).to.exist;
+      });
+
+      it('should set aria-invalid on each child radio when validity is not valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+
+        expect(r1.getAttribute('aria-invalid')).to.equal('true');
+
+        el.removeAttribute('error');
+        await elementUpdated(el);
+
+        expect(r1.hasAttribute('aria-invalid')).to.be.false;
       });
     });
 
@@ -1218,7 +1252,7 @@ function runFullTest(mobileView) {
       expect(fieldset.getAttribute('role')).to.equal('radiogroup');
     });
 
-    it('should set aria-invalid when in error state', async () => {
+    it('should set aria-invalid on the fieldset when in error state', async () => {
       const el = await fixture(html`
         <auro-radio-group error="Error">
           <span slot="legend">Pick one</span>
@@ -1226,10 +1260,11 @@ function runFullTest(mobileView) {
         </auro-radio-group>
       `);
 
-      expect(el.getAttribute('aria-invalid')).to.equal('true');
+      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
     });
 
-    it('should remove aria-invalid when error is cleared', async () => {
+    it('should remove aria-invalid from the fieldset when error is cleared', async () => {
       const el = await fixture(html`
         <auro-radio-group error="Error">
           <span slot="legend">Pick one</span>
@@ -1240,7 +1275,7 @@ function runFullTest(mobileView) {
       el.removeAttribute('error');
       await elementUpdated(el);
 
-      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
     });
 
     it('should render error help text with role="alert" when invalid', async () => {
