@@ -178,6 +178,14 @@ export class AuroDatePicker extends AuroElement {
     this.hasFocus = false;
 
     /**
+     * Tracks whether the current open cycle promoted the fullscreen bib via
+     * showModal(). Used by the close handler to decide whether native <dialog>
+     * focus restoration will fire (see the auroDropdown-toggled handler).
+     * @private
+     */
+    this._bibOpenedAsModal = false;
+
+    /**
      * @private
      */
     this.hasValue = false;
@@ -1312,6 +1320,16 @@ export class AuroDatePicker extends AuroElement {
               bibEl.close();
               bibEl.open(true);
 
+              // Record that this open cycle actually promoted the dialog via
+              // showModal(). The close handler relies on this — not the broader
+              // isBibFullscreen flag — to decide whether native <dialog> focus
+              // restoration will occur, because isBibFullscreen is set
+              // synchronously in showBib() while this open(true) runs a
+              // microtask later. If the bib is closed before this resolves,
+              // showModal() never fires and there is no native restoration to
+              // defer to.
+              this._bibOpenedAsModal = true;
+
               doubleRaf(() => {
                 this.focusActiveCellWhenReady();
               });
@@ -1353,8 +1371,16 @@ export class AuroDatePicker extends AuroElement {
         // (desktop) layouts keep the explicit restore for keyboard/SR
         // correctness, and non-fullscreen bibs (no showModal, no native
         // restoration) always restore explicitly.
+        //
+        // Gate on `_bibOpenedAsModal` — set only after the actual showModal()
+        // promotion (open(true)) — rather than `isBibFullscreen`, which is true
+        // as soon as the fullscreen layout is chosen but before the modal is
+        // promoted. If the bib is closed before that async promotion runs, no
+        // native restoration will occur, so we must still restore explicitly.
+        const bibWasModal = this._bibOpenedAsModal;
+        this._bibOpenedAsModal = false;
         const useNativeFocusRestoration =
-          this.dropdown.isBibFullscreen && window.matchMedia('(pointer: coarse)').matches;
+          bibWasModal && window.matchMedia('(pointer: coarse)').matches;
         if (shouldRestoreFocus && !useNativeFocusRestoration) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
