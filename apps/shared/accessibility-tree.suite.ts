@@ -87,6 +87,67 @@ export function accessibilityTreeSuite(framework: string) {
 
       await expect(cb).toHaveAttribute('aria-checked', 'true');
     });
+
+    // ── Invalid-group ARIA association (AB#1636704) ──────────────────────
+
+    test('invalid required checkbox group exposes aria-invalid on the fieldset, not the host', async ({ page }) => {
+      const firstOption = fixture(page, 'required-group', 'auro-checkbox').first();
+      // Check then uncheck to generate a real focus/blur cycle, then blur away to trigger validation.
+      await firstOption.click();
+      await firstOption.click();
+      await page.click('#outside-element');
+
+      const group = fixture(page, 'required-group', 'auro-checkbox-group');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+
+      await expect(group).not.toHaveAttribute('aria-invalid');
+      await expect.poll(() =>
+        group.evaluate((el: any) => el.shadowRoot?.querySelector('fieldset')?.getAttribute('aria-invalid')),
+      ).toBe('true');
+    });
+
+    test('invalid checkbox group fieldset has aria-describedby resolving to the error message', async ({ page }) => {
+      const firstOption = fixture(page, 'required-group', 'auro-checkbox').first();
+      await firstOption.click();
+      await firstOption.click();
+      await page.click('#outside-element');
+
+      const group = fixture(page, 'required-group', 'auro-checkbox-group');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+
+      await expect.poll(() =>
+        group.evaluate((el: any) => {
+          const fieldset = el.shadowRoot?.querySelector('fieldset');
+          const id = fieldset?.getAttribute('aria-describedby');
+          return !!id && !!el.shadowRoot.getElementById(id);
+        }),
+      ).toBe(true);
+    });
+
+    test('checkboxes in an invalid required group expose aria-invalid=true', async ({ page }) => {
+      const firstOption = fixture(page, 'required-group', 'auro-checkbox').first();
+      await firstOption.click();
+      await firstOption.click();
+      await page.click('#outside-element');
+
+      await expect.poll(() =>
+        fixture(page, 'required-group', 'auro-checkbox-group').evaluate((el: any) => el.validity),
+        { timeout: 5_000 },
+      ).toBe('valueMissing');
+
+      await expect.poll(() => firstOption.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    test('checkboxes in a valid group do not expose aria-invalid', async ({ page }) => {
+      const firstOption = fixture(page, 'required-group', 'auro-checkbox').first();
+      await firstOption.click();
+
+      await expect.poll(() =>
+        fixture(page, 'required-group', 'auro-checkbox-group').evaluate((el: any) => el.validity),
+      ).toBe('valid');
+
+      await expect(firstOption).not.toHaveAttribute('aria-invalid');
+    });
   });
 
   // ── Radio ───────────────────────────────────────────────────────────────

@@ -8,10 +8,12 @@
 import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 
 // Import the processed CSS file into the scope of the component
 import styleCss from "./styles/auro-checkbox-group-css.js";
@@ -92,6 +94,11 @@ export class AuroCheckboxGroup extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-checkbox-helptext', formkitVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.uniqueId = new UniqueId().create();
   }
 
   static get styles() {
@@ -377,8 +384,10 @@ export class AuroCheckboxGroup extends LitElement {
       this.checkboxes.forEach((el) => {
         if (this.validity && this.validity !== 'valid') {
           el.setAttribute('error', true);
+          el.setAttribute('aria-invalid', 'true');
         } else {
           el.removeAttribute('error');
+          el.removeAttribute('aria-invalid');
         }
       });
     }
@@ -404,12 +413,6 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      if (this.error) {
-        this.setAttribute('aria-invalid', true);
-      } else {
-        this.removeAttribute('aria-invalid');
-      }
-
       this.validate(true);
     }
   }
@@ -428,7 +431,11 @@ export class AuroCheckboxGroup extends LitElement {
     };
 
     return html`
-      <fieldset class="${classMap(groupClasses)}">
+      <fieldset
+        class="${classMap(groupClasses)}"
+        aria-invalid="${ifDefined(this.validity && this.validity !== 'valid' ? 'true' : undefined)}"
+        aria-describedby="${this.uniqueId}"
+      >
         <legend>
           <slot name="legend"></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
@@ -438,11 +445,11 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
+          <${this.helpTextTag} id="${this.uniqueId}" part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}"" role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" error appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }
