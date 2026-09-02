@@ -317,6 +317,39 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>Programmatically moves focus to the input element.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
 <p>Resets the component to its initial state, clearing the value and validation state.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br /><br />
+<auro-input id="resetStateExample" minlength="12" value="Auro Team" setCustomValidityTooShort="Please enter your full name!">
+<span slot="label">Full Name</span>
+<span slot="helpText">Please enter your full name.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
+&lt;br /&gt;&lt;br /&gt;
+&lt;auro-input id="resetStateExample" minlength="12" value="Auro Team" setCustomValidityTooShort="Please enter your full name!"&gt;
+  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
+<pre class="language-js"><code class="language-js">export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+​
+  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+    elem.reset();
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="validate">validate()</auro-header>
 <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
 </section>

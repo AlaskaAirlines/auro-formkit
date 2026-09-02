@@ -397,6 +397,55 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>The following public methods are available on the <code>&lt;auro-select&gt;</code> element.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
 <p>Resets the component to its initial state, clearing the value and validation state.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br /><br />
+<auro-select id="resetStateExample" value="price">
+<span slot="ariaLabel.bib.close">Close Popup</span>
+<span slot="bib.fullscreen.headline">Sort by</span>
+<span slot="label">Sort by</span>
+<auro-menu>
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
+&lt;br /&gt;&lt;br /&gt;
+&lt;auro-select id="resetStateExample" value="price"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close Popup&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Sort by&lt;/span&gt;
+  &lt;span slot="label"&gt;Sort by&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
+<pre class="language-js"><code class="language-js">export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+​
+  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+    elem.reset();
+  });
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="updateActiveOption">updateActiveOption()</auro-header>
 <p>Updates the active option in the menu by index. The active option receives visual focus when navigating with the keyboard.</p>
 <auro-header level="3" id="hideBib">hideBib()</auro-header>
