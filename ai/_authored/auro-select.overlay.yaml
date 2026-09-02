@@ -1,0 +1,37 @@
+summaryOverride: >
+  Select control (wraps auro-dropdown + auro-menu). Native equivalent is a
+  <select> with <option>/<optgroup>; the option panel cannot be styled natively.
+
+tiers:
+  multiselect: core
+  autoPlacement: wc-only
+  flexMenuWidth: wc-only
+  fluid: wc-only
+  forceDisplayValue: wc-only
+  fullscreenBreakpoint: wc-only
+  isPopoverVisible: wc-only
+  largeFullscreenHeadline: wc-only
+  matchWidth: wc-only
+  noCheckmark: wc-only
+  noFlip: wc-only
+  offset: wc-only
+  optionSelected: wc-only
+  placement: wc-only
+  shift: wc-only
+  typeaheadTimeoutMs: wc-only
+
+nativeEquiv:
+  multiselect: multiple
+  name: name
+  value: value
+  required: required
+  disabled: disabled
+
+behavior:
+  a11y:
+    - Use a native <select> with an associated <label>; group options with <optgroup label="...">.
+    - Multi-select uses the native `multiple` attribute.
+  keyboard:
+    - Type-ahead, Up/Down, and Home/End are provided natively by <select>.
+  validation:
+    - Set `required` on <select> with an empty-value first <option> to enforce a selection natively.

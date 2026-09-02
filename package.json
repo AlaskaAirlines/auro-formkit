@@ -36,14 +36,17 @@
     "LICENSE",
     "NOTICE",
     "version.js",
-    "custom-elements.json"
+    "custom-elements.json",
+    "ai/**"
   ],
   "scripts": {
     "analyze": "custom-elements-manifest analyze --config ./packages/config/src/custom-elements-manifest.config.mjs",
-    "build": "npm run analyze && npm run build:docs:kit && turbo run build",
+    "build": "npm run analyze && npm run build:ai:generate && npm run build:docs:kit && turbo run build",
     "build-storybook": "npm run build && npm run analyze && storybook build",
     "build:docs": "turbo run build:docs",
     "build:docs:kit": "node ./packages/build-tools/src/kitDocProcessor.mjs",
+    "build:ai": "npm run analyze && npm run build:ai:generate",
+    "build:ai:generate": "node ./packages/build-tools/src/aiSpecGenerator.mjs",
     "build:force": "npm run analyze && turbo run build --force",
     "build:formkit-version": "turbo run build:formkit-version",
     "build:version": "turbo run build:version",

@@ -1,0 +1,21 @@
+summaryOverride: >
+  Selectable option list; native closest is a <ul role="listbox"> with role="option"
+  items, or the <option>s inside a native <select>.
+
+tiers:
+  value: core
+  disabled: core
+  loading: wc-only
+  matchword: wc-only
+  nocheckmark: wc-only
+
+nativeEquiv:
+  value: value
+  disabled: disabled
+  multiselect: aria-multiselectable="true" on the listbox (or the native `multiple` attribute)
+
+behavior:
+  a11y:
+    - Use role="listbox" with role="option" children; set aria-selected on chosen options and aria-activedescendant for the highlighted one.
+  keyboard:
+    - Up/Down move the active option, Enter/Space selects, type-ahead jumps to matching options, Home/End jump to the ends.

@@ -1,0 +1,47 @@
+{
+  "name": "@aurodesignsystem/auro-formkit-mcp",
+  "version": "0.0.0",
+  "description": "MCP server that serves Auro FormKit AI implementation specs. Lets an AI reimplement Auro form components in plain HTML/CSS/JS, on-brand and accessible, without consuming the web components.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/AlaskaAirlines/auro-formkit#readme",
+  "bugs": {
+    "url": "https://github.com/AlaskaAirlines/auro-formkit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlaskaAirlines/auro-formkit",
+    "directory": "packages/mcp"
+  },
+  "keywords": [
+    "auro",
+    "mcp",
+    "model-context-protocol",
+    "design-system",
+    "ai",
+    "llms"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "auro-formkit-mcp": "./src/index.mjs"
+  },
+  "main": "./src/index.mjs",
+  "files": [
+    "src/**/*.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node ./src/index.mjs",
+    "inspect": "npx -y @modelcontextprotocol/inspector node ./src/index.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
