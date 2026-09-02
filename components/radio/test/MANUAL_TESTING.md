@@ -107,6 +107,10 @@
 [ ] Verify arrow key navigation is announced (screen reader indicates new selection)
 [ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify focus indicators are clearly visible on each radio button
+[ ] Leave a required group without a selection and blur to trigger `valueMissing` — verify a screen reader (VoiceOver + Safari, and NVDA + Firefox or Chrome) announces the group as invalid and reads the error message when the group is entered
+[ ] With the group invalid, arrow between radios — verify the invalid state continues to be conveyed as focus moves between individual radios, not just on initial group entry
+
+> **Known/expected:** `aria-invalid` is set on both the group's fieldset and each individual radio (by design — see AB#1344690). On Tab-in to an invalid group, VoiceOver may say "invalid data" twice in one utterance (once for the fieldset, once for the radio you land on). This is not a bug — it's the redundancy that keeps the invalid state conveyed on every subsequent arrow-key move, not just on initial entry. Do not "fix" this by removing the per-radio `aria-invalid`.
 
 ### Slots
 
