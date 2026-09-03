@@ -27,6 +27,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
  * @customElement auro-checkbox-group
  *
+ * @csspart checkbox-group - Apply css to the fieldset element in the shadow DOM
  * @csspart helpText - Apply css to the help text element that displays helper or error messages.
  *
  * @slot legend - Allows for the legend to be overridden.
@@ -453,6 +454,7 @@ export class AuroCheckboxGroup extends LitElement {
     return html`
       <fieldset
         class="${classMap(groupClasses)}"
+        part="checkbox-group"
         aria-invalid="${ifDefined(this.validity && this.validity !== 'valid' ? 'true' : undefined)}"
         aria-describedby="${this.uniqueId}"
       >

@@ -1327,6 +1327,11 @@ function runFullTest(mobileView) {
 
       expect(el.shadowRoot.querySelector('fieldset')).to.exist;
       expect(el.shadowRoot.querySelector('legend')).to.exist;
+
+      // The fieldset must stay reachable from a consumer stylesheet: the accessibility
+      // docs tell consumers to target this part instead of the host, now that
+      // aria-invalid no longer lives on the host element.
+      expect(el.shadowRoot.querySelector('[part="checkbox-group"]')).to.equal(el.shadowRoot.querySelector('fieldset'));
     });
 
     it('should render error help text with role alert when validity is not valid', async () => {

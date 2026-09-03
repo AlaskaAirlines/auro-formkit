@@ -38,7 +38,7 @@ The `checkbox` role is in `aria-invalid`'s supported-role list in every ARIA ver
 
 <auro-header level="4" id="attributePlacementNote">Attribute placement</auro-header>
 
-`aria-invalid` is applied to the internal `<fieldset>`, not to the `<auro-checkbox-group>` host element. Do not write CSS selectors or test assertions against `auro-checkbox-group[aria-invalid]`; query the internal fieldset or read the `validity` property instead.
+`aria-invalid` is applied to the internal `<fieldset>`, not to the `<auro-checkbox-group>` host element. Do not write CSS selectors or test assertions against `auro-checkbox-group[aria-invalid]`; target the `part="checkbox-group"` fieldset or read the `validity` property instead.
 
 <auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
 
