@@ -8,10 +8,12 @@
 import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 
 // Import the processed CSS file into the scope of the component
 import styleCss from "./styles/auro-checkbox-group-css.js";
@@ -25,6 +27,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
  * @customElement auro-checkbox-group
  *
+ * @csspart checkbox-group - Apply css to the fieldset element in the shadow DOM
  * @csspart helpText - Apply css to the help text element that displays helper or error messages.
  *
  * @slot legend - Allows for the legend to be overridden.
@@ -92,6 +95,11 @@ export class AuroCheckboxGroup extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-checkbox-helptext', formkitVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.uniqueId = new UniqueId().create();
   }
 
   static get styles() {
@@ -343,6 +351,47 @@ export class AuroCheckboxGroup extends LitElement {
     this.handlePreselectedItems();
 
     this.validate();
+    this.syncCheckboxValidity();
+  }
+
+  /**
+   * Whether the group is currently in an invalid state.
+   * `validity` — not `error` — is the authoritative source: `validate()` resolves the
+   * `error` attribute to `validity = 'customError'`, so `error` is already covered here.
+   * Single definition of "invalid" for the whole component, consumed by `render()` and
+   * `syncCheckboxValidity()` so the fieldset and its children can never disagree.
+   * @private
+   * @returns {boolean}
+   */
+  get isInvalid() {
+    return Boolean(this.validity && this.validity !== 'valid');
+  }
+
+  /**
+   * Method for mirroring the group's invalid state onto each checkbox.
+   * Has to be re-applied from `handleItems()` as well, because a slot change can happen
+   * without `validity` itself changing — a checkbox slotted into an already-invalid
+   * group would otherwise be missed.
+   * @private
+   * @returns {void}
+   */
+  syncCheckboxValidity() {
+    const invalid = this.isInvalid;
+
+    this.checkboxes.forEach((el) => {
+      if (invalid) {
+        el.setAttribute('error', true);
+        el.setAttribute('aria-invalid', 'true');
+      } else {
+        // Group state is authoritative: an `error` set directly on an individual
+        // checkbox by a consumer is cleared here, and because this method also runs
+        // from `handleItems()` that now happens on every slot change, not just on a
+        // validity change. Matches auro-radio-group. See docs/post-mortem/1636704.md,
+        // "Breaking Change Assessment", for why this is not treated as a breaker.
+        el.removeAttribute('error');
+        el.removeAttribute('aria-invalid');
+      }
+    });
   }
 
   /**
@@ -374,13 +423,7 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      this.checkboxes.forEach((el) => {
-        if (this.validity && this.validity !== 'valid') {
-          el.setAttribute('error', true);
-        } else {
-          el.removeAttribute('error');
-        }
-      });
+      this.syncCheckboxValidity();
     }
 
     if (changedProperties.has('required')) {
@@ -404,12 +447,6 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      if (this.error) {
-        this.setAttribute('aria-invalid', true);
-      } else {
-        this.removeAttribute('aria-invalid');
-      }
-
       this.validate(true);
     }
   }
@@ -428,7 +465,12 @@ export class AuroCheckboxGroup extends LitElement {
     };
 
     return html`
-      <fieldset class="${classMap(groupClasses)}">
+      <fieldset
+        class="${classMap(groupClasses)}"
+        part="checkbox-group"
+        aria-invalid="${ifDefined(this.isInvalid ? 'true' : undefined)}"
+        aria-describedby="${this.uniqueId}"
+      >
         <legend>
           <slot name="legend"></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
@@ -436,13 +478,13 @@ export class AuroCheckboxGroup extends LitElement {
         <slot @slotchange=${this.handleItems}></slot>
       </fieldset>
 
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ${!this.isInvalid
         ? html`
-          <${this.helpTextTag} part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
+          <${this.helpTextTag} id="${this.uniqueId}" part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}"" role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" error appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

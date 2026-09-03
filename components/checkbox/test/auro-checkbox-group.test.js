@@ -309,7 +309,8 @@ function runFullTest(mobileView) {
         `);
 
         expect(el.hasAttribute('error')).to.be.true;
-        expect(el.hasAttribute('aria-invalid')).to.be.true;
+        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
         expect(el.validity).to.equal('customError');
 
         el.removeAttribute('error');
@@ -317,7 +318,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.hasAttribute('error')).to.be.false;
-        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
         expect(el.validity).to.equal('valid');
       });
     });
@@ -511,7 +512,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.hasAttribute('validity')).to.be.false;
-        expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.not.equal('true');
       });
 
       it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
@@ -1195,17 +1196,18 @@ function runFullTest(mobileView) {
       expect(el.hasAttribute('aria-required')).to.be.false;
     });
 
-    it('should set aria-invalid when error is set', async () => {
+    it('should set aria-invalid on the fieldset when error is set', async () => {
       const el = await fixture(html`
         <auro-checkbox-group error="Error msg">
           <auro-checkbox value="one">One</auro-checkbox>
         </auro-checkbox-group>
       `);
 
-      expect(el.getAttribute('aria-invalid')).to.equal('true');
+      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
     });
 
-    it('should remove aria-invalid when error is cleared', async () => {
+    it('should remove aria-invalid from the fieldset when error is cleared', async () => {
       const el = await fixture(html`
         <auro-checkbox-group error="Error msg">
           <auro-checkbox value="one">One</auro-checkbox>
@@ -1215,7 +1217,104 @@ function runFullTest(mobileView) {
       el.removeAttribute('error');
       await elementUpdated(el);
 
-      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
+    });
+
+    it('should set aria-invalid on the fieldset when validity is valueMissing', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group required>
+          <auro-checkbox value="one">One</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valueMissing');
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
+    });
+
+    it('should associate the fieldset with its help/error text via aria-describedby', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group error="Error msg">
+          <auro-checkbox value="one">One</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      const fieldset = el.shadowRoot.querySelector('fieldset');
+      const describedById = fieldset.getAttribute('aria-describedby');
+
+      expect(describedById).to.exist;
+      expect(el.shadowRoot.getElementById(describedById)).to.exist;
+    });
+
+    it('should set aria-invalid on each child checkbox when validity is not valid', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group error="Error msg">
+          <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      const cb1 = el.querySelector('#cb1');
+
+      expect(cb1.getAttribute('aria-invalid')).to.equal('true');
+
+      el.removeAttribute('error');
+      await elementUpdated(el);
+
+      expect(cb1.hasAttribute('aria-invalid')).to.be.false;
+    });
+
+    it('should set aria-invalid on a checkbox slotted into an already-invalid group', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group required>
+          <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valueMissing');
+      expect(el.querySelector('#cb1').getAttribute('aria-invalid')).to.equal('true');
+
+      // The slot change does not change `validity`, so the `updated()` branch keyed on it
+      // never runs — `handleItems()` has to apply the state to the new checkbox itself.
+      const added = document.createElement('auro-checkbox');
+
+      added.id = 'cb2';
+      added.value = 'two';
+      el.appendChild(added);
+      await elementUpdated(el);
+
+      expect(added.hasAttribute('error')).to.be.true;
+      expect(added.getAttribute('aria-invalid')).to.equal('true');
+    });
+
+    it('should pass axe with aria-invalid set on the implicit-role=group fieldset', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group required>
+          <span slot="legend">Pick at least one</span>
+          <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          <auro-checkbox id="cb2" value="two">Two</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      const fieldset = el.shadowRoot.querySelector('fieldset');
+
+      // The fieldset carries no explicit role, so its implicit role is `group`. ARIA 1.1
+      // treats aria-invalid as global; ARIA 1.2 deprecates that global use and lists
+      // supported roles that do not include `group`. axe-core still resolves it as global
+      // and raises no aria-allowed-attr / aria-prohibited-attr finding here. This test
+      // pins that outcome, so if a future axe release honors the 1.2 deprecation it fails
+      // loudly here instead of surfacing in a consumer's audit.
+      expect(fieldset.hasAttribute('role')).to.be.false;
+      expect(fieldset.getAttribute('aria-invalid')).to.equal('true');
+
+      await expect(el).to.be.accessible();
     });
 
     it('should render a fieldset element for grouping', async () => {
@@ -1228,6 +1327,11 @@ function runFullTest(mobileView) {
 
       expect(el.shadowRoot.querySelector('fieldset')).to.exist;
       expect(el.shadowRoot.querySelector('legend')).to.exist;
+
+      // The fieldset must stay reachable from a consumer stylesheet: the accessibility
+      // docs tell consumers to target this part instead of the host, now that
+      // aria-invalid no longer lives on the host element.
+      expect(el.shadowRoot.querySelector('[part="checkbox-group"]')).to.equal(el.shadowRoot.querySelector('fieldset'));
     });
 
     it('should render error help text with role alert when validity is not valid', async () => {
