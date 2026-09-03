@@ -350,6 +350,34 @@ export class AuroCheckboxGroup extends LitElement {
     this.handlePreselectedItems();
 
     this.validate();
+    this.syncCheckboxValidity();
+  }
+
+  /**
+   * Method for mirroring the group's invalid state onto each checkbox.
+   * `validity` is the authoritative invalid state, and it has to be re-applied from
+   * `handleItems()` as well, because a slot change can happen without `validity` itself
+   * changing — a checkbox slotted into an already-invalid group would otherwise be missed.
+   * @private
+   * @returns {void}
+   */
+  syncCheckboxValidity() {
+    const invalid = Boolean(this.validity && this.validity !== 'valid');
+
+    this.checkboxes.forEach((el) => {
+      if (invalid) {
+        el.setAttribute('error', true);
+        el.setAttribute('aria-invalid', 'true');
+      } else {
+        // Group state is authoritative: an `error` set directly on an individual
+        // checkbox by a consumer is cleared here, and because this method also runs
+        // from `handleItems()` that now happens on every slot change, not just on a
+        // validity change. Matches auro-radio-group. See docs/post-mortem/1636704.md,
+        // "Breaking Change Assessment", for why this is not treated as a breaker.
+        el.removeAttribute('error');
+        el.removeAttribute('aria-invalid');
+      }
+    });
   }
 
   /**
@@ -381,15 +409,7 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      this.checkboxes.forEach((el) => {
-        if (this.validity && this.validity !== 'valid') {
-          el.setAttribute('error', true);
-          el.setAttribute('aria-invalid', 'true');
-        } else {
-          el.removeAttribute('error');
-          el.removeAttribute('aria-invalid');
-        }
-      });
+      this.syncCheckboxValidity();
     }
 
     if (changedProperties.has('required')) {
