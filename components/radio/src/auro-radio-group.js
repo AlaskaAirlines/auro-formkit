@@ -352,15 +352,27 @@ export class AuroRadioGroup extends LitElement {
   }
 
   /**
+   * Whether the group is currently in an invalid state.
+   * `validity` — not `error` — is the authoritative source: `validate()` resolves the
+   * `error` attribute to `validity = 'customError'`, so `error` is already covered here.
+   * Single definition of "invalid" for the whole component, consumed by `render()` and
+   * `syncItemValidity()` so the fieldset and its children can never disagree.
+   * @private
+   * @returns {boolean}
+   */
+  get isInvalid() {
+    return Boolean(this.validity && this.validity !== 'valid');
+  }
+
+  /**
    * Method for mirroring the group's invalid state onto each radio input.
-   * `validity` — not `error` — is the authoritative invalid state, and it has to be
-   * re-applied from `handleItems()` as well, because a slot change or a reconnect can
-   * happen without `validity` itself changing.
+   * Has to be re-applied from `handleItems()` as well, because a slot change or a
+   * reconnect can happen without `validity` itself changing.
    * @private
    * @returns {void}
    */
   syncItemValidity() {
-    const invalid = Boolean(this.error) || Boolean(this.validity && this.validity !== 'valid');
+    const invalid = this.isInvalid;
 
     this.items.forEach((el) => {
       if (invalid) {
@@ -580,7 +592,7 @@ export class AuroRadioGroup extends LitElement {
         class="${classMap(groupClasses)}"
         part="radio-group"
         role="radiogroup"
-        aria-invalid="${ifDefined(this.validity && this.validity !== 'valid' ? 'true' : undefined)}"
+        aria-invalid="${ifDefined(this.isInvalid ? 'true' : undefined)}"
         aria-describedby="${this.uniqueId}"
       >
         <legend class="${classMap(legendClasses)}">
@@ -590,7 +602,7 @@ export class AuroRadioGroup extends LitElement {
         <slot @slotchange=${this.handleSlotChange}></slot>
       </fieldset>
 
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ${!this.isInvalid
         ? html`
           <${this.helpTextTag} id="${this.uniqueId}" appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
             <slot name="helpText"></slot>

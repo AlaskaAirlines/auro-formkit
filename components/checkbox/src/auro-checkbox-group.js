@@ -355,15 +355,28 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
+   * Whether the group is currently in an invalid state.
+   * `validity` — not `error` — is the authoritative source: `validate()` resolves the
+   * `error` attribute to `validity = 'customError'`, so `error` is already covered here.
+   * Single definition of "invalid" for the whole component, consumed by `render()` and
+   * `syncCheckboxValidity()` so the fieldset and its children can never disagree.
+   * @private
+   * @returns {boolean}
+   */
+  get isInvalid() {
+    return Boolean(this.validity && this.validity !== 'valid');
+  }
+
+  /**
    * Method for mirroring the group's invalid state onto each checkbox.
-   * `validity` is the authoritative invalid state, and it has to be re-applied from
-   * `handleItems()` as well, because a slot change can happen without `validity` itself
-   * changing — a checkbox slotted into an already-invalid group would otherwise be missed.
+   * Has to be re-applied from `handleItems()` as well, because a slot change can happen
+   * without `validity` itself changing — a checkbox slotted into an already-invalid
+   * group would otherwise be missed.
    * @private
    * @returns {void}
    */
   syncCheckboxValidity() {
-    const invalid = Boolean(this.validity && this.validity !== 'valid');
+    const invalid = this.isInvalid;
 
     this.checkboxes.forEach((el) => {
       if (invalid) {
@@ -455,7 +468,7 @@ export class AuroCheckboxGroup extends LitElement {
       <fieldset
         class="${classMap(groupClasses)}"
         part="checkbox-group"
-        aria-invalid="${ifDefined(this.validity && this.validity !== 'valid' ? 'true' : undefined)}"
+        aria-invalid="${ifDefined(this.isInvalid ? 'true' : undefined)}"
         aria-describedby="${this.uniqueId}"
       >
         <legend>
@@ -465,7 +478,7 @@ export class AuroCheckboxGroup extends LitElement {
         <slot @slotchange=${this.handleItems}></slot>
       </fieldset>
 
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ${!this.isInvalid
         ? html`
           <${this.helpTextTag} id="${this.uniqueId}" part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
             <slot name="helpText"></slot>
