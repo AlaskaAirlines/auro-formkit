@@ -264,15 +264,57 @@ export function accessibilityTreeSuite(framework: string) {
       await expect.poll(() => yesRadio.getAttribute('aria-invalid')).toBe('true');
     });
 
-    test('radios in a valid group do not expose aria-invalid', async ({ page }) => {
+    test('radios have aria-invalid removed when the group becomes valid', async ({ page }) => {
+      const group = fixture(page, 'required', 'auro-radio-group');
       const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+
+      // Drive the group invalid first. Asserting the attribute is absent on a fresh page
+      // would pass even if the removal logic were broken — it was never set there.
+      await yesRadio.evaluate((el: any) => el.focus());
+      await expect.poll(() =>
+        yesRadio.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await page.click('#outside-element');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+      await expect.poll(() => yesRadio.getAttribute('aria-invalid')).toBe('true');
+
+      // Selecting an option must clear it from both the child and the fieldset.
       await yesRadio.click();
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valid');
+
+      await expect.poll(() => yesRadio.getAttribute('aria-invalid')).toBe(null);
+      await expect.poll(() =>
+        group.evaluate((el: any) => el.shadowRoot?.querySelector('fieldset')?.getAttribute('aria-invalid')),
+      ).toBe(null);
+    });
+
+    test('radios keep aria-invalid as arrow keys move focus between options', async ({ page }) => {
+      const group = fixture(page, 'required', 'auro-radio-group');
+      const yesRadio = fixture(page, 'required', 'auro-radio[data-value="yes"]');
+      const noRadio = fixture(page, 'required', 'auro-radio[data-value="no"]');
+
+      // Arrow keys *select* in a radio group, so the first press would clear `valueMissing`.
+      // `customError` is the invalid state a user can actually arrow through, and it is the
+      // reason per-radio aria-invalid exists: some AT/browser pairs announce a container's
+      // invalid state only on entry, not on each arrow-key move within it.
+      await group.evaluate((el: any) => el.setAttribute('error', 'Pick a different option'));
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('customError');
+      await expect.poll(() => yesRadio.getAttribute('aria-invalid')).toBe('true');
+
+      await yesRadio.evaluate((el: any) => el.focus());
+      await page.keyboard.press('ArrowDown');
 
       await expect.poll(() =>
-        fixture(page, 'required', 'auro-radio-group').evaluate((el: any) => el.validity),
-      ).toBe('valid');
-
-      await expect(yesRadio).not.toHaveAttribute('aria-invalid');
+        noRadio.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await expect.poll(() => group.evaluate((el: any) => el.validity)).toBe('customError');
+      await expect.poll(() => noRadio.getAttribute('aria-invalid')).toBe('true');
     });
   });
 
