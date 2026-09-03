@@ -46,9 +46,10 @@ The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements..
 
 ## CSS Shadow Parts
 
-| Part       | Description                                      |
-|------------|--------------------------------------------------|
-| `helpText` | Apply css to the help text element that displays helper or error messages. |
+| Part             | Description                                      |
+|------------------|--------------------------------------------------|
+| `checkbox-group` | Apply css to the fieldset element in the shadow DOM |
+| `helpText`       | Apply css to the help text element that displays helper or error messages. |
 
 # auro-checkbox
 

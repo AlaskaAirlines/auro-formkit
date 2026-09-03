@@ -32,7 +32,7 @@ While the group is invalid, `aria-invalid` is set on both the `<fieldset>` and e
 The `checkbox` role is in `aria-invalid`'s supported-role list in every ARIA version, so the per-checkbox placement is unambiguous. The group-level placement is worth one note: `aria-invalid` is a global attribute in ARIA 1.1, applicable to any role including `group`, but ARIA 1.2 deprecates that global use in favor of a supported-role list that does not include `group`. Keeping it on the `<fieldset>` is a deliberate choice — it is not a *prohibited* attribute for `group`, current axe-core resolves it as global and reports no violation, and it gives the group a real invalid signal that would otherwise be lost. This is covered by an automated axe assertion in the component's test suite so that a future change in tooling surfaces here rather than in a consumer's audit.
 
 <auro-header level="4" id="attributePlacementNote">Attribute placement</auro-header>
-`aria-invalid` is applied to the internal `<fieldset>`, not to the `<auro-checkbox-group>` host element. Do not write CSS selectors or test assertions against `auro-checkbox-group[aria-invalid]`; query the internal fieldset or read the `validity` property instead.
+`aria-invalid` is applied to the internal `<fieldset>`, not to the `<auro-checkbox-group>` host element. Do not write CSS selectors or test assertions against `auro-checkbox-group[aria-invalid]`; target the `part="checkbox-group"` fieldset or read the `validity` property instead.
 
 <auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
 - **Focus** — When focus moves to a checkbox, the screen reader announces the checkbox label, its checked/unchecked state, and role ("checkbox").
