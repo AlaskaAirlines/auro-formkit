@@ -347,18 +347,30 @@ export class AuroRadioGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      if (this.validity && this.validity !== 'valid') {
-        this.items.forEach((el) => {
-          el.setAttribute('error', true);
-          el.setAttribute('aria-invalid', 'true');
-        });
-      } else {
-        this.items.forEach((el) => {
-          el.removeAttribute('error');
-          el.removeAttribute('aria-invalid');
-        });
-      }
+      this.syncItemValidity();
     }
+  }
+
+  /**
+   * Method for mirroring the group's invalid state onto each radio input.
+   * `validity` — not `error` — is the authoritative invalid state, and it has to be
+   * re-applied from `handleItems()` as well, because a slot change or a reconnect can
+   * happen without `validity` itself changing.
+   * @private
+   * @returns {void}
+   */
+  syncItemValidity() {
+    const invalid = Boolean(this.error) || Boolean(this.validity && this.validity !== 'valid');
+
+    this.items.forEach((el) => {
+      if (invalid) {
+        el.setAttribute('error', true);
+        el.setAttribute('aria-invalid', 'true');
+      } else {
+        el.removeAttribute('error');
+        el.removeAttribute('aria-invalid');
+      }
+    });
   }
 
   /**
@@ -414,8 +426,9 @@ export class AuroRadioGroup extends LitElement {
 
     this.items.forEach((el) => {
       el.required = this.required;
-      el.error = Boolean(this.error);
     });
+
+    this.syncItemValidity();
   }
 
   /**
