@@ -1265,6 +1265,58 @@ function runFullTest(mobileView) {
       expect(cb1.hasAttribute('aria-invalid')).to.be.false;
     });
 
+    it('should set aria-invalid on a checkbox slotted into an already-invalid group', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group required>
+          <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valueMissing');
+      expect(el.querySelector('#cb1').getAttribute('aria-invalid')).to.equal('true');
+
+      // The slot change does not change `validity`, so the `updated()` branch keyed on it
+      // never runs — `handleItems()` has to apply the state to the new checkbox itself.
+      const added = document.createElement('auro-checkbox');
+
+      added.id = 'cb2';
+      added.value = 'two';
+      el.appendChild(added);
+      await elementUpdated(el);
+
+      expect(added.hasAttribute('error')).to.be.true;
+      expect(added.getAttribute('aria-invalid')).to.equal('true');
+    });
+
+    it('should pass axe with aria-invalid set on the implicit-role=group fieldset', async () => {
+      const el = await fixture(html`
+        <auro-checkbox-group required>
+          <span slot="legend">Pick at least one</span>
+          <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          <auro-checkbox id="cb2" value="two">Two</auro-checkbox>
+        </auro-checkbox-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      const fieldset = el.shadowRoot.querySelector('fieldset');
+
+      // The fieldset carries no explicit role, so its implicit role is `group`. ARIA 1.1
+      // treats aria-invalid as global; ARIA 1.2 deprecates that global use and lists
+      // supported roles that do not include `group`. axe-core still resolves it as global
+      // and raises no aria-allowed-attr / aria-prohibited-attr finding here. This test
+      // pins that outcome, so if a future axe release honors the 1.2 deprecation it fails
+      // loudly here instead of surfacing in a consumer's audit.
+      expect(fieldset.hasAttribute('role')).to.be.false;
+      expect(fieldset.getAttribute('aria-invalid')).to.equal('true');
+
+      await expect(el).to.be.accessible();
+    });
+
     it('should render a fieldset element for grouping', async () => {
       const el = await fixture(html`
         <auro-checkbox-group>

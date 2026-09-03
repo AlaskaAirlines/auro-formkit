@@ -138,15 +138,53 @@ export function accessibilityTreeSuite(framework: string) {
       await expect.poll(() => firstOption.getAttribute('aria-invalid')).toBe('true');
     });
 
-    test('checkboxes in a valid group do not expose aria-invalid', async ({ page }) => {
+    test('checkboxes have aria-invalid removed when the group becomes valid', async ({ page }) => {
+      const group = fixture(page, 'required-group', 'auro-checkbox-group');
       const firstOption = fixture(page, 'required-group', 'auro-checkbox').first();
+
+      // Drive the group invalid first. Asserting the attribute is absent on a fresh page
+      // would pass even if the removal logic were broken — it was never set there.
       await firstOption.click();
+      await firstOption.click();
+      await page.click('#outside-element');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+      await expect.poll(() => firstOption.getAttribute('aria-invalid')).toBe('true');
 
+      // Satisfying the requirement must clear it from both the child and the fieldset.
+      await firstOption.click();
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valid');
+
+      await expect.poll(() => firstOption.getAttribute('aria-invalid')).toBe(null);
       await expect.poll(() =>
-        fixture(page, 'required-group', 'auro-checkbox-group').evaluate((el: any) => el.validity),
-      ).toBe('valid');
+        group.evaluate((el: any) => el.shadowRoot?.querySelector('fieldset')?.getAttribute('aria-invalid')),
+      ).toBe(null);
+    });
 
-      await expect(firstOption).not.toHaveAttribute('aria-invalid');
+    test('every checkbox keeps aria-invalid as focus moves between options while invalid', async ({ page }) => {
+      const group = fixture(page, 'required-group', 'auro-checkbox-group');
+      const options = fixture(page, 'required-group', 'auro-checkbox');
+      const firstOption = options.first();
+      const secondOption = options.nth(1);
+
+      await firstOption.click();
+      await firstOption.click();
+      await page.click('#outside-element');
+      await expect.poll(() => group.evaluate((el: any) => el.validity), { timeout: 5_000 }).toBe('valueMissing');
+
+      // The reason per-option aria-invalid exists: some AT/browser pairs announce a
+      // container's invalid state only when focus first enters the group, not as focus
+      // moves within it. Whichever option the user lands on must still expose it.
+      await firstOption.evaluate((el: any) => el.focus());
+      await expect.poll(() => firstOption.getAttribute('aria-invalid')).toBe('true');
+
+      await secondOption.evaluate((el: any) => el.focus());
+      await expect.poll(() =>
+        secondOption.evaluate((el: any) =>
+          el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+      await expect.poll(() => secondOption.getAttribute('aria-invalid')).toBe('true');
     });
   });
 
