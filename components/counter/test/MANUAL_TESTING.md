@@ -1,176 +1,77 @@
 # Manual Testing — auro-counter / auro-counter-group
 
-## auro-counter
+Automated tests (`auro-counter.test.js`, `auro-counter-group.test.js`) already cover rendering, property/attribute reflection and defaults, min/max clamping, disabled and error states, increment/decrement via click and keyboard, event firing, validation logic, public methods, slot content presence, dropdown open/close, and focus management (Escape/Tab/Shift+Tab, focus fallback when a control disables itself). The manual cases below deliberately avoid re-verifying that logic and instead focus on what automation cannot confirm: real rendering and appearance, theming, screen-reader announcements, touch input, and real-device fullscreen behavior.
 
-### Mouse Interactions
+## Smoke Test
 
-[ ] Click the increment (+) button — verify the value increases by 1
-[ ] Click the decrement (−) button — verify the value decreases by 1
-[ ] Click increment when value equals max — verify the value does not exceed max and the increment button becomes disabled
-[ ] Click decrement when value equals min — verify the value does not go below min and the decrement button becomes disabled
-[ ] Click increment or decrement on a disabled counter — verify no change occurs
-[ ] Rapidly click increment — verify each click registers and the value increments correctly
+Run these first for a quick confidence check that the components work in a real browser.
 
-### Keyboard Interactions
+### auro-counter
 
-[ ] Tab to the counter — verify focus lands on the counter component
-[ ] Arrow Up on a focused counter — verify the value increments by 1
-[ ] Arrow Down on a focused counter — verify the value decrements by 1
-[ ] Tab away from the counter — verify focus moves to the next element
+[ ] Load a counter with slotted label text — verify it renders with the label and current value visible
+[ ] Click the increment (+) button, then the decrement (−) button — verify the displayed value visibly rises and falls by 1
+[ ] Increment to max — verify the value stops and the increment button becomes visibly disabled
+[ ] Tab to the counter and press Arrow Up / Arrow Down — verify the focus indicator is visible and the value changes
 
-### Touch / Tap Interactions
+### auro-counter-group
 
-[ ] Tap the increment button — verify the value increases by 1
-[ ] Tap the decrement button — verify the value decreases by 1
-[ ] Tap increment at max — verify no change
-[ ] Tap decrement at min — verify no change
+[ ] Load a group of counters — verify each counter renders and the group total/summary is shown
+[ ] Increment one counter — verify that counter and the group total visibly update
+[ ] With `isDropdown`, click the trigger — verify the bib opens; click outside — verify it closes
+[ ] Tab to the dropdown trigger and press Enter — verify the focus indicator is visible and the bib opens
 
-### Property States
+## Depth
 
-#### `value`
-[ ] Set value programmatically — verify the displayed value updates
-[ ] Read value after clicking increment — verify it matches the displayed value
+### auro-counter — Appearance & Theming
 
-#### `min` / `max`
-[ ] Default min=0 and max=9 - verify the counter cannot go below 0 or above 9
-[ ] Set min=2 and max=5 — verify the counter cannot go below 2 or above 5
-[ ] Set min=2 with initial value=0 — verify behavior when value is below min
-[ ] Set max=3 with initial value=5 — verify behavior when value exceeds max
-
-#### `disabled`
-[ ] Set disabled — verify both buttons are visually disabled and non-interactive
-[ ] Remove disabled — verify both buttons become interactive
-
-#### `error`
-[ ] Set error with a message — verify the counter displays an error state with the custom message
-
-### Validation
-
-[ ] Call `validate()` — verify validation runs
-[ ] Call `validate(true)` — verify forced validation
-
-### Accessibility
-
-[ ] Verify the counter label (default slot content) is announced by screen readers
-[ ] Verify increment and decrement buttons have accessible labels (ariaLabel.plus / ariaLabel.minus slots)
-[ ] Verify the current value is announced on change
-[ ] Verify disabled state is announced
-[ ] Verify the help text is announced (helpText slot)
-[ ] Verify the description is announced (description slot)
+[ ] Verify the error visual state renders correctly (border / coloring / message placement)
+[ ] Verify the disabled counter is visibly greyed / non-interactive in appearance
+[ ] Verify `inverse` / `onDark` appearance renders correctly on a dark background (label, value, help text, buttons)
 [ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
-[ ] Verify focus indicators are clearly visible
+[ ] Verify the focus indicator on the control and on each button is clearly visible
 
-### Slots
+### auro-counter — Touch (device)
 
-[ ] Set custom content in the default slot — verify it renders as the counter label
-[ ] Set custom content in the `ariaLabel.minus` slot — verify screen reader announces it for the decrement button
-[ ] Set custom content in the `ariaLabel.plus` slot — verify screen reader announces it for the increment button
-[ ] Set custom content in the `helpText` slot — verify it renders below the counter
-[ ] Set custom content in the `description` slot — verify it renders as descriptive text
+[ ] Tap the increment and decrement buttons on a real touchscreen — verify each tap registers and the value updates
+[ ] Tap increment at max and decrement at min — verify no change and the disabled button gives no misleading feedback
 
-### Public Methods
+### auro-counter — Screen Reader
 
-[ ] Call `increment()` — verify the value increases by 1
-[ ] Call `increment(3)` — verify the value increases by 3
-[ ] Call `decrement()` — verify the value decreases by 1
-[ ] Call `decrement(2)` — verify the value decreases by 2
-[ ] Call `validate()` — verify validation runs and validity state updates
+[ ] Verify the counter label (default slot) is announced
+[ ] Verify the increment and decrement buttons announce their accessible labels (ariaLabel.plus / ariaLabel.minus)
+[ ] Verify the current value is announced when it changes
+[ ] Verify the disabled state is announced
+[ ] Verify the help text and description content are announced
 
----
+### auro-counter-group — Appearance & Theming
 
-## auro-counter-group
+[ ] Verify the group error visual state renders correctly (coloring, message, error icon)
+[ ] Verify the dropdown trigger, label, and value text render correctly, including in `inverse` / `onDark` appearance
+[ ] Verify color contrast meets WCAG 2.1 AA
+[ ] Verify the focus indicator is clearly visible on the trigger and on controls inside the bib
 
-### Mouse Interactions
-
-#### Standalone (non-dropdown) Mode
-[ ] Click increment/decrement on individual counters in the group — verify each counter operates independently
-[ ] Verify the group total updates when any individual counter changes
-
-#### Dropdown Mode (`isDropdown`)
-[ ] Click the dropdown trigger — verify the counter group bib opens
-[ ] Click increment/decrement on counters inside the bib — verify values change
-[ ] Click outside the bib — verify the bib closes
-[ ] Verify the trigger displays the current total / summary
-
-### Keyboard Interactions
-
-#### Standalone Mode
-[ ] Tab through counters in the group — verify each counter receives focus in order
-[ ] Arrow Up/Down on individual counters — verify increment/decrement behavior
-
-#### Dropdown Mode
-[ ] Tab to the dropdown trigger — verify focus
-[ ] Enter/Space on the trigger — verify the bib opens
-[ ] Tab through controls inside the bib — verify focus moves through counter controls
-[ ] Escape — verify the bib closes
-[ ] Tab stays trapped inside bib when in fullscreen mode
-
-### Touch / Tap Interactions
+### auro-counter-group — Touch (device)
 
 [ ] Tap the dropdown trigger — verify the bib opens
-[ ] Tap counter buttons inside the bib — verify values change
-[ ] Tap outside the bib — verify the bib closes
+[ ] Tap counter buttons inside the bib — verify values and total update
+[ ] Tap outside the bib — verify it closes
 
-### Fullscreen (Mobile) Mode
+### auro-counter-group — Fullscreen / Mobile (real device)
 
-[ ] Open the counter-group dropdown at mobile breakpoint — verify the fullscreen dialog opens
-[ ] Verify the close button receives initial focus when the dialog opens
-[ ] Tap increment/decrement buttons inside the dialog — verify they work
-[ ] Press Escape — verify the dialog closes
-[ ] Press Tab — verify the dialog closes
-[ ] Verify focus returns to the trigger when the dialog closes
+[ ] Open the dropdown at a viewport below `fullscreenBreakpoint` on a real device — verify it opens as a fullscreen dialog
+[ ] Verify the fullscreen headline and footer slot content render correctly
+[ ] Verify the close button is reachable and focused, and closing returns focus to the trigger
+[ ] Set `fullscreenBreakpoint="disabled"` — verify the dropdown never enters fullscreen even on a small viewport
+[ ] Verify layout, scrolling, and touch interactions inside the fullscreen dialog behave correctly
 
-### Property States
+### auro-counter-group — Cross-browser & Integration
 
-#### `min` / `max` (group-level)
-[ ] Set min on the group — verify the group total cannot go below the group min
-[ ] Set max on the group — verify the group total cannot exceed the group max
-[ ] Verify individual counters are constrained when the group total reaches its limit
+[ ] Verify dropdown positioning and bib rendering across Chrome, Safari, and Firefox
+[ ] Verify a counter-group dropdown nested inside an auro-dialog or auro-drawer opens/closes without disrupting the parent overlay
 
-#### `total`
-[ ] Verify total reflects the sum of all child counter values
-[ ] Verify total updates in real time as counters change
+### auro-counter-group — Screen Reader
 
-#### `value`
-[ ] Read value — verify it returns an object with individual counter values
-
-#### `error`
-[ ] Set error with a message — verify the group displays an error state
-
-#### `isDropdown`
-[ ] Set isDropdown — verify the group renders as a dropdown with a trigger
-[ ] Remove isDropdown — verify counters render inline
-
-#### `fullscreenBreakpoint`
-[ ] Set fullscreenBreakpoint="sm" — verify the dropdown switches to fullscreen at the small breakpoint
-[ ] Set fullscreenBreakpoint="disabled" — verify the dropdown never enters fullscreen
-
-### Validation
-
-[ ] Call `validate()` — verify group-level validation runs
-[ ] Call `validate(true)` — verify forced validation
-
-### Accessibility
-
-[ ] Verify the group is announced as a coherent unit by screen readers
-[ ] Verify the fullscreen dialog headline is announced (bib.fullscreen.headline slot)
-[ ] Verify the close button has an accessible label (ariaLabel.bib.close slot)
-[ ] Verify the dropdown label is announced (label slot)
-[ ] Verify focus trapping works in fullscreen dialog mode
-[ ] Verify color contrast meets WCAG 2.1 AA
-
-### Slots
-
-[ ] Set custom content in the default slot — verify child counters render
-[ ] Set custom content in the `ariaLabel.bib.close` slot — verify screen reader announces it for the close button
-[ ] Set custom content in the `bib.fullscreen.headline` slot — verify it renders as the fullscreen dialog headline
-[ ] Set custom content in the `bib.fullscreen.footer` slot — verify it renders at the bottom of the fullscreen dialog
-[ ] Set custom content in the `label` slot — verify it renders as the dropdown label
-[ ] Set custom content in the `valueText` slot — verify it renders as the dropdown value display
-[ ] Set custom content in the `helpText` slot — verify it renders below the dropdown trigger
-
-### Public Methods
-
-[ ] Call `showBib()` — verify the dropdown bib opens
-[ ] Call `hideBib()` — verify the dropdown bib closes
-[ ] Call `validate()` — verify group-level validation runs and validity state updates
+[ ] Verify the group and its dropdown label are announced as a coherent unit
+[ ] Verify the fullscreen dialog headline is announced when the dialog opens
+[ ] Verify the close button announces its accessible label (ariaLabel.bib.close)
+[ ] Verify each child counter's label, value, and value changes are announced inside the bib
