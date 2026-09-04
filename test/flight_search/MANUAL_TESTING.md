@@ -1,5 +1,15 @@
 # Planbook Component — Manual Test Plan
 
+Planbook is an **integration (composite) component** assembled from the underlying
+auro-* form components (input, select, combobox, datepicker, counter, checkbox,
+radio, dropdown, form). Each of those sub-components ships its own comprehensive
+automated test suite, so isolated control mechanics — a counter incrementing, a
+dropdown opening, a checkbox toggling, generic property reflection — are **already
+covered by automation and are not re-tested here.** Manual testing focuses on what
+only the composed component exercises: end-to-end search flows, cross-field business
+rules, and the perceptual, device, and assistive-technology concerns that cannot be
+asserted in a headless suite.
+
 ## Environment Setup
 
 - **Browsers:** Chrome (latest), Safari (latest), Firefox (latest), Edge (latest)
@@ -8,192 +18,173 @@
 
 ---
 
-## 1. Trip Type Selection
+## Smoke Test
+
+A fast, real-browser end-to-end sanity pass. Run this first on every build.
+
+### Search Execution & Validation
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 1.1 | Validation reset on switch | Enter invalid data, trigger validation, then switch trip type | Previous validation errors clear |
+| S1 | Component renders with defaults | Load Planbook | Form renders with **1 adult** and **Round Trip** selected by default |
+| S2 | Set origin | Type "SEA" in origin, select Seattle-Tacoma from the dropdown | Origin field populates with SEA |
+| S3 | Set destination | Type "SFO" in destination, select San Francisco from the dropdown | Destination field populates with SFO |
+| S4 | Pick dates | Select an outbound date and a return date | Both date fields populate as a valid range |
+| S5 | Valid search | With all required fields filled, click **Search Flights** | Emits the `search` event / navigates to results |
+| S6 | Required-field validation | Clear origin (or another required field), click **Search Flights** | Error header appears listing the missing-field error; no navigation occurs |
 
 ---
 
-## 2. City Search (Origin & Destination)
+## Depth
+
+Grouped by feature area and ordered to minimize tester context-switching: desktop
+happy-path and cross-field logic first (mouse/keyboard), then visual theming and
+responsive layout (eyes/resize), then touch, then assistive-tech last.
+
+### Trip Type
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 2.1 | Search by airport code | Type "SEA" in origin field | Dropdown shows Seattle-Tacoma with code SEA; selecting it populates the field |
-| 2.2 | Search by city name | Type "San Francisco" in destination | Dropdown shows SFO and nearby airports |
-| 2.3 | Search by partial name | Type "Port" in origin | Dropdown shows Portland (PDX), Portland (PWM), and other matching airports |
-| 2.4 | Select airport from dropdown | Click a dropdown result | Field populates with 3-letter IATA code, dropdown closes |
-| 2.5 | No matching airport | Type "XYZXYZ" in origin | Dropdown shows "No matching airport" message |
-| 2.6 | Clear and retype | Select an airport, clear the field, type new text | Previous selection removed; new dropdown appears |
-| 2.7 | Nearby/substations | Search for an airport that has substations | Nested menu shows nearby airport options |
-| 2.8 | Keyboard navigation | Use arrow keys and Enter to navigate/select in the dropdown | Focus moves through options; Enter selects highlighted option |
-| 2.9 | Blur with invalid text | Type partial text and tab away | Field shows validation error for invalid airport |
+| T1 | Fields update per trip type | Switch between Round Trip, One Way, and Multi City | Visible fields recompose: One Way hides the return date; Multi City reveals segment rows |
+| T2 | Validation reset on switch | Enter invalid data, trigger validation, then switch trip type | Previous validation errors clear |
 
----
+### City Search (Origin & Destination)
 
-## 3. Swap Origin/Destination
+Isolated combobox/dropdown filtering, selection, and keyboard navigation are covered
+by the combobox and dropdown suites. These cases verify Planbook's airport dataset
+and validation integration.
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 3.1 | Basic swap | Set origin=SEA, destination=SFO, click swap button | Origin becomes SFO, destination becomes SEA |
-| 3.2 | Swap preserves nearby | Enable "Include nearby airports" on origin, then swap | Nearby airport state follows the airport to its new position |
-| 3.3 | Swap with empty fields | Leave destination empty, click swap | Origin moves to destination; origin becomes empty |
-| 3.4 | Screen reader announcement | Activate swap button | SR announces origin/destination swap |
+| C1 | Match against airport dataset | Type "San Francisco" in destination | Results include SFO plus nearby airports from Planbook's dataset |
+| C2 | Nested nearby/substations | Search for an airport that has substations | Nested menu exposes the nearby airport options |
+| C3 | No matching airport | Type "XYZXYZ" in origin | Planbook shows the "No matching airport" empty-state message |
+| C4 | Blur with invalid text | Type partial text that resolves to no airport, then tab away | Field shows the invalid-airport validation error |
 
----
-
-## 4. Nearby Airports
+### Swap Origin/Destination
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 4.1 | Toggle nearby origin | Check "Include nearby airports" under origin | Checkbox is checked; search criteria includes nearby airports flag |
-| 4.2 | Toggle nearby destination | Check "Include nearby airports" under destination | Checkbox is checked; search criteria includes nearby destination flag |
-| 4.3 | Hidden when disabled | Set `showNearbyAirports=false` prop | Nearby airport checkboxes do not appear |
+| SW1 | Basic swap | Set origin=SEA, destination=SFO, click swap | Origin becomes SFO, destination becomes SEA |
+| SW2 | Swap preserves nearby state | Enable "Include nearby airports" on origin, then swap | The nearby-airport flag follows the airport to its new position |
+| SW3 | Swap with an empty field | Leave destination empty, click swap | Origin value moves to destination; origin becomes empty |
 
----
-
-## 5. Date Selection
+### Nearby Airports
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 5.1 | Select outbound date (RT) | In Round Trip, click date picker and select a future date | Outbound date populates correctly |
-| 5.2 | Select return date (RT) | After outbound, select a return date >= outbound | Return date populates; forms a valid range |
-| 5.3 | Return before outbound | Try selecting a return date before outbound date | Prevented or shows validation error |
-| 5.4 | One Way date | Switch to One Way; select a departure date | Only one date field shown; populates correctly |
-| 5.5 | Multi City dates | In Multi City, select dates for each segment | Each segment has its own date; min date for segment N+1 >= segment N's date |
-| 5.6 | Past date validation | Attempt to select a date in the past | Date is not selectable or shows error |
-| 5.7 | Max date boundary | Attempt to select a date beyond 331 days out | Date is not selectable |
-| 5.8 | Flexible dates toggle | Check "Show flexible dates" | Toggle state reflected in search criteria |
+| N1 | Flag flows into search criteria | Check "Include nearby airports" on origin and destination, run a search | Emitted search criteria include the nearby-origin and nearby-destination flags |
+| N2 | Config-gated visibility | Set `showNearbyAirports=false` | Nearby-airport checkboxes do not render |
 
----
+### Dates
 
-## 6. Passenger Selection
+Isolated datepicker mechanics (past-date blocking, single-field population) are
+covered by the datepicker suite. These verify cross-field range and business-window logic.
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 6.1 | Default passengers | Load component | Shows "1 adult" by default |
-| 6.2 | Increment adults | Click + on adults counter | Adults count increases (up to 7 total) |
-| 6.3 | Add children | Click + on children counter | Children count increases; display updates (e.g., "1 adult, 1 child") |
-| 6.4 | Add infants | Click + on infants counter | Infants count increases; limited to number of adults |
-| 6.5 | Max 7 passengers | Add passengers until total is 7 | All + buttons disabled when total reaches 7 |
-| 6.6 | Infant limit | Set 2 adults, try to add 3 infants | Infant counter stops at 2 (capped at adult count) |
-| 6.7 | Decrement to minimum | Try to reduce adults below 1 | Adults counter does not go below 1 |
-| 6.8 | Passenger info drawers | Click info icon next to "Children" or "Infants" | Drawer opens explaining age ranges and policies |
-| 6.9 | Display text formatting | Set 2 adults, 3 children, 1 infant | Display shows "2 adults, 3 children, 1 infant" with correct pluralization |
+| D1 | Return constrained by outbound | Select an outbound date, then attempt a return date before it | Earlier returns are prevented / show a validation error; valid returns form a range |
+| D2 | One Way single field | Switch to One Way, select a departure date | Only one date field is shown and populates |
+| D3 | Booking-window max | Attempt to select a date beyond 331 days out | Date is not selectable (business max) |
+| D4 | Flexible dates flag | Check "Show flexible dates", run a search | Toggle state is reflected in the emitted search criteria |
 
----
+### Passengers
 
-## 7. Upgrade Tier Selection
+Counter increment/decrement and min/max button-disabling are covered by the counter
+suite. These verify Planbook's cross-field caps and aggregated display.
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 7.1 | Default upgrade | Load component | Upgrade is set to "None" |
-| 7.2 | Select a tier | Open upgrade dropdown, select "Tier 1" | Upgrade updates to Tier 1 |
-| 7.3 | Guest certificate | Select "Guest Certificate" from dropdown | Upgrade updates to Guest |
-| 7.4 | Guest disabled with Points | Enable "Use Miles" toggle, then open upgrade dropdown | Guest Certificate option is disabled/greyed out |
-| 7.5 | Info drawer | Click the upgrade info link/icon | Upgrade info drawer opens with tier definitions |
-| 7.6 | Accordion visibility | On narrow viewport, collapse accordion; upgrade should be inside | Upgrade input hidden until "More Options" expanded |
+| P1 | Max 7 total passengers | Add passengers until total reaches 7 | All + buttons disable at 7 total |
+| P2 | Infants capped at adults | Set 2 adults, try to add 3 infants | Infant counter stops at 2 (capped at adult count) |
+| P3 | Aggregated display text | Set 2 adults, 3 children, 1 infant | Display reads "2 adults, 3 children, 1 infant" with correct pluralization |
+| P4 | Passenger info drawer | Click the info icon next to Children/Infants | Drawer opens explaining the age ranges and passenger policies (Planbook composition — not covered by any sub-component suite) |
 
----
+### Upgrade Tier
 
-## 8. Discount Code
+Opening the dropdown and selecting a tier are covered by the dropdown/select suites.
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 8.1 | Enter discount code | Type "ABC123" in discount field | Code is accepted; field shows entered text |
-| 8.2 | Info drawer | Click discount info icon | Discount terms drawer opens; terms load from API |
-| 8.3 | Invalid code on search | Enter invalid code, click "Search Flights" | Appropriate error message displayed (e.g., "Invalid discount code") |
-| 8.4 | Discount disabled with special fare (AFB) | In AFB mode, select a special fare | Discount input becomes disabled |
-| 8.5 | Accordion visibility | On narrow viewport, collapse accordion | Discount input hidden until "More Options" expanded |
+| U1 | Guest Certificate disabled by Points | Enable "Use Miles", then open the upgrade dropdown | Guest Certificate option is disabled/greyed out |
+| U2 | Upgrade info drawer | Click the upgrade info icon | Drawer opens explaining the upgrade tiers and eligibility (Planbook composition — not covered by any sub-component suite) |
 
-
----
-
-## 9. Points / Miles Toggle
+### Discount Code
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 9.1 | Toggle points on | Check "Use Miles" checkbox | Points mode enabled |
-| 9.2 | Points disables guest upgrade | Enable points, open upgrade dropdown | Guest Certificate is disabled |
-| 9.3 | Points disables special fares (AFB) | In AFB mode, enable points | Special fares dropdown and "Show only special fares" checkbox disabled |
-| 9.4 | Points resets special fares | Select a special fare, then enable points | Special fare resets to "Not Selected" |
-| 9.5 | Award airport filtering | Enable points, search for an airport without award service | Different error message shown (award-only filtering) |
+| DC1 | Terms load from API | Open the discount info drawer | Drawer opens and discount terms populate from the API |
+| DC2 | Invalid code on search | Enter an invalid code, click Search Flights | Invalid-discount-code error is displayed |
+| DC3 | Disabled by AFB special fare | In AFB mode, select a special fare | Discount input becomes disabled |
 
----
-
-## 10. Multi City Specific
+### Points / Miles
 
 | # | Test Case | Steps | Expected Result |
 |---|-----------|-------|-----------------|
-| 10.1 | Add flights | Click "Add Flight" | New city pair row appears (up to 4 max) |
-| 10.2 | Maximum flights | Add flights until 4 total | "Add Flight" button is disabled |
-| 10.3 | Remove a flight | Click remove/delete on a city pair | City pair row removed; remaining rows re-index |
-| 10.4 | Min date cascading | Set date for flight 1, then select date for flight 2 | Flight 2 min date is >= flight 1 date |
-| 10.5 | Switch away from Multi City | Add 3 flights in Multi City, switch to Round Trip, then back to Multi City | Extra flights removed; reset to single city pair |
+| PM1 | Disables guest upgrade | Enable points, open the upgrade dropdown | Guest Certificate is disabled |
+| PM2 | Disables special fares (AFB) | In AFB mode, enable points | Special-fares dropdown and "Show only special fares" checkbox are disabled |
+| PM3 | Resets selected special fare | Select a special fare, then enable points | Special fare resets to "Not Selected" |
+| PM4 | Award airport filtering | Enable points, search an airport without award service | Award-only filtering shows the distinct error message |
 
----
-
-## 11. Search Execution & Validation
+### Multi City
 
 | # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 11.1 | Valid search | Fill all required fields correctly, click "Search Flights" | Redirects to search results page (or emits `search` event) |
-| 11.2 | Missing origin | Leave origin empty, click search | Error: origin required; error header visible |
-| 11.3 | Missing destination | Leave destination empty, click search | Error: destination required |
-| 11.4 | Missing dates | Clear dates, click search | Error: dates required |
-| 11.5 | Duplicate origin/destination | Set both to SEA, click search | Error: origin and destination cannot be the same |
-| 11.6 | Multiple errors | Leave both cities and dates empty, click search | All relevant errors shown in error header |
-| 11.7 | Loading state | Click search with valid data | Button shows loading spinner; `isLoading` is true |
+|---|-----------|-------|-----------------|
+| MC1 | Add / max flights | Click "Add Flight" repeatedly | New segment rows appear up to 4; "Add Flight" disables at 4 |
+| MC2 | Remove and re-index | Remove a middle segment | Row is removed; remaining rows re-index correctly |
+| MC3 | Min-date cascade | Set a date on segment 1, then open segment 2's picker | Segment 2's min selectable date is >= segment 1's date; cascades across all segments |
+| MC4 | Reset on trip-type change | Add 3 segments, switch to Round Trip, switch back to Multi City | Extra segments are removed; resets to a single city pair |
 
----
-
-## 12. Theming
+### Search Execution & Validation
 
 | # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 12.1 | Alaska theme (default) | Load with `brand=Alaska` | Alaska branding, colors, and typography applied |
-| 12.2 | Hawaiian theme | Load with `brand=Hawaiian` | Hawaiian branding, colors, and typography applied |
-| 12.3 | Dark mode | Set `themeMode=Dark` | Dark color scheme applied |
-| 12.4 | Light mode | Set `themeMode=Light` | Light color scheme applied |
-| 12.5 | System mode | Set `themeMode=System` | Follows OS preference (toggle OS dark mode to verify) |
+|---|-----------|-------|-----------------|
+| SE1 | Duplicate origin/destination | Set both to SEA, click Search Flights | Error: origin and destination cannot be the same |
+| SE2 | Aggregated error header | Leave both cities and dates empty, click Search Flights | Every relevant error is listed together in the error header |
+| SE3 | Loading state | Click Search Flights with valid data | Button shows the loading spinner; `isLoading` is true during submission |
+| SE4 | Criteria reflect form state | Set trip type, "Use Miles", "Flexible Dates", and nearby toggles, then submit | Emitted radio/checkbox criteria match the on-screen selections |
+| SE5 | Reset to defaults | Change several radios/checkboxes, then reset/reload the form | All controls return to their default state |
 
----
-
-## 13. Responsive Layout
+### Edge Cases & Error Recovery
 
 | # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 13.1 | Desktop (wide) | View at 1280px+ width | Full layout; all options visible; no accordion collapse |
-| 13.2 | Tablet | View at 768px width | Responsive adjustments; fields may stack; accordion may appear |
-| 13.3 | Mobile | View at 375px width | Fully stacked layout; "More Options" accordion visible; upgrade/discount collapsed |
-| 13.4 | Accordion collapse | On narrow viewport, verify "More Options" trigger | Clicking "More Options" expands to reveal Upgrade and Discount inputs |
-| 13.5 | Resize behavior | Start at desktop, resize to mobile and back | Layout transitions smoothly without broken state |
+|---|-----------|-------|-----------------|
+| E1 | Clear all and search | Clear every field, click search | All required-field errors surface simultaneously in the header |
+| E2 | Very long discount code | Enter a very long string in the discount field | Input handles it gracefully; no layout break |
 
----
-
-## 14. Accessibility
+### Theming
 
 | # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 14.1 | Keyboard-only navigation | Tab through all interactive elements | All inputs, buttons, and controls are reachable and operable via keyboard |
-| 14.2 | Screen reader labels | Navigate with VoiceOver/NVDA | All form controls have descriptive labels; icons have `aria-label` |
-| 14.3 | Error announcements | Trigger validation errors | Errors announced via `aria-live` region |
-| 14.4 | Dynamic content announcements | Swap origin/destination | Screen reader announces the swap action |
+|---|-----------|-------|-----------------|
+| TH1 | Alaska theme (default) | Load with `brand=Alaska` | Alaska branding, colors, and typography applied |
+| TH2 | Hawaiian theme | Load with `brand=Hawaiian` | Hawaiian branding, colors, and typography applied |
+| TH3 | Light mode | Set `themeMode=Light` | Light color scheme applied cleanly across all controls |
+| TH4 | Dark mode | Set `themeMode=Dark` | Dark color scheme applied cleanly across all controls |
+| TH5 | System mode | Set `themeMode=System`, toggle OS dark mode | Theme follows OS preference live |
 
----
-
-## 15. Search Criteria Filters (Radio Buttons & Checkboxes)
-
-| # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 15.1 | Preset filters — radio buttons | Submit a flight search | All radio buttons reflect the preset values (e.g., trip type matches the provided value) |
-| 15.2 | Preset filters — checkboxes | Submit a flight search | All checkboxes reflect the preset values (e.g., "Use Miles", "Flexible Dates", "Include nearby airports" match provided state) |
-| 15.3 | Reset filters | Change radio buttons and checkboxes to non-default values, then reset/reload the form | All radio buttons and checkboxes return to their default state |
-
-## 16. Edge Cases & Error Recovery
+### Responsive Layout
 
 | # | Test Case | Steps | Expected Result |
-|---|-----------|-------|------------------|
-| 16.1 | Clear all and search | Clear all fields and click search | All required field errors shown simultaneously |
-| 16.2 | Very long discount code | Enter a very long string in discount field | Input handles gracefully; no layout break |
+|---|-----------|-------|-----------------|
+| R1 | Desktop (wide) | View at 1280px+ | Full layout; all options visible; no accordion collapse |
+| R2 | Tablet | View at 768px | Fields adjust/stack; accordion may appear |
+| R3 | Mobile | View at 375px | Fully stacked layout; "More Options" accordion present |
+| R4 | More Options accordion | On a narrow viewport, expand "More Options" | Upgrade and Discount inputs are revealed only when expanded |
+| R5 | Resize behavior | Resize desktop → mobile → desktop | Layout transitions smoothly with no broken/stuck state |
+
+### Touch
+
+| # | Test Case | Steps | Expected Result |
+|---|-----------|-------|-----------------|
+| TC1 | Tap targets | On a real touch device, tap each control | Swap, counters, toggles, and search are comfortably tappable (no mis-taps) |
+| TC2 | Date picker on touch | Open and select dates by tapping | Calendar is usable; dates select without needing hover |
+| TC3 | Dropdown scroll on touch | Open a long airport dropdown, scroll and tap a result | List scrolls smoothly; selection lands on the tapped option |
+
+### Accessibility
+
+| # | Test Case | Steps | Expected Result |
+|---|-----------|-------|-----------------|
+| A1 | Keyboard-only full form | Tab/Shift+Tab and operate every control end to end | All inputs, toggles, counters, and buttons are reachable and operable; focus order is logical |
+| A2 | Screen reader labels | Traverse with VoiceOver/NVDA | Every control has a descriptive label; icon buttons expose `aria-label` |
+| A3 | Error announcements | Trigger validation errors | Errors are announced via the `aria-live` region |
+| A4 | Swap announcement | Activate the swap button with a screen reader on | The origin/destination swap is announced |
