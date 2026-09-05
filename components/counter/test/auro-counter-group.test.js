@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { fixture, fixtureSync, html, expect, elementUpdated, aTimeout, waitUntil } from '@open-wc/testing';
+import { setViewport, sendMouse, sendKeys } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '@aurodesignsystem/auro-dialog';
@@ -821,6 +821,55 @@ function runFullTest(mobileView) {
         await expect(el.validity).to.equal('valid');
       });
     });
+
+    describe('reset', () => {
+      it('should clear each counter to its min and recompute total/value', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter name="adults" min="1" value="2">Adults</auro-counter>
+            <auro-counter name="children" min="0" value="1">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        await Promise.all(Array.from(el.counters).map((counter) => counter.updateComplete));
+        await elementUpdated(el);
+
+        el.counters[0].increment();
+        el.counters[1].increment();
+        await elementUpdated(el);
+        expect(el.total).to.equal(5);
+
+        el.reset();
+        await elementUpdated(el);
+
+        // Each counter clears to its min (1 and 0), ignoring the presets (2 and 1), matching other Auro form elements.
+        expect(el.counters[0].value).to.equal(1);
+        expect(el.counters[1].value).to.equal(0);
+        expect(el.total).to.equal(1);
+        expect(el.value).to.deep.equal({ adults: 1, children: 0 });
+      });
+
+      it('should clear counters to min in the dropdown configuration', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="label">Passengers</span>
+            <auro-counter name="adults" min="1" value="2">Adults</auro-counter>
+            <auro-counter name="children" min="0" value="3">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await Promise.all(Array.from(el.counters).map((counter) => counter.updateComplete));
+
+        el.counters[0].increment();
+        await elementUpdated(el);
+
+        el.reset();
+        await elementUpdated(el);
+
+        expect(el.counters[0].value).to.equal(1);
+        expect(el.counters[1].value).to.equal(0);
+      });
+    });
   });
 
   describe('Events', () => {
@@ -1268,6 +1317,61 @@ function runFullTest(mobileView) {
 
         expect(el.dropdown.isPopoverVisible).to.be.true;
       });
+
+      // Real pointer clicks (sendMouse) move focus the way a browser does, which
+      // synthetic .click() does not — required to reproduce AB#1634231, where a
+      // counter button that disables itself at an extreme blurs and closed the bib.
+      if (!mobileView) {
+        bibIt('should keep the bib open when a counter button disables itself on click (AB#1634231)', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="1">Counter 1</auro-counter>
+              <auro-counter value="3">Counter 2</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Counter 1 value 1 -> 0 hits min, disabling its decrement button.
+          const [counter1] = el.counters;
+          const minusBtn = counter1.shadowRoot.querySelector('[part="controlMinus"]');
+          const rect = minusBtn.getBoundingClientRect();
+          await sendMouse({
+            type: 'click',
+            position: [Math.floor(rect.x + (rect.width / 2)), Math.floor(rect.y + (rect.height / 2))]
+          });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          expect(counter1.value).to.equal(0);
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        bibIt('should still close the bib when clicking outside the group', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="5">Counter 1</auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Click empty page space away from the group and its bib.
+          await sendMouse({ type: 'click', position: [400, 400] });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+      }
     });
 
     describe('Disabled Group', () => {
@@ -1454,6 +1558,94 @@ function runFullTest(mobileView) {
 
         expect(el.dropdown.isPopoverVisible).to.be.true;
       });
+
+      if (!mobileView) {
+        // Reverse-tabbing out of the first counter must skip the trigger (which
+        // precedes the bib content in the flattened tab order) and land on the
+        // previous page element, closing the bib in a single press.
+        it('should close the bib and move focus to the previous element on Shift+Tab from the first counter', async () => {
+          // `fixtureSync` rather than `fixture`: for a non-Lit root like this
+          // <div>, `fixture` waits on `nextFrame()`, and requestAnimationFrame
+          // never fires while web-test-runner has this page backgrounded
+          // behind another test file. Await the Lit element directly instead.
+          const wrapper = fixtureSync(html`
+            <div>
+              <button id="before-counter-group">Before</button>
+              <auro-counter-group isDropdown>
+                <auro-counter value="2">Counter 1</auro-counter>
+                <auro-counter value="3">Counter 2</auro-counter>
+              </auro-counter-group>
+            </div>
+          `);
+          const el = wrapper.querySelector('auro-counter-group');
+          const beforeBtn = wrapper.querySelector('#before-counter-group');
+          await elementUpdated(el);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          // Place focus on the first focusable element inside the bib.
+          const firstControl = el.counters[0].shadowRoot.querySelector('[part="counterControl"]');
+          firstControl.focus();
+          await elementUpdated(el);
+
+          await sendKeys({ down: 'Shift' });
+          await sendKeys({ press: 'Tab' });
+          await sendKeys({ up: 'Shift' });
+
+          // The handler moves focus via doubleRaf. Poll on a timer rather than
+          // awaiting requestAnimationFrame so a stalled frame surfaces as a
+          // clear waitUntil failure instead of a Mocha timeout.
+          await waitUntil(
+            () => document.activeElement === beforeBtn,
+            'focus should return to the element preceding the counter-group'
+          );
+
+          expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        // Reverse-tabbing from a later counter must not exit the bib; the handler
+        // should leave the event alone so the browser moves to the previous counter.
+        it('should not close the bib on Shift+Tab from a later counter', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <auro-counter value="2">Counter 1</auro-counter>
+              <auro-counter value="3">Counter 2</auro-counter>
+            </auro-counter-group>
+          `);
+
+          el.dropdown.show();
+          await elementUpdated(el);
+          await el.updateComplete;
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          const secondControl = el.counters[1].shadowRoot.querySelector('[part="counterControl"]');
+          secondControl.focus();
+
+          // Dispatch Shift+Tab directly on the second counter. `sendKeys` performs
+          // the native focus move before the keydown is observed in this harness,
+          // which misreports the focused counter; a synthetic keydown keeps focus
+          // on the second counter so the handler sees the true event origin.
+          const evt = new KeyboardEvent('keydown', {
+            key: 'Tab',
+            shiftKey: true,
+            bubbles: true,
+            composed: true,
+            cancelable: true
+          });
+          secondControl.dispatchEvent(evt);
+          // Timer-based wait: requestAnimationFrame does not fire while the
+          // page is backgrounded behind another test file.
+          await aTimeout(100);
+
+          // Guard against the handler over-firing: it must take the
+          // `activeIndex !== 0` early return, leaving the bib open and the event
+          // untouched so native navigation reaches the previous counter.
+          expect(el.dropdown.isPopoverVisible).to.be.true;
+          expect(evt.defaultPrevented).to.be.false;
+        });
+      }
     });
   });
 }

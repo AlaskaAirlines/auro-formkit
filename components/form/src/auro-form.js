@@ -601,7 +601,12 @@ export class AuroForm extends LitElement {
    */
   reset() {
     const previousValue = this.value;
-    this._elements.forEach((element) => element.reset());
+    this._elements.forEach((element) => {
+      // Guard against a registered element that does not implement reset() so one missing method cannot abort the entire form reset.
+      if (typeof element.reset === 'function') {
+        element.reset();
+      }
+    });
 
     this.updateComplete.then(() => {
       this.initializeState();

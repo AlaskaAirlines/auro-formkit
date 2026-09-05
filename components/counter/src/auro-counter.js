@@ -37,6 +37,13 @@ import { keyboardStrategy } from './keyboardStrategy.js';
  * @slot ariaLabel.plus - Accessible label for the increment button.
  * @slot helpText - Help text content for the counter.
  * @slot description - Descriptive content for the counter.
+ *
+ * @csspart counterControl - The container for the counter's spinbutton controls and value.
+ * @csspart controlMinus - The decrement button.
+ * @csspart controlPlus - The increment button.
+ * @csspart helpText - The help text and error message container.
+ *
+ * @event input - Notifies that the counter's value has changed.
  */
 export class AuroCounter extends LitElement {
   static get shadowRootOptions() {
@@ -148,7 +155,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       defaultSlot: {
-        type: String
+        type: String,
+        attribute: "defaultslot"
       },
 
       /**
@@ -164,7 +172,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMax: {
-        type: Boolean
+        type: Boolean,
+        attribute: "disablemax"
       },
 
       /**
@@ -172,7 +181,8 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMin: {
-        type: Boolean
+        type: Boolean,
+        attribute: "disablemin"
       },
 
       /**
@@ -202,9 +212,11 @@ export class AuroCounter extends LitElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: "ondark",
         reflect: true
       },
 
@@ -272,6 +284,41 @@ export class AuroCounter extends LitElement {
   }
 
   /**
+   * Moves focus to the spinbutton control container.
+   * The +/- buttons are internal `tabindex="-1"` controls; the container is the
+   * widget's single focusable element. `focusVisible: true` forces the container's
+   * `:focus-visible` ring to render even though the interaction was a pointer
+   * click, so focus stays visible on the counter after using its buttons.
+   * @private
+   */
+  focusControl() {
+    const control = this.shadowRoot?.querySelector('[part="counterControl"]');
+    if (control && !this.disabled) {
+      // `focusVisible` is a progressive enhancement: it is not yet in the standard
+      // FocusOptions interface (Chrome 86+, Firefox 116+, Safari 15.4+). Browsers
+      // that do not recognize it still move focus correctly — they simply do not
+      // render the `:focus-visible` ring. Do not treat a missing ring on an older
+      // engine as a regression.
+      control.focus({ focusVisible: true });
+    }
+  }
+
+  /**
+   * Handles a pointer click on a control button.
+   * A pointer click focuses the clicked button, so if the value change disables
+   * that button at an extreme the browser would drop focus to the document body.
+   * Move focus to the spinbutton container first, then change the value: focus is
+   * no longer on the button when it becomes disabled, so it is never lost and the
+   * counter (and any enclosing dropdown) stays operable (AB#1634231).
+   * @param {'increment' | 'decrement'} action - The control action to perform.
+   * @private
+   */
+  handleControlClick(action) {
+    this.focusControl();
+    this[action]();
+  }
+
+  /**
    * Initializes the value of the counter.
    * If the current value is undefined, it sets the value to the minimum value.
    * @private
@@ -308,6 +355,17 @@ export class AuroCounter extends LitElement {
    */
   validate(force = false) {
     this.validation.validate(this, force);
+  }
+
+  /**
+   * Resets the counter to its default state, clearing validity/touched state and returning
+   * the value to `min` — matching the clear-on-reset behavior of the other Auro form elements.
+   * @returns {void}
+   */
+  reset() {
+    // validation.reset() clears validity/touched and sets value to undefined; initValue() then restores the min floor.
+    this.validation.reset(this);
+    this.initValue();
   }
 
   firstUpdated() {
@@ -413,7 +471,7 @@ export class AuroCounter extends LitElement {
               .tabindex="${'-1'}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlMinus"
-              @click="${() => this.decrement()}"
+              @click="${() => this.handleControlClick('decrement')}"
               ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
@@ -427,7 +485,7 @@ export class AuroCounter extends LitElement {
               .tabindex="${'-1'}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlPlus"
-              @click="${() => this.increment()}"
+              @click="${() => this.handleControlClick('increment')}"
               ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>

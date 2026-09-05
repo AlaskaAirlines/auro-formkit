@@ -1,12 +1,13 @@
-/* eslint-disable jsdoc/require-jsdoc */
-
-import { AuroSelect } from '../src/auro-select.js';
-import '../../menu/src/registered.js';
+import { AuroCounter } from '../src/auro-counter.js';
+import { AuroCounterGroup } from '../src/auro-counter-group.js';
 
 import { resetStateExample } from '../apiExamples/reset-state.js';
 
-AuroSelect.register();
-AuroSelect.register('custom-select');
+AuroCounter.register(); // registering to `auro-counter`
+AuroCounterGroup.register(); // registering to `auro-counter-group`
+
+AuroCounter.register('custom-counter');
+AuroCounterGroup.register('custom-counter-group');
 
 export function initExamples(initCount) {
   initCount = initCount || 0;

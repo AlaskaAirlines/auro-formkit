@@ -87,7 +87,8 @@ function getOptionLabel(option) {
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
- * @event auroCombobox-valueSet - (Deprecated) Notifies that the component has a new value set.
+ * @csspart helpText - The help text and error message content container.
+ * @event auroCombobox-valueSet - Notifies that the component has a new value set. **DEPRECATED** - Use the `input` event instead.
  * @event input - Notifies that the component has a new value set.
  * @event inputValue - Notifies that the components internal HTML5 input value has changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
@@ -106,6 +107,7 @@ export class AuroCombobox extends AuroElement {
    */
   _initializeDefaults() {
     // Defaults that effect the combobox behavior and state
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.disabled = false;
     this.msgSelectionMissing = 'Please select an option.';
@@ -115,20 +117,36 @@ export class AuroCombobox extends AuroElement {
     this.persistInput = false;
     this.required = false;
     this.typedValue = undefined;
+
+    /** @type {'filter' | 'suggestion'} */
     this.behavior = "suggestion";
     this.clearBtnFocused = false;
+
+    // One-shot: set when the input's clear button is activated so the
+    // SPA-preselect guard in handleInputValueChange doesn't swallow the
+    // genuine clear (AB#1634257).
+    this._clearBtnActivated = false;
 
     // Defaults that effect the overall layout of the combobox
     this.checkmark = false;
     this.dvInputOnly = false;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
+
+    /** @type {'classic' | 'emphasized' | 'snowflake'} */
     this.layout = 'classic';
     this.matchWidth = true;
+
+    /** @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'} */
     this.shape = 'classic';
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'} */
     this.size = 'xl';
     this.triggerIcon = false;
 
     // Defaults that effect the dropdown
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
@@ -191,7 +209,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default' | 'inverse'} appearance - The visual appearance of the component.
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -212,6 +230,7 @@ export class AuroCombobox extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: 'autoplacement',
         reflect: true
       },
 
@@ -219,9 +238,11 @@ export class AuroCombobox extends AuroElement {
        * Array of available options to display in the dropdown.
        * This array contains all non-hidden options (e.g., hidden by filtering on input value).
        * @private
+       * @type {HTMLElement[]}
        */
       availableOptions: {
         state: true,
+        attribute: false,
         type: Array,
         reflect: false,
         hasChanged(newVal, oldVal) {
@@ -291,6 +312,7 @@ export class AuroCombobox extends AuroElement {
        */
       dvInputOnly: {
         type: Boolean,
+        attribute: 'dvinputonly',
         reflect: true
       },
 
@@ -324,6 +346,29 @@ export class AuroCombobox extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the combobox.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the combobox.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'xl'
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -333,6 +378,7 @@ export class AuroCombobox extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: 'matchwidth',
         reflect: true
       },
 
@@ -341,6 +387,7 @@ export class AuroCombobox extends AuroElement {
        */
       noFilter: {
         type: Boolean,
+        attribute: 'nofilter',
         reflect: true
       },
 
@@ -350,6 +397,7 @@ export class AuroCombobox extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: 'noflip',
         reflect: true
       },
 
@@ -366,6 +414,7 @@ export class AuroCombobox extends AuroElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
@@ -380,9 +429,11 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -391,7 +442,8 @@ export class AuroCombobox extends AuroElement {
        * @type {HTMLElement}
        */
       optionSelected: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
@@ -401,6 +453,7 @@ export class AuroCombobox extends AuroElement {
        */
       persistInput: {
         type: Boolean,
+        attribute: 'persistinput',
         reflect: true
       },
 
@@ -434,28 +487,32 @@ export class AuroCombobox extends AuroElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing` due to the user not choosing a menu option when behavior = "filter".
        */
       setCustomValidityValueMissingFilter: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissingfilter'
       },
 
       /**
@@ -475,11 +532,13 @@ export class AuroCombobox extends AuroElement {
        */
       triggerIcon: {
         type: Boolean,
+        attribute: 'triggericon',
         reflect: true
       },
 
       /**
        * Applies the defined value as the type attribute on `auro-input`.
+       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
        */
       type: {
         type: String,
@@ -491,6 +550,7 @@ export class AuroCombobox extends AuroElement {
        */
       typedValue: {
         type: String,
+        attribute: 'typedvalue',
         reflect: true
       },
 
@@ -516,6 +576,7 @@ export class AuroCombobox extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: 'largefullscreenheadline',
         reflect: true
       },
       /* eslint-enable jsdoc/require-description-complete-sentence */
@@ -530,12 +591,14 @@ export class AuroCombobox extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
       /**
        * Specifies the currently active option.
        * @private
+       * @type {HTMLElement}
        */
       optionActive: {
         type: Object,
@@ -973,7 +1036,7 @@ export class AuroCombobox extends AuroElement {
           // focus, which fires focusout on the child auro-input before the
           // bib input receives focus. That focusout triggers the input's own
           // validate(), which dispatches a composed auroFormElement-validated
-          // event. Because composed events are retargetted at each shadow DOM
+          // event. Because composed events are re-targeted at each shadow DOM
           // boundary, the event appears to originate from the combobox itself
           // and its listener unconditionally sets this.validity — causing
           // premature validation. This flag suppresses all validation paths
@@ -1020,6 +1083,13 @@ export class AuroCombobox extends AuroElement {
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
+
+    // Mirror the trigger's clear-button tracking onto the fullscreen bib input
+    // so clearing there also fully resets the combobox (AB#1634257). See
+    // trackClearBtnActivation for why this must run in the capture phase.
+    if (this.inputInBib && this.inputInBib !== this.input) {
+      this.trackClearBtnActivation(this.inputInBib);
+    }
 
     // Pass label text to the dropdown bib for accessible dialog naming
     const labelElement = this.querySelector('[slot="label"]');
@@ -1236,7 +1306,7 @@ export class AuroCombobox extends AuroElement {
           this.optionSelected = selected;
         }
 
-        // Skip writeback when this event is the echo of our own setMenuValue —
+        // Skip write-back when this event is the echo of our own setMenuValue —
         // otherwise it cascades against handleInputValueChange in suggestion mode.
         if (this._pendingMenuValueSync) {
           this._pendingMenuValueSync = false;
@@ -1406,6 +1476,52 @@ export class AuroCombobox extends AuroElement {
         this.clearBtnFocused = false;
       }
     });
+
+    this.trackClearBtnActivation(this.input);
+  }
+
+  /**
+   * Flags genuine clear-button activations on an auro-input so the SPA-preselect
+   * guard in handleInputValueChange doesn't swallow them.
+   *
+   * The auro-input clear button fires an `isProgrammatic` input event (via
+   * notifyValueChanged) that is indistinguishable in shape from the
+   * SPA-preselect echo that guard bails on (isProgrammatic + set value + empty
+   * input). Without this one-shot flag, clicking clear would leave
+   * this.value/optionSelected stale (AB#1634257).
+   *
+   * Delegated on the shadow root so it works regardless of when .clearBtn
+   * renders (it only exists after a value is set), and covers both real clicks
+   * and programmatic clearBtn.click() (which no focusin precedes). Registered in
+   * the CAPTURE phase so the flag is set BEFORE the button's own @click
+   * (handleClickClear) fires its synchronous input event — which is when
+   * handleInputValueChange reads the flag.
+   * @private
+   * @param {Element} inputEl - The auro-input whose clear button to track.
+   * @returns {void}
+   */
+  trackClearBtnActivation(inputEl) {
+    if (!inputEl || !inputEl.shadowRoot) {
+      return;
+    }
+    inputEl.shadowRoot.addEventListener('click', (event) => {
+      if (event.target.closest('.clearBtn')) {
+        this._clearBtnActivated = true;
+
+        // Bound the flag's lifetime to this synchronous clear -> input window.
+        // auro-input's handleClickClear fires its input event synchronously
+        // (before any macrotask runs), so handleInputValueChange consumes the
+        // flag first and this reset is a harmless no-op. It only does real work
+        // if that input event never arrives (e.g. auro-input throws mid-clear),
+        // guaranteeing the flag can't survive to be misread as a genuine clear
+        // by a later unrelated event such as an SPA-preselect echo (AB#1634257).
+        // Scheduled via _scheduleTimer so disconnectedCallback cancels it if the
+        // component tears down inside that window.
+        this._scheduleTimer(() => {
+          this._clearBtnActivated = false;
+        }, 0);
+      }
+    }, true);
   }
 
   /**
@@ -1447,6 +1563,17 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
+    // Consume the one-shot clear-button flag on EVERY entry, before any branch
+    // below can early-return. trackClearBtnActivation sets it in the capture
+    // phase right before auro-input's clear button fires its synchronous input
+    // event; reading and immediately clearing it here guarantees the flag never
+    // survives a handleInputValueChange call to leak into a later event (e.g.
+    // the bib branch bailing at _syncingDisplayValue, or an SPA-preselect echo)
+    // where it would defeat the guard below. Held in a local so that guard can
+    // still tell a genuine clear from the init-render echo (AB#1634257).
+    const clearBtnActivated = this._clearBtnActivated;
+    this._clearBtnActivated = false;
+
     // When the event comes from the fullscreen bib input, sync the value to
     // the trigger input. Setting trigger.value triggers Lit's updated()
     // (async, microtask) which fires notifyValueChanged() → another 'input'
@@ -1494,7 +1621,12 @@ export class AuroCombobox extends AuroElement {
     // to the exact shape of that echo (isProgrammatic + non-empty combobox
     // value + empty input.value) so it doesn't affect the swap/typed paths
     // where value/input already track each other through the sync helpers.
-    if (event && event.isProgrammatic && this.value && !this.input.value) {
+    // The clear button's echo has the same shape (isProgrammatic + set value +
+    // empty input) but is a genuine user clear that MUST reset this.value and
+    // optionSelected below. clearBtnActivated (consumed at the top of this
+    // method) is true only for that genuine clear, so only the real
+    // SPA-preselect echo bails (AB#1634257).
+    if (event && event.isProgrammatic && this.value && !this.input.value && !clearBtnActivated) {
       return;
     }
 
@@ -1598,7 +1730,7 @@ export class AuroCombobox extends AuroElement {
       // Ignore dispatches from the bib (fullscreen) input. It's re-validated
       // inside this.validate()'s auroInputElements loop with its own
       // (often undefined) validity, and the event is composed/bubbles up to
-      // this listener with `target` retargeted to the combobox. Letting it
+      // this listener with `target` re-targeted to the combobox. Letting it
       // through would overwrite the trigger input's correct validity with
       // the bib input's stale one (e.g. wiping `tooShort` during typing).
       if (this.inputInBib && evt.composedPath()[0] === this.inputInBib && this.inputInBib !== this.input) {
@@ -1639,6 +1771,14 @@ export class AuroCombobox extends AuroElement {
     // retry would otherwise keep rescheduling itself indefinitely.
     this._pendingTimers.forEach((id) => clearTimeout(id));
     this._pendingTimers.clear();
+
+    // Cancelling the timers above drops the macrotask that would have reset
+    // _clearBtnActivated, so reset it here too. Otherwise a disconnect inside
+    // the clear-click -> macrotask window strands the flag `true`; instance
+    // state survives reconnect, and the first matching input event (including
+    // an SPA-preselect echo) would then bypass the guard in
+    // handleInputValueChange and silently clear value/optionSelected (AB#1634257).
+    this._clearBtnActivated = false;
   }
 
   firstUpdated() {
@@ -1737,6 +1877,14 @@ export class AuroCombobox extends AuroElement {
       }
       if (this.menu.value || this.menu.optionSelected) {
         this.menu.reset();
+      } else {
+        // The menu's selection properties are already cleared, but option
+        // elements can still carry a stale `selected` attribute (e.g. the menu
+        // options were rebuilt after the value was set, orphaning the DOM from
+        // the now-null optionSelected). reset() is skipped above in that case,
+        // so re-sync the option DOM directly to guarantee no option renders as
+        // selected once the field is cleared (AB#1634259).
+        this.menu.clearSelection();
       }
     } finally {
       this._clearing = false;

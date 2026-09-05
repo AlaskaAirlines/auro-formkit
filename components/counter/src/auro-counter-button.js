@@ -11,6 +11,10 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 
 import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+/**
+ * The `auro-counter-button` element provides the increment and decrement control button used within an `auro-counter`.
+ * @customElement auro-counter-button
+ */
 export class AuroCounterButton extends AuroButton {
 
   constructor() {
