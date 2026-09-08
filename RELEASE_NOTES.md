@@ -5,6 +5,131 @@ The latest release is expanded by default. Select any release below to expand it
 Complete changelog history may be viewed [here](https://github.com/AlaskaAirlines/auro-formkit/releases).
 
 <auro-accordion expanded>
+<span slot="trigger">FormKit v6.2.0</span>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.02.00.md) -->
+<!-- The below content is automatically added from ./docs/releases/06.02.00.md -->
+
+# Release Notes
+
+This document outlines all changes since the 6.1.0 release.
+
+Version 6.2.0 is a **minor release** focused on the accessibility of the radio and checkbox groups, dropdown focus behavior in `auro-counter-group`, clear-button correctness in `auro-combobox`, and editor IntelliSense accuracy across the whole kit. It also teaches `auro-counter` how to reset. No breaking API changes.
+
+## Summary
+
+`auro-radio-group` and `auro-checkbox-group` now expose their invalid state where assistive technology actually looks for it, and keep that state in sync with their children as options are slotted in and out. `auro-counter-group` gained a working `reset()` — its absence had been silently aborting `auro-form.reset()` for any form containing a counter — along with fixes for the dropdown closing on a +/- click and for Shift+Tab escaping the bib. `auro-combobox`'s clear button now clears the reported value, not just the visible text. The aggregate Custom Elements Manifest was corrected end to end so editors show accurate autocomplete, valid value lists, and deprecation strikethrough for `onDark`.
+
+- **Radio and checkbox groups announce their invalid state correctly.** `aria-invalid` moved from the host element onto the shadow-DOM `<fieldset>` that carries the group's semantics, is now driven by `validity` rather than the `error` attribute alone (so a required-and-empty group is finally announced as invalid), and the group's help/error text is associated via `aria-describedby`.
+- **Group state no longer desyncs from its children.** A `slotchange` on an already-invalid group used to strip `error` from every radio while leaving `aria-invalid="true"` behind, and a newly-slotted option received neither attribute. Both attributes are now written together in one place.
+- **`auro-form.reset()` works on forms containing a counter.** `auro-counter` and `auro-counter-group` implement `reset()`, and the form's reset loop now skips any element that lacks the method instead of aborting the whole chain.
+- **`auro-counter-group`'s dropdown behaves under keyboard and mouse.** Clicking a +/- button that disables itself at min/max no longer closes the panel or drops the focus ring, and Shift+Tab from the first counter exits the group backward instead of looping onto the trigger.
+- **`auro-combobox`'s clear button fully clears.** `value` and `optionSelected` reset alongside the visible input, and the open menu no longer shows the previous choice with selected styling.
+- **Editor tooling is accurate.** Enumerated attributes are typed as closed string-literal unions, camelCase properties advertise the attribute name Lit actually binds, internal state no longer appears as public attributes, and 26 `onDark` entries are flagged deprecated in favor of `appearance`.
+- **`auro-checkbox-group` exposes `part="checkbox-group"`** on its fieldset, mirroring `auro-radio-group`.
+
+All changes are backward compatible. No public attributes, properties, events, or slots were removed. Two behavior changes are worth reading before updating — see the notes on the `aria-invalid` relocation and on per-child `error` clearing in Bug Fixes below — but neither requires migration work for consumers following the documented styling guidance.
+
+## Features
+
+### AURO-COUNTER
+
+- **`reset()` on `auro-counter` and `auro-counter-group`** — [AB#1593509](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1593509)
+
+    `auro-counter-group` is a registered form element, but neither it nor its child `auro-counter` implemented `reset()`. `AuroForm.reset()` called `element.reset()` unguarded on every registered element, so reaching a counter threw synchronously inside the loop and aborted the rest of the reset — the counter *and every field after it* stayed untouched, with no visible error. Any form combining a counter with other fields was effectively unable to reset. `auro-counter.reset()` now clears validity/touched state via `validation.reset()` and then re-applies the `min` floor via `initValue()` (order matters — `validation.reset()` sets `value` to `undefined`). `auro-counter-group.reset()` delegates to each child and clears its own validity; because each child reset fires an `input` event the group already listens to, the aggregate `value`/`total` recompute on their own. As a safeguard, `auro-form`'s reset loop now guards each call with `typeof element.reset === 'function'`, so one missing method can never again cascade into a full-form failure.
+
+    Note that the counter clears to `min` rather than restoring its authored preset value. This is a deliberate deviation from the ticket's literal wording, chosen so the counter matches the clear-on-reset convention of every other Auro form element (input clears to empty, checkbox/radio uncheck, select/datepicker clear); `min` is a counter's blank state, since it cannot be empty. Where a preset equals `min`, the two behaviors are indistinguishable. See the decision record at [`docs/post-mortem/1593509.md`](../post-mortem/1593509.md).
+
+### AURO-CHECKBOX
+
+- **The group fieldset is exposed as `part="checkbox-group"`** — [AB#1636704](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1636704)
+
+    `auro-checkbox-group`'s shadow-DOM `<fieldset>` now carries `part="checkbox-group"`, declared as an `@csspart` and mirroring `auro-radio-group`'s existing `part="radio-group"`. This closes the one open gap in the mitigation for moving `aria-invalid` off the host element: that relocation was assessed as non-breaking partly because the accessibility docs tell consumers to target the internal fieldset, but this component exposed no part for its fieldset, so the instruction was not actionable from a consumer stylesheet at all. The part is documented in both the generated `docs/api.md` CSS Shadow Parts table and the hand-authored `css-parts.md` partial behind the Customize page. Adding a part is purely additive.
+
+## Bug Fixes
+
+_Note: Bug fixes do not require migration steps. Updating to this version is all that is necessary to implement these changes._
+
+### AURO-RADIO-GROUP, AURO-CHECKBOX-GROUP
+
+- **`aria-invalid` placement and error association corrected** — [AB#1344690](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1344690), [AB#1636704](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1636704)
+
+    `aria-invalid` sat on the group's host element rather than on the shadow-DOM `<fieldset>` that actually carries `role="radiogroup"` / the group's semantics, and it was triggered by the `error` attribute alone — so a required-and-empty group (`valueMissing`) never received `aria-invalid` at all unless a consumer also set an explicit error string. Both groups now place `aria-invalid` on the fieldset and drive it from `validity`. The group's help/error text is associated through a shared id plus `aria-describedby`, so screen readers can discover the message on demand instead of relying solely on a one-time live-region announcement. Individual `auro-radio` and `auro-checkbox` children also receive `aria-invalid` in sync with their existing `error` attribute, because some AT/browser combinations announce a container's invalid state only on initial entry and not on each arrow-key move between children. A stray extra quote in the checkbox error-branch help-text template was fixed while editing the same line.
+
+    **Behavior note:** consumers with styling or test selectors keyed on `auro-radio-group[aria-invalid]` / `auro-checkbox-group[aria-invalid]` at the host level will no longer match. Target the exposed `radio-group` / `checkbox-group` part instead, per the accessibility and customize docs.
+
+- **Child `error` and `aria-invalid` now stay in sync across slot changes** — [AB#1344690](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1344690), [AB#1636704](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1636704)
+
+    `handleItems()` re-mirrors group state onto the children on every `slotchange` and on `connectedCallback`, but in `auro-radio-group` it handled only `error` — not the per-child `aria-invalid` added alongside it. Because the clearing path ran only when `validity` changed, a slot change on an already-invalid group stripped `error` from every radio while leaving `aria-invalid="true"` behind: each radio rendered as valid while still announcing "invalid data" to assistive technology. A radio slotted into an already-invalid group received neither attribute. Both cases are reachable from ordinary dynamically-rendered option lists and from detach/re-attach cycles. `auro-checkbox-group` had the milder form of the same defect — its `handleItems()` never touched `error`, so a newly-slotted checkbox was simply missing both attributes rather than left in a contradictory state. In both components a single private sync method (`syncItemValidity()` / `syncCheckboxValidity()`) now writes both attributes together, called from the `updated()` validity branch and from `handleItems()`, so the two can no longer disagree regardless of which path runs.
+
+    **Behavior note:** because that method clears `error` when the group is valid, `auro-checkbox-group`'s `handleItems()` now removes `error` from every child on each slot change — so an `error` set directly on an individual `auro-checkbox` is cleared by a subsequent slot change. Assessed as non-breaking on narrow grounds: the pre-change `updated()` branch already cleared `error` across all children on every validity change, so the group was already authoritative over per-child error state.
+
+- **Group help-text ids are generated with `generateUUID`** — [#1608](https://github.com/AlaskaAirlines/auro-formkit/pull/1608)
+
+    `uniqueId` was `Date.now().toString(36)`, so two groups constructed in the same millisecond shared an id — and that id backs the group help-text id and the fieldset's `aria-describedby`. Shadow-DOM scoping meant no user-visible defect was reachable, but both groups now use `generateUUID` (crypto-backed, with a leading-digit guard for CSS selector validity), removing the collision outright. It ships in `auro-library` 5.14.1, already pinned, so no dependency change was needed.
+
+### AURO-COUNTER
+
+- **The dropdown stays open and keeps focus when a +/- button disables itself** — [AB#1634231](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1634231)
+
+    In a counter group rendered as a dropdown, clicking a +/- button that reached its min/max disabled that button, which blurred it with a null `relatedTarget` and caused the group's `focusout` handler to close the panel; the same disable also dropped the visible focus indicator to the document body. `auro-counter` now routes +/- clicks through `handleControlClick(action)`, which focuses the `[part="counterControl"]` container with `focus({ focusVisible: true })` *before* incrementing or decrementing, so focus is never on a button at the moment it disables. Follow-up work in [#1600](https://github.com/AlaskaAirlines/auro-formkit/pull/1600) replaced the original `pointerdown`-tracking workaround in the group with a `:focus-within` rule on the `counterControl` part, which retains the focus outline and open state while focus lives anywhere inside the control. That removed the `pointerdownInsideGroup` flag and its focusout branch entirely, collapsing focus-loss handling back to a single "focus left the group" path — and with it two latent bugs the flag had introduced: a stale `true` surviving a reconnect because the document listener was registered in `firstUpdated()` and never re-added, and a stale `true` surviving into a later non-pointer focus loss because the flag was read but never cleared. See [`docs/post-mortem/1634231.md`](../post-mortem/1634231.md).
+
+- **Shift+Tab from the first counter exits the dropdown backward** — [AB#1606347](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1606347)
+
+    The trigger precedes the bib content in the flattened tab order, so a native Shift+Tab off the first counter landed back on the trigger and left the bib open — a loop with no keyboard-only way out backward. The counter-group keyboard strategy now handles `Tab`: when the bib is expanded, non-modal, and focus is on the first focusable in the bib (determined from `composedPath()`, which reports the real origin through every shadow boundary, unlike `document.activeElement`), it suppresses the native behavior, hides the bib, and moves focus to the tab stop preceding the group. Shift+Tab from any later counter still moves natively to the previous counter, forward Tab is unchanged, and fullscreen continues to rely on the dialog's native focus trapping.
+
+### AURO-COMBOBOX
+
+- **The clear button resets `value` and `optionSelected`** — [AB#1634257](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1634257)
+
+    Clearing a combobox with the X button emptied the visible input but left the reported `value` and `optionSelected` pointing at the prior selection, so form submission, validation, and dependent fields kept behaving as though the old option were still selected. The cause: `auro-input`'s clear button fires an `isProgrammatic` input event whose shape (`isProgrammatic` + set value + empty input) is identical to the SPA-preselect echo that `handleInputValueChange` deliberately ignores, so the guard was swallowing genuine clears. A one-shot `_clearBtnActivated` flag — set by a capture-phase click listener on the trigger input's shadow root, and mirrored onto the fullscreen bib input — now distinguishes a real user clear from an init echo. The consume is hoisted to the top of `handleInputValueChange` so no early-returning branch can skip it, and the capture listener schedules a macrotask reset as a fallback when no input event follows.
+
+- **Stale menu selection styling is cleared when the value is cleared** — [AB#1634259](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1634259)
+
+    Clearing a combobox value left the open menu showing the previous choice with selected styling whenever the option DOM had been orphaned from the menu's selection state (for example, options rebuilt after a value was set). `auro-menu`'s `clearSelection()` now eagerly syncs the option DOM via `updateItemsState()`, stripping stale `selected`/`aria-selected` attributes instead of relying on a reactive re-render that never fires when the selection properties are already `null`. It intentionally leaves `active`/`optionActive` untouched so a highlighted option stays keyboard-re-selectable after emptying the value ([AB#1606433](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1606433)). `auro-combobox`'s `clear()` calls `clearSelection()` in the orphan case.
+
+- **The clear-button flag is reset on disconnect** — [#1603](https://github.com/AlaskaAirlines/auro-formkit/pull/1603)
+
+    `disconnectedCallback` cancelled the macrotask that resets `_clearBtnActivated` but left the flag itself set. If the element disconnected inside the clear-click → macrotask window (the abandoned-activation path — e.g. `auro-input` throws mid-clear so no input event consumes the flag), the flag was stranded `true`. Web-component instance state survives disconnect/reconnect, so on reconnect the first matching input event — including an SPA-preselect echo — bypassed the guard in `handleInputValueChange` and silently cleared `value`/`optionSelected`. The flag is now reset in `disconnectedCallback` alongside the timer cancellation.
+
+### ALL COMPONENTS
+
+- **Custom Elements Manifest types, attribute names, and deprecation flags corrected** — [AB#1633053](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1633053)
+
+    The aggregate CEM feeds VS Code custom-data and the JSX/Svelte typings the Auro CLI generates from `custom-elements.json`, and it had drifted enough that autocomplete was wrong and the generated `.d.ts` did not compile. All changes are behavior-preserving JSDoc and property-metadata edits, plus regenerated `docs/api.md` files. Enumerated attributes (`shape`, `size`, `layout`, `appearance`, `autocapitalize`, `autocorrect`, `spellcheck`, `inputmode`) are now typed as closed string-literal unions rooted per component so inherited types resolve; constructor-body default assignments were moved into helper methods with inline `@type` annotations so the analyzer stops inferring bare `string`; camelCase Lit properties declare the lowercase `attribute:` name Lit actually binds (`onDark` → `ondark`, `fullscreenBreakpoint`, `autoPlacement`); missing descriptions, `@csspart` declarations, and a malformed `type.text` were filled in. Genuinely-private internal state (`hasAllValues`, `hasFocus`, `hasValue`, `hasTriggerContent`, `isPopoverVisible`) and object/function-typed properties that can only be assigned in JS (`onSlotChange`, `bibTemplate`, `optionSelected`) are marked `attribute: false`, so the manifest no longer advertises attributes that could never carry their value. `onDark` now carries `@deprecated` everywhere it is superseded by `appearance` — 26 entries, up from 0 — so editors strike it through; it is intentionally left intact on `AuroElement`, `auro-menu`, and `auro-menuoption`, which have no `appearance` replacement. The shared `deprecatedProseToFieldPlugin` from `auro-library` was wired into the analyzer config to promote deprecation prose on events and slots into the manifest `deprecated` field, and the deprecated `change`, `auroCheckbox-input`, and `auroCombobox-valueSet` events were given explicit migration guidance the plugin extracts. See [`docs/post-mortem/1633053.md`](../post-mortem/1633053.md).
+
+    Review follow-up in [#1595](https://github.com/AlaskaAirlines/auro-formkit/pull/1595) added `@type` union annotations to the enumerated field defaults in combobox, counter-group, and datepicker — a real fix for the latter two, whose plain string literals had caused the analyzer to override the property getter's `@type` and drift from the unions already shown in `docs/api.md` — and converted the two checkbox `@fires` tags to `@event` for consistency with the sibling declarations.
+
+## Improvements
+
+_Note: Improvements do not require migration steps. Updating to this version is all that is necessary to implement these changes._
+
+### AURO-RADIO-GROUP, AURO-CHECKBOX-GROUP
+
+- **Group invalid state consolidated behind a single `isInvalid` accessor** — [#1608](https://github.com/AlaskaAirlines/auro-formkit/pull/1608)
+
+    Both group components defined "invalid" in three places each — the fieldset's `aria-invalid` binding, the help-text render branch, and the child-sync method — and the two siblings had drifted to different predicates, radio OR-ing in `Boolean(this.error)` while checkbox tested `validity` alone. Each component now exposes a private `get isInvalid()` as the single definition, consumed by `render()` and by the sync method. Radio's `error` half is dropped as redundant: `updated()` calls `validate(true)` on any error change and form-validation resolves it to `validity = 'customError'` before anything can observe the difference. No behavior change.
+
+## Build & Packaging
+
+- **Dependency bumps** — `@alaskaairux/icons` 5.23.0 → 5.27.0 and `@aurodesignsystem/auro-library` 5.14.0 → 5.14.1 in devDependencies. The auro-library bump supplies both `generateUUID` and the shared `deprecatedProseToFieldPlugin` used above.
+- **CI** — `ADO_TOKEN` is now forwarded to the release-candidate reusable workflow, and `CODEOWNERS` points at `auro-engineers`.
+
+## Test Coverage
+
+- **radio / checkbox:** WTR unit tests for fieldset and per-child `aria-invalid` toggling (including the previously untested `valueMissing` case) and for the `aria-describedby` association; regression tests for an option slotted into an already-invalid group, which fail against the pre-fix source; axe assertions pinning the ARIA outcome for the group and per-child placement; and an assertion that the new `checkbox-group` part resolves to the fieldset (coverage 99.38% → 99.39%). Playwright accessibility-tree tests cover the same behavior in the React and Svelte framework apps, closing two prior gaps — nothing had moved focus between options while the group was invalid, and the paired valid-group test asserted the attribute was absent on a fresh page where it had never been set.
+- **counter:** real `sendMouse` regression tests for the panel-stays-open and focus-visible behaviors, a remount test asserting the pointerdown tracking survives reconnect, a two-focusout test pinning the flag lifetime, Shift+Tab tests for both the first counter (exits) and a later counter (stays), and reset tests at the counter and group level. Full suite passes at 100% coverage.
+- **combobox / menu:** desktop and mobile regression tests for the clear-button reset and the one-shot flag's lifetime, a disconnect-in-window race test (activate the flag, disconnect before the macrotask fires, reconnect, fire a preselect echo, assert `value`/`optionSelected` survive), and stale-selection-styling tests at both the menu and combobox levels.
+- **form:** a regression test reproducing the ticket steps for `reset()` on a form containing a *named* `auro-counter-group` — the form only tracks elements carrying a `formkit` attribute, so an unnamed group never reproduces the bug.
+- **test configuration:** `components/counter` now runs WTR with `--concurrency=1`, and the Shift+Tab fixture was switched from `fixture` to `fixtureSync` plus an explicit `elementUpdated` — `fixture` waits on `nextFrame()` for a non-Lit root, and `requestAnimationFrame` never fires while web-test-runner has the page backgrounded behind another test file. The focus assertion now polls with `waitUntil` so a stalled frame surfaces as a clear failure rather than a Mocha timeout (#2513).
+
+## Documentation
+
+- Every component's `MANUAL_TESTING.md` was restructured onto a single **Smoke Test / Depth** shape, with per-component `###` subsections where a doc covers multiple components, Depth steps reordered to minimize tester context-switches (desktop mouse → keyboard → visual/theming → touch → screen reader last), and purely programmatic checks already covered by `.test.js` removed (net ~2,200 lines deleted) — [AB#1639416](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1639416). Follow-up work from review of [#1610](https://github.com/AlaskaAirlines/auro-formkit/pull/1610) added explicit Depth checks for `shape`/`size`/`layout` on every component that declares them (enumerating the real supported values read from the property definitions), a focus-indicator assertion to every Smoke section, restored `prefers-reduced-motion` coverage where a component genuinely branches on the setting, and Container Composition sections for select and combobox. The WCAG color-contrast checklist items were removed throughout — contrast is a property of the design tokens rather than of any individual component, so per-component re-verification belongs upstream in the token/theme review; focus-indicator visibility, inverse/onDark rendering, and "error is distinguishable by more than color alone" are all retained. No component source changed.
+- `reset()` documentation was standardized across form components — [AB#1593509](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1593509). Each of combobox, datepicker, input, and select now shows an inline live example plus a "See code" accordion directly under its `reset()` entry on the getting-started/Functions section, matching where the counter's new example lives. Input's example moved off the customize page; select gained new `apiExamples/reset-state.*` files. Documentation and demo changes only — no source or runtime behavior of those four components was touched.
+- Added post-mortems under [`docs/post-mortem/`](../post-mortem/): [1344690](../post-mortem/1344690.md), [1593509](../post-mortem/1593509.md), [1633053](../post-mortem/1633053.md), [1634231](../post-mortem/1634231.md), and [1636704](../post-mortem/1636704.md).
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-accordion>
 <span slot="trigger">FormKit v6.1.0</span>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.01.00.md) -->
 <!-- The below content is automatically added from ./docs/releases/06.01.00.md -->
