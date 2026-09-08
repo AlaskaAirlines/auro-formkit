@@ -32,6 +32,7 @@ A fast, real-browser end-to-end sanity pass. Run this first on every build.
 | S4 | Pick dates | Select an outbound date and a return date | Both date fields populate as a valid range |
 | S5 | Valid search | With all required fields filled, click **Search Flights** | Emits the `search` event / navigates to results |
 | S6 | Required-field validation | Clear origin (or another required field), click **Search Flights** | Error header appears listing the missing-field error; no navigation occurs |
+| S7 | Focus indicator | Tab from the first field through to **Search Flights** | A clearly visible focus indicator appears at every stop — fields, trip-type controls, swap, counters, and buttons |
 
 ---
 

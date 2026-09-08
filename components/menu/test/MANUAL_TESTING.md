@@ -24,7 +24,9 @@ Run these first for a quick confidence check that the component works in a real 
 [ ] Verify the active (highlighted) option style is visually distinct from the resting and selected states
 [ ] Verify the focus / active indicator is clearly visible when navigating options with the keyboard
 [ ] Verify the `onDark` / inverse appearance renders correctly against a dark background (options, checkmark, active highlight, dividers)
-[ ] Verify `size` (e.g. `sm` / `md` / `lg`) and `shape` (e.g. `box` / `round`) render at visibly correct dimensions, and that nested child menus / options inherit them visually
+[ ] Render each `shape` (`box`, `pill`, `snowflake`) — verify option corner radii and edge treatment render correctly, and that nested child menus / options inherit the shape visually
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl` — default `sm`) — verify option height, label text, and checkmark scale proportionally, and that nested child menus / options inherit the size visually
+[ ] Set a named `layout` on the menu (free-form string; normally set for you by the host `auro-select` / `auro-combobox`) — verify the menu renders consistently with the host trigger's layout instead of reverting to the default treatment
 [ ] Verify `<hr>` dividers render as visible separators between options
 [ ] Verify `matchWord` highlighting renders the matched substring visibly bolder (`<strong>`) without disturbing surrounding text or icons
 [ ] Slot an icon alongside option text — verify the icon and text align and render together correctly

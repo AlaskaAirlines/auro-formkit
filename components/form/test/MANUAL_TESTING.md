@@ -15,7 +15,7 @@ changed in the formkit v6 migration — prioritize them when regression-testing 
 [ ] Fill all required fields validly and click submit — verify the submit fires and the happy path succeeds
 [ ] Leave a required field empty and click submit — verify submission is blocked and errors are shown on the invalid field(s)
 [ ] Edit a few fields, then click reset — verify all fields visibly return to their initial state
-[ ] Tab from the first field through to the submit button and press Enter — verify the form is reachable by keyboard and submits
+[ ] Tab from the first field through to the submit button — verify a clearly visible focus indicator appears at every stop, then press Enter and verify the form submits
 
 ## Depth
 
