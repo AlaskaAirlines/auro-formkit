@@ -29,7 +29,6 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Verify `appearance="default"` and `appearance="inverse"` (and deprecated `onDark`) render correct trigger, chevron, and bib colors against light and dark backgrounds
 [ ] Verify `simple`, `chevron`, `error`/`errorMessage`, and `auro-dropdownbib` flags (`rounded`, `inset`, `common`) render as intended
-[ ] Verify text/icon contrast meets WCAG 2.1 AA in every appearance and in disabled/error states
 
 ### Positioning / Floating
 

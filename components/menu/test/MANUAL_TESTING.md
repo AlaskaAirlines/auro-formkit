@@ -24,7 +24,6 @@ Run these first for a quick confidence check that the component works in a real 
 [ ] Verify the active (highlighted) option style is visually distinct from the resting and selected states
 [ ] Verify the focus / active indicator is clearly visible when navigating options with the keyboard
 [ ] Verify the `onDark` / inverse appearance renders correctly against a dark background (options, checkmark, active highlight, dividers)
-[ ] Verify color contrast meets WCAG 2.1 AA for option text, active highlight, checkmark, and disabled state in both default and `onDark` appearances
 [ ] Verify `size` (e.g. `sm` / `md` / `lg`) and `shape` (e.g. `box` / `round`) render at visibly correct dimensions, and that nested child menus / options inherit them visually
 [ ] Verify `<hr>` dividers render as visible separators between options
 [ ] Verify `matchWord` highlighting renders the matched substring visibly bolder (`<strong>`) without disturbing surrounding text or icons

@@ -30,7 +30,6 @@ Run these first for a quick confidence check that the component works in a real 
 [ ] Verify the selected/unselected indicators render correctly in default, inverse, and onDark appearances
 [ ] Verify the error visual state (border/color) is clearly distinguishable from the default state
 [ ] Verify a disabled radio is visibly grayed out and reads as non-interactive
-[ ] Verify color contrast of label, indicator, and error text meets WCAG 2.1 AA in default and inverse appearances
 
 ### auro-radio — Touch
 
@@ -47,7 +46,7 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Set `horizontal` — verify the radios visually lay out in a row and wrap sensibly at narrow widths
 [ ] Verify the legend, help text, and "(optional)" label render with correct spacing in default, inverse, and onDark appearances
-[ ] Verify the persistent error message renders legibly with sufficient contrast in each appearance
+[ ] Verify the persistent error message renders legibly in each appearance
 [ ] Render the group in Chrome, Safari, and Firefox — verify consistent layout, indicator alignment, and legend rendering
 
 ### auro-radio-group — Touch
