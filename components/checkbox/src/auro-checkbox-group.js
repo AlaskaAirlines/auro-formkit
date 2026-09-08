@@ -13,7 +13,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
-import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
+import { generateUUID } from '@aurodesignsystem/auro-library/scripts/runtime/generateUUID';
 
 // Import the processed CSS file into the scope of the component
 import styleCss from "./styles/auro-checkbox-group-css.js";
@@ -99,7 +99,7 @@ export class AuroCheckboxGroup extends LitElement {
     /**
      * @private
      */
-    this.uniqueId = new UniqueId().create();
+    this.uniqueId = generateUUID();
   }
 
   static get styles() {

@@ -21,7 +21,7 @@ import AuroFormValidation from '@aurodesignsystem/form-validation';
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
-import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
+import { generateUUID } from '@aurodesignsystem/auro-library/scripts/runtime/generateUUID';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
@@ -94,7 +94,7 @@ export class AuroRadioGroup extends LitElement {
     /**
      * @private
      */
-    this.uniqueId = new UniqueId().create();
+    this.uniqueId = generateUUID();
   }
 
   static get styles() {
