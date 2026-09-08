@@ -66,6 +66,11 @@ export const InDialogContainerQuery: Story = {
 </div>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const dialog = canvasElement.querySelector('auro-dialog') as any;
+    await dialog.updateComplete;
+    // wait a bit for the dialog to finish its open transition before showing the bib
+    await new Promise((r) => setTimeout(r, 500));
+
     const el = canvasElement.querySelector('auro-select') as any;
     await el.updateComplete;
     el.showBib();
@@ -99,6 +104,11 @@ export const InDrawerContainerQuery: Story = {
 </div>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const drawer = canvasElement.querySelector('auro-drawer') as any;
+    await drawer.updateComplete;
+    // wait a bit for the drawer to finish its open transition before showing the bib
+    await new Promise((r) => setTimeout(r, 500));
+
     const el = canvasElement.querySelector('auro-select') as any;
     await el.updateComplete;
     el.showBib();
