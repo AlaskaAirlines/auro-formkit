@@ -31,6 +31,9 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Compare `appearance="default"` and `appearance="inverse"` on their intended light/dark backgrounds — verify text, label, icons, and borders are legible in each
 [ ] Verify the focus indicator is clearly visible in both appearances
+[ ] Render each `layout` (`classic`, `emphasized`, `emphasized-left`, `emphasized-right`, `snowflake`, `snowflake-left`, `snowflake-right`) — verify label placement and animation, the accent treatment, and the left/right variants each render as designed
+[ ] Render each `shape` (`box`, `classic`, `pill`, `pill-left`, `pill-right`, `rounded`, `snowflake`) — verify corner radii render correctly and the pill left/right indents apply to the correct side
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl` — default `lg`) — verify the field height, label, and icons scale proportionally without clipping or overlap
 [ ] Verify the error state is visually distinguishable by more than color alone (icon/text), not color-only
 [ ] Render the same input across Chrome, Safari, and Firefox — verify label animation, masking, and icon rendering are visually consistent
 

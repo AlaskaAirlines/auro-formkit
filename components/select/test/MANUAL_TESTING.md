@@ -21,11 +21,13 @@ A quick real-browser sanity pass. Run these in a real browser before deeper test
 
 [ ] Set `appearance="default"` — verify the light-background treatment applies to trigger, help text, and menu
 [ ] Set `appearance="inverse"` (or the deprecated `onDark`) on a dark background — verify the dark treatment applies to the trigger AND the bib menu interior (options, checkmarks, hover states) in both popover and fullscreen modes
-[ ] Render each `layout` (`classic`, `emphasized`, `snowflake`) with each `shape` (`classic`, `pill`, `pill-left`, `pill-right`, `snowflake`) — verify each visual style renders correctly and `size="lg"`/`size="xl"` (xl only on `emphasized`) look correct
+[ ] Render each `layout` (`classic`, `emphasized`, `snowflake`) — verify each visual style renders correctly on both the trigger and the bib menu
+[ ] Render each `shape` (`classic`, `pill`, `pill-left`, `pill-right`, `snowflake`) against each layout — verify corner radii render correctly and the pill left/right indents apply to the correct side
+[ ] Render each `size` (`lg`, plus `xl` which only `emphasized` supports) — verify the trigger and bib scale proportionally, and that setting `xl` on a non-`emphasized` layout does not produce a broken size
 [ ] Focus the trigger in each layout with each appearance (`default`, `inverse`) — verify a clearly visible focus indicator in all combinations
 [ ] Select an option with very long text (50+ characters) — verify the trigger truncates with ellipsis (classic) or wraps (emphasized/snowflake) without breaking layout
 [ ] Add options with very long text (100+ characters) and 50+ options — verify options render and the menu scrolls bounded within the popover (desktop) and dialog (fullscreen) without layout breakage
-[ ] Enable `prefers-reduced-motion: reduce`, then navigate options with ↓/↑ — verify options scroll into view instantly with no smooth animation
+[ ] Enable `prefers-reduced-motion: reduce`, then (a) navigate options with ↓/↑ and (b) open a select whose selected option is far down a long list — verify both scroll into view instantly with no smooth animation; turn it back off and verify both animate again
 [ ] Repeat the core rendering checks across supported browsers (Chrome, Safari, Firefox, Edge) — verify consistent trigger, bib, and option rendering
 
 ### Touch / Tap
@@ -44,6 +46,15 @@ Test on real mobile devices (iOS Safari, Android Chrome), not just an emulated v
 [ ] Select an option — verify the dialog closes and the trigger shows the value; tap the close button — verify it closes without selecting
 [ ] Rotate the device / resize past the `fullscreenBreakpoint` while the bib is open — verify the mode switches smoothly and focus lands sensibly (close button in fullscreen, trigger in popover)
 [ ] Verify the trigger's content behind the dialog is not visible or reachable by touch while the dialog is open
+
+### Container Composition (`auro-dialog` / `auro-drawer`)
+
+`auro-select` renders its menu through the same `auro-dropdown` bib as datepicker, dropdown, and counter-group, so it carries the same exposure when nested inside another overlay.
+
+[ ] Place the select inside `auro-dialog`, then inside `auro-drawer` — verify the bib escapes the container's clipping and is not visually cut off at any edge
+[ ] Open the bib inside each container and press ⎋ — verify only the bib closes and the Escape does not leak through to close the parent dialog/drawer
+[ ] Open, select, and close repeatedly inside each container — verify the parent overlay is undisrupted (stays open, keeps its scroll position and focus trap) and focus returns to the trigger
+[ ] Repeat at a mobile breakpoint where the select goes fullscreen — verify the select's dialog and the parent overlay do not fight over the top layer or focus
 
 ### Screen Reader
 

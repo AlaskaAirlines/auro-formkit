@@ -10,7 +10,8 @@ Automated tests (`auro-datepicker.test.js`) already cover attribute reflection (
 [ ] Type a valid date in the configured format into the input — verify it is accepted
 [ ] In `range` mode, pick a start date then an end date — verify a highlighted range renders across the intervening cells and both inputs populate
 [ ] With `required` set, blur the empty input — verify a visible error message appears
-[ ] Tab to the trigger, press Enter/Space to open, and arrow-navigate the grid — verify a visible focus ring tracks the active cell
+[ ] Tab to the trigger — verify a clearly visible focus indicator appears on the trigger input
+[ ] Press Enter/Space to open, then arrow-navigate the grid — verify a visible focus ring tracks the active cell
 
 ## Depth
 
@@ -24,12 +25,14 @@ Automated tests (`auro-datepicker.test.js`) already cover attribute reflection (
 
 ### Appearance & Theming
 
-[ ] Verify the `snowflake` layout renders its label/display-value/accent styling correctly
-[ ] Verify `shape` and `size` variants render with correct proportions on the trigger
+[ ] Render each `layout` (`classic`, `snowflake`) — verify `classic` renders the standard bordered trigger and `snowflake` renders its label/display-value/accent styling correctly
+[ ] Render each `shape` (`box`, `classic`, `pill`, `pill-left`, `pill-right`, `rounded`, `snowflake`) — verify corner radii render correctly and the pill left/right indents apply to the correct side, including in `range` mode where the trigger holds two inputs
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl` — default `lg`) — verify the trigger scales proportionally without clipping the label or icon, and the calendar bib stays correctly positioned against it
 [ ] Verify the focus indicator is clearly visible on the trigger input, clear button, month-nav buttons, active calendar cell (focus ring), and Done/close buttons
 [ ] Verify blackout cells render with their distinct disabled-but-in-range styling
 [ ] Verify reference-date cells are visually indicated, and `popover_YYYY_MM_DD` content renders in the cell popover on hover/focus
 [ ] Verify `date_YYYY_MM_DD` slot content renders inside the cell, and the `highlight` attribute applies the success-state token color
+[ ] Arrow-navigate the calendar with `prefers-reduced-motion: reduce` on, then off — verify cells scroll into view instantly in **both** states. Unlike select and combobox, the calendar does not branch on the setting: `scrollToActiveCell` always uses `behavior: 'auto'` (see the rationale comment at `src/auro-calendar.js:1611`), so any smooth or animated scroll here is a regression regardless of the OS setting
 
 ### Localization & Format display
 

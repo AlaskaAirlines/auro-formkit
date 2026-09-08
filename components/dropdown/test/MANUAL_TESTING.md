@@ -9,7 +9,7 @@ Run these first for a quick confidence check that the component works in a real 
 [ ] Load the component — verify the trigger renders and is visible
 [ ] Click the trigger — verify the bib opens with its content visible
 [ ] Click outside the bib, then reopen and press Escape — verify each closes the bib
-[ ] Tab to the trigger and press Enter (or Space) — verify the bib opens
+[ ] Tab to the trigger — verify a clearly visible focus indicator appears, then press Enter (or Space) and verify the bib opens
 [ ] With the bib open, Tab into the bib content, then press Escape — verify focus returns to the trigger with a visible focus ring
 [ ] Set `disabled` and click/keyboard the trigger — verify the bib does not open
 
@@ -29,6 +29,9 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Verify `appearance="default"` and `appearance="inverse"` (and deprecated `onDark`) render correct trigger, chevron, and bib colors against light and dark backgrounds
 [ ] Verify `simple`, `chevron`, `error`/`errorMessage`, and `auro-dropdownbib` flags (`rounded`, `inset`, `common`) render as intended
+[ ] Render each `layout` (`classic`, `emphasized`, `snowflake`) — verify the trigger treatment and label placement match the layout
+[ ] Render each `shape` (`box`, `classic`, `pill`, `pill-left`, `pill-right`, `rounded`, `snowflake`) — verify corner radii render correctly and the pill left/right indents apply to the correct side of the trigger
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl`) — verify the trigger and chevron scale proportionally and the bib stays aligned to the trigger at every size
 
 ### Positioning / Floating
 

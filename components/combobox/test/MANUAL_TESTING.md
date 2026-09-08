@@ -26,7 +26,10 @@ Automated tests (`auro-combobox.test.js`) already cover rendering, property/attr
 
 [ ] Verify the dark / inverse appearance renders correctly — bib background, borders, option hover/active highlight, and the bold match-highlight (`<strong>`) are all legible
 [ ] Verify the focus ring is clearly visible on the trigger input and the clear button against every supported background
-[ ] Verify the layout variants (classic, emphasized, snowflake) render as designed and options/checkmarks align correctly
+[ ] Render each `layout` (`classic`, `emphasized`, `snowflake`) — verify each renders as designed and options/checkmarks align correctly
+[ ] Render each `shape` (`box`, `classic`, `pill`, `pill-left`, `pill-right`, `rounded`, `snowflake`) against each layout — verify corner radii render correctly, the pill left/right indents apply to the correct side, and the bib still aligns to the trigger
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl` — default `xl`) — verify the trigger height, text, and icons scale proportionally and the size/shape forwarded to the inner `auro-menu` stays visually consistent with the trigger
+[ ] Enable `prefers-reduced-motion: reduce`, then navigate options with ↓/↑ — verify options scroll into view instantly with no smooth animation; turn it back off and verify the scroll animates again
 [ ] Verify rendering is consistent across supported browsers (Chrome, Safari, Firefox, Edge) — bib positioning, fonts, and highlight styles
 [ ] Set `triggerIcon` with `type="credit-card"` — verify a credit-card icon actually renders inside the input trigger. Note: `triggerIcon` forwards the `icon` attribute to the inner `auro-input`, but icon rendering is currently limited to `type="credit-card"`. Without a credit-card type, no icon renders even though the attribute propagates. (Automation covers `triggerIcon`/`type` attribute reflection only — not that the icon SVG renders — so this visual check must stay manual.)
 
@@ -43,6 +46,15 @@ Automated tests (`auro-combobox.test.js`) already cover rendering, property/attr
 [ ] Type in the fullscreen input on a device — verify options filter and the list scrolls under touch
 [ ] Dismiss via the close button, Escape, tap-outside, and selecting an option — verify focus returns to the trigger on each path. NOTE: the close-button path currently drops focus (known issue [AB#1592304](https://dev.azure.com/itsals/E_Retain_Content/_boards/board/t/Auro%20Design%20System/Stories?workitem=1592304)); confirm whether it still reproduces
 [ ] Verify Shift+Tab focus management inside the fullscreen dialog behaves consistently across browsers (historically inconsistent and may need custom handling)
+
+### Container Composition (`auro-dialog` / `auro-drawer`)
+
+`auro-combobox` renders its suggestions through the same `auro-dropdown` bib as datepicker, dropdown, and counter-group, so it carries the same exposure when nested inside another overlay.
+
+[ ] Place the combobox inside `auro-dialog`, then inside `auro-drawer` — verify the bib escapes the container's clipping and is not visually cut off at any edge
+[ ] Type to open the bib inside each container and press Escape — verify only the bib closes and the Escape does not leak through to close the parent dialog/drawer
+[ ] Type, select, and clear repeatedly inside each container — verify the parent overlay is undisrupted (stays open, keeps its scroll position and focus trap) and focus returns to the trigger input
+[ ] Repeat at a phone breakpoint where the combobox goes fullscreen — verify the combobox's dialog and the parent overlay do not fight over the top layer or focus, and the virtual keyboard still opens
 
 ### Screen Reader
 

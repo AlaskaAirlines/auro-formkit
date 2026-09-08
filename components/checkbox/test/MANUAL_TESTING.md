@@ -23,6 +23,7 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Load a group of checkboxes — verify they all render beneath the group legend
 [ ] Check two different checkboxes — verify both stay checked independently
+[ ] Tab into the group and move between checkboxes — verify a clearly visible focus indicator appears on each one
 [ ] Blur a required group with nothing checked — verify the error message displays
 
 ## Depth

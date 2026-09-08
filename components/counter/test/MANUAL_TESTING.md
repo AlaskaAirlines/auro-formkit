@@ -48,6 +48,12 @@ Run these first for a quick confidence check that the components work in a real 
 [ ] Verify the dropdown trigger, label, and value text render correctly, including in `inverse` / `onDark` appearance
 [ ] Verify the focus indicator is clearly visible on the trigger and on controls inside the bib
 
+`shape`, `size`, and `layout` are declared on `auro-counter-group` only (they style the dropdown trigger), so set `isDropdown` before running the three checks below. `auro-counter` on its own supports none of them.
+
+[ ] Render each `layout` (`classic`, `snowflake`) — verify the trigger's label/value treatment matches the layout
+[ ] Render each `shape` (`box`, `classic`, `pill`, `pill-left`, `pill-right`, `rounded`, `snowflake`) — verify corner radii render correctly and the pill left/right indents apply to the correct side
+[ ] Render each `size` (`xs`, `sm`, `md`, `lg`, `xl`) — verify the trigger scales proportionally and the bib stays aligned to it with the counters inside legible at every size
+
 ### auro-counter-group — Touch (device)
 
 [ ] Tap the dropdown trigger — verify the bib opens
