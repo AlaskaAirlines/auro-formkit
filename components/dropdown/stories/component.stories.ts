@@ -457,6 +457,11 @@ export const DropdownInDialogBibOpen: Story = {
 </auro-dialog>
   `,
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const dialog = canvasElement.querySelector('auro-dialog') as any;
+    await dialog.updateComplete;
+    // wait a bit for the dialog to finish its open transition before clicking the trigger
+    await new Promise((r) => setTimeout(r, 500));
+
     const trigger = await canvas.findByShadowRole('button', { name: 'Trigger' });
     await userEvent.click(trigger);
     await wait(100);
@@ -500,6 +505,11 @@ export const DropdownInDrawerBibOpen: Story = {
 </auro-drawer>
   `,
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const drawer = canvasElement.querySelector('auro-drawer') as any;
+    await drawer.updateComplete;
+    // wait a bit for the drawer to finish its open transition before clicking the trigger
+    await new Promise((r) => setTimeout(r, 500));
+
     const trigger = await canvas.findByShadowRole('button', { name: 'Trigger' });
     await userEvent.click(trigger);
     await wait(100);
@@ -654,3 +664,4 @@ export const DropdownInverseError: Story = {
 </div>
   `,
 };
+
