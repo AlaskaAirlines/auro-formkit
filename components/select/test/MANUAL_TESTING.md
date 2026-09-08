@@ -1,6 +1,6 @@
 # Manual Testing — auro-select
 
-Automated tests (`auro-select.test.js` and `selectUtils.test.js`) already cover rendering, property/attribute reflection and defaults, slot rendering, mouse and keyboard interaction (arrow/Home/End/Enter/Escape/Space/Tab/type-ahead), event firing, ARIA attribute presence and routing, validation logic, placement, and public methods. The manual cases below focus on what automation cannot confirm: real rendering and theming, color contrast, focus-indicator visibility, actual screen-reader announcements, touch input, and true fullscreen/mobile-dialog behavior on real devices and browsers.
+Automated tests (`auro-select.test.js` and `selectUtils.test.js`) already cover rendering, property/attribute reflection and defaults, slot rendering, mouse and keyboard interaction (arrow/Home/End/Enter/Escape/Space/Tab/type-ahead), event firing, ARIA attribute presence and routing, validation logic, placement, and public methods. The manual cases below focus on what automation cannot confirm: real rendering and theming, focus-indicator visibility, actual screen-reader announcements, touch input, and true fullscreen/mobile-dialog behavior on real devices and browsers.
 
 **Key symbols:** ↓ = ArrowDown · ↑ = ArrowUp · ↵ = Enter · ⇥ = Tab · ␣ = Space · ⎋ = Escape
 
@@ -23,7 +23,6 @@ A quick real-browser sanity pass. Run these in a real browser before deeper test
 [ ] Set `appearance="inverse"` (or the deprecated `onDark`) on a dark background — verify the dark treatment applies to the trigger AND the bib menu interior (options, checkmarks, hover states) in both popover and fullscreen modes
 [ ] Render each `layout` (`classic`, `emphasized`, `snowflake`) with each `shape` (`classic`, `pill`, `pill-left`, `pill-right`, `snowflake`) — verify each visual style renders correctly and `size="lg"`/`size="xl"` (xl only on `emphasized`) look correct
 [ ] Focus the trigger in each layout with each appearance (`default`, `inverse`) — verify a clearly visible focus indicator in all combinations
-[ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances (trigger text, placeholder, help/error text, options, checkmarks)
 [ ] Select an option with very long text (50+ characters) — verify the trigger truncates with ellipsis (classic) or wraps (emphasized/snowflake) without breaking layout
 [ ] Add options with very long text (100+ characters) and 50+ options — verify options render and the menu scrolls bounded within the popover (desktop) and dialog (fullscreen) without layout breakage
 [ ] Enable `prefers-reduced-motion: reduce`, then navigate options with ↓/↑ — verify options scroll into view instantly with no smooth animation

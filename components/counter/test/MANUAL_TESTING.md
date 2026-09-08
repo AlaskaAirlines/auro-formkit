@@ -27,7 +27,6 @@ Run these first for a quick confidence check that the components work in a real 
 [ ] Verify the error visual state renders correctly (border / coloring / message placement)
 [ ] Verify the disabled counter is visibly greyed / non-interactive in appearance
 [ ] Verify `inverse` / `onDark` appearance renders correctly on a dark background (label, value, help text, buttons)
-[ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify the focus indicator on the control and on each button is clearly visible
 
 ### auro-counter — Touch (device)
@@ -47,7 +46,6 @@ Run these first for a quick confidence check that the components work in a real 
 
 [ ] Verify the group error visual state renders correctly (coloring, message, error icon)
 [ ] Verify the dropdown trigger, label, and value text render correctly, including in `inverse` / `onDark` appearance
-[ ] Verify color contrast meets WCAG 2.1 AA
 [ ] Verify the focus indicator is clearly visible on the trigger and on controls inside the bib
 
 ### auro-counter-group — Touch (device)

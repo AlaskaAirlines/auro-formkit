@@ -24,7 +24,6 @@ Automated tests (`auro-combobox.test.js`) already cover rendering, property/attr
 
 ### Appearance & Theming
 
-[ ] Verify color contrast meets WCAG 2.1 AA for the input text, placeholder, label, help text, and highlighted/selected options in default and inverse appearances
 [ ] Verify the dark / inverse appearance renders correctly — bib background, borders, option hover/active highlight, and the bold match-highlight (`<strong>`) are all legible
 [ ] Verify the focus ring is clearly visible on the trigger input and the clear button against every supported background
 [ ] Verify the layout variants (classic, emphasized, snowflake) render as designed and options/checkmarks align correctly

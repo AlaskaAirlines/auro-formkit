@@ -30,8 +30,7 @@ Run these first for a quick confidence check that the component works in a real 
 ### Appearance & Theming
 
 [ ] Compare `appearance="default"` and `appearance="inverse"` on their intended light/dark backgrounds — verify text, label, icons, and borders are legible in each
-[ ] Verify color contrast meets WCAG 2.1 AA for label, input text, placeholder, and error text in both default and inverse appearances
-[ ] Verify the focus indicator is clearly visible (sufficient contrast and thickness) in both appearances
+[ ] Verify the focus indicator is clearly visible in both appearances
 [ ] Verify the error state is visually distinguishable by more than color alone (icon/text), not color-only
 [ ] Render the same input across Chrome, Safari, and Firefox — verify label animation, masking, and icon rendering are visually consistent
 

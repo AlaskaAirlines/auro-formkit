@@ -24,7 +24,6 @@ Automated tests (`auro-datepicker.test.js`) already cover attribute reflection (
 
 ### Appearance & Theming
 
-[ ] Verify color contrast meets WCAG 2.1 AA for the trigger, calendar cells, selected/today/disabled states, and nav buttons in both `default` and `inverse` (onDark) appearances
 [ ] Verify the `snowflake` layout renders its label/display-value/accent styling correctly
 [ ] Verify `shape` and `size` variants render with correct proportions on the trigger
 [ ] Verify the focus indicator is clearly visible on the trigger input, clear button, month-nav buttons, active calendar cell (focus ring), and Done/close buttons

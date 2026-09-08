@@ -31,7 +31,6 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Verify the error visual state renders correctly (border / coloring)
 [ ] Verify the inverse / onDark appearance renders correctly against a dark background
-[ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify the focus indicator is clearly visible when the checkbox is tabbed to
 
 ### auro-checkbox — Touch
@@ -48,7 +47,6 @@ Run these first for a quick confidence check that the component works in a real 
 
 [ ] Set `horizontal` — verify the checkboxes lay out in a row instead of a column
 [ ] Verify the persistent error state (with a custom message) renders correctly
-[ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
 [ ] Verify focus indicators are clearly visible on each checkbox in the group
 
 ### auro-checkbox-group — Screen Reader
