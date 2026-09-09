@@ -1,0 +1,12 @@
+summaryOverride: >
+  Form coordinator that validates and manages child fields. Native equivalent is
+  the <form> element with native submit/reset and constraint validation.
+
+behavior:
+  a11y:
+    - Use a native <form>; group related fields in <fieldset>/<legend>; the submit control is a real <button type="submit">.
+  keyboard:
+    - Enter in a text field submits the form (native).
+  validation:
+    - Use native constraint validation (required, pattern, min/max) surfaced on submit.
+    - auro-form's cross-field coordination and aggregated validity are wc-only — validate each field and aggregate in script.

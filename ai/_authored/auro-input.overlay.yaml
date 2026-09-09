@@ -1,0 +1,33 @@
+# Reference overlay for auro-input. Shows every authored field the generator merges.
+# Other components can start with just `summaryOverride` and grow from here.
+
+summaryOverride: >
+  Single-line text input (types text, email, password, number) with built-in
+  validation, required/error states, and a bordered theme.
+
+# Reclassify specific attributes. Anything not listed falls back to the
+# _defaults tierPolicy (nativeEquiv -> core, wcOnlyHints -> wc-only, else enhanced).
+tiers:
+  type: core            # constrain to the natively supported subset via `enum` below
+  hideLabelVisually: core
+
+# Constrain enum-like attributes to the values reproducible in plain HTML.
+enums:
+  type: [text, email, password, number]
+
+# Override or add native mappings beyond the defaults.
+nativeEquiv:
+  hideLabelVisually: "add a visually-hidden class to the <label> (keep it in the DOM)"
+
+# Component-specific behavior appended to the _defaults behavior lists.
+behavior:
+  validation:
+    - Track a "touched" state; do NOT show errors before the field is first blurred.
+    - On invalid, swap the helpText content for the error message and set aria-invalid="true".
+  a11y:
+    - When the field is not `required`, append "(optional)" to the accessible label.
+    - For password fields, the show/hide toggle needs its own accessible name (aria-label).
+
+# Extra assertions on top of the _defaults verify list.
+verify:
+  - "type is one of text|email|password|number (other Auro types are wc-only)"

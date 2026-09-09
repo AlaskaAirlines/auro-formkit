@@ -13,5 +13,8 @@
   },
   "scripts": {
     "build:formkit-version": "node ./src/writeFormkitVersion.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
   }
 }

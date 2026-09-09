@@ -1,0 +1,44 @@
+summaryOverride: >
+  Date / date-range picker — a text input plus a calendar popup. Native closest is
+  <input type="date"> (single date only; no range or blackout dates, and the
+  browser's picker cannot be styled with Auro tokens).
+
+tiers:
+  autoPlacement: wc-only
+  blackoutDates: wc-only
+  blackoutLabel: wc-only
+  calendarEndDate: wc-only
+  calendarStartDate: wc-only
+  calendarFocusDate: wc-only
+  calendarGridLabel: wc-only
+  centralDate: wc-only
+  monthFirst: wc-only
+  monthNames: wc-only
+  navLabelNextMonth: wc-only
+  navLabelPrevMonth: wc-only
+  noFlip: wc-only
+  offset: wc-only
+  placement: wc-only
+  range: wc-only
+  referenceDates: wc-only
+  shift: wc-only
+  stacked: wc-only
+  valueEnd: wc-only
+  fullscreenBreakpoint: wc-only
+  largeFullscreenHeadline: wc-only
+
+nativeEquiv:
+  value: value (on a native <input type="date">)
+  minDate: min
+  maxDate: max
+  required: required
+  disabled: disabled
+
+behavior:
+  a11y:
+    - Label the date input; the calendar popup is a dialog containing a grid (role="grid") of day cells.
+    - Provide accessible names for the previous/next month navigation and announce the selected date(s).
+  keyboard:
+    - Arrow keys move between days, PageUp/PageDown change month, Enter selects, Esc closes.
+  validation:
+    - Range selection, blackout dates, and min/max beyond a single value are scripted; native <input type="date"> only supports min/max on one date.

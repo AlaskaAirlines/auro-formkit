@@ -1,0 +1,23 @@
+summaryOverride: >
+  Numeric stepper with increment/decrement buttons; composes into a counter-group.
+  Native closest is <input type="number"> or a role="spinbutton" with real +/- buttons.
+
+tiers:
+  disableMax: enhanced
+  disableMin: enhanced
+  defaultSlot: wc-only
+
+nativeEquiv:
+  value: value
+  min: min
+  max: max
+  disabled: disabled
+
+behavior:
+  a11y:
+    - Use <input type="number"> with an associated <label>, or role="spinbutton" with aria-valuenow/valuemin/valuemax.
+    - The minus/plus controls are real <button>s with accessible names (see the ariaLabel.minus / ariaLabel.plus slots).
+  keyboard:
+    - Arrow Up/Down increment and decrement the value (native on number input).
+  validation:
+    - Clamp to min/max and disable the relevant button at the bounds; expose range errors with role="alert".
