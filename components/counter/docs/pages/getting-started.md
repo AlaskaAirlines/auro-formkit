@@ -27,6 +27,7 @@
       <auro-anchorlink fluid href="#validate" class="level2 body-xs">validate()</auro-anchorlink>
       <auro-anchorlink fluid href="#increment" class="level2 body-xs">increment()</auro-anchorlink>
       <auro-anchorlink fluid href="#decrement" class="level2 body-xs">decrement()</auro-anchorlink>
+      <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -76,6 +77,19 @@
         <p>Increments the counter value by 1. Optionally pass a number to increment by a specific amount.</p>
         <auro-header level="3" id="decrement">decrement()</auro-header>
         <p>Decrements the counter value by 1. Optionally pass a number to decrement by a specific amount.</p>
+        <auro-header level="3" id="reset">reset()</auro-header>
+        <p>Resets the counter or counter group, clearing each counter to its <code>min</code> value and clearing validation state — the same clear-on-reset behavior used by the other Auro form elements. This is also what <code>&lt;auro-form&gt;</code> calls when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
       </section>
     </div>
   </div>

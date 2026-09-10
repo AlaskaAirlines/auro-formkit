@@ -516,6 +516,44 @@ function runFullTest(mobileView) {
         const eventSubmitted = await resetEvent;
         await expect(eventSubmitted).to.be.true;
       });
+
+      it('should reset a form containing an auro-counter-group without throwing (AB#1593509)', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="tester" value="some value"></auro-input>
+            <auro-counter-group name="passengers">
+              <auro-counter name="adults" min="1" value="2">Adults</auro-counter>
+              <auro-counter name="children" min="0" value="1">Children</auro-counter>
+            </auro-counter-group>
+            <auro-button type="reset">Reset</auro-button>
+          </auro-form>
+        `);
+
+        await elementUpdated(el);
+
+        const group = el.querySelector('auro-counter-group');
+        group.configureCounters();
+        await Promise.all(Array.from(group.counters).map((counter) => counter.updateComplete));
+        await elementUpdated(el);
+
+        // Edit the counter so reset has something to clear.
+        group.counters[0].increment();
+        await elementUpdated(el);
+        expect(group.total).to.equal(4);
+
+        const resetEvent = new Promise((res) => {
+          el.addEventListener('reset', () => res(true));
+        });
+
+        // Reset must complete and still dispatch its event even with a counter present.
+        el.reset();
+
+        const eventFired = await resetEvent;
+        await expect(eventFired).to.be.true;
+        // Counters clear to their min (1 and 0), matching how other form elements reset.
+        expect(group.counters[0].value).to.equal(1);
+        expect(group.total).to.equal(1);
+      });
     });
   });
 

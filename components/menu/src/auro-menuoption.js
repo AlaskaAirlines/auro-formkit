@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 /* eslint-disable lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines -- JSDoc/CEM documentation additions push this file past the 300-line ceiling */
 
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
@@ -75,9 +76,36 @@ export class AuroMenuOption extends AuroElement {
   static get properties() {
     return {
       ...super.properties,
+
+      /**
+       * Sets the shape of the option. When unset, it inherits the shape of the parent `auro-menu`.
+       * @type {'box' | 'pill' | 'snowflake'}
+       * @default 'box'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the option. When unset, it inherits the size of the parent `auro-menu`.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'sm'
+       */
+      size: {
+        type: String,
+        attribute: "size",
+        reflect: true
+      },
+
+      /**
+       * When true, this option will not show the checkmark when selected.
+       */
       noCheckmark: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: 'nocheckmark'
       },
 
       /**
@@ -89,21 +117,34 @@ export class AuroMenuOption extends AuroElement {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * When true, the option is disabled and cannot be selected.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * The value associated with this menu option.
+       */
       value: {
         type: String,
         reflect: true
       },
+
+      /**
+       * Sets the tab order of the menu option.
+       */
       tabIndex: {
         type: Number,
-        reflect: true
+        reflect: true,
+        attribute: 'tabindex'
       },
 
       /**
-       * @private
+       * When set, selecting this option dispatches a custom event of the given name from the parent `auro-menu` (and an `auroMenu-customEventFired` event) instead of selecting the option.
        */
       event: {
         type: String,

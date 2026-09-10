@@ -74,6 +74,11 @@ export const InDialogContainerQuery: Story = {
 </div>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const dialog = canvasElement.querySelector('auro-dialog') as any;
+    await dialog.updateComplete;
+    // wait a bit for the dialog to finish its open transition before focusing the
+    await new Promise((r) => setTimeout(r, 500));
+
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     el.focus();
@@ -108,8 +113,12 @@ export const InDrawerContainerQuery: Story = {
 </div>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const drawer = canvasElement.querySelector('auro-drawer') as any;
     const el = canvasElement.querySelector('auro-combobox') as any;
-    await el.updateComplete;
+    await drawer.updateComplete;
+    // wait a bit for the drawer to finish its open transition before focusing the combobox
+    await new Promise((r) => setTimeout(r, 500));
+
     el.focus();
     await el.updateComplete;
     await userEvent.keyboard('{a}');

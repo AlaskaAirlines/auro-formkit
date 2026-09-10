@@ -74,6 +74,17 @@
         <p>Programmatically moves focus to the input element.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
         <p>Resets the component to its initial state, clearing the value and validation state.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="validate">validate()</auro-header>
         <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
       </section>

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, no-unused-expressions, no-undef, no-magic-numbers */
 
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { setViewport, sendMouse } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import { AuroCounterButton } from '../src/auro-counter-button.js';
@@ -338,6 +338,51 @@ function runFullTest(mobileView) {
       });
     });
 
+    // Real pointer clicks (sendMouse) focus the clicked button; when that button
+    // disables itself at an extreme the browser drops focus to <body>. Focus must
+    // fall back to the spinbutton control container. (AB#1634231)
+    if (!mobileView) {
+      describe('focus fallback on control disable', () => {
+        it('should move focus to the control container when the decrement button disables at min', async () => {
+          const el = await fixture(html`<auro-counter value="1">Counter</auro-counter>`);
+          await elementUpdated(el);
+
+          const minusBtn = el.shadowRoot.querySelector('[part="controlMinus"]');
+          const rect = minusBtn.getBoundingClientRect();
+          await sendMouse({
+            type: 'click',
+            position: [Math.floor(rect.x + (rect.width / 2)), Math.floor(rect.y + (rect.height / 2))]
+          });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 30));
+
+          const control = el.shadowRoot.querySelector('[part="counterControl"]');
+          expect(el.value).to.equal(0);
+          expect(el.shadowRoot.activeElement).to.equal(control);
+          expect(control.matches(':focus-visible')).to.be.true;
+        });
+
+        it('should move focus to the control container when the increment button disables at max', async () => {
+          const el = await fixture(html`<auro-counter value="8" max="9">Counter</auro-counter>`);
+          await elementUpdated(el);
+
+          const plusBtn = el.shadowRoot.querySelector('[part="controlPlus"]');
+          const rect = plusBtn.getBoundingClientRect();
+          await sendMouse({
+            type: 'click',
+            position: [Math.floor(rect.x + (rect.width / 2)), Math.floor(rect.y + (rect.height / 2))]
+          });
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 30));
+
+          const control = el.shadowRoot.querySelector('[part="counterControl"]');
+          expect(el.value).to.equal(9);
+          expect(el.shadowRoot.activeElement).to.equal(control);
+          expect(control.matches(':focus-visible')).to.be.true;
+        });
+      });
+    }
+
     describe('validate', () => {
       it('should set customError validity when error attribute is set', async () => {
         const el = await fixture(html`<auro-counter error="Error msg">Counter</auro-counter>`);
@@ -349,6 +394,34 @@ function runFullTest(mobileView) {
         const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
         el.validate(true);
         await expect(el.validity).to.not.equal('customError');
+      });
+    });
+
+    describe('reset', () => {
+      it('should clear the counter back to its min, ignoring any preset value', async () => {
+        const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>`);
+        await elementUpdated(el);
+
+        el.increment(3);
+        expect(el.value).to.equal(8);
+
+        el.reset();
+        await elementUpdated(el);
+        // Matches the clear-on-reset behavior of other Auro form elements: value returns to min (0), not the preset 5.
+        expect(el.value).to.equal(0);
+      });
+
+      it('should clear to min when a custom min is set', async () => {
+        const el = await fixture(html`<auro-counter min="2">Counter</auro-counter>`);
+        await elementUpdated(el);
+        expect(el.value).to.equal(2);
+
+        el.increment(4);
+        expect(el.value).to.equal(6);
+
+        el.reset();
+        await elementUpdated(el);
+        expect(el.value).to.equal(2);
       });
     });
   });

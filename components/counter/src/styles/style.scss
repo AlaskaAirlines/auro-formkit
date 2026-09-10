@@ -47,7 +47,7 @@
     // prevent double-tap zoom on iOS (included in button for enabled state behaving differently)
     touch-action: manipulation;
 
-    &:focus-visible {
+    &:focus-within {
       outline-offset: 0;
       outline-style: solid;
       outline-width: var(--ds-size-25, vac.$ds-size-25);

@@ -46,6 +46,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
+ * @csspart wrapper - The trigger wrapper element surrounding the trigger content and chevron.
  * @csspart chevron - The collapsed/expanded state icon container.
  * @csspart size - The size of the dropdown bib. (height, width, maxHeight, maxWidth only)
  * @csspart helpText - The helpText content container.
@@ -70,7 +71,7 @@ export class AuroDropdown extends AuroElement {
 
     /**
      * When true, the dropdown skips its generic focus restoration on close.
-     * Set by consumers (e.g. combobox) that manage their own focus routing
+     * Set by consumers (for example combobox) that manage their own focus routing
      * via setClearBtnFocus / setInputFocus / keyboard strategy.
      * Separate from noHideOnThisFocusLoss (which controls auto-close behavior).
      * @private
@@ -239,7 +240,7 @@ export class AuroDropdown extends AuroElement {
   /**
    * Focus the trigger content. When the trigger wrapper itself is focusable
    * (has tabindex), focus it directly. Otherwise, focus the first focusable
-   * element slotted into the trigger slot (e.g. the auro-input).
+   * element slotted into the trigger slot (for example the auro-input).
    * @private
    */
   focusTrigger() {
@@ -336,6 +337,7 @@ export class AuroDropdown extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: 'autoplacement',
         reflect: true
       },
 
@@ -344,6 +346,7 @@ export class AuroDropdown extends AuroElement {
        */
       desktopModal: {
         type: Boolean,
+        attribute: 'desktopmodal',
         reflect: true
       },
 
@@ -352,6 +355,7 @@ export class AuroDropdown extends AuroElement {
        */
       disableEventShow: {
         type: Boolean,
+        attribute: 'disableeventshow',
         reflect: true
       },
 
@@ -385,14 +389,16 @@ export class AuroDropdown extends AuroElement {
        */
       disableKeyboardHandling: {
         type: Boolean,
+        attribute: 'disablekeyboardhandling',
         reflect: true
       },
 
       /**
-       * @private
+       * Sets the width of the dropdown bib in pixels.
        */
       dropdownWidth: {
-        type: Number
+        type: Number,
+        attribute: 'dropdownwidth'
       },
 
       /**
@@ -417,7 +423,8 @@ export class AuroDropdown extends AuroElement {
        * Contains the help text message for the current validity error.
        */
       errorMessage: {
-        type: String
+        type: String,
+        attribute: 'errormessage'
       },
 
       /**
@@ -425,6 +432,7 @@ export class AuroDropdown extends AuroElement {
        */
       focusShow: {
         type: Boolean,
+        attribute: 'focusshow',
         reflect: true
       },
 
@@ -442,6 +450,7 @@ export class AuroDropdown extends AuroElement {
        */
       isBibFullscreen: {
         type: Boolean,
+        attribute: 'isbibfullscreen',
         reflect: true
       },
 
@@ -450,6 +459,7 @@ export class AuroDropdown extends AuroElement {
        */
       hoverToggle: {
         type: Boolean,
+        attribute: 'hovertoggle',
         reflect: true
       },
 
@@ -457,7 +467,8 @@ export class AuroDropdown extends AuroElement {
        * @private
        */
       hasTriggerContent: {
-        type: Boolean
+        type: Boolean,
+        attribute: false
       },
 
       /**
@@ -470,6 +481,7 @@ export class AuroDropdown extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
@@ -480,6 +492,27 @@ export class AuroDropdown extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the dropdown.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the dropdown.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -489,6 +522,7 @@ export class AuroDropdown extends AuroElement {
        */
       parentBorder: {
         type: Boolean,
+        attribute: 'parentborder',
         reflect: true
       },
 
@@ -497,6 +531,7 @@ export class AuroDropdown extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: 'matchwidth',
         reflect: true
       },
 
@@ -506,6 +541,7 @@ export class AuroDropdown extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: 'noflip',
         reflect: true
       },
 
@@ -522,6 +558,7 @@ export class AuroDropdown extends AuroElement {
        */
       noHideOnThisFocusLoss: {
         type: Boolean,
+        attribute: 'nohideonthisfocusloss',
         reflect: true
       },
 
@@ -530,6 +567,7 @@ export class AuroDropdown extends AuroElement {
        */
       noToggle: {
         type: Boolean,
+        attribute: 'notoggle',
         reflect: true
       },
 
@@ -544,17 +582,21 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
       /**
        *  If declared, and a function is set, that function will execute when the slot content is updated.
+       * @type {() => void}
        */
       onSlotChange: {
         type: Function,
+        attribute: false,
         reflect: false
       },
 
@@ -569,10 +611,11 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * @private
+       * Sets the tabindex applied to the dropdown trigger for keyboard focus order.
        */
       tabIndex: {
-        type: Number
+        type: Number,
+        attribute: 'tabindex'
       },
 
       /**
@@ -796,7 +839,7 @@ export class AuroDropdown extends AuroElement {
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
      * @event auroDropdown-idAdded
-     * @type {Object<key: 'id', value: string>} - The ID of the dropdown bib element.
+     * @type {CustomEvent<{ id: string }>} - Detail carries the generated ID of the dropdown bib element.
      */
     this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 

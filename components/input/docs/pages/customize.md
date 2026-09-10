@@ -630,21 +630,6 @@
         </auro-accordion>
       </section>
       <section>
-        <auro-header level="2" id="resetState">Reset State</auro-header>
-        <p>Use the <code>reset()</code> method to reset the <code>&lt;auro-input&gt;</code>'s <code>value</code> and <code>validity</code> state. Doing so will preserve all other attributes and properties.</p>
-        <div class="exampleWrapper">
-          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/reset-state.html) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-        </div>
-        <auro-accordion alignRight>
-          <span slot="trigger">See code</span>
-          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/reset-state.html) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/reset-state.js) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-        </auro-accordion>
-      </section>
-      <section>
         <auro-header level="2" id="swapValues">Swapping Values Between Inputs</auro-header>
         <p>Example illustrates using a JavaScript function attached to an <code>auro-button</code> component <code>click</code> event to swap the values of two <code>auro-input</code> elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.</p>
         <div class="exampleWrapper">

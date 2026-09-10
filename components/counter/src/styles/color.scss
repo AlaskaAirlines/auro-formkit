@@ -29,7 +29,7 @@
 }
 
 :host::part(counterControl) {
-  &:focus-visible {
+  &:focus-within {
     outline-color: var(--ds-auro-counter-control-border-color);
   }
 }

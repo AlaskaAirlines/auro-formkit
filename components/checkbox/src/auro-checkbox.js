@@ -17,7 +17,6 @@ import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-/* eslint-disable jsdoc/no-undefined-types -- @fires event names are not types */
 /**
  * The `auro-checkbox` element is for the purpose of allowing users to select one or more options of a limited number of choices.
  * @customElement auro-checkbox
@@ -28,10 +27,12 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - The default slot for the checkbox label.
  *
- * @fires change - (Deprecated) Notifies when checked value is changed.
- * @fires input - Notifies when when checked value is changed by user's interface.
+ * @event change - Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead.
+ * @event input - Notifies when checked value is changed by user's interface.
+ * @event auroCheckbox-input - Notifies when the checked value is changed by user interaction. **DEPRECATED** - Use the `input` event instead.
+ * @event auroCheckbox-focusin - Notifies when the checkbox receives focus.
+ * @event auroCheckbox-focusout - Notifies when the checkbox loses focus.
  */
-/* eslint-enable jsdoc/no-undefined-types */
 
 // build the component class
 export class AuroCheckbox extends LitElement {
@@ -130,9 +131,11 @@ export class AuroCheckbox extends LitElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 

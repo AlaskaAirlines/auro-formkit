@@ -5,6 +5,7 @@
 import { LitElement } from "lit";
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 // Import touch detection lib
 import 'focus-visible/dist/focus-visible.min.js';
@@ -14,12 +15,13 @@ import styleCss from "./styles/auro-radio-group-css.js";
 import colorCss from './styles/groupColor-css.js';
 import tokenCss from './styles/tokens-css.js';
 
-// Import formvalidation class
+// Import formValidation class
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { generateUUID } from '@aurodesignsystem/auro-library/scripts/runtime/generateUUID';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
@@ -32,6 +34,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * @customElement auro-radio-group
  *
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
+ * @csspart helpText - Apply css to the help text element that displays helper or error messages.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
@@ -87,6 +90,11 @@ export class AuroRadioGroup extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-radio-helptext', formkitVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.uniqueId = generateUUID();
   }
 
   static get styles() {
@@ -146,22 +154,27 @@ export class AuroRadioGroup extends LitElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
       /**
        * Specifies the current selected radio button.
+       * @type {HTMLElement}
        */
       optionSelected: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
@@ -176,21 +189,24 @@ export class AuroRadioGroup extends LitElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
@@ -331,20 +347,42 @@ export class AuroRadioGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      if (this.validity && this.validity !== 'valid') {
-        this.setAttribute('aria-invalid', 'true');
-
-        this.items.forEach((el) => {
-          el.setAttribute('error', true);
-        });
-      } else {
-        this.removeAttribute('aria-invalid');
-
-        this.items.forEach((el) => {
-          el.removeAttribute('error');
-        });
-      }
+      this.syncItemValidity();
     }
+  }
+
+  /**
+   * Whether the group is currently in an invalid state.
+   * `validity` — not `error` — is the authoritative source: `validate()` resolves the
+   * `error` attribute to `validity = 'customError'`, so `error` is already covered here.
+   * Single definition of "invalid" for the whole component, consumed by `render()` and
+   * `syncItemValidity()` so the fieldset and its children can never disagree.
+   * @private
+   * @returns {boolean}
+   */
+  get isInvalid() {
+    return Boolean(this.validity && this.validity !== 'valid');
+  }
+
+  /**
+   * Method for mirroring the group's invalid state onto each radio input.
+   * Has to be re-applied from `handleItems()` as well, because a slot change or a
+   * reconnect can happen without `validity` itself changing.
+   * @private
+   * @returns {void}
+   */
+  syncItemValidity() {
+    const invalid = this.isInvalid;
+
+    this.items.forEach((el) => {
+      if (invalid) {
+        el.setAttribute('error', true);
+        el.setAttribute('aria-invalid', 'true');
+      } else {
+        el.removeAttribute('error');
+        el.removeAttribute('aria-invalid');
+      }
+    });
   }
 
   /**
@@ -400,8 +438,9 @@ export class AuroRadioGroup extends LitElement {
 
     this.items.forEach((el) => {
       el.required = this.required;
-      el.error = Boolean(this.error);
     });
+
+    this.syncItemValidity();
   }
 
   /**
@@ -549,7 +588,13 @@ export class AuroRadioGroup extends LitElement {
     };
 
     return html`
-      <fieldset class="${classMap(groupClasses)}" part="radio-group" role="radiogroup">
+      <fieldset
+        class="${classMap(groupClasses)}"
+        part="radio-group"
+        role="radiogroup"
+        aria-invalid="${ifDefined(this.isInvalid ? 'true' : undefined)}"
+        aria-describedby="${this.uniqueId}"
+      >
         <legend class="${classMap(legendClasses)}">
           <slot name="legend" @slotchange=${this.handleLegendSlotChange}></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
@@ -557,13 +602,13 @@ export class AuroRadioGroup extends LitElement {
         <slot @slotchange=${this.handleSlotChange}></slot>
       </fieldset>
 
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ${!this.isInvalid
         ? html`
-          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" error aria-live="assertive" part="helpText">
+          <${this.helpTextTag} id="${this.uniqueId}" appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

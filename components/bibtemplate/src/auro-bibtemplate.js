@@ -34,6 +34,9 @@ import headerVersion from './headerVersion.js';
  * @slot subheader - Slot for the subheader content.
  * @slot footer - Slot for the footer content.
  * @slot ariaLabel.close - Slot for the close button aria-label.
+ * @csspart bibtemplate - The outermost bibtemplate container element.
+ * @event close-click - Notifies when the close button is clicked.
+ * @event auro-bibtemplate-connected - Notifies that the bibtemplate has connected to the DOM, passing a reference to the element in the event detail.
  */
 export class AuroBibtemplate extends LitElement {
 
@@ -73,10 +76,19 @@ export class AuroBibtemplate extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, the bibtemplate renders in fullscreen mode, exposing the header, subheader, and footer regions.
+       */
       isFullscreen: {
         type: Boolean,
+        attribute: 'isfullscreen',
         reflect: true
       },
+
+      /**
+       * If declared, the fullscreen headline renders using the larger display heading style.
+       */
       large: {
         type: Boolean,
         reflect: true
@@ -87,6 +99,7 @@ export class AuroBibtemplate extends LitElement {
        */
       showFooter: {
         type: Boolean,
+        attribute: 'showfooter',
         reflect: true
       }
     };

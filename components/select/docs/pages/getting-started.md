@@ -78,6 +78,17 @@
         <p>The following public methods are available on the <code>&lt;auro-select&gt;</code> element.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
         <p>Resets the component to its initial state, clearing the value and validation state.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="updateActiveOption">updateActiveOption()</auro-header>
         <p>Updates the active option in the menu by index. The active option receives visual focus when navigating with the keyboard.</p>
         <auro-header level="3" id="hideBib">hideBib()</auro-header>

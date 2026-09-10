@@ -3,6 +3,8 @@
 import { AuroCombobox } from '../src/auro-combobox.js';
 import '../../menu/src/registered.js';
 
+import { resetStateExample } from '../apiExamples/reset-state.js';
+
 AuroCombobox.register();
 AuroCombobox.register('custom-combobox');
 
@@ -10,7 +12,7 @@ export function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
-    // Add any example initialization code here.
+    resetStateExample();
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {

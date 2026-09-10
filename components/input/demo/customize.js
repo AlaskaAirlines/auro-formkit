@@ -1,7 +1,6 @@
 import { AuroInput } from '../src/auro-input.js';
 import { customError } from "../apiExamples/error";
 import { setReadonlyValue } from "../apiExamples/readonly";
-import { resetStateExample } from "../apiExamples/reset-state";
 import { swapInputValues } from "../apiExamples/swap-value";
 
 AuroInput.register();
@@ -14,7 +13,6 @@ export function initExamples(initCount) {
     customError();
     setReadonlyValue();
     swapInputValues();
-    resetStateExample();
   } catch (error) {
     if (initCount <= 20) {
       setTimeout(() => {

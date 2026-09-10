@@ -219,6 +219,40 @@ function runFullTest(mobileView) {
 
         expect(el.querySelector('#r1').hasAttribute('error')).to.be.false;
       });
+
+      it('should keep error and aria-invalid in sync on child radios across a slot change', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('valueMissing');
+        expect(el.querySelector('#r1').hasAttribute('error')).to.be.true;
+        expect(el.querySelector('#r1').getAttribute('aria-invalid')).to.equal('true');
+
+        // A slot change re-mirrors child state without `validity` changing, so it must not
+        // clear `error` while leaving `aria-invalid` stranded — the child would then render
+        // as valid while still announcing "invalid data" to assistive technology.
+        const added = document.createElement('auro-radio');
+
+        added.id = 'r2';
+        added.value = 'two';
+        added.name = 'test';
+        el.appendChild(added);
+        await elementUpdated(el);
+
+        expect(el.querySelector('#r1').hasAttribute('error')).to.be.true;
+        expect(el.querySelector('#r1').getAttribute('aria-invalid')).to.equal('true');
+
+        // The newly-slotted radio joins an already-invalid group and must pick up both.
+        expect(added.hasAttribute('error')).to.be.true;
+        expect(added.getAttribute('aria-invalid')).to.equal('true');
+      });
     });
 
     describe('horizontal', () => {
@@ -385,7 +419,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         expect(el.hasAttribute('validity')).to.be.false;
-        expect(el.getAttribute('aria-invalid')).to.not.equal('true');
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.not.equal('true');
       });
 
       it('should not clear error attribute state on blur when both error and noValidate are set', async () => {
@@ -558,7 +592,7 @@ function runFullTest(mobileView) {
         expect(el.validity).to.be.undefined;
       });
 
-      it('should set aria-invalid when validity is not valid', async () => {
+      it('should set aria-invalid on the radiogroup fieldset when validity is not valid', async () => {
         const el = await fixture(html`
           <auro-radio-group error="Error">
             <span slot="legend">Pick one</span>
@@ -566,10 +600,11 @@ function runFullTest(mobileView) {
           </auro-radio-group>
         `);
 
-        expect(el.getAttribute('aria-invalid')).to.equal('true');
+        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
       });
 
-      it('should remove aria-invalid when validity becomes valid', async () => {
+      it('should remove aria-invalid from the radiogroup fieldset when validity becomes valid', async () => {
         const el = await fixture(html`
           <auro-radio-group error="Error">
             <span slot="legend">Pick one</span>
@@ -577,12 +612,45 @@ function runFullTest(mobileView) {
           </auro-radio-group>
         `);
 
-        expect(el.getAttribute('aria-invalid')).to.equal('true');
+        expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
 
         el.removeAttribute('error');
         await elementUpdated(el);
 
-        expect(el.hasAttribute('aria-invalid')).to.be.false;
+        expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
+      });
+
+      it('should associate the radiogroup fieldset with its help/error text via aria-describedby', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const fieldset = el.shadowRoot.querySelector('fieldset');
+        const describedById = fieldset.getAttribute('aria-describedby');
+
+        expect(describedById).to.exist;
+        expect(el.shadowRoot.getElementById(describedById)).to.exist;
+      });
+
+      it('should set aria-invalid on each child radio when validity is not valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+
+        expect(r1.getAttribute('aria-invalid')).to.equal('true');
+
+        el.removeAttribute('error');
+        await elementUpdated(el);
+
+        expect(r1.hasAttribute('aria-invalid')).to.be.false;
       });
     });
 
@@ -1218,7 +1286,7 @@ function runFullTest(mobileView) {
       expect(fieldset.getAttribute('role')).to.equal('radiogroup');
     });
 
-    it('should set aria-invalid when in error state', async () => {
+    it('should set aria-invalid on the fieldset when in error state', async () => {
       const el = await fixture(html`
         <auro-radio-group error="Error">
           <span slot="legend">Pick one</span>
@@ -1226,10 +1294,11 @@ function runFullTest(mobileView) {
         </auro-radio-group>
       `);
 
-      expect(el.getAttribute('aria-invalid')).to.equal('true');
+      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
     });
 
-    it('should remove aria-invalid when error is cleared', async () => {
+    it('should remove aria-invalid from the fieldset when error is cleared', async () => {
       const el = await fixture(html`
         <auro-radio-group error="Error">
           <span slot="legend">Pick one</span>
@@ -1240,7 +1309,33 @@ function runFullTest(mobileView) {
       el.removeAttribute('error');
       await elementUpdated(el);
 
-      expect(el.hasAttribute('aria-invalid')).to.be.false;
+      expect(el.shadowRoot.querySelector('fieldset').hasAttribute('aria-invalid')).to.be.false;
+    });
+
+    it('should pass axe with aria-invalid set on the radiogroup fieldset', async () => {
+      const el = await fixture(html`
+        <auro-radio-group required>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          <auro-radio id="r2" value="two" name="test">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.validate(true);
+      await elementUpdated(el);
+
+      // Unlike the checkbox group, this fieldset carries an explicit role="radiogroup",
+      // which is in aria-invalid's supported-role list under both ARIA 1.1 (where the
+      // attribute is global) and ARIA 1.2 (which deprecates the global use but keeps
+      // radiogroup supported) — so the *group-level* placement is spec-clean either way.
+      // The per-radio mirroring is a separate case: `radio` is not on the 1.2 list, so it
+      // relies on the same deprecated-global allowance as the checkbox group's `group`
+      // role. Kept deliberately (see docs/pages/accessibility.md); this assertion covers
+      // both placements, so a tooling change that honors the 1.2 deprecation fails here.
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('role')).to.equal('radiogroup');
+      expect(el.shadowRoot.querySelector('fieldset').getAttribute('aria-invalid')).to.equal('true');
+
+      await expect(el).to.be.accessible();
     });
 
     it('should render error help text with role="alert" when invalid', async () => {

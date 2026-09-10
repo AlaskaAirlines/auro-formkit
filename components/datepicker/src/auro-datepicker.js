@@ -74,6 +74,10 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @slot popover_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell popover for the specified date.
  * @csspart dropdown - Use for customizing the style of the dropdown.
  * @csspart trigger - Use for customizing the style of the datepicker trigger.
+ * @csspart wrapper - Use for customizing the style of the trigger content wrapper.
+ * @csspart mainLabel - Use for customizing the style of the main label in the snowflake layout.
+ * @csspart inputSection - Use for customizing the style of the input section within the trigger.
+ * @csspart accentIcon - Use for customizing the style of the leading calendar accent icon.
  * @csspart input - Use for customizing the style of the datepicker inputs.
  * @csspart calendarWrapper - Use for customizing the style of the calendar container.
  * @csspart calendar - Use for customizing the style of the calendar.
@@ -83,6 +87,7 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
+ * @event input - Notifies that the datepicker's value has changed.
  */
 export class AuroDatePicker extends AuroElement {
   static get shadowRootOptions() {
@@ -113,6 +118,7 @@ export class AuroDatePicker extends AuroElement {
     // If `calendarStartDate` is set, use that as the central date. Otherwise, use the current date.
     this.calendarRenderUtil.updateCentralDate(this, this.calendarStartDateObject ?? new Date());
 
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.touched = false;
     this.disabled = false;
@@ -126,6 +132,8 @@ export class AuroDatePicker extends AuroElement {
     this.rangeLabelInRange = 'in range';
     this.rangeLabelAfterRange = 'after range';
     this.rangeLabelEndPreview = 'previewing range end';
+
+    /** @type {string[]} */
     this.blackoutDates = [];
     this.blackoutLabel = 'unavailable';
     this.navLabelPrevMonth = 'Previous month';
@@ -139,9 +147,12 @@ export class AuroDatePicker extends AuroElement {
     this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
     this._validLocale = 'en-US';
     // floaterConfig
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
@@ -152,6 +163,7 @@ export class AuroDatePicker extends AuroElement {
 
     /**
      * @private
+     * @type {HTMLElement[]}
      */
     this.dateSlotContent = [];
 
@@ -246,11 +258,17 @@ export class AuroDatePicker extends AuroElement {
      */
     this.handleClearClick = this.handleClearClick.bind(this);
 
-    // Layout Config
+    this.initializeArchitectureDefaults();
+  }
+
+  // Defaults for the inherited layout/shape/size architecture props are set in a
+  // helper (not the constructor body) so the CEM analyzer keeps their `@type`
+  // unions instead of inferring `string` from a constructor-literal assignment.
+  // See AlaskaAirlines/discussions#653.
+  initializeArchitectureDefaults() {
     this.layout = 'classic';
     this.shape = 'classic';
     this.size = 'lg';
-
   }
 
   // This function is to define props used within the scope of this component
@@ -276,6 +294,7 @@ export class AuroDatePicker extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: "autoplacement",
         reflect: true
       },
 
@@ -289,9 +308,11 @@ export class AuroDatePicker extends AuroElement {
        * `blackoutDates[i] = ...`, `blackoutDates.splice(...)`) will not
        * invalidate the cache and the new entries will be silently ignored.
        * To update, reassign the property: `el.blackoutDates = [...el.blackoutDates, '2024-12-25']`.
+       * @type {string[]}
        */
       blackoutDates: {
         type: Array,
+        attribute: 'blackoutdates',
         reflect: true
       },
 
@@ -301,6 +322,7 @@ export class AuroDatePicker extends AuroElement {
        */
       blackoutLabel: {
         type: String,
+        attribute: 'blackoutlabel',
         reflect: true
       },
 
@@ -309,6 +331,7 @@ export class AuroDatePicker extends AuroElement {
        */
       calendarEndDate: {
         type: String,
+        attribute: 'calendarenddate',
         reflect: true
       },
 
@@ -318,6 +341,7 @@ export class AuroDatePicker extends AuroElement {
        */
       calendarGridLabel: {
         type: String,
+        attribute: 'calendargridlabel',
         reflect: true
       },
 
@@ -326,6 +350,7 @@ export class AuroDatePicker extends AuroElement {
        */
       calendarFocusDate: {
         type: String,
+        attribute: 'calendarfocusdate',
         reflect: true
       },
 
@@ -334,6 +359,7 @@ export class AuroDatePicker extends AuroElement {
        */
       calendarStartDate: {
         type: String,
+        attribute: 'calendarstartdate',
         reflect: true
       },
 
@@ -341,7 +367,8 @@ export class AuroDatePicker extends AuroElement {
        * The date that determines the currently visible month.
        */
       centralDate: {
-        type: String
+        type: String,
+        attribute: 'centraldate'
       },
 
       /**
@@ -357,6 +384,7 @@ export class AuroDatePicker extends AuroElement {
        */
       dvInputOnly: {
         type: Boolean,
+        attribute: 'dvinputonly',
         reflect: true
       },
 
@@ -394,6 +422,7 @@ export class AuroDatePicker extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
@@ -402,11 +431,13 @@ export class AuroDatePicker extends AuroElement {
        */
       hasAllValues: {
         type: Boolean,
+        attribute: false,
         reflect: false
       },
 
       hasFocus: {
         type: Boolean,
+        attribute: false,
         reflect: false,
       },
 
@@ -415,10 +446,14 @@ export class AuroDatePicker extends AuroElement {
        */
       hasValue: {
         type: Boolean,
+        attribute: false,
         reflect: false,
       },
 
-      /** Exposes inputmode attribute for input. */
+      /**
+       * Sets the `inputmode` attribute on the underlying input, hinting at the virtual keyboard to display.
+       * @type {'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'}
+       */
       inputmode: {
         type: String,
         attribute: true,
@@ -431,6 +466,7 @@ export class AuroDatePicker extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: 'largefullscreenheadline',
         reflect: true
       },
 
@@ -441,6 +477,29 @@ export class AuroDatePicker extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the datepicker.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the datepicker.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'lg'
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -449,6 +508,7 @@ export class AuroDatePicker extends AuroElement {
        */
       maxDate: {
         type: String,
+        attribute: 'maxdate',
         reflect: true
       },
 
@@ -457,22 +517,26 @@ export class AuroDatePicker extends AuroElement {
        */
       minDate: {
         type: String,
+        attribute: 'mindate',
         reflect: true
       },
 
       /**
-       * @private
+       * When set, the calendar displays the month before the year in the header.
        */
       monthFirst: {
-        type: Boolean
+        type: Boolean,
+        attribute: 'monthfirst'
       },
 
       /**
        * Names of all 12 months to render in the calendar.
        * When omitted, month names will be automatically populated from the active `locale` (falling back to `en-US`).
+       * @type {string[]}
        */
       monthNames: {
-        type: Array
+        type: Array,
+        attribute: 'monthnames'
       },
 
       /**
@@ -481,6 +545,7 @@ export class AuroDatePicker extends AuroElement {
        */
       navLabelNextMonth: {
         type: String,
+        attribute: 'navlabelnextmonth',
         reflect: true
       },
 
@@ -490,6 +555,7 @@ export class AuroDatePicker extends AuroElement {
        */
       navLabelPrevMonth: {
         type: String,
+        attribute: 'navlabelprevmonth',
         reflect: true
       },
 
@@ -499,6 +565,7 @@ export class AuroDatePicker extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: 'noflip',
         reflect: true
       },
 
@@ -507,6 +574,7 @@ export class AuroDatePicker extends AuroElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
@@ -521,9 +589,11 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -542,6 +612,7 @@ export class AuroDatePicker extends AuroElement {
        */
       placeholderEndDate: {
         type: String,
+        attribute: 'placeholderenddate',
         reflect: true
       },
 
@@ -572,6 +643,7 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelAfterRange: {
         type: String,
+        attribute: 'rangelabelafterrange',
         reflect: true
       },
 
@@ -581,6 +653,7 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelBeforeRange: {
         type: String,
+        attribute: 'rangelabelbeforerange',
         reflect: true
       },
 
@@ -590,6 +663,7 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelEnd: {
         type: String,
+        attribute: 'rangelabelend',
         reflect: true
       },
 
@@ -601,6 +675,7 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelEndPreview: {
         type: String,
+        attribute: 'rangelabelendpreview',
         reflect: true
       },
 
@@ -610,6 +685,7 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelInRange: {
         type: String,
+        attribute: 'rangelabelinrange',
         reflect: true
       },
 
@@ -619,15 +695,18 @@ export class AuroDatePicker extends AuroElement {
        */
       rangeLabelStart: {
         type: String,
+        attribute: 'rangelabelstart',
         reflect: true
       },
 
       /**
        * Dates that the user should have for reference as part of their decision-making when selecting a date.
        * This should be a JSON string array of ISO date strings (`YYYY-MM-DD`).
+       * @type {string[]}
        */
       referenceDates: {
         type: Array,
+        attribute: 'referencedates',
         reflect: true
       },
 
@@ -643,7 +722,8 @@ export class AuroDatePicker extends AuroElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
@@ -651,28 +731,32 @@ export class AuroDatePicker extends AuroElement {
        * Also used as the validation message when a blackout date is typed into the input.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `rangeOverflow`.
        */
       setCustomValidityRangeOverflow: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityrangeoverflow'
       },
 
       /**
        * Custom help text message to display when validity = `rangeUnderflow`.
        */
       setCustomValidityRangeUnderflow: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityrangeunderflow'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
@@ -720,7 +804,8 @@ export class AuroDatePicker extends AuroElement {
        * Value selected for the second datepicker when using date range.
        */
       valueEnd: {
-        type: String
+        type: String,
+        attribute: 'valueend'
       }
     };
   }

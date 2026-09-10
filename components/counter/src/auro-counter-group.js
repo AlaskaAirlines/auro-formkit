@@ -43,11 +43,17 @@ import iconVersion from "./iconVersion.js";
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
+ *
+ * @csspart dropdown - The dropdown element rendered when `isDropdown` is true.
+ * @csspart helpText - The help text and error message container.
+ *
+ * @event input - Notifies that the counter group's value has changed.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
     super();
 
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.max = undefined;
     this.min = undefined;
@@ -58,12 +64,15 @@ export class AuroCounterGroup extends AuroElement {
 
     this.matchWidth = false;
     this.isDropdown = false;
+
+    /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
     this.largeFullscreenHeadline = false;
     this.autoPlacement = false;
     this.noFlip = false;
     this.shift = false;
 
+    /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
     this.placement = 'bottom-start';
 
     /**
@@ -155,6 +164,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: "autoplacement",
         reflect: true
       },
 
@@ -187,6 +197,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: "fullscreenbreakpoint",
         reflect: true
       },
 
@@ -194,7 +205,8 @@ export class AuroCounterGroup extends AuroElement {
        * If true, the counter group is displayed as a dropdown.
        */
       isDropdown: {
-        type: Boolean
+        type: Boolean,
+        attribute: "isdropdown"
       },
 
       /**
@@ -204,6 +216,29 @@ export class AuroCounterGroup extends AuroElement {
        */
       layout: {
         type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the counter group when it is a dropdown.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the counter group when it is a dropdown.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'xl'
+       */
+      size: {
+        type: String,
+        attribute: "size",
         reflect: true
       },
 
@@ -213,6 +248,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: "matchwidth",
         reflect: true
       },
 
@@ -238,6 +274,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: "largefullscreenheadline",
         reflect: true
       },
 
@@ -247,6 +284,7 @@ export class AuroCounterGroup extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: "noflip",
         reflect: true
       },
 
@@ -269,9 +307,11 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance` instead.
+       * @deprecated Use `appearance` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: "ondark",
         reflect: true
       },
 
@@ -302,6 +342,7 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * The current individual values of the nested counters.
+       * @type {Record<string, number>}
        */
       value: {
         type: Object,
@@ -612,6 +653,19 @@ export class AuroCounterGroup extends AuroElement {
     this.validation.validate(this, force);
   }
 
+  /**
+   * Resets the counter group to its initial state by resetting each child counter and clearing validity.
+   * Each child reset dispatches an `input` event, which triggers `updateValue()` to recompute `value`/`total`.
+   * @returns {void}
+   */
+  reset() {
+    if (this.counters) {
+      this.counters.forEach((counter) => counter.reset());
+    }
+
+    this.validation.reset(this);
+  }
+
   updated(changedProperties) {
     if (changedProperties.has("value")) {
       this.validate();
@@ -649,9 +703,13 @@ export class AuroCounterGroup extends AuroElement {
         if (!this.dropdown?.isPopoverVisible || this.dropdown?.isBibFullscreen) {
           return;
         }
+
+        // Focus moved to a specific element still inside the group — keep the bib open.
         if (event.relatedTarget && this.contains(event.relatedTarget)) {
           return;
         }
+
+        // Focus moved to a known element outside the group (e.g. Tab to the next field).
         this.hideBib();
       });
     }

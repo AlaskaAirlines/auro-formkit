@@ -3985,6 +3985,185 @@ function runFullTest(mobileView) {
             await expect(activeInput.value).to.not.be.ok;
           });
 
+          // AB#1634257: clearing an actual selection with the clear button
+          // must fully reset the reported value and optionSelected, not just
+          // the visible input. auro-input's clear fires an `isProgrammatic`
+          // input event whose shape matches the SPA-preselect echo the
+          // handleInputValueChange guard bails on; without the clear-button
+          // tracking flag the guard swallowed the reset and left value stale.
+          it('resets value and optionSelected after a real selection is cleared', async () => {
+            const el = await defaultFixture(mobileView);
+            await elementUpdated(el);
+
+            // Select a real option.
+            el.focus();
+            await elementUpdated(el);
+            await sendKeys({ press: 'a' });
+            el.input.click();
+            await elementUpdated(el);
+            await waitUntil(() => el.dropdown.isPopoverVisible);
+
+            if (mobileView) {
+              el.inputInBib.focus();
+              await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+            }
+
+            const option = el.menu.querySelector('auro-menuoption[value="Apples"]');
+            option.click();
+            await elementUpdated(el);
+            await el.menu.updateComplete;
+            // Let the display-value sync settle (matches a user clicking clear
+            // after the selection has committed, not mid-sync).
+            await el.input.updateComplete;
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            expect(el.value).to.equal('Apples');
+            expect(el.optionSelected).to.be.ok;
+
+            const activeInput = mobileView ? el.inputInBib : el.input;
+            const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
+            await expect(clearBtn).to.exist;
+
+            clearBtn.click();
+            await elementUpdated(el);
+            await el.updateComplete;
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            await expect(el.value).to.not.be.ok;
+            await expect(el.optionSelected).to.not.be.ok;
+            await expect(el.menu.value).to.not.be.ok;
+          });
+
+          // AB#1634259: clearing must refresh the open menu so no option keeps
+          // its selected styling. If the menu options were rebuilt after a value
+          // was set, an option can still carry a stale `selected` attribute while
+          // menu.value/optionSelected are already null — clear()'s reset() guard
+          // is skipped in that case, so the option kept rendering as selected.
+          // clear() must strip that stale DOM regardless of the null properties.
+          it('removes stale selected styling from all options on clear', async () => {
+            const el = await presetValueFixture(mobileView);
+            await elementUpdated(el);
+            await el.menu.updateComplete;
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            const apples = el.menu.querySelector('auro-menuoption[value="Apples"]');
+            expect(apples.hasAttribute('selected')).to.be.true;
+
+            // Simulate a dynamic option rebuild that orphaned the DOM from the
+            // menu's selection state: the reactive selection properties have been
+            // reconciled to null, but the option element still carries the stale
+            // `selected`/`aria-selected` attributes from before the rebuild.
+            el.menu.optionSelected = undefined;
+            el.menu.value = undefined;
+            el.menu._selectedKey = undefined;
+            await el.menu.updateComplete;
+            apples.setAttribute('selected', '');
+            apples.setAttribute('aria-selected', 'true');
+
+            el.clear();
+            await elementUpdated(el);
+            await el.menu.updateComplete;
+
+            const stillSelected = [...el.menu.querySelectorAll('auro-menuoption[selected]')];
+            expect(stillSelected, 'no option should keep the selected attribute').to.be.empty;
+            expect(apples.getAttribute('aria-selected')).to.equal('false');
+          });
+
+          // AB#1634257 (hardening): the clear-button flag is a one-shot that must
+          // never survive a handleInputValueChange call. Even when the fullscreen
+          // bib branch bails early on _syncingDisplayValue (before the original
+          // consume point), the flag is now consumed at the top of the method, so
+          // it cannot leak into a later SPA-preselect echo and clobber the value.
+          it('consumes the clear-button flag even when the bib branch bails early', async () => {
+            const el = await defaultFixture(mobileView);
+            await elementUpdated(el);
+
+            el._clearBtnActivated = true;
+            // Force the early return inside the inputInBib branch.
+            el._syncingDisplayValue = true;
+
+            el.handleInputValueChange({ target: el.inputInBib, isProgrammatic: true });
+
+            expect(el._clearBtnActivated, 'flag must be consumed on every entry').to.be.false;
+
+            el._syncingDisplayValue = false;
+          });
+
+          // AB#1634257 (hardening): the capture listener bounds the flag's lifetime
+          // with a macrotask reset, so an activation that is never followed by an
+          // input event (the only realistic path being auro-input throwing before
+          // it fires the event) cannot survive indefinitely and be misread as a
+          // genuine clear by a later unrelated event.
+          it('auto-clears the clear-button flag on the next macrotask when no input event follows', async () => {
+            const el = await defaultFixture(mobileView);
+            await elementUpdated(el);
+
+            const activeInput = mobileView ? el.inputInBib : el.input;
+            // A .clearBtn-matching node with no auro-input @click handler, so the
+            // combobox's capture listener sets the flag but nothing consumes it
+            // synchronously (mimics the abandoned-activation path).
+            const fakeBtn = document.createElement('span');
+            fakeBtn.className = 'clearBtn';
+            activeInput.shadowRoot.appendChild(fakeBtn);
+
+            fakeBtn.click();
+            expect(el._clearBtnActivated, 'capture phase set the flag').to.be.true;
+
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            expect(el._clearBtnActivated, 'macrotask reset the abandoned flag').to.be.false;
+
+            fakeBtn.remove();
+          });
+
+          // AB#1634257 (hardening): the direct complement to the macrotask
+          // auto-clear test above. If the element disconnects INSIDE the
+          // clear-click -> macrotask window, disconnectedCallback cancels the
+          // timer that would reset the flag. Without also resetting the flag
+          // there, it stays `true`; instance state survives reconnect, so the
+          // first SPA-preselect echo (isProgrammatic + set value + empty input)
+          // would bypass the guard and silently clear value/optionSelected.
+          it('resets the clear-button flag on disconnect so a post-reconnect preselect echo cannot clobber the value', async () => {
+            const el = await defaultFixture(mobileView);
+            await elementUpdated(el);
+
+            const parent = el.parentNode;
+            const nextSibling = el.nextSibling;
+
+            // Abandoned activation on the trigger input: the capture listener
+            // sets the flag and schedules the macrotask reset, but nothing
+            // consumes it synchronously.
+            const fakeBtn = document.createElement('span');
+            fakeBtn.className = 'clearBtn';
+            el.input.shadowRoot.appendChild(fakeBtn);
+            fakeBtn.click();
+            expect(el._clearBtnActivated, 'capture phase set the flag').to.be.true;
+
+            // Disconnect inside the window, before the macrotask fires. This
+            // cancels the reset timer, so disconnectedCallback must reset the
+            // flag itself.
+            parent.removeChild(el);
+            expect(el._clearBtnActivated, 'disconnect reset the stranded flag').to.be.false;
+
+            // Reconnect — web-component instance state survives.
+            parent.insertBefore(el, nextSibling);
+            await elementUpdated(el);
+
+            // Shape a committed selection with an empty input so an SPA-preselect
+            // echo matches the guard.
+            el.value = 'Apples';
+            el.optionSelected = { value: 'Apples' };
+            el.input.value = '';
+
+            el.handleInputValueChange({ target: el.input, isProgrammatic: true });
+
+            // With the flag correctly reset on disconnect, the echo bails at the
+            // guard and leaves the selection intact instead of silently clearing it.
+            expect(el.value, 'value must survive the preselect echo').to.equal('Apples');
+            expect(el.optionSelected, 'optionSelected must survive the preselect echo').to.be.ok;
+
+            fakeBtn.remove();
+          });
+
           if (mobileView) {
             it('should clear the trigger input value when its clear button is clicked', async () => {
               const el = await defaultFixture(mobileView);

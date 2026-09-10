@@ -20,6 +20,8 @@ export class AuroHelpText extends LitElement {
     super();
 
     this.error = false;
+
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
     this.onDark = false;
     this.hasTextContent = false;
@@ -40,8 +42,8 @@ export class AuroHelpText extends LitElement {
     return {
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'} - The appearance of the help text, either default (for light backgrounds) or inverse (for dark backgrounds).
+       * The appearance of the help text, either default (for light backgrounds) or inverse (for dark backgrounds).
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -54,6 +56,7 @@ export class AuroHelpText extends LitElement {
        */
       slotNodes: {
         type: Boolean,
+        attribute: 'slotnodes',
       },
 
       /**
@@ -61,6 +64,7 @@ export class AuroHelpText extends LitElement {
        */
       hasTextContent: {
         type: Boolean,
+        attribute: 'hastextcontent',
       },
 
       /**
@@ -73,9 +77,11 @@ export class AuroHelpText extends LitElement {
 
       /**
        * DEPRECATED - use `appearance` instead.
+       * @deprecated Use `appearance` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       }
     };

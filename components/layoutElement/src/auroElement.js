@@ -1,36 +1,36 @@
 import { LitElement } from "lit";
 
+/**
+ * AuroElement is the shared base class for layout-aware Auro form components.
+ *
+ * It defines the common `layout`, `shape`, `size`, and `ondark` reactive
+ * properties and the architecture helpers (`renderLayout`, `resetShapeClasses`,
+ * `resetLayoutClasses`) that subclasses use to render a chosen layout and apply
+ * the matching `shape-*` / `layout-*` wrapper classes. Subclasses supply their
+ * own default and valid value set for `layout`, `shape`, and `size`.
+ */
 export class AuroElement extends LitElement {
   static get properties() {
     return {
 
       /**
-       * Defines the language of an element.
-       * @default {'default'}
+       * When true, renders the component styled for use on a dark background.
        */
-      layout: {
-        type: String,
-        attribute: "layout",
-        reflect: true
-      },
-
-      shape: {
-        type: String,
-        attribute: "shape",
-        reflect: true
-      },
-
-      size: {
-        type: String,
-        attribute: "size",
-        reflect: true
-      },
-
       onDark: {
         type: Boolean,
         attribute: "ondark",
         reflect: true
       }
+
+      // NOTE: `layout`, `shape`, and `size` are intentionally NOT declared here.
+      // Their valid value sets differ per component, and the CEM analyzer roots
+      // an inherited property's `type` in the class that declares it — a base
+      // declaration would force every subclass's `@type` to be discarded and
+      // emitted as plain `string`. Each subclass declares its own `layout` /
+      // `shape` / `size` with an exact `@type` union instead. AuroElement still
+      // consumes `this.layout` / `this.shape` / `this.size` in its render and
+      // architecture helpers below (subclasses guarantee the reactive props).
+      // See AlaskaAirlines/discussions#653.
     };
   }
 

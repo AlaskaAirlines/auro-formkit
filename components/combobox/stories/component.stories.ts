@@ -589,6 +589,11 @@ export const ComboboxInDialogBibOpen: Story = {
 </auro-dialog>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const dialog = canvasElement.querySelector('auro-dialog') as any;
+    await dialog.updateComplete;
+    // wait a bit for the dialog to finish its open transition before focusing the combobox
+    await new Promise((r) => setTimeout(r, 500));
+
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     el.focus();
@@ -644,6 +649,11 @@ export const ComboboxInDrawerBibOpen: Story = {
 </auro-drawer>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const drawer = canvasElement.querySelector('auro-drawer') as any;
+    // wait a bit for the drawer to finish its open transition before focusing the combobox
+    await drawer.updateComplete;
+    await new Promise((r) => setTimeout(r, 500));
+
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     el.focus();

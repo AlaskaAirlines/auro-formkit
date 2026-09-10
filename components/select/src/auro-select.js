@@ -54,6 +54,9 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @csspart dropdownChevron - Apply CSS to the collapsed/expanded state icon container.
  * @csspart dropdownSize - Apply size styles to the dropdown bib (height, width, maxHeight, maxWidth only).
  * @csspart helpText - Apply CSS to the help text.
+ * @csspart wrapper - Apply CSS to the root wrapper element of the select.
+ * @csspart dropdown - Apply CSS to the underlying dropdown element.
+ * @csspart displayValue - Apply CSS to the custom displayValue container.
  */
 
 // build the component class
@@ -180,6 +183,7 @@ export class AuroSelect extends AuroElement {
        */
       autoPlacement: {
         type: Boolean,
+        attribute: 'autoplacement',
         reflect: true
       },
 
@@ -212,6 +216,7 @@ export class AuroSelect extends AuroElement {
        */
       flexMenuWidth: {
         type: Boolean,
+        attribute: 'flexmenuwidth',
         reflect: true,
       },
 
@@ -228,6 +233,7 @@ export class AuroSelect extends AuroElement {
        */
       forceDisplayValue: {
         type: Boolean,
+        attribute: 'forcedisplayvalue',
         reflect: true
       },
 
@@ -241,6 +247,7 @@ export class AuroSelect extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        attribute: 'fullscreenbreakpoint',
         reflect: true
       },
 
@@ -267,6 +274,7 @@ export class AuroSelect extends AuroElement {
        */
       isPopoverVisible: {
         type: Boolean,
+        attribute: false,
         reflect: false
       },
 
@@ -276,6 +284,7 @@ export class AuroSelect extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        attribute: 'largefullscreenheadline',
         reflect: true
       },
 
@@ -294,6 +303,7 @@ export class AuroSelect extends AuroElement {
        */
       matchWidth: {
         type: Boolean,
+        attribute: 'matchwidth',
         reflect: true
       },
 
@@ -319,6 +329,7 @@ export class AuroSelect extends AuroElement {
        */
       noCheckmark: {
         type: Boolean,
+        attribute: 'nocheckmark',
         reflect: true
       },
 
@@ -328,6 +339,7 @@ export class AuroSelect extends AuroElement {
        */
       noFlip: {
         type: Boolean,
+        attribute: 'noflip',
         reflect: true
       },
 
@@ -336,6 +348,7 @@ export class AuroSelect extends AuroElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
@@ -350,9 +363,11 @@ export class AuroSelect extends AuroElement {
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -361,7 +376,8 @@ export class AuroSelect extends AuroElement {
        * @type {HTMLElement|Array<HTMLElement>}
        */
       optionSelected: {
-        type: Object
+        type: Object,
+        attribute: false
       },
 
       /**
@@ -394,21 +410,24 @@ export class AuroSelect extends AuroElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
@@ -454,6 +473,7 @@ export class AuroSelect extends AuroElement {
        */
       typeaheadTimeoutMs: {
         type: Number,
+        attribute: 'typeaheadtimeoutms',
         reflect: true
       },
 

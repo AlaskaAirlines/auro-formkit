@@ -19,6 +19,7 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
  * Base class for auro-input component that provides core input functionality.
  * @event input - Event fires when the value of an `auro-input` has been changed.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
+ * @event auroInput-validityChange - Notifies that the `validity` state of the input has changed.
  */
 export default class BaseInput extends AuroElement {
 
@@ -49,7 +50,10 @@ export default class BaseInput extends AuroElement {
     // during its own update cycle sees a populated util instance.
     this.activeLabel = false;
 
-    /** @private */
+    /**
+     * @private
+     * @type {string[]}
+     */
     this.allowedInputTypes = [
       "text",
       "number",
@@ -58,9 +62,14 @@ export default class BaseInput extends AuroElement {
       "credit-card",
       "tel"
     ];
+
+    /** @type {'default' | 'inverse'} */
     this.appearance = "default";
 
-    /** @private */
+    /**
+     * @private
+     * @type {Record<string, string>}
+     */
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
       'dd/mm/yyyy': 'dateDDMMYYYY',
@@ -91,7 +100,6 @@ export default class BaseInput extends AuroElement {
 
     /** @private */
     this.label = 'Input label is undefined';
-    this.layout = 'classic';
     this.locale = 'en-US';
     this._format = undefined;
 
@@ -107,17 +115,18 @@ export default class BaseInput extends AuroElement {
     this.setCustomValidityForType = undefined;
     // Credit Card is intentionally excluded — its mask manages the cursor
     // itself, and listing it here caused cursor placement issues in Safari.
-    /** @private */
+    /**
+     * @private
+     * @type {string[]}
+     */
     this.setSelectionInputTypes = [
       "text",
       "password",
       "email"
     ];
-    this.shape = 'classic';
 
     /** @private */
     this.showPassword = false;
-    this.size = 'lg';
     this.touched = false;
 
     /** @private */
@@ -135,6 +144,24 @@ export default class BaseInput extends AuroElement {
     /** @private */
     this.validationCCLength = undefined;
     this.value = undefined;
+
+    this.initializeArchitectureDefaults();
+  }
+
+  /**
+   * Sets the default `layout`, `shape`, and `size` values.
+   *
+   * These are assigned in a helper method rather than the constructor body so
+   * the CEM analyzer keeps their `@type` string-literal unions (a literal
+   * assignment in the constructor would make the analyzer infer `string` and
+   * override the union — see AlaskaAirlines/discussions#653, gotcha 1).
+   * @private
+   * @returns {void}
+   */
+  initializeArchitectureDefaults() {
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
   }
 
   // function to define props used within the scope of this component
@@ -143,10 +170,44 @@ export default class BaseInput extends AuroElement {
       ...super.properties,
 
       /**
+       * Sets the layout variant of the input.
+       * @type {'classic' | 'emphasized' | 'emphasized-left' | 'emphasized-right' | 'snowflake' | 'snowflake-left' | 'snowflake-right'}
+       * @default 'classic'
+       */
+      layout: {
+        type: String,
+        attribute: "layout",
+        reflect: true
+      },
+
+      /**
+       * Sets the shape of the input.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @default 'classic'
+       */
+      shape: {
+        type: String,
+        attribute: "shape",
+        reflect: true
+      },
+
+      /**
+       * Sets the size of the input.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @default 'lg'
+       */
+      size: {
+        type: String,
+        attribute: "size",
+        reflect: true
+      },
+
+      /**
        * The value for the role attribute.
        */
       a11yRole: {
         type: String,
+        attribute: 'a11yrole',
         reflect: true
       },
 
@@ -155,6 +216,7 @@ export default class BaseInput extends AuroElement {
        */
       a11yControls: {
         type: String,
+        attribute: 'a11ycontrols',
         reflect: true
       },
 
@@ -163,6 +225,7 @@ export default class BaseInput extends AuroElement {
        */
       a11yExpanded: {
         type: Boolean,
+        attribute: 'a11yexpanded',
         reflect: true
       },
 
@@ -172,6 +235,7 @@ export default class BaseInput extends AuroElement {
        */
       a11yActivedescendant: {
         type: String,
+        attribute: 'a11yactivedescendant',
         reflect: true
       },
 
@@ -182,6 +246,7 @@ export default class BaseInput extends AuroElement {
        */
       activeLabel: {
         type: Boolean,
+        attribute: 'activelabel',
         reflect: true
       },
 
@@ -196,7 +261,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters].
+       * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user.
+       * @type {'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'}
        */
       autocapitalize: {
         type: String,
@@ -213,6 +279,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
+       * @type {'on' | 'off'}
        */
       autocorrect: {
         type: String,
@@ -223,7 +290,8 @@ export default class BaseInput extends AuroElement {
        * Custom help text message for email type validity.
        */
       customValidityTypeEmail: {
-        type: String
+        type: String,
+        attribute: 'customvaliditytypeemail'
       },
 
       /**
@@ -239,6 +307,7 @@ export default class BaseInput extends AuroElement {
        */
       dvInputOnly: {
         type: Boolean,
+        attribute: 'dvinputonly',
         reflect: true
       },
 
@@ -254,7 +323,8 @@ export default class BaseInput extends AuroElement {
        * Contains the help text message for the current validity error.
        */
       errorMessage: {
-        type: String
+        type: String,
+        attribute: 'errormessage'
       },
 
       /**
@@ -290,6 +360,7 @@ export default class BaseInput extends AuroElement {
        */
       hideLabelVisually: {
         type: Boolean,
+        attribute: 'hidelabelvisually',
         reflect: true
       },
 
@@ -356,6 +427,7 @@ export default class BaseInput extends AuroElement {
        */
       maxLength: {
         type: Number,
+        attribute: 'maxlength',
         reflect: true
       },
 
@@ -371,6 +443,7 @@ export default class BaseInput extends AuroElement {
        */
       minLength: {
         type: Number,
+        attribute: 'minlength',
         reflect: true
       },
 
@@ -396,14 +469,17 @@ export default class BaseInput extends AuroElement {
        */
       noValidate: {
         type: Boolean,
+        attribute: 'novalidate',
         reflect: true
       },
 
       /**
        * DEPRECATED - use `appearance="inverse"` instead.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
+        attribute: 'ondark',
         reflect: true
       },
 
@@ -443,77 +519,88 @@ export default class BaseInput extends AuroElement {
        * Sets a custom help text message to display for all validityStates.
        */
       setCustomValidity: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidity'
       },
 
       /**
        * Custom help text message to display when validity = `badInput`.
        */
       setCustomValidityBadInput: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditybadinput'
       },
 
       /**
        * Custom help text message to display when validity = `customError`.
        */
       setCustomValidityCustomError: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditycustomerror'
       },
 
       /**
        * Custom help text message to display for the declared element `type` and type validity fails.
        */
       setCustomValidityForType: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityfortype'
       },
 
       /**
        * Custom help text message to display when validity = `patternMismatch`.
        */
       setCustomValidityPatternMismatch: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditypatternmismatch'
       },
 
       /**
        * Custom help text message to display when validity = `rangeOverflow`.
        */
       setCustomValidityRangeOverflow: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityrangeoverflow'
       },
 
       /**
        * Custom help text message to display when validity = `rangeUnderflow`.
        */
       setCustomValidityRangeUnderflow: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityrangeunderflow'
       },
 
       /**
        * Custom help text message to display when validity = `tooLong`.
        */
       setCustomValidityTooLong: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditytoolong'
       },
 
       /**
        * Custom help text message to display when validity = `tooShort`.
        */
       setCustomValidityTooShort: {
-        type: String
+        type: String,
+        attribute: 'setcustomvaliditytooshort'
       },
 
       /**
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
-        type: String
+        type: String,
+        attribute: 'setcustomvalidityvaluemissing'
       },
 
       /**
        * @ignore
        */
       showPassword: {
-        state: true
+        state: true,
+        attribute: false
       },
 
       /**
@@ -525,7 +612,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
+       * An enumerated attribute defines whether the element may be checked for spelling errors. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
+       * @type {'true' | 'false'}
        */
       spellcheck: {
         type: String,
@@ -556,7 +644,8 @@ export default class BaseInput extends AuroElement {
        * Sets validation mode to re-eval with each input.
        */
       validateOnInput: {
-        type: Boolean
+        type: Boolean,
+        attribute: 'validateoninput'
       },
 
       /**

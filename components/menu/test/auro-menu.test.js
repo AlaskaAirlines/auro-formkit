@@ -633,6 +633,28 @@ function runFullTest(mobileView) {
         expect(menu.value).to.eql('option 1');
       });
 
+      // AB#1634259: clearSelection() must strip the selected DOM, not just null
+      // the reactive properties. When an option carries a stale `selected`
+      // attribute while optionSelected is already undefined (e.g. options were
+      // rebuilt after a value was set), nulling the properties again schedules
+      // no re-render, so the option would keep rendering as selected.
+      it('clearSelection strips stale selected attributes from all options', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        // Orphan the DOM: selection properties already null, option still marked.
+        const option = menu.querySelector('auro-menuoption[value="option 2"]');
+        option.setAttribute('selected', '');
+        option.setAttribute('aria-selected', 'true');
+        expect(menu.optionSelected).to.equal(undefined);
+
+        menu.clearSelection();
+        await elementUpdated(menu);
+
+        expect(menu.querySelectorAll('auro-menuoption[selected]')).to.be.empty;
+        expect(option.getAttribute('aria-selected')).to.equal('false');
+      });
+
       // Verify reset() returns to undefined
       it('should handle undefined vs array state correctly in multi-select mode', async () => {
         const el = await multiSelectFixture();
