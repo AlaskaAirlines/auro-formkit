@@ -1,4 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
+import '@aurodesignsystem/auro-button';
 import { AuroCounter } from '../src/auro-counter.js';
 import { AuroCounterGroup } from '../src/auro-counter-group.js';
 
