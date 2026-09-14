@@ -624,15 +624,30 @@ function runFullTest(mobileView) {
     });
 
     describe('bib.fullscreen.footer', () => {
-      it('should render content in the bib.fullscreen.footer slot', async () => {
+      bibIt('should render content in the bib.fullscreen.footer slot', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <span slot="bib.fullscreen.footer">Footer text</span>
             <auro-counter>Counter</auro-counter>
           </auro-counter-group>
         `);
-        const slotContent = el.querySelector('[slot="bib.fullscreen.footer"]');
-        await expect(slotContent).to.exist;
+
+        el.dropdown.show();
+        await elementUpdated(el);
+
+        // The slotted content is relocated out of the light DOM and onto the
+        // bib template's `footer` slot.
+        const footerContent = el.bibtemplate.querySelector('[slot="footer"]');
+        expect(footerContent).to.exist;
+        expect(footerContent.textContent.trim()).to.equal('Footer text');
+
+        if (mobileView) {
+          // The bib template only renders the footer container in fullscreen.
+          await waitUntil(() => el.bibtemplate.shadowRoot.querySelector('#footerContainer'));
+
+          const footerSlot = el.bibtemplate.shadowRoot.querySelector('#footerContainer slot[name="footer"]');
+          expect(footerSlot.assignedNodes()).to.include(footerContent);
+        }
       });
     });
 
