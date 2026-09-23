@@ -27,6 +27,15 @@ declare global {
         name?: string;
         checked?: boolean | '';
       };
+      'auro-counter-group': React.HTMLAttributes<HTMLElement> & {
+        name?: string;
+      };
+      'auro-counter': React.HTMLAttributes<HTMLElement> & {
+        name?: string;
+        min?: number;
+        max?: number;
+        value?: number;
+      };
       'auro-button': React.HTMLAttributes<HTMLElement> & {
         type?: string;
         variant?: string;
@@ -89,6 +98,16 @@ export default function FormInteraction() {
           <auro-input name="optionalField" bordered>
             <span slot="label">Optional Field</span>
           </auro-input>
+          <button type="submit">Submit</button>
+        </auro-form>
+      </section>
+
+      {/* Form with a counter group that has an already-invalid child counter */}
+      <section data-testid="counter">
+        <auro-form>
+          <auro-counter-group name="passengers">
+            <auro-counter name="adults" min={0} max={1} value={2}>Adults</auro-counter>
+          </auro-counter-group>
           <button type="submit">Submit</button>
         </auro-form>
       </section>

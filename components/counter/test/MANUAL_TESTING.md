@@ -72,6 +72,7 @@ Run these first for a quick confidence check that the components work in a real 
 
 [ ] Verify dropdown positioning and bib rendering across Chrome, Safari, and Firefox
 [ ] Verify a counter-group dropdown nested inside an auro-dialog or auro-drawer opens/closes without disrupting the parent overlay
+[ ] Verify a counter-group with an errored child inside an auro-form still blocks submit, and the error outline/message persists after the submit attempt
 
 ### auro-counter-group — Screen Reader
 
