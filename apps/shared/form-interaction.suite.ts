@@ -366,6 +366,40 @@ export function formInteractionSuite(framework: string) {
       });
     });
 
+    // AB#1642340 — a counter-group's aggregated child-error state was being
+    // clobbered back to 'valid' by forced validation, so an invalid child
+    // counter no longer blocked form submission.
+    test.describe('Counter group form submission', () => {
+      test('an invalid child counter blocks submission through a real form', async ({ page }) => {
+        const counterGroup = page.locator('[data-testid="counter"] auro-counter-group');
+
+        // The child counter is invalid from load (value above max), so the
+        // submit button is correctly disabled -- call submit() directly, the
+        // same path auro-form's own click handler uses, and the same path
+        // that used to silently discard the group's invalid state.
+        await expect.poll(() => counterGroup.evaluate((el: any) => el.validity)).toBe('rangeOverflow');
+        await expect.poll(() => isSubmitDisabled(page, 'counter')).toBe(true);
+
+        await form(page, 'counter').evaluate((el: any) => {
+          (el as any).__submitFired = false;
+          el.addEventListener('submit', () => {
+            (el as any).__submitFired = true;
+          }, { once: true });
+        });
+
+        await form(page, 'counter').evaluate((el: any) => el.submit());
+        await page.waitForTimeout(300);
+
+        await expect.poll(() =>
+          form(page, 'counter').evaluate((el: any) => (el as any).__submitFired),
+        ).toBe(false);
+
+        // The group must still report invalid after the blocked submit attempt --
+        // this is the state that was previously lost by forced validation.
+        await expect.poll(() => counterGroup.evaluate((el: any) => el.validity)).toBe('rangeOverflow');
+      });
+    });
+
     test.describe('Events', () => {
       test('fires change event when input value changes', async ({ page }) => {
         await form(page, 'simple').evaluate((el: any) => {
