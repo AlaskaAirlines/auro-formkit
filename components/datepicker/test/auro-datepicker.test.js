@@ -1282,6 +1282,175 @@ function runFullTest(mobileView) {
         expect(el.shadowRoot.activeElement).to.equal(input);
       });
 
+      // Verify that closing the fullscreen dialog on a coarse-pointer (touch)
+      // device does NOT re-focus the input programmatically. Native <dialog>
+      // restoration returns focus to the trigger as part of the closing tap;
+      // an extra gesture-decoupled .focus() is what iOS Safari penalizes by
+      // swallowing the user's next tap, forcing a second tap to reopen the
+      // calendar (AB#1634252).
+      it('should defer to native focus restoration on close for a coarse pointer', async () => {
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
+
+        // Report a coarse primary pointer so the close handler takes the
+        // touch-device branch. Delegate every other query (e.g. reduced motion)
+        // to the real implementation.
+        const originalMatchMedia = window.matchMedia;
+        window.matchMedia = (query) => {
+          if (query === '(pointer: coarse)') {
+            return { matches: true, media: query, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} };
+          }
+          return originalMatchMedia.call(window, query);
+        };
+
+        // Declared out here so both the matchMedia and the focus-spy restore
+        // can happen together in `finally`, even if an assertion throws.
+        let input;
+        let originalFocus;
+
+        try {
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          input = getInput(el, 0);
+
+          input.click();
+          await expect(dropdown.isPopoverVisible).to.be.true;
+          await el.dropdown.updateComplete;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // Sanity: the touch layout opened as a fullscreen modal dialog.
+          expect(dropdown.isBibFullscreen).to.be.true;
+
+          // Spy on the input's programmatic focus.
+          originalFocus = input.focus.bind(input);
+          let programmaticFocusCount = 0;
+          input.focus = () => {
+            programmaticFocusCount += 1;
+            originalFocus();
+          };
+
+          el.hideBib();
+          await elementUpdated(el);
+          // Let the close handler's focus-restoration rAF fire.
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(dropdown.isPopoverVisible).to.be.false;
+          // The trigger is re-enabled for interaction...
+          expect(dropdown.trigger.inert).to.be.false;
+          // ...but the input was NOT re-focused programmatically, so the user's
+          // next single tap produces a clean click that reopens the calendar.
+          expect(programmaticFocusCount).to.equal(0);
+        } finally {
+          if (input && originalFocus) {
+            input.focus = originalFocus;
+          }
+          window.matchMedia = originalMatchMedia;
+        }
+      });
+
+      // Positive control for the coarse-pointer test above: on a fine pointer
+      // (no coarse mock — the harness default), the same close flow DOES restore
+      // focus to the input exactly once. Without this, the coarse test's
+      // `programmaticFocusCount === 0` could pass vacuously if focus were never
+      // restored on this path at all; this proves the guard is the differentiator.
+      it('should restore focus to the input on close for a fine pointer', async () => {
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
+
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const input = getInput(el, 0);
+
+        input.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await el.dropdown.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        expect(dropdown.isBibFullscreen).to.be.true;
+
+        // Spy on the input's programmatic focus.
+        const originalFocus = input.focus.bind(input);
+        let programmaticFocusCount = 0;
+        input.focus = () => {
+          programmaticFocusCount += 1;
+          originalFocus();
+        };
+
+        try {
+          el.hideBib();
+          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(dropdown.isPopoverVisible).to.be.false;
+          expect(dropdown.trigger.inert).to.be.false;
+          // Fine pointer keeps the explicit restore, so the handler focuses the
+          // input exactly once (the dropdown's redundant generic restore is
+          // suppressed via noFocusRestoreOnClose).
+          expect(programmaticFocusCount).to.equal(1);
+        } finally {
+          input.focus = originalFocus;
+        }
+      });
+
+      // The public blur() method must dismiss the calendar WITHOUT bouncing focus
+      // back onto the trigger input. A consumer that calls datepicker.blur() after
+      // a selection (a documented way to close the calendar) otherwise leaves the
+      // trigger holding DOM focus; on touch devices that leftover focused-input
+      // state makes the OS consume the user's next tap, so reopening takes two
+      // taps. super.blur() moves activeElement off the component (clearing
+      // hasFocus), and noFocusRestoreOnClose suppresses the dropdown's generic
+      // focusTrigger(), so no gesture-decoupled programmatic .focus() fires and
+      // focus is left on <body> (AB#1634252).
+      it('should not re-focus the trigger on a blur()-driven close', async () => {
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
+
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const input = getInput(el, 0);
+
+        // Open the calendar as a fullscreen modal (mobile).
+        input.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await el.dropdown.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        expect(dropdown.isBibFullscreen).to.be.true;
+
+        // Mirror "after a date is selected".
+        el.value = '01/15/2025';
+        await elementUpdated(el);
+
+        // Spy on the trigger input's programmatic focus.
+        const originalFocus = input.focus.bind(input);
+        let programmaticFocusCount = 0;
+        input.focus = () => {
+          programmaticFocusCount += 1;
+          originalFocus();
+        };
+
+        try {
+          // The reported trigger: dismiss via the public blur() method.
+          el.blur();
+          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          expect(dropdown.isPopoverVisible).to.be.false;
+          // No gesture-decoupled programmatic focus restoration...
+          expect(programmaticFocusCount).to.equal(0);
+          // ...and focus is not parked on the datepicker's own trigger input.
+          expect(el.shadowRoot.activeElement).to.not.equal(input);
+        } finally {
+          input.focus = originalFocus;
+        }
+      });
+
       // Verify the 'fullscreenBreakpoint' property does not cycle through content in fullscreen bib when Tab is pressed.
       it('should not cycle through content in fullscreen bib when Tab is pressed', async () => {
         await setViewport({

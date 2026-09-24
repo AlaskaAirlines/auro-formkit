@@ -178,6 +178,14 @@ export class AuroDatePicker extends AuroElement {
     this.hasFocus = false;
 
     /**
+     * Tracks whether the current open cycle promoted the fullscreen bib via
+     * showModal(). Used by the close handler to decide whether native <dialog>
+     * focus restoration will fire (see the auroDropdown-toggled handler).
+     * @private
+     */
+    this._bibOpenedAsModal = false;
+
+    /**
      * @private
      */
     this.hasValue = false;
@@ -1232,6 +1240,15 @@ export class AuroDatePicker extends AuroElement {
     // a top-layer popover where :focus-within on the dropdown host returns false).
     this.dropdown.noHideOnThisFocusLoss = true;
 
+    // Suppress the dropdown's generic focus restoration on close — the
+    // datepicker manages its own focus in the auroDropdown-toggled handler
+    // below (respecting hasFocus / _restoreFocusOnClose, and deferring to the
+    // fullscreen dialog's native restoration on touch devices). Without this,
+    // the dropdown's setTimeout(focusTrigger) fires a second, gesture-decoupled
+    // programmatic focus on close, which on iOS Safari swallows the user's next
+    // tap and forces a second tap to reopen the calendar (AB#1634252).
+    this.dropdown.noFocusRestoreOnClose = true;
+
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
     // screen readers announce it as just "dialog" with no context.
@@ -1303,6 +1320,16 @@ export class AuroDatePicker extends AuroElement {
               bibEl.close();
               bibEl.open(true);
 
+              // Record that this open cycle actually promoted the dialog via
+              // showModal(). The close handler relies on this — not the broader
+              // isBibFullscreen flag — to decide whether native <dialog> focus
+              // restoration will occur, because isBibFullscreen is set
+              // synchronously in showBib() while this open(true) runs a
+              // microtask later. If the bib is closed before this resolves,
+              // showModal() never fires and there is no native restoration to
+              // defer to.
+              this._bibOpenedAsModal = true;
+
               doubleRaf(() => {
                 this.focusActiveCellWhenReady();
               });
@@ -1334,7 +1361,27 @@ export class AuroDatePicker extends AuroElement {
         this.dropdown.trigger.inert = false;
         const shouldRestoreFocus = this.hasFocus || this._restoreFocusOnClose;
         this._restoreFocusOnClose = false;
-        if (shouldRestoreFocus) {
+        // On coarse-pointer (touch) devices closing the fullscreen modal, rely
+        // on the <dialog>'s native focus restoration instead of forcing focus
+        // back onto the input. showModal() returns focus to the trigger anchor
+        // as part of the closing gesture, so a11y focus is preserved. Re-running
+        // .focus() here is a gesture-decoupled programmatic focus that iOS
+        // Safari penalizes: it swallows the user's next tap, so reopening the
+        // calendar takes two taps instead of one (AB#1634252). Fine-pointer
+        // (desktop) layouts keep the explicit restore for keyboard/SR
+        // correctness, and non-fullscreen bibs (no showModal, no native
+        // restoration) always restore explicitly.
+        //
+        // Gate on `_bibOpenedAsModal` — set only after the actual showModal()
+        // promotion (open(true)) — rather than `isBibFullscreen`, which is true
+        // as soon as the fullscreen layout is chosen but before the modal is
+        // promoted. If the bib is closed before that async promotion runs, no
+        // native restoration will occur, so we must still restore explicitly.
+        const bibWasModal = this._bibOpenedAsModal;
+        this._bibOpenedAsModal = false;
+        const useNativeFocusRestoration =
+          bibWasModal && window.matchMedia('(pointer: coarse)').matches;
+        if (shouldRestoreFocus && !useNativeFocusRestoration) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
               this.inputList[0].focus();
