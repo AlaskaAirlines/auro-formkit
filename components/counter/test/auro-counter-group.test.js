@@ -624,15 +624,30 @@ function runFullTest(mobileView) {
     });
 
     describe('bib.fullscreen.footer', () => {
-      it('should render content in the bib.fullscreen.footer slot', async () => {
+      bibIt('should render content in the bib.fullscreen.footer slot', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <span slot="bib.fullscreen.footer">Footer text</span>
             <auro-counter>Counter</auro-counter>
           </auro-counter-group>
         `);
-        const slotContent = el.querySelector('[slot="bib.fullscreen.footer"]');
-        await expect(slotContent).to.exist;
+
+        el.dropdown.show();
+        await elementUpdated(el);
+
+        // The slotted content is relocated out of the light DOM and onto the
+        // bib template's `footer` slot.
+        const footerContent = el.bibtemplate.querySelector('[slot="footer"]');
+        expect(footerContent).to.exist;
+        expect(footerContent.textContent.trim()).to.equal('Footer text');
+
+        if (mobileView) {
+          // The bib template only renders the footer container in fullscreen.
+          await waitUntil(() => el.bibtemplate.shadowRoot.querySelector('#footerContainer'));
+
+          const footerSlot = el.bibtemplate.shadowRoot.querySelector('#footerContainer slot[name="footer"]');
+          expect(footerSlot.assignedNodes()).to.include(footerContent);
+        }
       });
     });
 
@@ -926,30 +941,6 @@ function runFullTest(mobileView) {
   });
 
   describe('Private Functions', () => {
-    it('renderHelpTextErrors should return empty for no messages', async () => {
-      const el = await fixture(html`
-        <auro-counter-group>
-          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
-        </auro-counter-group>
-      `);
-      await elementUpdated(el);
-
-      const result = el.renderHelpTextErrors([]);
-      expect(result).to.exist;
-    });
-
-    it('renderHelpTextErrors should render messages', async () => {
-      const el = await fixture(html`
-        <auro-counter-group>
-          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
-        </auro-counter-group>
-      `);
-      await elementUpdated(el);
-
-      const result = el.renderHelpTextErrors(['Error 1', 'Error 2']);
-      expect(result).to.have.length(2);
-    });
-
     it('renderHelpText should render error state when validity is an error', async () => {
       const el = await fixture(html`
         <auro-counter-group isDropdown>
@@ -1068,6 +1059,220 @@ function runFullTest(mobileView) {
 
       expect(el.validity).to.equal('rangeOverflow');
       expect(el.errorMessage).to.not.be.undefined;
+    });
+  });
+
+  describe('Forced validation preserves child errors (AB#1642340)', () => {
+    describe('non-dropdown variant', () => {
+      it('keeps the group invalid through forced validation when the child settles first', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter min="0" max="1" value="2">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        // Let the group's own deferred aggregation settle before forcing validation.
+        await aTimeout(0);
+        expect(el.validity).to.equal('rangeOverflow');
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('rangeOverflow');
+      });
+
+      it('keeps the group invalid when forced validation runs before the group has adopted the child\'s state', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter min="0" max="1" value="2">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        // Force validate immediately -- before the deferred updateValidity()
+        // scheduled at slot configuration has had a chance to run.
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('rangeOverflow');
+      });
+
+      it('recovers a previously-lost error on a later forced validation', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter min="0" max="1" value="2">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+
+        el.validate(true);
+        await elementUpdated(el);
+        expect(el.validity).to.equal('rangeOverflow');
+
+        // A second forced validation must still report invalid, not stick at 'valid'.
+        el.validate(true);
+        await elementUpdated(el);
+        expect(el.validity).to.equal('rangeOverflow');
+      });
+
+      it('reports a readable error message rather than "[object Object]"', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter error="Custom error on Adults counter">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.errorMessage).to.be.a('string');
+        expect(el.errorMessage).to.not.include('[object Object]');
+        expect(el.errorMessage).to.include('Custom error on Adults counter');
+      });
+
+      it('joins multiple invalid children\'s messages with a sentence boundary, not a run-on string', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter error="Custom error on Adults counter">Adults</auro-counter>
+            <auro-counter error="Custom error on Children counter">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.errorMessage).to.equal('Custom error on Adults counter. Custom error on Children counter');
+      });
+
+      it('does not surface a stale message when the invalid child\'s new cause has no message of its own', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter error="Custom text">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+        expect(el.errorMessage).to.equal('Custom text');
+
+        // Simulate the child transitioning from a customError with a message to
+        // a rangeOverflow with no message of its own (the shared validator's
+        // default rangeOverflow message is '').
+        const counter = el.counters[0];
+        counter.validity = 'rangeOverflow';
+        counter.errorMessage = '';
+
+        el.updateValidity();
+        await aTimeout(0);
+
+        expect(el.validity).to.equal('rangeOverflow');
+        expect(el.errorMessage).to.be.undefined;
+      });
+
+      it('re-dispatches auroFormElement-validated with the corrected detail when forced validation clobbers a child-derived error', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter min="0" max="1" value="2">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+        expect(el.validity).to.equal('rangeOverflow');
+
+        const events = [];
+        el.addEventListener('auroFormElement-validated', (event) => events.push(event));
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        // The shared validator dispatches its own (incorrect, 'valid') event first;
+        // this fix's re-derivation dispatches a second, corrected event right after.
+        expect(events).to.have.length(2);
+        expect(events[0].detail.validity).to.equal('valid');
+        expect(events[1].detail.validity).to.equal('rangeOverflow');
+        expect(el.validity).to.equal('rangeOverflow');
+      });
+
+      it('does not re-dispatch a second auroFormElement-validated when the correction is a no-op', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter min="0" max="10" value="0">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+        expect(el.validity).to.equal('valid');
+
+        const events = [];
+        el.addEventListener('auroFormElement-validated', (event) => events.push(event));
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        // Only the shared validator's own event fires -- no redundant second
+        // dispatch, since the re-derivation didn't change anything here.
+        expect(events).to.have.length(1);
+        expect(events[0].detail.validity).to.equal('valid');
+        expect(el.validity).to.equal('valid');
+      });
+
+      it('preserves the group\'s own error through forced validation', async () => {
+        const el = await fixture(html`
+          <auro-counter-group error="Group level error">
+            <auro-counter min="0" max="10" value="0">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('customError');
+      });
+
+      it('resets to valid once the group\'s own error is cleared and children are valid', async () => {
+        const el = await fixture(html`
+          <auro-counter-group error="Group level error">
+            <auro-counter min="0" max="10" value="0">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        el.removeAttribute('error');
+        el.error = undefined;
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('valid');
+      });
+    });
+
+    describe('dropdown variant', () => {
+      bibIt('keeps the group invalid through forced validation while a child counter is invalid', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="ariaLabel.bib.close">Close Popup</span>
+            <div slot="bib.fullscreen.headline">Passengers</div>
+            <div slot="label">Passengers</div>
+            <auro-counter min="0" max="1" value="2">
+              Adults
+              <span slot="description">18 years or older</span>
+            </auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+        expect(el.validity).to.equal('rangeOverflow');
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('rangeOverflow');
+      });
     });
   });
 

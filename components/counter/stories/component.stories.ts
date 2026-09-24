@@ -155,11 +155,55 @@ export const DropdownOpenWithError: Story = {
   </auro-counter>
 </auro-counter-group>
   `,
-  async play({ canvas }: { canvas: any }) {
+  async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
     const trigger = await canvas.findByShadowText(/View errors/i);
     await userEvent.click(trigger);
     await wait(100);
     await wait(50);
+
+    // AB#1642340 -- with two invalid children, the aggregated message must read
+    // as two joined sentences, not a run-on string with no separator.
+    const group = canvasElement.querySelector('auro-counter-group') as any;
+    await expect(group.errorMessage).toBe('Custom error on Adults counter. Custom error on Children counter');
+  },
+};
+
+// AB#1642340 -- pins that a child counter's error survives forced validation
+// (what auro-form.submit() performs), instead of being reset to 'valid'.
+export const DropdownErrorSurvivesSubmit: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
+  render: () => html`
+<auro-counter-group isDropdown>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Passengers</span>
+  <div slot="label">Passengers</div>
+  <div slot="valueText">View errors</div>
+  <auro-counter error="Custom error on Adults counter">
+    Adults
+    <span slot="description">18 years or older</span>
+  </auro-counter>
+  <auro-counter error="Custom error on Children counter">
+    Children
+    <span slot="description">2–17 years</span>
+  </auro-counter>
+</auro-counter-group>
+  `,
+  async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const trigger = await canvas.findByShadowText(/View errors/i);
+    await userEvent.click(trigger);
+    await wait(100);
+
+    // Simulate the forced validation an auro-form submit performs.
+    const group = canvasElement.querySelector('auro-counter-group') as any;
+    group.validate(true);
+    await wait(50);
+
+    await expect(group.validity).not.toBe('valid');
   },
 };
 
