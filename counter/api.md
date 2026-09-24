@@ -41,9 +41,10 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 
 ## Events
 
-| Event   | Type                                             | Description                                      |
-|---------|--------------------------------------------------|--------------------------------------------------|
-| `input` | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` | Notifies that the counter group's value has changed. |
+| Event                       | Type                                             | Description                                      |
+|-----------------------------|--------------------------------------------------|--------------------------------------------------|
+| `auroFormElement-validated` | `CustomEvent<{ validity: any; message: string \| undefined; }>` | Notifies that the `validity` and `errorMessage` values have changed. |
+| `input`                     | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` | Notifies that the counter group's value has changed. |
 
 ## Slots
 
