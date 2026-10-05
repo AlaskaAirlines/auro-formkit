@@ -3,7 +3,7 @@
 , no-await-in-loop, no-implicit-coercion, jsdoc/require-jsdoc */
 
 import { fixture, fixtureSync, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import { setViewport, sendKeys } from '@web/test-runner-commands';
+import { setViewport, sendKeys, sendMouse, resetMouse } from '@web/test-runner-commands';
 import { unsafeStatic } from 'lit/static-html.js';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
@@ -3329,6 +3329,89 @@ function runFullTest(mobileView) {
         toggle.click();
         await elementUpdated(input);
         expect(input.type).to.equal('password');
+      });
+    });
+
+    describe('Clear button wrapper on hover and focus', () => {
+      afterEach(async () => {
+        await resetMouse();
+      });
+
+      const hover = async (el) => {
+        const rect = el.shadowRoot.querySelector('.wrapper').getBoundingClientRect();
+        await sendMouse({
+          type: 'move',
+          position: [Math.round(rect.left + (rect.width / 2)), Math.round(rect.top + (rect.height / 2))]
+        });
+      };
+
+      const interactions = {
+        hover,
+        focus: async (el) => {
+          el.shadowRoot.querySelector('input').focus();
+          await elementUpdated(el);
+        }
+      };
+
+      ['classic', 'emphasized', 'snowflake'].forEach((layout) => {
+        Object.entries(interactions).forEach(([name, interact]) => {
+          it(`does not shift the error icon on ${name} when empty in ${layout} layout`, async () => {
+            const el = await fixture(html`<auro-input layout="${layout}" label="First name"></auro-input>`);
+            el.validity = 'customError';
+            await elementUpdated(el);
+
+            const errorIcon = el.shadowRoot.querySelector('.alertNotification');
+            const before = errorIcon.getBoundingClientRect().left;
+
+            await interact(el);
+
+            const clearWrapper = el.shadowRoot.querySelector('.notification.clear');
+            expect(getComputedStyle(clearWrapper).display).to.equal('none');
+
+            // emphasized and snowflake hide the error icon on focus by design
+            if (name === 'focus' && layout !== 'classic') {
+              expect(getComputedStyle(errorIcon).display).to.equal('none');
+            } else {
+              expect(errorIcon.getBoundingClientRect().left).to.equal(before);
+            }
+          });
+
+          it(`shows the clear wrapper on ${name} when a value is present in ${layout} layout`, async () => {
+            const el = await fixture(html`<auro-input layout="${layout}" label="First name" value="some value"></auro-input>`);
+            await elementUpdated(el);
+
+            await interact(el);
+
+            const clearWrapper = el.shadowRoot.querySelector('.notification.clear');
+            expect(getComputedStyle(clearWrapper).display).to.equal('flex');
+            expect(clearWrapper.getBoundingClientRect().width).to.be.greaterThan(0);
+          });
+        });
+      });
+
+      it('keeps the clear wrapper hidden on hover when readonly or disabled with a value', async () => {
+        for (const attr of ['readonly', 'disabled']) {
+          const el = await fixture(html`<auro-input label="First name" value="some value"></auro-input>`);
+          el.setAttribute(attr, '');
+          await elementUpdated(el);
+
+          await hover(el);
+
+          const clearWrapper = el.shadowRoot.querySelector('.notification.clear');
+          expect(getComputedStyle(clearWrapper).display, attr).to.equal('none');
+        }
+      });
+
+      it('still reveals the password toggle on hover when a value is present', async () => {
+        const el = await fixture(html`<auro-input type="password" label="Password" value="secret"></auro-input>`);
+        await elementUpdated(el);
+
+        const passwordBtn = el.shadowRoot.querySelector('.passwordBtn');
+        expect(getComputedStyle(passwordBtn).display).to.equal('none');
+
+        await hover(el);
+
+        expect(getComputedStyle(passwordBtn).display).to.not.equal('none');
       });
     });
   });
