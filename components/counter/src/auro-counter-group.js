@@ -171,14 +171,6 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * The current error message to display when the component is invalid.
-       */
-      error: {
-        type: String,
-        reflect: false
-      },
-
-      /**
-       * The current error message to display when the component is invalid.
        * This is set by validation and is not available to consumers.
        * @private
        */
@@ -669,7 +661,7 @@ export class AuroCounterGroup extends AuroElement {
     // not at initial load or on ordinary interaction. See docs/post-mortem/1642340.md,
     // "Iterations That Didn't Work", for the attempt to scope this to `force` and
     // why it broke that behavior.
-    if (this.counters && !this.hasAttribute('error')) {
+    if (this.counters) {
       const previousValidity = this.validity;
       const previousMessage = this.errorMessage;
 
@@ -780,7 +772,7 @@ export class AuroCounterGroup extends AuroElement {
         <div slot="helpText">
           <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText" role="alert" aria-live="assertive">
-              ${this.error || this.errorMessage}
+              ${this.errorMessage}
             </p>
           </${this.helpTextTag}>
         </div>

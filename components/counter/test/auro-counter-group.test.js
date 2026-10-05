@@ -293,13 +293,30 @@ function runFullTest(mobileView) {
     });
 
     describe('error', () => {
-      it('should default to undefined', async () => {
+      // AB#1642036 -- the group's error state is driven solely by its counters'
+      // validity, so `error` is no longer part of the group's public API.
+      it('should not be a declared property', async () => {
         const el = await fixture(html`
-          <auro-counter-group>
+          <auro-counter-group error="Group level error">
             <auro-counter>Counter</auro-counter>
           </auro-counter-group>
         `);
+        expect(el.constructor.properties).to.not.have.property('error');
         await expect(el.error).to.be.undefined;
+      });
+
+      it('should derive its error message from invalid child counters', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter error="Custom error on Adults counter">Adults</auro-counter>
+            <auro-counter error="Custom error on Children counter">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await aTimeout(0);
+
+        expect(el.validity).to.equal('customError');
+        expect(el.errorMessage).to.equal('Custom error on Adults counter. Custom error on Children counter');
       });
 
       describe('Error on individual counter in group', () => {
@@ -949,7 +966,7 @@ function runFullTest(mobileView) {
       `);
       await elementUpdated(el);
 
-      el.error = 'Something went wrong';
+      el.errorMessage = 'Something went wrong';
       el.validity = 'customError';
       await elementUpdated(el);
 
@@ -958,6 +975,7 @@ function runFullTest(mobileView) {
 
       const alertP = helpTextEl.querySelector('[role="alert"]');
       expect(alertP).to.exist;
+      expect(alertP.textContent.trim()).to.equal('Something went wrong');
     });
 
     it('getInvalidCounters should filter invalid counters', async () => {
@@ -1220,7 +1238,9 @@ function runFullTest(mobileView) {
         expect(el.validity).to.equal('valid');
       });
 
-      it('preserves the group\'s own error through forced validation', async () => {
+      // AB#1642036 -- a leftover `error` attribute on the group must not
+      // override the validity derived from its counters.
+      it('ignores an error attribute on the group when its children are valid', async () => {
         const el = await fixture(html`
           <auro-counter-group error="Group level error">
             <auro-counter min="0" max="10" value="0">Adults</auro-counter>
@@ -1231,23 +1251,43 @@ function runFullTest(mobileView) {
         el.validate(true);
         await elementUpdated(el);
 
-        expect(el.validity).to.equal('customError');
+        // Same end state as a group with no `error` attribute at all.
+        expect(el.validity).to.equal('valid');
+        expect(el.errorMessage).to.equal('');
       });
 
-      it('resets to valid once the group\'s own error is cleared and children are valid', async () => {
+      it('does not dispatch a transient customError auroFormElement-validated for an error attribute on the group', async () => {
         const el = await fixture(html`
           <auro-counter-group error="Group level error">
             <auro-counter min="0" max="10" value="0">Adults</auro-counter>
           </auro-counter-group>
         `);
         await elementUpdated(el);
+        await aTimeout(0);
 
-        el.removeAttribute('error');
-        el.error = undefined;
+        const events = [];
+        el.addEventListener('auroFormElement-validated', (event) => events.push(event));
+
         el.validate(true);
         await elementUpdated(el);
 
-        expect(el.validity).to.equal('valid');
+        expect(events).to.have.length(1);
+        expect(events[0].detail.validity).to.equal('valid');
+      });
+
+      it('reports the child\'s error, not the group\'s error attribute, when a child is invalid', async () => {
+        const el = await fixture(html`
+          <auro-counter-group error="Group level error">
+            <auro-counter min="0" max="1" value="2">Adults</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('rangeOverflow');
+        expect(el.errorMessage).to.not.equal('Group level error');
       });
     });
 

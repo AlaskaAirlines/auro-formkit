@@ -138,7 +138,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="error">Error</auro-header>
-        <p>Use the <code>error</code> attribute to apply a persistent custom error message on the counter or counter group.</p>
+        <p>Use the <code>error</code> attribute to apply a persistent custom error message on an individual counter.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -149,7 +149,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="dropdownErrors">Dropdown Errors</auro-header>
-        <p>Individual counters within a dropdown can display their own error messages. The group <code>error</code> attribute overrides individual errors.</p>
+        <p>The counter group's error state and message are driven by the validity of its counters. When one or more counters are invalid, the group displays their error messages combined.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-error.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
