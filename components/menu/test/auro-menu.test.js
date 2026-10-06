@@ -1120,6 +1120,28 @@ function runFullTest(mobileView) {
         expect(option1.hasAttribute('aria-disabled')).to.be.false;
         expect(option2.getAttribute('aria-disabled')).to.equal('true');
       });
+
+      // AB#1566578 follow-up - `this.items` is a deep query, so re-enabling
+      // an unrelated root must not strip aria-disabled from a nested
+      // submenu's options that are still independently disabled.
+      it('should not clear aria-disabled on a nested submenu\'s options when an unrelated root re-enables', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOption = nestedMenu.querySelector('auro-menuoption');
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        expect(nestedOption.getAttribute('aria-disabled')).to.equal('true');
+
+        rootMenu.disabled = true;
+        await elementUpdated(rootMenu);
+        rootMenu.disabled = false;
+        await elementUpdated(rootMenu);
+
+        expect(nestedOption.getAttribute('aria-disabled')).to.equal('true');
+        expect(nestedMenu.disabled).to.be.true;
+      });
     });
 
     describe('hasLoadingPlaceholder', () => {

@@ -16,6 +16,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import {
   isOptionInteractive,
   isSelectableByValue,
+  hasDisabledAncestorMenu,
   dispatchMenuEvent,
   serializeMultiSelectValue,
   resolveSelectedOption,
@@ -743,13 +744,15 @@ export class AuroMenu extends AuroElement {
       // written onto the option (AB#1566578), but aria-disabled has to be
       // pushed proactively — unlike interactivity checks, AT reads it
       // directly off the DOM rather than through a JS getter. Only clear it
-      // on re-enable when the option isn't itself authored `disabled`, so an
-      // authored-disabled option's own aria-disabled (set independently by
-      // its own `updated()`) is never clobbered.
+      // on re-enable when the option isn't itself authored `disabled` AND no
+      // other ancestor menu in its chain is still disabled — `this.items` is
+      // a deep query, so toggling an unrelated root back on must not strip
+      // aria-disabled from a nested submenu's options that are still
+      // independently disabled.
       if (changedProperties.has('disabled')) {
         if (this.disabled) {
           option.setAttribute('aria-disabled', 'true');
-        } else if (!option.disabled) {
+        } else if (!option.disabled && !hasDisabledAncestorMenu(option)) {
           option.removeAttribute('aria-disabled');
         }
       }
