@@ -249,7 +249,10 @@ export class AuroMenuOption extends AuroElement {
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
-      } else {
+      } else if (!hasDisabledAncestorMenu(this)) {
+        // Authored `disabled` just turned off, but if an ancestor menu is
+        // still disabled (AB#1566578) this option is still inert — don't
+        // clear the announcement a still-disabled ancestor is responsible for.
         this.removeAttribute('aria-disabled');
       }
     }
@@ -281,7 +284,7 @@ export class AuroMenuOption extends AuroElement {
    * @private
    */
   handleClick() {
-    if (!this.disabled) {
+    if (!this.disabled && !hasDisabledAncestorMenu(this)) {
       // Pure event emitter: the parent menu owns selection state and will
       // update `selected` via setSelected(). Toggling here desyncs the option
       // UI from auro-menu.optionSelected (e.g. single-select re-click on the
