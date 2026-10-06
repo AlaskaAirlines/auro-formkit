@@ -21,6 +21,7 @@ import iconVersion from './iconVersion.js';
 
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
 import { classMap } from 'lit/directives/class-map.js';
+import { hasDisabledAncestorMenu } from './auro-menu-utils.js';
 
 let menuOptionIdCounter = 0;
 
@@ -196,7 +197,8 @@ export class AuroMenuOption extends AuroElement {
   get isActive() {
     return !this.hasAttribute('hidden') &&
       !this.disabled &&
-      !this.hasAttribute('static');
+      !this.hasAttribute('static') &&
+      !hasDisabledAncestorMenu(this);
   }
 
   connectedCallback() {

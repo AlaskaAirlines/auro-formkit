@@ -5,6 +5,8 @@
 
 /* stylelint-disable declaration-no-important, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
 
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+
 :host {
   ::slotted(hr) {
     border-top-color: var(--ds-auro-menu-divider-color);
@@ -18,6 +20,46 @@
 
   slot[name="loadingText"] {
     color: var(--ds-auro-menu-loader-text-color);
+  }
+}
+
+// A disabled menu renders its options inert without mutating their own
+// `disabled` state. Two declarations, covering two different needs:
+// 1. Plain inheritance on :host([disabled]) itself. Inherited custom
+//    properties cross every shadow boundary they encounter, no matter how
+//    many levels deep — so this is what makes a *nested* submenu's options
+//    dim when the ROOT is disabled, even though the nested <auro-menu>
+//    itself never receives `disabled` (by design — see auro-menu.js). An
+//    inherited value never outranks ANY local declaration on the element
+//    that receives it, so an authored-disabled or selected option's own
+//    locally-declared colors remain completely unaffected by this rule,
+//    at any depth, with zero specificity math required.
+// 2. ::slotted() with !important, scoped to this host's own direct option
+//    children only (does NOT reach through a nested submenu's own shadow
+//    tree — inheritance above covers that case instead). This declares a
+//    LOCAL value directly on the option, which — unlike inheritance — DOES
+//    compete in the same cascade as the option's own :host([selected])/
+//    :host([selected].active) rules, and wins unconditionally thanks to
+//    !important. Required because (1) alone cannot override a selected
+//    option's local color: an inherited value can never outrank ANY local
+//    declaration, full stop, regardless of !important or specificity.
+// Known residual gap: a selected (not individually disabled) option nested
+// inside a submenu that is itself NOT disabled, while only an ANCESTOR
+// (e.g. the root) is disabled, only receives the inherited (1) — its own
+// submenu's ::slotted() rule isn't active since that submenu isn't
+// `disabled` — so it keeps its accent color instead of fully dimming.
+// Functionally inert either way (JS blocks interaction regardless); this is
+// a narrow, accepted cosmetic limitation, not a correctness gap.
+:host([disabled]) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+
+  ::slotted(auro-menuoption),
+  ::slotted([auro-menuoption]) {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default}) !important;
+    --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled}) !important;
+    --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled}) !important;
   }
 }
 

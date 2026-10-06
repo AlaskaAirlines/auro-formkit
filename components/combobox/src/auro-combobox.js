@@ -655,12 +655,42 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Checks whether an option's own `disabled` or any ancestor `auro-menu`'s
+   * `disabled` (root or a nested submenu the option is slotted inside)
+   * applies. A menu never writes `disabled` onto its options (AB#1566578),
+   * so an ancestor's disabled state has to be resolved at check-time by
+   * walking up, mirroring `auro-menu`'s own `isOptionInteractive()`/
+   * `isSelectableByValue()` — duplicated here rather than imported since
+   * `auro-combobox` only ever talks to `auro-menu` through its public DOM
+   * contract, not its internal module.
+   * @private
+   * @param {HTMLElement} option - The option to check.
+   * @returns {boolean} True if the option or any ancestor menu is disabled.
+   */
+  isOptionOrAncestorMenuDisabled(option) {
+    if (option.disabled) {
+      return true;
+    }
+
+    let ancestor = option.closest('auro-menu, [auro-menu]');
+
+    while (ancestor) {
+      if (ancestor.disabled) {
+        return true;
+      }
+      ancestor = ancestor.parentElement ? ancestor.parentElement.closest('auro-menu, [auro-menu]') : null;
+    }
+
+    return false;
+  }
+
+  /**
    * Mark the first available (non-hidden), enabled option as `active`.
    * @private
    * @returns {void}
    */
   activateFirstEnabledAvailableOption() {
-    const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !opt.disabled && !opt.hasAttribute('nomatch'));
+    const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !this.isOptionOrAncestorMenuDisabled(opt) && !opt.hasAttribute('nomatch'));
     this.updateActiveOption(firstEnabledOptionIndex);
   }
 
@@ -674,7 +704,7 @@ export class AuroCombobox extends AuroElement {
 
     // Work backwards through the available options array to find the last enabled option
     for (let index = this.availableOptions.length - 1; index >= 0; index -= 1) {
-      if (!this.availableOptions[index].disabled && !this.availableOptions[index].hasAttribute('nomatch')) {
+      if (!this.isOptionOrAncestorMenuDisabled(this.availableOptions[index]) && !this.availableOptions[index].hasAttribute('nomatch')) {
         lastEnabledOptionIndex = index;
         break;
       }
