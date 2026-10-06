@@ -818,6 +818,22 @@ export class AuroMenu extends AuroElement {
       ]));
     }
 
+    // Options slotted in (or re-initialized) while the menu is already
+    // disabled never went through the `disabled`-change branch that pushes
+    // `aria-disabled` (AB#1566578) — re-apply it here the same way
+    // `noCheckmark` already re-applies above. Only the `true` case needs
+    // replaying: re-enabling the menu already clears existing items via the
+    // normal `disabled`-change path, and a newly-added item that isn't
+    // disabled has no `aria-disabled` to clear yet.
+    if (this.disabled) {
+      this.updateItemsState(new Map([
+        [
+          'disabled',
+          true
+        ]
+      ]));
+    }
+
     this.dispatchEvent(new CustomEvent('auroMenu-optionsChange', {
       detail: {
         options: this.items
