@@ -2938,6 +2938,32 @@ function runFullTest(mobileView) {
       expect(el.inputValue).to.be.undefined;
     });
 
+    // AB#1566578 follow-up - auro-menu never writes `disabled` onto options,
+    // including a disabled nested submenu's own options, so combobox's own
+    // "first/last enabled" activation must also honor a disabled ancestor
+    // menu, not just the option's own `disabled` attribute.
+    it('activateFirstEnabledAvailableOption skips options inside a disabled nested submenu', async () => {
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menu>
+              <auro-menuoption value="Apples" id="nested-dis-option-0">Apples</auro-menuoption>
+            </auro-menu>
+            <auro-menuoption value="Oranges" id="nested-dis-option-1">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+
+      el.menu.querySelector('auro-menu').disabled = true;
+      el.availableOptions = [...el.options];
+
+      el.activateFirstEnabledAvailableOption();
+
+      expect(el.optionActive.id).to.equal('nested-dis-option-1');
+    });
+
     it('updateFilter hides bib when loading and isHiddenWhileLoading', async () => {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);

@@ -33,6 +33,25 @@ describe('selectUtils', () => {
       expect(getEnabledOptions(undefined)).to.deep.equal([]);
       expect(getEnabledOptions(null)).to.deep.equal([]);
     });
+
+    // AB#1566578 follow-up - auro-menu never writes `disabled` onto options,
+    // including a disabled nested submenu's own options, so this util must
+    // also honor a disabled ancestor menu, not just the option's own attribute.
+    it('excludes options inside a disabled nested submenu', async () => {
+      const menu = await fixture(html`
+        <auro-menu>
+          <auro-menuoption value="a">Apples</auro-menuoption>
+          <auro-menu>
+            <auro-menuoption value="b">Bananas</auro-menuoption>
+          </auro-menu>
+        </auro-menu>
+      `);
+      menu.querySelector('auro-menu').disabled = true;
+
+      const enabled = getEnabledOptions(menu);
+
+      expect(enabled.map((opt) => opt.value)).to.deep.equal(['a']);
+    });
   });
 
   describe('getActiveOptions', () => {

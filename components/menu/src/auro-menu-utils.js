@@ -83,6 +83,31 @@ export function arraysAreEqual(arr1, arr2) {
 }
 
 /**
+ * Walks up through every ancestor `auro-menu` (root and any nested submenus
+ * the option is slotted inside) and checks whether any of them is disabled.
+ * A menu's `disabled` is never written onto its options (AB#1566578), so an
+ * option's interactivity must be resolved at check-time against its owning
+ * menu chain instead of a mutated attribute. Exported so every "is this
+ * option interactive" check agrees — `auro-menuoption`'s `isActive` getter
+ * uses it too (consumed by `auro-select`/`auro-combobox`), not just this
+ * module's own `isOptionInteractive`/`isSelectableByValue`.
+ * @param {HTMLElement} option - The option to check.
+ * @returns {boolean} True if any ancestor menu (root or nested) is disabled.
+ */
+export function hasDisabledAncestorMenu(option) {
+  let ancestor = option.closest('auro-menu, [auro-menu]');
+
+  while (ancestor) {
+    if (ancestor.disabled) {
+      return true;
+    }
+    ancestor = ancestor.parentElement ? ancestor.parentElement.closest('auro-menu, [auro-menu]') : null;
+  }
+
+  return false;
+}
+
+/**
  * Validates if an option can be interacted with.
  * @private
  * @param {HTMLElement} option - The option to check.
@@ -91,21 +116,23 @@ export function arraysAreEqual(arr1, arr2) {
 export function isOptionInteractive(option) {
   return !option.hasAttribute('hidden') &&
          !option.hasAttribute('disabled') &&
-         !option.hasAttribute('static');
+         !option.hasAttribute('static') &&
+         !hasDisabledAncestorMenu(option);
 }
 
 /**
  * Validates if an option may be selected by matching a programmatic value.
  * Unlike `isOptionInteractive`, `hidden` is allowed: the combobox toggles
  * `hidden` as its type-ahead filter, so a filtered-out option is still a
- * valid programmatic selection. Only disabled and static options — which are
- * never selectable — are rejected.
+ * valid programmatic selection. Disabled (its own or an ancestor menu's) and
+ * static options — which are never selectable — are rejected.
  * @param {HTMLElement} option - The option to check.
  * @returns {boolean} True if option can be selected by value.
  */
 export function isSelectableByValue(option) {
   return !option.hasAttribute('disabled') &&
-         !option.hasAttribute('static');
+         !option.hasAttribute('static') &&
+         !hasDisabledAncestorMenu(option);
 }
 
 /* eslint-disable no-underscore-dangle */

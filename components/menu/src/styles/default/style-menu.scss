@@ -73,3 +73,12 @@
     }
   }
 }
+
+// A disabled menu renders its options inert without mutating their own
+// `disabled` state — block pointer hit-testing (clicks and hover highlight)
+// on the whole option list from the menu side instead.
+:host([disabled]) {
+  .menuWrapper {
+    pointer-events: none;
+  }
+}

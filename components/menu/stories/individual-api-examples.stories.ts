@@ -91,6 +91,7 @@ const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialC
 export const Basic = stories.Basic;
 export const Custom = stories.Custom;
 export const DisabledMenu = stories.DisabledMenu;
+export const DisabledMenuToggle = stories.DisabledMenuToggle;
 export const Disabled = stories.Disabled;
 export const EventAttribute = stories.EventAttribute;
 export const Events = stories.Events;
