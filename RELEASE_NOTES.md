@@ -5,6 +5,92 @@ The latest release is expanded by default. Select any release below to expand it
 Complete changelog history may be viewed [here](https://github.com/AlaskaAirlines/auro-formkit/releases).
 
 <auro-accordion expanded>
+<span slot="trigger">FormKit v6.2.2</span>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.02.02.md) -->
+<!-- The below content is automatically added from ./docs/releases/06.02.02.md -->
+
+# Release Notes
+
+This document outlines all changes since the 6.2.1 release.
+
+Version 6.2.2 is a **patch release** focused on disabled-state correctness in `auro-menu` and the components built on it, error handling in `auro-counter-group`, and text and icon layout fixes in `auro-input` and `auro-select`. No breaking API changes.
+
+## Summary
+
+`auro-menu` no longer overwrites its options' own `disabled` state: re-enabling a disabled menu used to force-enable every option, including ones authored `disabled` in markup. Fixing that exposed several places that had silently relied on the old behavior, and all of them now honor a disabled ancestor menu, at any nesting depth, across keyboard, pointer, programmatic selection, styling, and `aria-disabled`. `auro-counter-group`'s non-functional `error` property was removed, so the group's error now always comes from its child counters. `auro-select` truncates long placeholders, labels, and values with an ellipsis in every layout, and `auro-input`'s error icon no longer shifts sideways on hover or focus.
+
+- Options authored `disabled` inside an `auro-menu` stay disabled when the menu is disabled and then re-enabled.
+- A disabled menu or nested submenu now blocks keyboard navigation, selection, hover activation, programmatic `value` assignment, and the `auroMenuOption-click` event for every option inside it, and `auro-select` and `auro-combobox` skip those options too.
+- Screen readers get correct `aria-disabled` on options in a disabled menu, including options slotted in after the menu was disabled.
+- `auro-counter-group` ignores an `error` attribute on the group itself. Its error message comes only from invalid child counters.
+- `auro-select` truncates long placeholder, label, and selected-value text with an ellipsis in classic, emphasized, and snowflake layouts.
+- `auro-input`'s error icon stays put when hovering or focusing an empty input that has an error.
+
+All changes are backward compatible. The only consumer-visible API change is that `auro-counter-group` ignores an `error` attribute on the group, which never worked reliably (see below). Consumers should update without migration work.
+
+## Bug Fixes
+
+_Note: Bug fixes do not require migration steps. Updating to this version is all that is necessary to implement these changes._
+
+### AURO-MENU
+
+- **Stop the menu from overwriting its options' `disabled` state** — [AB#1566578](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1566578)
+
+    `updateItemsState()` unconditionally wrote `option.disabled = this.disabled` whenever the menu's `disabled` changed. Re-enabling a disabled menu therefore force-enabled every option, including ones authored `disabled` in markup. The menu no longer writes to an option's own `disabled` property or attribute. Instead, being inside a disabled menu is now checked when it matters. `navigateOptions()` and `makeSelection()` return early when the menu is disabled. `isOptionInteractive()` and `isSelectableByValue()` walk up through every ancestor menu, so a disabled nested submenu blocks navigation, selection, and programmatic `value=` assignment just as a disabled root menu does. `handleOptionHover()` uses the same check, so a hover that gets past the CSS `pointer-events` guard can't activate a disabled-ancestor option. The disabled color now reaches options in arbitrarily nested submenus and wins over a selected or active option's own color. `aria-disabled` is set on options when the menu's `disabled` changes, and an option authored `disabled` keeps its own `aria-disabled` when the menu is re-enabled.
+
+- **Keep `aria-disabled` on options in a submenu that is still disabled** — [#1625](https://github.com/AlaskaAirlines/auro-formkit/pull/1625)
+
+    The loop that clears `aria-disabled` runs over every option in the tree, including nested submenus, but it only checked each option's own `disabled`. Re-enabling an unrelated root menu could remove `aria-disabled` from the options of a nested submenu that was still disabled. Screen readers then reported those options as available even though selecting them did nothing. The clear step now also checks the option's ancestor menus.
+
+- **Close the remaining option-level disabled-ancestor gaps** — [#1625](https://github.com/AlaskaAirlines/auro-formkit/pull/1625)
+
+    Three more cases of the same pattern, one layer down at the option level. The public `auroMenuOption-click` event no longer fires for an option inside a disabled ancestor menu. Removing `disabled` from an option no longer clears its `aria-disabled` while an ancestor menu is still disabled. Options slotted into an already-disabled menu (async-loaded content, dynamic rebuilds) now get `aria-disabled` when they are initialized.
+
+### AURO-SELECT / AURO-COMBOBOX
+
+- **Skip options in a disabled ancestor menu** — [AB#1566578](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1566578)
+
+    `auro-select` and `auro-combobox` each have their own logic for deciding whether an option can be used: `isActive`, `getEnabledOptions()`, and `activateFirstEnabledAvailableOption()`/`activateLastEnabledAvailableOption()`. Previously it only checked the option's own `disabled` flag, which the menu used to overwrite. It now also treats options inside a disabled ancestor menu as unavailable, so these components keep matching `auro-menu`'s new behavior.
+
+### AURO-SELECT
+
+- **Truncate placeholder, label, and value with an ellipsis in all layouts** — [AB#1602239](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1602239)
+
+    With no option selected, a long placeholder or label overflowed the trigger instead of truncating. The selected value only truncated in the classic layout. The truncation rules lived only in the classic layout's styles and targeted a `label` selector that matches nothing in the shadow DOM, because the label renders in `#dropdownLabel`. The rules now apply to `#dropdownLabel`, `.value`, and `#placeholder` in all layouts. `#dropdownLabel` is now block-level so that `text-overflow` takes effect, and truncated text no longer runs into the chevron.
+
+### AURO-INPUT
+
+- **Keep the error icon from shifting on hover or focus** — [AB#1561213](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1561213)
+
+    Hovering or focusing an empty input that had an error revealed the empty clear-button wrapper. The spacing between items in that row then pushed the error icon about 8px sideways. A new `isClearable` getter (true when the input has a value and is not `readonly` or `disabled`) now controls both the clear button and its wrapper. The hidden utility class now overrides the `.notification` display rule, matching the pattern `auro-datepicker` already uses. The password visibility toggle is unaffected.
+
+### AURO-COUNTER
+
+- **Remove the non-functional `error` property from `auro-counter-group`** — [AB#1642036](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1642036)
+
+    A consumer-set `error` on `auro-counter-group` could not be relied on, because the deferred check of the child counters' validity overwrote it. It still partly leaked through: it was shown ahead of the real `errorMessage` in the help text, and it made `validate()` skip re-checking the child counters. The property, the `validate()` guard, and the help-text fallback are removed, and the shared validation now ignores an `error` attribute on `auro-counter-group`. A leftover `error` attribute on the group is now harmless. The group's error state and message come only from its invalid child counters. If you were setting `error` on the group, remove it. To show a group error, set `error` on (or invalidate) the individual `auro-counter` elements.
+
+## Build & Packaging
+
+- **Auro dependency bumps** — Bundled into the published component builds: `@aurodesignsystem/auro-button` 12.4.0 → 12.4.1, `@aurodesignsystem/auro-loader` 6.2.0 → 6.3.0, `@aurodesignsystem/auro-popover` 6.0.4 → 6.1.0, and `@aurodesignsystem/auro-library` 5.14.2 → 5.14.3. Used for theming, demos, docs, and tooling only: `@aurodesignsystem/design-tokens` 9.3.3 → 9.4.1, `@alaskaairux/icons` 5.27.0 → 5.30.0, `@aurodesignsystem/auro-accordion` 6.3.0 → 6.3.1, `@aurodesignsystem/auro-dialog` 4.2.1 → 4.2.2, `@aurodesignsystem/auro-drawer` 5.2.0 → 5.2.1, and `@aurodesignsystem/auro-cli` 4.0.0 → 4.1.0 (exact pin).
+- **Runtime dependency bumps** — `@floating-ui/dom` 1.7.6 → 1.8.0 (dropdown positioning) and `date-fns` 4.1.0 → 4.4.0 (datepicker) are bundled into the published builds. Among the `lit` packages in `dependencies`, only `lit-html` changed version (3.3.2 → 3.3.3). The declared ranges were raised to match what is installed, so consumers now need `lit` ^3.3.3, `lit-element` ^4.2.2, and `lit-html` ^3.3.3.
+- **Tooling and test dependencies** — All other dependencies in the root and the React/Svelte framework apps were updated to their latest minor or patch release, including Storybook 10.6, Vite 8.3, Rollup 4.64, Sass 1.105, ESLint 10.12, Stylelint 17.16, Playwright 1.63, Vitest 4.1.11, Turborepo 2.11, and semantic-release 25.0.9. Major-version updates were deliberately left out.
+
+## Test Coverage
+
+- **menu:** a dedicated regression test for each disabled-ancestor fix, each verified by reverting that fix and confirming only its own test fails. Also a nested-submenu test that keeps the submenu disabled through an unrelated root's disable/re-enable cycle, and a Storybook example (`disabled-menu-toggle`) showing that authored `disabled` is preserved.
+- **select / combobox:** coverage confirming options in a disabled ancestor menu count as unavailable, plus WTR tests in each layout confirming truncation and chevron clearance for a long placeholder, label, and selected value. The `SelectLongValueEllipsis` story was extended to match.
+- **input:** WTR tests using real hover and focus in classic, emphasized, and snowflake layouts covering icon stability, the clear wrapper's visibility with a value and when `readonly` or `disabled`, and the password toggle. Also new `InputErrorHover` and `InputErrorWithValueHover` visual regression stories.
+- **counter:** tests that replace the old group-`error` cases. They confirm `error` is not a declared property, a leftover attribute is ignored, and the group's message comes from its counters.
+
+## Documentation
+
+- `auro-counter-group` customize docs, `api.md`, the `dropdown-error-group` example, and `MANUAL_TESTING.md` now describe group errors as coming from the child counters — [AB#1642036](https://itsals.visualstudio.com/5e9f12eb-f830-406f-bee9-be25938f7aaa/_workitems/edit/1642036).
+- `MANUAL_TESTING.md` smoke steps were added for the `auro-input` error-icon hover fix and the `auro-select` truncation fix. The stale note that emphasized and snowflake select values "wrap" was corrected.
+- Added a post-mortem under [`docs/post-mortem/`](../post-mortem/): [1566578](../post-mortem/1566578.md).
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-accordion>
 <span slot="trigger">FormKit v6.2.1</span>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.02.01.md) -->
 <!-- The below content is automatically added from ./docs/releases/06.02.01.md -->
