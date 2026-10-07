@@ -550,7 +550,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="error">Error</auro-header>
-<p>Use the <code>error</code> attribute to apply a persistent custom error message on the counter or counter group.</p>
+<p>Use the <code>error</code> attribute to apply a persistent custom error message on an individual counter.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/counter-error.html -->
@@ -569,7 +569,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="dropdownErrors">Dropdown Errors</auro-header>
-<p>Individual counters within a dropdown can display their own error messages. The group <code>error</code> attribute overrides individual errors.</p>
+<p>The counter group's error state and message are driven by the validity of its counters. When one or more counters are invalid, the group displays their error messages combined.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/dropdown-error.html -->
@@ -610,7 +610,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-error-group.html) -->
 <!-- The below content is automatically added from ./../apiExamples/dropdown-error-group.html -->
-<auro-counter-group error="Custom error on counter group" isDropdown>
+<auro-counter-group isDropdown>
 <span slot="ariaLabel.bib.close">Close Popup</span>
 <div slot="bib.fullscreen.headline">Passengers</div>
 <div slot="label">Passengers</div>
@@ -629,7 +629,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-error-group.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/dropdown-error-group.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-counter-group error="Custom error on counter group" isDropdown&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-counter-group isDropdown&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close Popup&lt;/span&gt;
   &lt;div slot="bib.fullscreen.headline"&gt;Passengers&lt;/div&gt;
   &lt;div slot="label"&gt;Passengers&lt;/div&gt;
