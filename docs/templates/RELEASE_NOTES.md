@@ -5,6 +5,14 @@ The latest release is expanded by default. Select any release below to expand it
 Complete changelog history may be viewed [here](https://github.com/AlaskaAirlines/auro-formkit/releases).
 
 <auro-accordion expanded>
+<span slot="trigger">FormKit v6.2.1</span>
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.02.01.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+<auro-accordion>
 <span slot="trigger">FormKit v6.2.0</span>
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/06.02.00.md) -->
