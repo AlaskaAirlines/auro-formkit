@@ -111,6 +111,75 @@ function runTest(mobileView) {
           expect(optionalSlot).to.not.exist;
         });
       });
+
+      describe('trigger text truncation', () => {
+        const longText = 'This text is long enough that it must truncate with an ellipsis inside the trigger';
+
+        /**
+         * Asserts the element truncates with an ellipsis and stays clear of the chevron.
+         * @param {AuroSelect} el - The select under test.
+         * @param {HTMLElement} target - The trigger text element to check.
+         * @returns {void}
+         */
+        const expectTruncated = (el, target) => {
+          const styles = getComputedStyle(target);
+          const chevron = el.dropdown.shadowRoot.querySelector('#showStateIcon');
+
+          expect(styles.overflow).to.equal('hidden');
+          expect(styles.whiteSpace).to.equal('nowrap');
+          expect(styles.textOverflow).to.equal('ellipsis');
+          expect(target.scrollWidth).to.be.greaterThan(target.clientWidth);
+          expect(target.getBoundingClientRect().right).to.be.at.most(chevron.getBoundingClientRect().left + 0.5);
+        };
+
+        ['classic', 'emphasized', 'snowflake'].forEach((layout) => {
+          describe(`in ${layout} layout`, () => {
+            it('truncates a long placeholder when nothing is selected', async () => {
+              const el = await fixture(html`
+                <auro-select layout="${layout}" style="width: 230px" placeholder="${longText}">
+                  <span slot="label">Fruit</span>
+                  <auro-menu>
+                    <auro-menuoption value="apple">Apple</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              `);
+              await elementUpdated(el);
+
+              expectTruncated(el, el.shadowRoot.querySelector('#placeholder'));
+            });
+
+            it('truncates a long label when nothing is selected', async () => {
+              const el = await fixture(html`
+                <auro-select layout="${layout}" style="width: 230px">
+                  <span slot="label">${longText}</span>
+                  <auro-menu>
+                    <auro-menuoption value="apple">Apple</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              `);
+              await elementUpdated(el);
+
+              expectTruncated(el, el.shadowRoot.querySelector('#dropdownLabel'));
+            });
+
+            it('truncates a long selected value', async () => {
+              const el = await fixture(html`
+                <auro-select layout="${layout}" style="width: 230px" value="long">
+                  <span slot="label">Fruit</span>
+                  <auro-menu>
+                    <auro-menuoption value="apple">Apple</auro-menuoption>
+                    <auro-menuoption value="long">${longText}</auro-menuoption>
+                  </auro-menu>
+                </auro-select>
+              `);
+              const value = el.shadowRoot.querySelector('#value');
+              await waitUntil(() => value.textContent.includes('This text'), 'selected value never rendered');
+
+              expectTruncated(el, value);
+            });
+          });
+        });
+      });
     });
 
     describe('User Stories', () => {

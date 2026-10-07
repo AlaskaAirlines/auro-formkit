@@ -44,7 +44,7 @@ Run these first for a quick confidence check that the components work in a real 
 
 ### auro-counter-group — Appearance & Theming
 
-[ ] Verify the group error visual state renders correctly (coloring, message, error icon)
+[ ] Verify the group error visual state renders correctly (coloring, message, error icon) when one or more child counters are invalid — the group has no `error` attribute of its own; its error state and message come from its counters' validity
 [ ] Verify the dropdown trigger, label, and value text render correctly, including in `inverse` / `onDark` appearance
 [ ] Verify the focus indicator is clearly visible on the trigger and on controls inside the bib
 

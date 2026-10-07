@@ -9,6 +9,7 @@ Automated tests (`auro-select.test.js` and `selectUtils.test.js`) already cover 
 A quick real-browser sanity pass. Run these in a real browser before deeper testing.
 
 [ ] Load a select with a `placeholder` and no selection — verify it renders with the placeholder visible in the trigger
+[ ] In a narrow (~230px) select with no selection, set a very long `placeholder`, then a very long `label` slot — verify each truncates with an ellipsis inside the trigger and stays clear of the chevron in every layout (`classic`, `emphasized`, `snowflake`)
 [ ] Click the trigger — verify the dropdown bib opens showing the menu options
 [ ] Click an option — verify the bib closes and the trigger displays the selected value
 [ ] ⇥ to the trigger and press ↵, then ↓ to an option and ↵ — verify the bib opens, the option becomes active, and it is selected on ↵
@@ -25,7 +26,7 @@ A quick real-browser sanity pass. Run these in a real browser before deeper test
 [ ] Render each `shape` (`classic`, `pill`, `pill-left`, `pill-right`, `snowflake`) against each layout — verify corner radii render correctly and the pill left/right indents apply to the correct side
 [ ] Render each `size` (`lg`, plus `xl` which only `emphasized` supports) — verify the trigger and bib scale proportionally, and that setting `xl` on a non-`emphasized` layout does not produce a broken size
 [ ] Focus the trigger in each layout with each appearance (`default`, `inverse`) — verify a clearly visible focus indicator in all combinations
-[ ] Select an option with very long text (50+ characters) — verify the trigger truncates with ellipsis (classic) or wraps (emphasized/snowflake) without breaking layout
+[ ] Select an option with very long text (50+ characters) — verify the trigger truncates with ellipsis in every layout (`classic`, `emphasized`, `snowflake`) without overlapping the chevron or breaking layout
 [ ] Add options with very long text (100+ characters) and 50+ options — verify options render and the menu scrolls bounded within the popover (desktop) and dialog (fullscreen) without layout breakage
 [ ] Enable `prefers-reduced-motion: reduce`, then (a) navigate options with ↓/↑ and (b) open a select whose selected option is far down a long list — verify both scroll into view instantly with no smooth animation; turn it back off and verify both animate again
 [ ] Repeat the core rendering checks across supported browsers (Chrome, Safari, Firefox, Edge) — verify consistent trigger, bib, and option rendering
