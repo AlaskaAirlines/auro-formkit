@@ -16,6 +16,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import {
   isOptionInteractive,
   isSelectableByValue,
+  hasDisabledAncestorMenu,
   dispatchMenuEvent,
   serializeMultiSelectValue,
   resolveSelectedOption,
@@ -167,7 +168,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * When true, the entire menu and all options are disabled.
+       * When true, the entire menu is disabled: options render inert (not focusable, keyboard-navigable, or selectable, and visually disabled) without changing any option's own `disabled` state.
        */
       disabled: {
         type: Boolean,
@@ -739,9 +740,21 @@ export class AuroMenu extends AuroElement {
         }
       }
 
-      // Update disabled state
+      // Announce menu-level disabled to assistive tech. `disabled` is never
+      // written onto the option (AB#1566578), but aria-disabled has to be
+      // pushed proactively — unlike interactivity checks, AT reads it
+      // directly off the DOM rather than through a JS getter. Only clear it
+      // on re-enable when the option isn't itself authored `disabled` AND no
+      // other ancestor menu in its chain is still disabled — `this.items` is
+      // a deep query, so toggling an unrelated root back on must not strip
+      // aria-disabled from a nested submenu's options that are still
+      // independently disabled.
       if (changedProperties.has('disabled')) {
-        option.disabled = this.disabled;
+        if (this.disabled) {
+          option.setAttribute('aria-disabled', 'true');
+        } else if (!option.disabled && !hasDisabledAncestorMenu(option)) {
+          option.removeAttribute('aria-disabled');
+        }
       }
     });
 
@@ -800,6 +813,22 @@ export class AuroMenu extends AuroElement {
       this.updateItemsState(new Map([
         [
           'noCheckmark',
+          true
+        ]
+      ]));
+    }
+
+    // Options slotted in (or re-initialized) while the menu is already
+    // disabled never went through the `disabled`-change branch that pushes
+    // `aria-disabled` (AB#1566578) — re-apply it here the same way
+    // `noCheckmark` already re-applies above. Only the `true` case needs
+    // replaying: re-enabling the menu already clears existing items via the
+    // normal `disabled`-change path, and a newly-added item that isn't
+    // disabled has no `aria-disabled` to clear yet.
+    if (this.disabled) {
+      this.updateItemsState(new Map([
+        [
+          'disabled',
           true
         ]
       ]));
@@ -1042,6 +1071,13 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   makeSelection() {
+    // A disabled menu is inert — called directly by auro-select/auro-combobox
+    // keyboard strategies as well as this menu's own handleKeyDown, so the
+    // guard lives here rather than only at the keydown entry point.
+    if (this.disabled) {
+      return;
+    }
+
     if (!this.items) {
       this.initItems();
     }
@@ -1162,6 +1198,15 @@ export class AuroMenu extends AuroElement {
    */
   handleOptionHover(event) {
     const option = event.detail;
+
+    // `pointer-events: none` normally keeps a real hover from ever reaching
+    // a disabled-ancestor option, but this guard protects the few paths
+    // that don't rely on pointer hit-testing (a synthetic `mouseover`
+    // dispatch, test automation) from still activating it.
+    if (!option || !isOptionInteractive(option)) {
+      return;
+    }
+
     if (this.items) {
       const idx = this.items.indexOf(option);
       if (idx >= 0) {
@@ -1199,6 +1244,11 @@ export class AuroMenu extends AuroElement {
    * @param {string} direction - 'up' or 'down'.
    */
   navigateOptions(direction) {
+    // A disabled menu is inert — no option becomes active via keyboard.
+    if (this.disabled) {
+      return;
+    }
+
     // Return early if no items exist
     if (!this.items || !this.items.length) {
       return;

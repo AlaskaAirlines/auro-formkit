@@ -7,7 +7,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | Property                | Attribute     | Modifiers | Type                                   | Default     | Description                                      |
 |-------------------------|---------------|-----------|----------------------------------------|-------------|--------------------------------------------------|
 | `currentLabel`          |               | readonly  | `string`                               |             |                                                  |
-| `disabled`              | `disabled`    |           | `boolean`                              |             | When true, the entire menu and all options are disabled. |
+| `disabled`              | `disabled`    |           | `boolean`                              |             | When true, the entire menu is disabled: options render inert (not focusable, keyboard-navigable, or selectable, and visually disabled) without changing any option's own `disabled` state. |
 | `hasLoadingPlaceholder` |               | readonly  | `boolean`                              |             | Getter for loading placeholder state.            |
 | `index`                 |               |           | `number`                               |             |                                                  |
 | `layout`                | `layout`      |           | `string`                               |             | Applies a named layout variant to the menu. Free-form string consumed by the shared architecture helpers; menu defines no closed value set. |

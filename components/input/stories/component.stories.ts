@@ -233,6 +233,54 @@ export const InputError: Story = {
   `,
 };
 
+// ─── Error state hovered with no value — error icon does not shift ───────────
+export const InputErrorHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input error="Please enter a valid name">
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as HTMLElement & { updateComplete: Promise<void> };
+    await el.updateComplete;
+
+    // Empty value: the clear wrapper stays out of the flex row so the error icon does not shift
+    const clearWrapper = el.shadowRoot?.querySelector('.notification.clear');
+    await expect(clearWrapper?.classList.contains('util_displayHidden')).toBe(true);
+  },
+};
+InputErrorHover.parameters = {
+  pseudo: {
+    hover: true,
+  },
+};
+
+// ─── Error state hovered with a value — clear button shown ───────────────────
+export const InputErrorWithValueHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input error="Please enter a valid name" value="J">
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as HTMLElement & { updateComplete: Promise<void> };
+    await el.updateComplete;
+
+    // With a value: the clear wrapper is eligible to show on hover
+    const clearWrapper = el.shadowRoot?.querySelector('.notification.clear');
+    await expect(clearWrapper?.classList.contains('util_displayHidden')).toBe(false);
+  },
+};
+InputErrorWithValueHover.parameters = {
+  pseudo: {
+    hover: true,
+  },
+};
+
 // ─── Readonly state ──────────────────────────────────────────────────────────
 export const InputReadonly: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],

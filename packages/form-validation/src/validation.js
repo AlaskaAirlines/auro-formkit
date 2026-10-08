@@ -296,7 +296,11 @@ export default class AuroFormValidation {
         ( elem.touched || (!elem.touched && typeof elem.value !== "undefined") )
       );
 
-    if (elem.hasAttribute('error')) {
+    // auro-counter-group derives its error state solely from its child counters,
+    // so an `error` attribute on the group itself is ignored.
+    const hasCustomError = elem.hasAttribute('error') && !this.runtimeUtils.elementMatch(elem, 'auro-counter-group');
+
+    if (hasCustomError) {
       elem.validity = 'customError';
       elem.errorMessage = elem.setCustomValidityCustomError || elem.error || elem.setCustomValidity || '';
       validationShouldRun = false;
@@ -391,7 +395,7 @@ export default class AuroFormValidation {
       }
     }
 
-    if (validationShouldRun || elem.hasAttribute('error')) {
+    if (validationShouldRun || hasCustomError) {
       // Use the validity message override if it is declared
       if (elem.validity && elem.validity !== 'valid' && elem.ValidityMessageOverride) {
         elem.errorMessage = elem.ValidityMessageOverride;

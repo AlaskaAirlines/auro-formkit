@@ -989,6 +989,195 @@ function runFullTest(mobileView) {
 
         expect(menuEl.disabled).to.be.true;
       });
+
+      // AB#1566578 - toggling the menu's `disabled` must never mutate an
+      // option's own authored `disabled` state.
+      it('should preserve an authored-disabled option across menu disable/enable toggles', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="opt1">Option 1</auro-menuoption>
+            <auro-menuoption value="opt2" disabled>Option 2</auro-menuoption>
+            <auro-menuoption value="opt3">Option 3</auro-menuoption>
+          </auro-menu>
+        `);
+        const [
+          opt1,
+          opt2,
+          opt3
+        ] = getOptions(el);
+
+        el.disabled = true;
+        await elementUpdated(el);
+
+        expect(opt1.disabled).to.be.false;
+        expect(opt2.disabled).to.be.true;
+        expect(opt3.disabled).to.be.false;
+
+        el.disabled = false;
+        await elementUpdated(el);
+
+        expect(opt1.disabled).to.be.false;
+        expect(opt2.disabled).to.be.true;
+        expect(opt3.disabled).to.be.false;
+      });
+
+      it('should never write `disabled` onto an option that was not authored disabled', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="opt1">Option 1</auro-menuoption>
+            <auro-menuoption value="opt2">Option 2</auro-menuoption>
+          </auro-menu>
+        `);
+        const options = getOptions(el);
+
+        el.disabled = true;
+        await elementUpdated(el);
+        options.forEach((option) => expect(option.disabled).to.be.false);
+
+        el.disabled = false;
+        await elementUpdated(el);
+        options.forEach((option) => expect(option.disabled).to.be.false);
+      });
+
+      // AB#1566578 follow-up - an option highlighted (keyboard-active) before
+      // the menu becomes disabled is not un-highlighted by the disabled
+      // toggle itself; it simply becomes unreachable via further keyboard
+      // navigation/selection while the menu stays disabled (covered
+      // separately by the Keyboard Behavior / makeSelection disabled tests).
+      it('should leave an already-active option\'s active state untouched when the menu becomes disabled', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        const activeOption = menuEl.optionActive;
+
+        menuEl.disabled = true;
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionActive).to.equal(activeOption);
+        expect(activeOption.classList.contains('active')).to.be.true;
+      });
+
+      // AB#1566578 follow-up - the no-mutation/preserve-authored-disabled
+      // guarantees hold the same way in multi-select mode.
+      it('should preserve authored-disabled options and selections across disable/enable in multiSelect mode', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const [
+          option1,
+          option2,
+          ,
+          option4
+        ] = getOptions(menuEl);
+
+        menuEl.handleSelectState(option1);
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionSelected).to.include(option1);
+        expect(option4.disabled).to.be.true;
+
+        menuEl.disabled = true;
+        await elementUpdated(menuEl);
+
+        expect(option1.disabled).to.be.false;
+        expect(option2.disabled).to.be.false;
+        expect(option4.disabled).to.be.true;
+        expect(menuEl.optionSelected).to.include(option1);
+
+        menuEl.disabled = false;
+        await elementUpdated(menuEl);
+
+        expect(option1.disabled).to.be.false;
+        expect(option2.disabled).to.be.false;
+        expect(option4.disabled).to.be.true;
+        expect(menuEl.optionSelected).to.include(option1);
+      });
+
+      // AB#1566578 follow-up - aria-disabled must still be announced to
+      // assistive tech while the menu is disabled, even though `disabled`
+      // itself is never written onto the option.
+      it('should set aria-disabled on options while the menu is disabled and clear it on re-enable', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test">
+            <auro-menuoption value="opt1">Option 1</auro-menuoption>
+            <auro-menuoption value="opt2" disabled>Option 2</auro-menuoption>
+          </auro-menu>
+        `);
+        const [
+          option1,
+          option2
+        ] = getOptions(el);
+
+        el.disabled = true;
+        await elementUpdated(el);
+
+        expect(option1.getAttribute('aria-disabled')).to.equal('true');
+        expect(option2.getAttribute('aria-disabled')).to.equal('true');
+
+        el.disabled = false;
+        await elementUpdated(el);
+
+        expect(option1.hasAttribute('aria-disabled')).to.be.false;
+        expect(option2.getAttribute('aria-disabled')).to.equal('true');
+      });
+
+      // AB#1566578 follow-up - `this.items` is a deep query, so re-enabling
+      // an unrelated root must not strip aria-disabled from a nested
+      // submenu's options that are still independently disabled.
+      it('should not clear aria-disabled on a nested submenu\'s options when an unrelated root re-enables', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOption = nestedMenu.querySelector('auro-menuoption');
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        expect(nestedOption.getAttribute('aria-disabled')).to.equal('true');
+
+        rootMenu.disabled = true;
+        await elementUpdated(rootMenu);
+        rootMenu.disabled = false;
+        await elementUpdated(rootMenu);
+
+        expect(nestedOption.getAttribute('aria-disabled')).to.equal('true');
+        expect(nestedMenu.disabled).to.be.true;
+      });
+
+      // AB#1566578 follow-up - an option's own `updated()` must not clear its
+      // aria-disabled when its OWN authored `disabled` toggles off while an
+      // ancestor menu is still independently disabled.
+      it('should not clear aria-disabled when an option\'s own disabled toggles off inside a still-disabled ancestor', async () => {
+        const el = await fixture(html`
+          <auro-menu aria-label="test" disabled>
+            <auro-menuoption value="opt1" disabled>Option 1</auro-menuoption>
+          </auro-menu>
+        `);
+        const [option1] = getOptions(el);
+        await elementUpdated(el);
+
+        expect(option1.getAttribute('aria-disabled')).to.equal('true');
+
+        option1.disabled = false;
+        await elementUpdated(option1);
+
+        expect(option1.getAttribute('aria-disabled')).to.equal('true');
+      });
+
+      // AB#1566578 follow-up - new options slotted in while the menu is
+      // already disabled must still get aria-disabled, mirroring how
+      // noCheckmark is already re-applied to newly-initialized items.
+      it('should set aria-disabled on an option slotted in after the menu is already disabled', async () => {
+        const el = await fixture(html`<auro-menu aria-label="test" disabled></auro-menu>`);
+        await elementUpdated(el);
+
+        const option = document.createElement('auro-menuoption');
+        option.value = 'late';
+        el.appendChild(option);
+        await elementUpdated(el);
+        await elementUpdated(option);
+
+        expect(option.getAttribute('aria-disabled')).to.equal('true');
+      });
     });
 
     describe('hasLoadingPlaceholder', () => {
@@ -1955,6 +2144,26 @@ function runFullTest(mobileView) {
         expect(fired).to.be.true;
       });
 
+      // AB#1566578 follow-up - a nested submenu's own disabled state must
+      // reject programmatic value selection of its options too, matching
+      // the keyboard/pointer guarantee (isOptionInteractive).
+      it('does not select an option inside a disabled nested submenu set by value, and fires selectValueFailure', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        let fired = false;
+        rootMenu.addEventListener('auroMenu-selectValueFailure', () => { fired = true; });
+
+        rootMenu.value = 'option a';
+        await elementUpdated(rootMenu);
+
+        expect(rootMenu.optionSelected).to.be.undefined;
+        expect(fired).to.be.true;
+      });
+
       it('excludes a disabled option from a multi-select value set', async () => {
         const el = await fixture(html`
           <auro-menu multiSelect aria-label="test">
@@ -2100,6 +2309,48 @@ function runFullTest(mobileView) {
         expect(nestedOptions[0].hasAttribute('selected')).to.be.true;
         expect(rootMenu.value).to.equal('option a');
       });
+
+      // AB#1566578 follow-up - a disabled nested submenu's options must not
+      // be selectable even if `_index` points at one directly (the root
+      // menu owns makeSelection(), and is itself still enabled).
+      it('should not select an option inside a disabled nested submenu', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        rootMenu._index = rootMenu.items.indexOf(nestedOptions[0]);
+        rootMenu.makeSelection();
+        await elementUpdated(rootMenu);
+
+        expect(rootMenu.optionSelected).to.be.undefined;
+        expect(nestedOptions[0].hasAttribute('selected')).to.be.false;
+      });
+
+      // AB#1566578 - verifies the end-to-end outcome of calling makeSelection()
+      // directly on a disabled root menu (the path auro-select/auro-combobox's
+      // keyboard strategies use, bypassing handleKeyDown). Note: this does not
+      // isolate the explicit `this.disabled` early return from the per-option
+      // isOptionInteractive()/ancestor-chain check below it — when the root is
+      // disabled, every option's ancestor-chain check also fails (the root is
+      // always in its own descendants' chain), so removing the explicit guard
+      // would not fail this test. The explicit guard is a redundant fast path,
+      // not something this test can prove is load-bearing on its own.
+      it('should not select anything when called directly on a disabled menu', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        menuEl._index = 0;
+        menuEl.disabled = true;
+        await elementUpdated(menuEl);
+
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.value).to.be.undefined;
+        expect(menuEl.optionSelected).to.be.undefined;
+      });
     });
 
     describe('handleNestedMenus', () => {
@@ -2192,6 +2443,39 @@ function runFullTest(mobileView) {
         }));
       });
 
+      // AB#1566578 follow-up - handleOptionHover must not activate an option
+      // inside a disabled ancestor menu, even when called directly rather
+      // than via a real hover (which `pointer-events: none` would block).
+      it('should not activate an option inside a disabled ancestor menu on hover', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOption = nestedMenu.querySelector('auro-menuoption');
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        rootMenu.handleOptionHover({ detail: nestedOption });
+
+        expect(rootMenu.optionActive).to.not.equal(nestedOption);
+      });
+
+      // AB#1566578 follow-up - auroMenuOption-click is a documented public
+      // event; an option inside a disabled ancestor menu must not dispatch
+      // it at all, not just rely on the menu's own listener to no-op.
+      it('should not dispatch auroMenuOption-click for an option inside a disabled ancestor menu', async () => {
+        const el = await nestedMenuFixture();
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOption = nestedMenu.querySelector('auro-menuoption');
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        let fired = false;
+        el.addEventListener('auroMenuOption-click', () => { fired = true; });
+        nestedOption.click();
+
+        expect(fired).to.be.false;
+      });
+
       it('should not make a selection when the menu is disabled', async () => {
         const el = await defaultFixture();
         const menu = el.querySelector('auro-menu');
@@ -2282,6 +2566,49 @@ function runFullTest(mobileView) {
 
         expect(el._index).to.equal(-1);
         expect(el.optionActive).to.be.undefined;
+      });
+
+      // AB#1566578 - verifies the end-to-end outcome of navigateOptions() on a
+      // disabled root menu, without marking individual options disabled. As
+      // with the makeSelection() test above, this does not isolate the
+      // explicit `this.disabled` early return from the ancestor-chain check
+      // inside isOptionInteractive() — the root disabled state alone already
+      // fails that check for every option in the tree, so this asserts the
+      // correct overall behavior rather than which specific guard produced it.
+      it('should not activate any option when the menu itself is disabled', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        menuEl.disabled = true;
+        await elementUpdated(menuEl);
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionActive).to.be.undefined;
+      });
+
+      // AB#1566578 follow-up - disabling a nested submenu directly (not the
+      // root) must still block keyboard navigation into its options, even
+      // though the root menu — which owns keyboard handling — is itself
+      // still enabled and has no knowledge the nested submenu is disabled.
+      it('should skip into a nested submenu\'s options when the submenu itself is disabled', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
+        nestedMenu.disabled = true;
+        await elementUpdated(nestedMenu);
+
+        // First ArrowDown → highlights option 1 (root)
+        rootMenu.navigateOptions('down');
+        await elementUpdated(rootMenu);
+
+        // Second ArrowDown should skip over the disabled nested submenu's
+        // options entirely and land on option 2 (the next root option).
+        rootMenu.navigateOptions('down');
+        await elementUpdated(rootMenu);
+
+        expect(rootMenu.optionActive).to.equal(rootOptions[1]);
       });
     });
 
@@ -2477,6 +2804,31 @@ function runFullTest(mobileView) {
       const opt = document.createElement('auro-menuoption');
       opt.setAttribute('static', '');
       expect(isSelectableByValue(opt)).to.be.false;
+    });
+
+    // AB#1566578 follow-up - programmatic value selection must honor a
+    // disabled ancestor menu the same way keyboard/pointer interaction does.
+    it('isSelectableByValue should return false for an option inside a disabled ancestor menu', async () => {
+      const el = await nestedMenuFixture();
+      const nestedMenu = el.querySelector('auro-menu auro-menu');
+      const nestedOption = nestedMenu.querySelector('auro-menuoption');
+      nestedMenu.disabled = true;
+      await elementUpdated(nestedMenu);
+
+      expect(isSelectableByValue(nestedOption)).to.be.false;
+    });
+
+    // AB#1566578 follow-up - auro-menuoption.isActive (consumed by
+    // auro-select's getActiveOptions() for type-ahead navigation) must also
+    // honor a disabled ancestor menu, not just the option's own attributes.
+    it('auro-menuoption.isActive should return false for an option inside a disabled ancestor menu', async () => {
+      const el = await nestedMenuFixture();
+      const nestedMenu = el.querySelector('auro-menu auro-menu');
+      const nestedOption = nestedMenu.querySelector('auro-menuoption');
+      nestedMenu.disabled = true;
+      await elementUpdated(nestedMenu);
+
+      expect(nestedOption.isActive).to.be.false;
     });
   });
 
@@ -3538,7 +3890,8 @@ function runFullTest(mobileView) {
     const makeOption = (value, key) => ({
       value,
       _optionKey: key,
-      hasAttribute: () => false
+      hasAttribute: () => false,
+      closest: () => null
     });
 
     it('resolveSelectedOption prefers the keyed option over first-by-value', () => {

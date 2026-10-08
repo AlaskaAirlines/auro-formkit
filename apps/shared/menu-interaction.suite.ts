@@ -25,6 +25,16 @@ function menu(page: Page, fixture: string): Locator {
   return page.locator(`[data-testid="${fixture}"] > auro-menu`);
 }
 
+/**
+ * A standalone auro-menu starts with no active option. Assert that before
+ * programmatic navigation so a stray hover (e.g. a fixture option sitting under
+ * Playwright's initial (0,0) cursor) fails clearly instead of off-by-one.
+ */
+async function expectNoActiveOption(page: Page, fixture: string) {
+  const active = await menu(page, fixture).evaluate((el: any) => el.optionActive?.value ?? null);
+  expect(active, `"${fixture}" menu should start with no active option`).toBeNull();
+}
+
 /** Return all auro-menuoption elements inside a fixture (top-level only). */
 function options(page: Page, fixture: string): Locator {
   return page.locator(`[data-testid="${fixture}"] auro-menuoption`);
@@ -232,6 +242,12 @@ export function menuInteractionSuite(framework: string) {
     // ── Programmatic navigation ───────────────────────────────────────────
 
     test.describe('Programmatic navigation', () => {
+      test.beforeEach(async ({ page }) => {
+        for (const fixture of ['default', 'with-disabled', 'with-hidden']) {
+          await expectNoActiveOption(page, fixture);
+        }
+      });
+
       test('navigateOptions("down") highlights first option', async ({ page }) => {
         await menu(page, 'default').evaluate((el: any) => el.navigateOptions('down'));
 

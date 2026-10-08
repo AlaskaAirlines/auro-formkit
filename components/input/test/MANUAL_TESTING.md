@@ -12,6 +12,7 @@ Run these first for a quick confidence check that the component works in a real 
 [ ] Enter a valid value in that field — verify the error message clears
 [ ] View a `disabled` input — verify it looks grayed out and does not accept focus or input
 [ ] Tab into the field — verify a clear focus indicator is visible
+[ ] With an empty field in an error state, hover and then focus it in each layout (classic, emphasized, snowflake) — verify the error icon does not shift sideways; then type a value and hover — verify the clear button (X) appears
 
 ## Depth
 

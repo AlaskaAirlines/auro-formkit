@@ -52,50 +52,79 @@ export const SelectDefault: Story = {
   `,
 };
 
-// ─── Long selected value truncates before chevron ─────────────────────────────
+// ─── Long selected value, placeholder, and label truncate before chevron ──────
+const ellipsisLayouts = ['classic', 'emphasized', 'snowflake'];
+const ellipsisLongText = 'Verify the trigger truncates with ellipsis without clipping the chevron area';
+
 export const SelectLongValueEllipsis: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-select style="width: 230px" value="long label">
-  <span slot="label">Select Example</span>
-  <auro-menu>
-    <auro-menuoption value="stops">Stops</auro-menuoption>
-    <auro-menuoption value="long label">Verify the trigger truncates with ellipsis in classic layout without clipping the chevron area</auro-menuoption>
-  </auro-menu>
-</auro-select>
+<div style="display: grid; grid-template-columns: repeat(3, 230px); gap: 1rem;">
+  ${ellipsisLayouts.map((layout) => html`
+    <auro-select data-case="value" layout="${layout}" style="width: 230px" value="long label">
+      <span slot="label">Select Example</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+        <auro-menuoption value="long label">${ellipsisLongText}</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+    <auro-select data-case="placeholder" layout="${layout}" style="width: 230px" placeholder="${ellipsisLongText}">
+      <span slot="label">Select Example</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+    <auro-select data-case="label" layout="${layout}" style="width: 230px">
+      <span slot="label">${ellipsisLongText}</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  `)}
+</div>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-select') as AuroSelect;
-    const menu = el.querySelector('auro-menu') as HTMLElement & { updateComplete?: Promise<void> };
+    const selects = Array.from(canvasElement.querySelectorAll('auro-select')) as AuroSelect[];
+    const targetSelectors: Record<string, string> = {
+      value: '#value',
+      placeholder: '#placeholder',
+      label: '#dropdownLabel',
+    };
 
-    await el.updateComplete;
-    await menu.updateComplete;
-    await el.dropdown.updateComplete;
+    for (const el of selects) {
+      const menu = el.querySelector('auro-menu') as HTMLElement & { updateComplete?: Promise<void> };
+
+      await el.updateComplete;
+      await menu.updateComplete;
+      await el.dropdown.updateComplete;
+    }
     await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
 
-    const value = el.shadowRoot?.querySelector('#value') as HTMLDivElement | null;
-    const dropdown = el.shadowRoot?.querySelector('[auro-dropdown]') as HTMLElement | null;
-    const triggerContent = dropdown?.querySelector('#triggerFocus') as HTMLDivElement | null;
-    const wrapper = dropdown?.shadowRoot?.querySelector('#triggerLabel') as HTMLDivElement | null;
-    const chevron = dropdown?.shadowRoot?.querySelector('#showStateIcon') as HTMLDivElement | null;
+    for (const el of selects) {
+      const target = el.shadowRoot?.querySelector(targetSelectors[el.dataset.case as string]) as HTMLElement | null;
+      const dropdown = el.shadowRoot?.querySelector('[auro-dropdown]') as HTMLElement | null;
+      const triggerContent = dropdown?.querySelector('#triggerFocus') as HTMLDivElement | null;
+      const wrapper = dropdown?.shadowRoot?.querySelector('#triggerLabel') as HTMLDivElement | null;
+      const chevron = dropdown?.shadowRoot?.querySelector('#showStateIcon') as HTMLDivElement | null;
 
-    if (!value || !dropdown || !triggerContent || !wrapper || !chevron) {
-      throw new Error('Failed to find select trigger elements for the truncation assertion.');
+      if (!target || !dropdown || !triggerContent || !wrapper || !chevron) {
+        throw new Error(`Failed to find select trigger elements for the ${el.layout} ${el.dataset.case} truncation assertion.`);
+      }
+
+      const targetRect = target.getBoundingClientRect();
+      const triggerContentRect = triggerContent.getBoundingClientRect();
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const chevronRect = chevron.getBoundingClientRect();
+      const targetStyles = getComputedStyle(target);
+      const wrapperStyles = getComputedStyle(wrapper);
+
+      await expect(targetStyles.textOverflow).toBe('ellipsis');
+      await expect(targetStyles.whiteSpace).toBe('nowrap');
+      await expect(wrapperStyles.overflowX === 'hidden' || wrapperStyles.overflow === 'hidden').toBe(true);
+      await expect(target.scrollWidth).toBeGreaterThan(target.clientWidth);
+      await expect(triggerContentRect.right).toBeLessThanOrEqual(wrapperRect.right + 0.5);
+      await expect(targetRect.right).toBeLessThanOrEqual(chevronRect.left + 0.5);
     }
-
-    const valueRect = value.getBoundingClientRect();
-    const triggerContentRect = triggerContent.getBoundingClientRect();
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const chevronRect = chevron.getBoundingClientRect();
-    const valueStyles = getComputedStyle(value);
-    const wrapperStyles = getComputedStyle(wrapper);
-
-    await expect(valueStyles.textOverflow).toBe('ellipsis');
-    await expect(valueStyles.whiteSpace).toBe('nowrap');
-    await expect(wrapperStyles.overflowX === 'hidden' || wrapperStyles.overflow === 'hidden').toBe(true);
-    await expect(value.scrollWidth).toBeGreaterThan(value.clientWidth);
-    await expect(triggerContentRect.right).toBeLessThanOrEqual(wrapperRect.right + 0.5);
-    await expect(valueRect.right).toBeLessThanOrEqual(chevronRect.left + 0.5);
   },
 };
 

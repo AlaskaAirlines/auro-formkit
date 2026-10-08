@@ -22,7 +22,9 @@ declare global {
 
 export default function MenuInteraction() {
   return (
-    <div>
+    // Padding keeps the first menu out from under Playwright's initial (0,0)
+    // cursor position, which could otherwise hover-activate its first option.
+    <div style={{ padding: 16 }}>
       {/* Default single-select menu */}
       <section data-testid="default">
         <auro-menu>

@@ -79,7 +79,7 @@ input {
   }
 }
 
-.notification {
+.notification:not(.util_displayHidden) {
   display: flex;
   align-items: center;
   justify-content: center;

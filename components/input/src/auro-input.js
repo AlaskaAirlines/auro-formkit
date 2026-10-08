@@ -117,6 +117,30 @@ export class AuroInput extends BaseInput {
   }
 
   /**
+   * Whether the input has a value that the user can clear.
+   * @private
+   * @returns {boolean} - True when the input has a value and is not read-only or disabled.
+   */
+  get isClearable() {
+    return Boolean(this.hasValue && !this.readonly && !this.disabled);
+  }
+
+  /**
+   * Returns classmap configuration for the clear button wrapper visibility.
+   * The wrapper is hidden on the same condition as the button so an empty wrapper
+   * never takes up space in the accents row on hover or focus.
+   * @private
+   * @returns {Record<string, boolean>} - Classmap object controlling clear button wrapper display state.
+   */
+  get clearWrapperClassMap() {
+    return {
+      'notification': true,
+      'clear': true,
+      'util_displayHidden': !this.isClearable
+    };
+  }
+
+  /**
    * Returns classmap configuration for the clear button visibility.
    * The button is hidden when the input has no value, is read-only, or is disabled.
    * @private
@@ -126,7 +150,7 @@ export class AuroInput extends BaseInput {
     return {
       'notificationBtn': true,
       'clearBtn': true,
-      'util_displayHidden': !this.hasValue || this.readonly || this.disabled
+      'util_displayHidden': !this.isClearable
     };
   }
 
@@ -560,7 +584,7 @@ export class AuroInput extends BaseInput {
    */
   renderHtmlActionClear() {
     return html`
-      <div class="notification clear">
+      <div class="${classMap(this.clearWrapperClassMap)}">
         <${this.buttonTag}
           @click="${this.handleClickClear}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
