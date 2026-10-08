@@ -26,28 +26,13 @@ function menu(page: Page, fixture: string): Locator {
 }
 
 /**
- * Move the mouse somewhere that isn't over a menu, then clear the menu's active
- * option so programmatic navigation starts from a known state. Playwright's
- * cursor starts at (0,0); when a menu option sits under it, a hover can
- * activate that option before the test runs.
+ * A standalone auro-menu starts with no active option. Assert that before
+ * programmatic navigation so a stray hover (e.g. a fixture option sitting under
+ * Playwright's initial (0,0) cursor) fails clearly instead of off-by-one.
  */
-async function startWithNoActiveOption(page: Page, fixture: string) {
-  const point = await page.evaluate(() => {
-    for (let y = 0; y < window.innerHeight; y += 10) {
-      for (let x = 0; x < window.innerWidth; x += 10) {
-        const el = document.elementFromPoint(x, y);
-        if (!el || !el.closest('auro-menu, auro-menuoption')) return { x, y };
-      }
-    }
-    return null;
-  });
-  if (!point) throw new Error('No point in the viewport is free of auro-menu');
-  await page.mouse.move(point.x, point.y);
-
-  await menu(page, fixture).evaluate((el: any) => el.reset());
-  await expect.poll(() =>
-    menu(page, fixture).evaluate((el: any) => el.optionActive?.value ?? null),
-  ).toBeNull();
+async function expectNoActiveOption(page: Page, fixture: string) {
+  const active = await menu(page, fixture).evaluate((el: any) => el.optionActive?.value ?? null);
+  expect(active, `"${fixture}" menu should start with no active option`).toBeNull();
 }
 
 /** Return all auro-menuoption elements inside a fixture (top-level only). */
@@ -259,7 +244,7 @@ export function menuInteractionSuite(framework: string) {
     test.describe('Programmatic navigation', () => {
       test.beforeEach(async ({ page }) => {
         for (const fixture of ['default', 'with-disabled', 'with-hidden']) {
-          await startWithNoActiveOption(page, fixture);
+          await expectNoActiveOption(page, fixture);
         }
       });
 
