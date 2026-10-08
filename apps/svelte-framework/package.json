@@ -18,17 +18,17 @@
 		"test:framework:report": "playwright test --config=playwright.report.config.ts"
 	},
 	"dependencies": {
-		"@aurodesignsystem/auro-formkit": "file:../../"
+		"@aurodesignsystem/auro-formkit": "file:../.."
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.60.0",
+		"@playwright/test": "^1.63.0",
 		"@sveltejs/adapter-auto": "^7.0.1",
-		"@sveltejs/kit": "^2.56.1",
-		"@sveltejs/vite-plugin-svelte": "^7.0.0",
-		"monocart-reporter": "^2.10.1",
-		"svelte": "^5.55.1",
-		"svelte-check": "^4.4.6",
-		"typescript": "^6.0.2",
-		"vite": "^8.0.5"
+		"@sveltejs/kit": "^2.70.3",
+		"@sveltejs/vite-plugin-svelte": "^7.3.1",
+		"monocart-reporter": "^2.14.1",
+		"svelte": "^5.57.2",
+		"svelte-check": "^4.7.6",
+		"typescript": "^6.0.3",
+		"vite": "^8.3.3"
 	}
 }
