@@ -25,6 +25,31 @@ function menu(page: Page, fixture: string): Locator {
   return page.locator(`[data-testid="${fixture}"] > auro-menu`);
 }
 
+/**
+ * Move the mouse somewhere that isn't over a menu, then clear the menu's active
+ * option so programmatic navigation starts from a known state. Playwright's
+ * cursor starts at (0,0); when a menu option sits under it, a hover can
+ * activate that option before the test runs.
+ */
+async function startWithNoActiveOption(page: Page, fixture: string) {
+  const point = await page.evaluate(() => {
+    for (let y = 0; y < window.innerHeight; y += 10) {
+      for (let x = 0; x < window.innerWidth; x += 10) {
+        const el = document.elementFromPoint(x, y);
+        if (!el || !el.closest('auro-menu, auro-menuoption')) return { x, y };
+      }
+    }
+    return null;
+  });
+  if (!point) throw new Error('No point in the viewport is free of auro-menu');
+  await page.mouse.move(point.x, point.y);
+
+  await menu(page, fixture).evaluate((el: any) => el.reset());
+  await expect.poll(() =>
+    menu(page, fixture).evaluate((el: any) => el.optionActive?.value ?? null),
+  ).toBeNull();
+}
+
 /** Return all auro-menuoption elements inside a fixture (top-level only). */
 function options(page: Page, fixture: string): Locator {
   return page.locator(`[data-testid="${fixture}"] auro-menuoption`);
@@ -232,6 +257,12 @@ export function menuInteractionSuite(framework: string) {
     // ── Programmatic navigation ───────────────────────────────────────────
 
     test.describe('Programmatic navigation', () => {
+      test.beforeEach(async ({ page }) => {
+        for (const fixture of ['default', 'with-disabled', 'with-hidden']) {
+          await startWithNoActiveOption(page, fixture);
+        }
+      });
+
       test('navigateOptions("down") highlights first option', async ({ page }) => {
         await menu(page, 'default').evaluate((el: any) => el.navigateOptions('down'));
 
