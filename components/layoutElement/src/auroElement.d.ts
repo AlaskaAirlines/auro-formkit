@@ -1,8 +1,7 @@
 export class AuroElement extends LitElement {
     static get properties(): {
         /**
-         * Defines the language of an element.
-         * @default {'default'}
+         * Sets the layout the component renders, such as `classic`. Each subclass declares its own valid values and default.
          */
         layout: {
             type: StringConstructor;
