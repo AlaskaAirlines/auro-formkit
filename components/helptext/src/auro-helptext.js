@@ -12,7 +12,19 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * Displays help text or error messages within form elements - Internal Use Only.
+ * Shows help text or an error message below a form element. It's meant for use inside Auro form components only.
+ *
+ * **Key capabilities**
+ * - **Error style**: `error` shows the text in the error color.
+ * - **Dark backgrounds**: `appearance="inverse"` switches to colors designed for dark backgrounds.
+ * - **Hidden when empty**: The element always stays hidden until its slot has text content.
+ *
+ * **Example**
+ * ```html
+ * <auro-helptext error>Enter a valid email address.</auro-helptext>
+ * ```
+ *
+ * @slot default - The help text or error message to show. The element stays hidden while this slot has no text.
  */
 export class AuroHelpText extends LitElement {
 
@@ -42,7 +54,7 @@ export class AuroHelpText extends LitElement {
     return {
 
       /**
-       * The appearance of the help text, either default (for light backgrounds) or inverse (for dark backgrounds).
+       * Sets the help text's colors. Use `default` on light backgrounds and `inverse` on dark backgrounds.
        * @type {'default' | 'inverse'}
        * @default 'default'
        */
@@ -68,7 +80,7 @@ export class AuroHelpText extends LitElement {
       },
 
       /**
-       * If declared, make font color red.
+       * Shows the text in the error color. Use it when the help text is an error message.
        */
       error: {
         type: Boolean,
@@ -76,8 +88,9 @@ export class AuroHelpText extends LitElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
-       * @deprecated Use `appearance` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the text in colors designed for dark backgrounds.
+       * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -88,11 +101,11 @@ export class AuroHelpText extends LitElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-helptext"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-helptext"] - The tag name to register the element under.
    *
    * @example
-   * AuroCheckbox.register("custom-helptext") // this will register this element to <custom-helptext/>
+   * AuroHelpText.register("custom-helptext") // registers as <custom-helptext>
    *
    */
   static register(name = "auro-helptext") {
@@ -103,6 +116,11 @@ export class AuroHelpText extends LitElement {
     this.handleSlotChange();
   }
 
+  /**
+   * Called when the slot's content changes and after each update. Checks whether the slot has text, so the element shows only when it does.
+   * @param {Event} [event] - The `slotchange` event, when called from one.
+   * @returns {void}
+   */
   handleSlotChange(event) {
     if (event) {
       this.slotNodes = event.target.assignedNodes();
@@ -112,10 +130,10 @@ export class AuroHelpText extends LitElement {
   }
 
   /**
-   * Checks if any of the provided nodes or their nested slot nodes contain non-empty text content.
+   * Checks whether any of the nodes, or the nodes assigned to a slot nested in them, have non-empty text content.
    *
-   * @param {NodeList|Array} nodes - The list of nodes to check for content.
-   * @returns {boolean} - Returns true if any node or nested slot node contains non-empty text content, otherwise false.
+   * @param {Node[]} nodes - The list of nodes to check for content.
+   * @returns {boolean} True if any node or nested slot node has non-empty text content; false otherwise.
    * @private
    */
   checkSlotsForContent(nodes) {
