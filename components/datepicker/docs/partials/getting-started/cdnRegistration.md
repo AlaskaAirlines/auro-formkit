@@ -6,7 +6,8 @@
 ```html
 <auro-datepicker>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.headline">Select Date</span>
+  <span slot="ariaLabel.bib.close">Close calendar</span>
+  <span slot="bib.fullscreen.headline">Select date</span>
   <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```

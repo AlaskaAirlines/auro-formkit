@@ -8,7 +8,7 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Attempt to update the central date but only if the date is a valid date.
+   * Sets `centralDate` to the first day of the date's month, when the date is valid.
    * @param {Object} elem - The element to set the centralDate on.
    * @param {String} date - The date to set the centralDate to.
    * @private
@@ -34,10 +34,10 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Determine how many months to render based on the defined calendar range.
+   * Determines how many months to render based on the defined calendar range.
    * @param {Object} elem - The auro-calendar element.
    * @private
-   * @returns {Number} Returns the number of months between the calendarStartDate and the calendarEndDate.
+   * @returns {Number} The number of months from calendarStartDate through calendarEndDate.
    */
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {
@@ -57,7 +57,7 @@ export class UtilitiesCalendarRender {
    * @param {Object} elem - The auro-calendar element.
    * @param {Boolean} isMobile - True if it's to render for mobile view.
    * @private
-   * @returns {Number} Returns the maximum number of months that can be rendered.
+   * @returns {Number} The maximum number of months that can be rendered.
    */
   maximumRenderableMonths(elem, isMobile) {
     const definedRangeMonths = this.determineDefinedCalendarRange(elem);
@@ -114,7 +114,7 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Determine which month is to be rendered first.
+   * Determines which month to render first.
    * @param {Object} elem - The auro-calendar element.
    * @private
    * @returns {void}
@@ -141,7 +141,7 @@ export class UtilitiesCalendarRender {
    * @param {Object} elem - The auro-calendar element.
    * @param {Number} month - Month the calendar displays.
    * @param {Number} year - Year the calendar displays.
-   * @returns {Object} Returns the auro-calendar-month HTML.
+   * @returns {Object} The auro-calendar-month HTML.
    */
   renderCalendar(elem, month, year) {
     return html`

@@ -18,12 +18,12 @@ import { isBlackoutTimestamp } from './blackoutUtils.js';
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
 /**
- * The `auro-calendar-cell` component renders a single selectable day button within a calendar month grid.
+ * One day in the datepicker's calendar: a button people select to choose that date.
  *
- * @event calendar-cell-activate - Notifies that this cell has been activated via click or tap.
+ * @event calendar-cell-activate - Notifies that this cell has been activated by a click, a tap, or Enter or Space.
  * @event date-is-hovered - Notifies that this cell's date is being hovered.
  * @event calendar-cell-focused - Notifies that this cell's button has received focus.
- * @csspart dateSlot - Use for customizing the style of the date slot content container.
+ * @csspart dateSlot - The container under the day number that holds the date's `date_YYYY_MM_DD` slot content, shown only when that slot has content.
  */
 export class AuroCalendarCell extends LitElement {
   constructor() {
@@ -64,17 +64,17 @@ export class AuroCalendarCell extends LitElement {
       // ...super.properties,
 
       /**
-       * The day object for this cell, containing its Unix timestamp (`date`) and day-of-month title.
+       * Sets the day this cell shows: an object with the date as a Unix timestamp in seconds (`date`) and the day of the month (`title`).
        */
       day:           { type: Object },
 
       /**
-       * Whether this cell's date is currently selected.
+       * Shows the cell in the selected style. The cell sets it itself when its date matches `dateFrom` or `dateTo`.
        */
       selected:      { type: Boolean },
 
       /**
-       * The end (return) date of the selected range as a Unix-timestamp string.
+       * Sets the end date of the chosen range, as a Unix timestamp in seconds.
        */
       dateTo:        {
         type: String,
@@ -82,7 +82,7 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * The start (depart) date of the selected range as a Unix-timestamp string.
+       * Sets the chosen date, or the start date of a range, as a Unix timestamp in seconds.
        */
       dateFrom:      {
         type: String,
@@ -90,22 +90,22 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * The month this cell belongs to.
+       * Sets the month this cell belongs to. The cell doesn't currently use it.
        */
       month:         { type: String },
 
       /**
-       * The minimum selectable date as a Unix timestamp.
+       * Sets the earliest date people can choose, as a Unix timestamp in seconds. When the cell's date is earlier, its button is turned off.
        */
       min:           { type: Number },
 
       /**
-       * The maximum selectable date as a Unix timestamp.
+       * Sets the latest date people can choose, as a Unix timestamp in seconds. When the cell's date is later, its button is turned off.
        */
       max:           { type: Number },
 
       /**
-       * Whether this cell is disabled because its date falls outside the min/max range.
+       * Stops clicks and Enter or Space from selecting the cell's date. The cell doesn't currently set it itself: dates outside `min` and `max` turn off their button instead.
        */
       disabled:      {
         type: Boolean,
@@ -113,13 +113,9 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * Legacy array of Unix-timestamp dates that cannot be selected.
-       * @deprecated Propagated from the legacy `auro-calendar.disabledDays`
-       * Unix-timestamp array. The cell honors it for backward compatibility
-       * (see the divergence-check fallback inside `isBlackout`), but
-       * consumers should migrate to `auro-datepicker.blackoutDates`
-       * (YYYY-MM-DD ISO strings). The calendar emits a one-time
-       * deprecation warning the first time a non-empty value is observed.
+       * Deprecated: Use `blackoutDates` on `auro-datepicker` instead.
+       * Sets dates people can't select, as Unix timestamps in seconds.
+       * @deprecated Use `blackoutDates` on `auro-datepicker` instead.
        * @type {number[]}
        */
       disabledDays:  {
@@ -128,7 +124,7 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * Whether this cell represents the current date (today).
+       * Marks the cell as today's date, which tells screen readers it's the current date (`aria-current="date"`). It doesn't currently change how the cell looks.
        */
       isCurrentDate: {
         type: Boolean,
@@ -136,12 +132,12 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * The BCP 47 locale tag used to format the cell's date.
+       * Sets the language and region used to format the cell's date for screen readers, such as `en-US` (a BCP 47 language tag). Uses `en-US` when not set.
        */
       locale:        { type: String },
 
       /**
-       * The cell's date formatted as a `YYYY_MM_DD` slot-name string.
+       * Sets the cell's date in `YYYY_MM_DD` format, which names its `date_` and `popover_` slots. The cell sets it from `day`.
        */
       dateStr:       {
         type: String,
@@ -149,7 +145,7 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * Whether to render the numerical date off-center to leave room below for date slot content.
+       * Moves the day number up to leave room below it for date slot content. The cell sets it when the datepicker has content for the cell's `date_YYYY_MM_DD` slot.
        */
       renderForDateSlot: {
         type: Boolean,
@@ -157,7 +153,7 @@ export class AuroCalendarCell extends LitElement {
       },
 
       /**
-       * Whether this cell has popover slot content to display.
+       * Shows the cell inside a popover. The cell sets it when the datepicker has content for the cell's `popover_YYYY_MM_DD` slot.
        */
       hasPopoverContent: {
         type: Boolean,
@@ -233,7 +229,7 @@ export class AuroCalendarCell extends LitElement {
 
   /**
    * Handles user hover events and dispatches a custom event.
-   * Does NOT set any reactive properties — the range preview is handled
+   * Does NOT set any reactive properties; the range preview is handled
    * imperatively by the calendar component to avoid O(N) re-renders.
    * @private
    * @returns {void}
@@ -246,7 +242,7 @@ export class AuroCalendarCell extends LitElement {
 
   /**
    * Handles focus events on the cell button.
-   * Dispatches a lightweight event for the calendar to handle SR
+   * Dispatches a lightweight event for the calendar to handle screen reader
    * announcements and range preview updates without triggering
    * any Lit lifecycle updates.
    * @private
@@ -267,7 +263,7 @@ export class AuroCalendarCell extends LitElement {
    * @param {Object} day - An object containing the dateFrom and day of month values.
    * @param {Number} min - The minimum date value.
    * @param {Number} max - The maximum date value.
-   * @returns {Boolean} - True if the date is out of range.
+   * @returns {Boolean} True if the date is out of range; false otherwise.
    */
   isOutOfRange(day, min, max) {
     if (day && day.date !== null && day.date !== undefined) {
@@ -280,7 +276,7 @@ export class AuroCalendarCell extends LitElement {
    * Checks if the current date is a blackout date (in disabledDays but within range).
    * Blackout cells are focusable but not selectable.
    * @private
-   * @returns {Boolean} - True if the date is a blackout date.
+   * @returns {Boolean} True if the date is a blackout date; false otherwise.
    */
   isBlackout() {
     if (!this.day || this.day.date === null || this.day.date === undefined || this.isOutOfRange(this.day, this.min, this.max)) {
@@ -326,7 +322,7 @@ export class AuroCalendarCell extends LitElement {
    * @param {Number} min - The minimum date value.
    * @param {Number} max - The maximum date value.
    * @param {Array} disabledDays - An array of disabled dates.
-   * @returns {Boolean} - True if the date is disabled.
+   * @returns {Boolean} True if the date is disabled; false otherwise.
    */
   isEnabled(day, min, max, disabledDays) {
     this.removeAttribute('disabled');
@@ -507,9 +503,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is a referenced date.
-   * @param {Object} dateStr - The date string in YYYY_MM_DD format.
-   * @returns Boolean - True if the date is a referenced date.
+   * Checks whether a date is one of the datepicker's `referenceDates`.
+   * @param {string} dateStr - The date, in `YYYY_MM_DD` format.
+   * @returns {boolean} True if the date is a reference date; false otherwise.
    */
   isReferenceDate(dateStr) {
     // If the datepicker has referenced dates specified
@@ -782,9 +778,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Programmatically focuses the cell's interactive button element.
-   * Uses focusVisible: true so the :focus-visible ring appears even when
-   * the bib was opened via mouse click (which sets mouse input modality).
+   * Moves keyboard focus to the cell's button.
+   * Uses `focusVisible: true` so the focus ring shows even when
+   * the calendar was opened with a mouse click.
    * @returns {void}
    */
   focusButton() {
@@ -795,16 +791,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Imperatively marks this cell as active without triggering a Lit re-render.
-   * Buttons stay tabindex="-1" because DOM focus stays on the grid wrapper —
-   * arrow keys move the active cell imperatively and the live region carries
-   * the SR announcement.
-   *
-   * Refuses to activate out-of-range cells: those are aria-hidden, have no
-   * click/focus handlers, and are filtered out of `getFocusableCells`. The
-   * active class showing on a disabled cell would be visually misleading,
-   * so this guard is the single source of truth across every code path
-   * that might call setActive (keyboard nav, focus restore, cell click).
+   * Marks the cell as the active cell and shows its popover, if it has one, without re-rendering.
+   * Does nothing for a date outside `min` and `max`. Keyboard focus stays on the calendar grid,
+   * and a live region announces the active date to screen readers.
    * @returns {void}
    */
   setActive() {
@@ -821,7 +810,7 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Imperatively marks this cell as inactive without triggering a Lit re-render.
+   * Marks the cell as no longer active, removes its focus ring, and hides its popover, without re-rendering.
    * @returns {void}
    */
   clearActive() {
@@ -841,8 +830,8 @@ export class AuroCalendarCell extends LitElement {
    * Updates range preview classes imperatively (no Lit re-render).
    * Called by the calendar component when the hovered date changes
    * during range selection (dateFrom set, dateTo not yet set).
-   * @param {Number} hoveredDate - Unix timestamp of the currently hovered/focused date.
-   * @param {Number} dateFrom - Unix timestamp of the selected departure date.
+   * @param {Number} hoveredDate - The Unix timestamp of the date that's hovered or active.
+   * @param {Number} dateFrom - The Unix timestamp of the chosen start date.
    * @returns {void}
    */
   updateRangePreviewClasses(hoveredDate, dateFrom) {
@@ -876,19 +865,10 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Re-applies the committed-range classes (inRange / rangeDepartDate /
-   * rangeReturnDate) imperatively from the cell's current `day`,
-   * `dateFrom`, and `dateTo`. Used after month navigation flushes:
-   * classMap in `renderCellButton` tracks its own previous state, so a
-   * preceding imperative `classList.remove` (from
-   * `clearRangePreviewClasses`) leaves classMap thinking the class is
-   * still applied. On re-render with the same class-value, classMap emits
-   * no delta and the class stays missing in the DOM. Re-toggling
-   * imperatively resyncs the DOM with the committed range.
-   *
-   * Delegates to the same `isInRange` / `isDepartDate` / `isReturnDate`
-   * helpers `renderCellButton` uses, so the two code paths cannot drift
-   * (including whatever timestamp normalization those helpers apply).
+   * Re-applies the classes that show a chosen range (`inRange`, `rangeDepartDate`,
+   * and `rangeReturnDate`) from the cell's `day`, `dateFrom`, and `dateTo`.
+   * The calendar calls it after month navigation, because classes removed by
+   * `clearRangePreviewClasses()` aren't restored by the next render.
    * @returns {void}
    */
   applyCommittedRangeClasses() {

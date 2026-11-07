@@ -8,7 +8,7 @@ export class CalendarUtilities {
 
 
   /**
-   * Scroll the calendar month list to a given valid date if in mobile view.
+   * Scrolls the calendar to the month of a valid date when the window is narrower than the calendar's mobile breakpoint.
    * @param {Object} elem - The calendar element.
    * @param {String} date - The date to scroll into view.
    * @returns {void}
@@ -41,7 +41,7 @@ export class CalendarUtilities {
   }
 
   /**
-   * Handles the visibility of the previous and next month buttons.
+   * Shows or hides the previous and next month buttons, so people can't move before the first month or past the last month the calendar allows.
    * @param {Object} elem - The auro-calendar element.
    * @returns {void}
    */
@@ -125,7 +125,7 @@ export class CalendarUtilities {
   /**
    * Updates the month and year when the user navigates to a different calendar month.
    * @param {Object} elem - The auro-calendar element.
-   * @param {String} direction - The direction the user is navigating.
+   * @param {String} direction - The direction to move: `next` or `prev`.
    * @returns {void}
    */
   handleMonthChange(elem, direction) {

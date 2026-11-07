@@ -1,7 +1,7 @@
 React 19 includes <auro-hyperlink href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</auro-hyperlink>, so <code>&lt;auro-datepicker&gt;</code> works directly in JSX without any wrapper library.
 
-<auro-header level="3" id="reactImport">Import the Component</auro-header>
-Import and register the component at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+<auro-header level="3" id="reactImport">Import the component</auro-header>
+Import and register the component at the top level of your application (for example, in your root `main.tsx` or `App.tsx`):
 
 ```js
 import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
@@ -9,8 +9,8 @@ import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/c
 AuroDatePicker.register('[custom]-datepicker');
 ```
 
-<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
+<auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
 
 ```js
 import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
@@ -24,7 +24,7 @@ declare global {
 }
 ```
 
-<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+<auro-header level="3" id="reactEvents">Event handling</auro-header>
 Auro components emit native <code>CustomEvent</code>s. Use a <code>ref</code> to attach event listeners in a <code>useEffect</code>:
 
 ```js
@@ -48,12 +48,15 @@ function MyDatePicker() {
   return (
     <custom-datepicker ref={datepickerRef}>
       <span slot="fromLabel">Choose a date</span>
+      <span slot="ariaLabel.bib.close">Close calendar</span>
+      <span slot="bib.fullscreen.headline">Select date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </custom-datepicker>
   );
 }
 ```
 
-<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="reactModuleResolution">Module resolution</auro-header>
 Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"</code> so TypeScript can resolve the component's package exports:
 
 ```js

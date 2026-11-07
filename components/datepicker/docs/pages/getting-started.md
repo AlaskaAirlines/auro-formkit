@@ -1,9 +1,9 @@
-<auro-header level="1" id="overview">Datepicker - Getting Started</auro-header>
+<auro-header level="1" id="overview">Datepicker - Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
       <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
@@ -11,7 +11,7 @@
       <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal configuration</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-fromLabel" class="level2 body-xs">fromLabel</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-toLabel" class="level2 body-xs">toLabel</auro-anchorlink>
@@ -24,11 +24,11 @@
       <auro-anchorlink fluid href="#slot-bib-fullscreen-toLabel" class="level2 body-xs">bib.fullscreen.toLabel</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-date" class="level2 body-xs">date_YYYY_MM_DD</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-popover" class="level2 body-xs">popover_YYYY_MM_DD</auro-anchorlink>
-      <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
-      <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
-      <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">ValueEnd</auro-anchorlink>
-      <auro-anchorlink fluid href="#values" class="level2 body-xs">Values</auro-anchorlink>
+      <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
+      <auro-anchorlink fluid href="#validity" class="level2 body-xs">validity</auro-anchorlink>
+      <auro-anchorlink fluid href="#value" class="level2 body-xs">value</auro-anchorlink>
+      <auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">valueEnd</auro-anchorlink>
+      <auro-anchorlink fluid href="#values" class="level2 body-xs">values</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
       <auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
@@ -56,16 +56,16 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="stateManagement">State Management</auro-header>
-        <p>The following read-only properties reflect the current state of the component and can be accessed via JavaScript.</p>
+        <auro-header level="2" id="stateManagement">State management</auro-header>
+        <p>Use the following properties in JavaScript to read the datepicker's current state. You can also set <code>value</code> and <code>valueEnd</code>.</p>
         <auro-header level="3" id="validity">validity</auro-header>
-        <p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>"valid"</code>, <code>"valueMissing"</code>, <code>"badInput"</code>, <code>"rangeOverflow"</code>, <code>"rangeUnderflow"</code>, and <code>"customError"</code>.</p>
+        <p>Gets the datepicker's current validation state as a string: <code>valid</code>, <code>valueMissing</code>, <code>tooShort</code>, <code>tooLong</code>, <code>patternMismatch</code>, <code>rangeOverflow</code>, <code>rangeUnderflow</code>, or <code>customError</code>. It's <code>undefined</code> until the datepicker is validated.</p>
         <auro-header level="3" id="value">value</auro-header>
-        <p>Gets or sets the selected date value as a string in <code>MM/DD/YYYY</code> format. When <code>range</code> is set, this represents the start date.</p>
+        <p>Gets or sets the chosen date as an ISO date string, such as <code>2025-04-21</code>. When <code>range</code> is set, it's the start date.</p>
         <auro-header level="3" id="valueEnd">valueEnd</auro-header>
-        <p>Gets or sets the end date value when <code>range</code> is set. Uses the same <code>MM/DD/YYYY</code> format.</p>
+        <p>Gets or sets the end date when <code>range</code> is set, in the same ISO format as <code>value</code>.</p>
         <auro-header level="3" id="values">values</auro-header>
-        <p>A convenience read-only property for use when <code>range</code> is implemented that returns both <code>value</code> and <code>valueEnd</code> as an array.</p>
+        <p>Gets the chosen dates as an array, which is useful when <code>range</code> is set. It's read-only.</p>
         <ul>
           <li>When <code>range</code> is set and both dates are selected, returns <code>[value, valueEnd]</code>.</li>
           <li>When only <code>value</code> is set (range not complete or not enabled), returns <code>[value]</code>.</li>
@@ -76,11 +76,11 @@
         <auro-header level="2" id="publicFunctions">Functions</auro-header>
         <p>The following public methods are available on the <code>&lt;auro-datepicker&gt;</code> element.</p>
         <auro-header level="3" id="focus">focus()</auro-header>
-        <p>Programmatically moves focus to the datepicker trigger input.</p>
+        <p>Moves keyboard focus to the start date input. Pass <code>endDate</code> to focus the end date input of a range.</p>
         <auro-header level="3" id="hideBib">hideBib()</auro-header>
-        <p>Programmatically hides the dropdown bib (calendar) if it is currently open.</p>
+        <p>Closes the calendar if it's open.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
-        <p>Resets the component to its initial state, clearing the selected date(s) and validation state.</p>
+        <p>Clears the chosen dates and the validation state.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -93,9 +93,9 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="showBib">showBib()</auro-header>
-        <p>Programmatically shows the dropdown bib (calendar) if it is not already open.</p>
+        <p>Opens the calendar if it's closed.</p>
         <auro-header level="3" id="validate">validate()</auro-header>
-        <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+        <p>Checks the chosen dates and updates <code>validity</code>. Pass <code>true</code> to validate even when the datepicker has focus or hasn't been used yet, so an empty required datepicker reports <code>valueMissing</code>.</p>
       </section>
     </div>
   </div>
