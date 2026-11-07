@@ -1,18 +1,18 @@
 <auro-header level="1" id="overview">Why auro-checkbox?</auro-header>
 
-<p>The native HTML <code>&lt;input type="checkbox"&gt;</code> is functional but minimal. It cannot be styled consistently across browsers, offers no group-level validation, and provides no integration with a design system. <code>auro-checkbox</code> and <code>auro-checkbox-group</code> address these gaps.</p>
+<p>The native HTML <code>&lt;input type="checkbox"&gt;</code> is functional but minimal. It can't be styled consistently across browsers, offers no group-level validation, and provides no integration with a design system. <code>auro-checkbox</code> and <code>auro-checkbox-group</code> address these gaps.</p>
 
 <auro-header level="2" id="accessibility">Accessibility</auro-header>
 
-<p>Native checkboxes have basic accessibility, but managing groups of related checkboxes — with a shared legend, coordinated validation, and consistent keyboard behavior — requires significant custom work.</p>
+<p>Native checkboxes have basic accessibility, but a group of related checkboxes also needs a shared legend, coordinated validation, and consistent keyboard behavior, which takes significant custom work.</p>
 
 <p><code>auro-checkbox</code> provides:</p>
 
 <ul>
-  <li><strong>Proper ARIA semantics</strong> — Each checkbox carries <code>role="checkbox"</code>, <code>aria-checked</code>, and <code>aria-disabled</code> attributes that stay in sync with component state.</li>
-  <li><strong>Automatic label binding</strong> — Slot content is automatically associated as the accessible label, eliminating <code>&lt;label for&gt;</code> wiring.</li>
-  <li><strong>Group-level semantics</strong> — <code>auro-checkbox-group</code> wraps checkboxes with a <code>legend</code> slot, giving screen readers a clear group description.</li>
-  <li><strong>Keyboard interaction</strong> — Space toggles the checkbox, matching the expected interaction pattern.</li>
+  <li><strong>Proper ARIA semantics</strong>: Each checkbox carries <code>role="checkbox"</code>, <code>aria-checked</code>, and <code>aria-disabled</code> attributes that stay in sync with component state.</li>
+  <li><strong>Automatic label binding</strong>: Slot content is automatically associated as the accessible label, eliminating <code>&lt;label for&gt;</code> wiring.</li>
+  <li><strong>Group-level semantics</strong>: <code>auro-checkbox-group</code> wraps checkboxes with a <code>legend</code> slot, giving screen readers a clear group description.</li>
+  <li><strong>Keyboard interaction</strong>: Space toggles the checkbox, matching the expected interaction pattern.</li>
 </ul>
 
 <auro-header level="2" id="groupManagement">Group management</auro-header>
@@ -31,20 +31,20 @@
 
 <auro-header level="2" id="validation">Validation</auro-header>
 
-<p>Native checkboxes support <code>required</code> on individual inputs, but there is no way to require "at least one selected" across a group without JavaScript.</p>
+<p>Native checkboxes support <code>required</code> on individual inputs, but requiring "at least one selected" across a group takes JavaScript.</p>
 
 <p><code>auro-checkbox-group</code> integrates with the Auro form validation system:</p>
 
 <ul>
   <li>Group-level <code>required</code> validation</li>
   <li>Custom error messages via <code>setCustomValidity</code> and <code>setCustomValidityValueMissing</code></li>
-  <li><code>touched</code> tracking so errors only appear after user interaction</li>
+  <li>Interaction tracking, so errors appear only after someone has interacted with the group</li>
   <li>Dispatches <code>auroFormElement-validated</code> events for parent form coordination</li>
 </ul>
 
 <auro-header level="2" id="themingAndVisualConsistency">Theming and visual consistency</auro-header>
 
-<p>Native checkboxes render differently across browsers and operating systems. Their appearance cannot be reliably controlled with CSS alone.</p>
+<p>Native checkboxes render differently across browsers and operating systems. Their appearance can't be reliably controlled with CSS alone.</p>
 
 <p><code>auro-checkbox</code> is built with the Auro Design System:</p>
 

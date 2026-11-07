@@ -3,8 +3,8 @@
     <tr>
       <th>Key</th>
       <th>Modifier</th>
-      <th>Current State</th>
-      <th>Focus Element</th>
+      <th>Current state</th>
+      <th>Focus element</th>
       <th>Behavior</th>
     </tr>
   </thead>

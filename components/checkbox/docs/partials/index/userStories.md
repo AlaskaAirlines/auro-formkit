@@ -20,7 +20,7 @@
     Move focus away from the checkbox group
     <div class="note">
       <p>
-        If the group is <code>required</code>, validation is triggered on blur. If no checkbox is checked the component renders the <code>valueMissing</code> error state.
+        When the group is <code>required</code> and no checkbox is checked, moving focus out of the group shows the <code>valueMissing</code> error state.
       </p>
     </div>
   </li>
@@ -46,7 +46,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
-<p>The checkbox group does not force the user to make a selection. If no checkbox is checked and the group is not <code>required</code>, the user can move past the group without checking any option.</p>
+<p>The checkbox group doesn't force the user to make a selection. If no checkbox is checked and the group isn't <code>required</code>, the user can move past the group without checking any option.</p>
 <p>If the group is <code>required</code>, moving focus away without checking any option triggers validation and renders the <code>valueMissing</code> error state.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->

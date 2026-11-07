@@ -24,18 +24,36 @@ import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
 /**
- * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
+ * A group of related checkboxes with a shared label that lets people select one or more options and can require at least one choice.
+ *
+ * **Key capabilities**
+ * - **Required selection**: Set `required` to show an error when someone leaves the group without checking any option.
+ * - **Custom error messages**: Set `setCustomValidityValueMissing` to replace the error text, or `error` to show an error of your own.
+ * - **Horizontal layout**: Set `horizontal` to place up to three checkboxes side by side.
+ * - **Disable every option**: Set `disabled` to turn off all the checkboxes in the group at once.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-checkbox-group required>
+ *   <span slot="legend">Seat preferences</span>
+ *   <auro-checkbox value="window" name="seat">Window seat</auro-checkbox>
+ *   <auro-checkbox value="aisle" name="seat">Aisle seat</auro-checkbox>
+ * </auro-checkbox-group>
+ * ```
+ * @summary A labeled group of checkboxes with required-selection validation, custom error messages, and a horizontal layout.
  * @customElement auro-checkbox-group
  *
- * @csspart checkbox-group - Apply css to the fieldset element in the shadow DOM
- * @csspart helpText - Apply css to the help text element that displays helper or error messages.
+ * @csspart checkbox-group - The `<fieldset>` element that wraps the legend and the checkboxes.
+ * @csspart helpText - The help text element below the group, which shows the help text or the error message.
  *
- * @slot legend - Allows for the legend to be overridden.
- * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
- * @slot helpText - Allows for the helper text to be overridden.
- * @slot default - The default slot for the checkbox items.
- * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
- * @event input - Notifies when the group's value changes due to a checkbox selection being added or removed.
+ * @slot legend - Label for the group, such as "Seat preferences". Screen readers announce it as the group's name. {@requiredWhen always} {@category ui}
+ * @slot optionalLabel - Text shown after the legend when the group isn't `required`, such as "- optional". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
+ * @slot helpText - Help text shown below the group, such as "Select all that apply". While the group shows an error, the error message replaces it. {@category ui}
+ * @slot default - The `auro-checkbox` elements in the group. {@requiredWhen always} {@category ui}
+ * @event auroFormElement-validated - Fires each time the group runs validation, with the result in `event.detail.validity` and `event.detail.message`.
+ * @event input - Fires when a checkbox in the group is checked or unchecked, after the group's selected values update.
  */
 
 export class AuroCheckboxGroup extends LitElement {
@@ -87,7 +105,7 @@ export class AuroCheckboxGroup extends LitElement {
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
-     * Generate unique names for dependency components.
+     * Creates unique tag names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
 
@@ -115,9 +133,11 @@ export class AuroCheckboxGroup extends LitElement {
       ...super.properties,
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the group colors to match its background. Use `inverse` on dark backgrounds and `default` on light ones.
+       * The group passes this value to every checkbox in it.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -125,7 +145,9 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * If set, disables the checkbox group.
+       * Turns off every checkbox in the group.
+       * Removing `disabled` later turns every checkbox back on, including ones you disabled individually.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -133,7 +155,9 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
+       * Shows the group in its error state with this message, such as "Select at least one option".
+       * The error stays until you remove the attribute. When set, `setCustomValidityCustomError` or `setCustomValidity` replaces the message.
+       * @category behavior
        */
       error: {
         type: String,
@@ -141,7 +165,9 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * If set, checkboxes will be aligned horizontally.
+       * Places the checkboxes side by side on one line.
+       * Works for up to three checkboxes; groups with four or more stay stacked vertically.
+       * @category ui
        */
       horizontal: {
         type: Boolean,
@@ -149,7 +175,9 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * If set, disables auto-validation on blur.
+       * Stops the group from validating automatically when focus leaves it or a checkbox changes.
+       * To validate the group yourself, call `validate()`. The `error` attribute still applies.
+       * @category behavior
        */
       noValidate: {
         type: Boolean,
@@ -158,8 +186,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the group and its checkboxes in colors made for dark backgrounds.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -168,7 +198,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Populates the `required` attribute on the element. Used for client-side validation.
+       * Requires at least one checked checkbox in the group and hides the "(optional)" text after the legend.
+       * The group shows an error when focus leaves it with nothing checked, or when someone unchecks the last checked option.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -176,7 +209,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Sets a custom help text message to display for all validityStates.
+       * Sets one error message for every kind of error, such as "Choose at least one option".
+       * It replaces the `error` text and the `setCustomValidityValueMissing` and `setCustomValidityCustomError` messages.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidity: {
         type: String,
@@ -184,7 +220,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Custom help text message to display when validity = `customError`.
+       * Sets the error message shown while the `error` attribute is set, in place of the attribute's own text.
+       * `setCustomValidity` takes priority when both are set.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityCustomError: {
         type: String,
@@ -192,7 +231,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing`.
+       * Sets the error message shown when the group is `required` and no checkbox is checked, such as "Select at least one option".
+       * `setCustomValidity` takes priority when both are set.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityValueMissing: {
         type: String,
@@ -200,7 +242,10 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Specifies the `validityState` this element is in.
+       * Gets the group's current validation state: `valid`, `valueMissing`, or `customError`.
+       * It's `undefined` until the group is first validated.
+       * @readonly
+       * @category behavior
        */
       validity: {
         type: String,
@@ -210,11 +255,11 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-checkbox-group"] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-checkbox-group"] - The tag name to register the element under.
    *
    * @example
-   * AuroCheckboxGroup.register("custom-checkbox-group") // this will register this element to <custom-checkbox-group/>
+   * AuroCheckboxGroup.register("custom-checkbox-group") // registers the element as <custom-checkbox-group>
    *
    */
   static register(name = "auro-checkbox-group") {
@@ -227,10 +272,11 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Helper method to handle checkbox value changing.
+   * Called when a checkbox is checked or unchecked.
+   * Adds or removes its value, dispatches `input`, and validates the group unless `noValidate` is set.
    * @private
    * @param {String} value - The value of the checkbox.
-   * @param {Boolean} selected - The checked state of the checkbox.
+   * @param {Boolean} selected - If true, adds the value to the group's selected values. If false, removes it.
    * @returns {void}
    */
   handleValueUpdate(value, selected) {
@@ -313,7 +359,7 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Helper method that handles the state of preselected checkboxes.
+   * Adds the values of checkboxes that start out with `checked` to the group's selected values.
    * @private
    * @returns {void}
    */
@@ -338,7 +384,8 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Helper method that handles the state of checkboxes.
+   * Called when the group connects or its slot content changes.
+   * Collects the checkboxes, picks up preselected values, validates, and mirrors the invalid state onto each checkbox.
    * @private
    * @returns {void}
    */
@@ -355,10 +402,10 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Whether the group is currently in an invalid state.
-   * `validity` — not `error` — is the authoritative source: `validate()` resolves the
-   * `error` attribute to `validity = 'customError'`, so `error` is already covered here.
-   * Single definition of "invalid" for the whole component, consumed by `render()` and
+   * Checks whether the group is currently invalid.
+   * `validity` is the source of truth, not `error`: `validate()` turns the
+   * `error` attribute into `validity = 'customError'`, so `error` is already covered here.
+   * Single definition of "invalid" for the whole component, used by `render()` and
    * `syncCheckboxValidity()` so the fieldset and its children can never disagree.
    * @private
    * @returns {boolean}
@@ -368,9 +415,9 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Method for mirroring the group's invalid state onto each checkbox.
-   * Has to be re-applied from `handleItems()` as well, because a slot change can happen
-   * without `validity` itself changing — a checkbox slotted into an already-invalid
+   * Mirrors the group's invalid state onto each checkbox.
+   * Also runs from `handleItems()`, because a slot change can happen
+   * without `validity` itself changing, so a checkbox slotted into an already-invalid
    * group would otherwise be missed.
    * @private
    * @returns {void}
@@ -395,7 +442,8 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Resets the group: unchecks every checkbox, including ones that started out checked, and clears the validation state.
+   * An error set with the `error` attribute stays.
    * @returns {void}
    */
   reset() {
@@ -407,8 +455,9 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * LitElement lifecycle method. Called after the DOM has been updated.
-   * @param {Map<string, any>} changedProperties - Keys are the names of changed properties, values are the corresponding previous values.
+   * Called after the group updates.
+   * Passes `disabled`, `appearance`, and the invalid state to each checkbox, and validates again when `error` changes.
+   * @param {Map<string, any>} changedProperties - The names of the changed properties, mapped to their previous values.
    * @returns {void}
    */
   updated(changedProperties) {
@@ -452,8 +501,8 @@ export class AuroCheckboxGroup extends LitElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Validates the group and shows an error message if it's invalid.
+   * @param {boolean} [force=false] - If true, validates right away, even while the group has focus or before anyone has interacted with it. If false, validates only when focus is outside the group and it has been interacted with or has a value.
    */
   validate(force = false) {
     this.validation.validate(this, force);
