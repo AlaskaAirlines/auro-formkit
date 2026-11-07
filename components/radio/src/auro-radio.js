@@ -19,20 +19,40 @@ import tokenCss from './styles/tokens-css.js';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * The `auro-radio` element is used to a button that allows the user to select one option from a set.
+ * A radio button that lets people choose one option from a set, used inside an `auro-radio-group`.
+ *
+ * **Key capabilities**
+ * - **Preselected option**: Set `checked` to show the option as selected when the page loads.
+ * - **Disabled option**: Set `disabled` to stop people from selecting the option.
+ * - **Extra description**: Put supporting text in the `content` slot to show it below the label.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-radio-group>
+ *   <span slot="legend">Seat preference</span>
+ *   <auro-radio value="window" name="seat">Window seat</auro-radio>
+ *   <auro-radio value="aisle" name="seat">Aisle seat</auro-radio>
+ * </auro-radio-group>
+ * ```
+ * @summary A radio button for choosing one option from a set, with preselected, disabled, and dark-background styles.
  * @customElement auro-radio
  *
- * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
- * @event {CustomEvent<any>} change - Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead.
- * @event {InputEvent} input - Notifies when checked value is changed by user's interface.
- * @event focusSelected - Notifies that the component has gained focus.
- * @event auroRadio-blur - Notifies that the component has lost focus.
- * @event resetRadio - Notifies that the component has reset the checked/selected state.
- * @event auroRadio-selected - Notifies that the component has been marked as checked/selected.
+ * @slot default - Label text for the radio button, such as "Window seat". Replaces the `label` attribute when set.
+ * @slot content - Extra content shown below the label, such as a short description of the option.
  *
- * @csspart radio - apply css to a specific checkbox.
- * @csspart radio-input - apply css to a specific checkbox's input.
- * @csspart radio-label - apply css to a specific checkbox's label.
+ * @event toggleSelected - Fires when someone selects the radio button. `auro-radio-group` listens for it to update its selection.
+ * @event {CustomEvent<any>} change - Deprecated: Use the `input` event instead. Fires when someone selects the radio button.
+ * @event {Event} input - Fires when someone selects the radio button.
+ * @event focusSelected - Fires when the radio button gets focus.
+ * @event auroRadio-blur - Fires when the radio button loses focus.
+ * @event resetRadio - Fires whenever the radio button's `checked` state changes, including on first render.
+ * @event auroRadio-selected - Fires when the radio button becomes checked, whether someone selects it or `checked` is set in code.
+ *
+ * @csspart radio - The container that wraps the radio button's input and label.
+ * @csspart radio-input - The native `<input type="radio">` element. It's visually hidden, so styles on this part don't change the visible circle.
+ * @csspart radio-label - The `<label>` element that holds the label text and draws the visible circle.
  */
 export class AuroRadio extends LitElement {
   constructor() {
@@ -70,9 +90,11 @@ export class AuroRadio extends LitElement {
     return {
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the radio button colors to match its background. Use `inverse` on dark backgrounds and `default` on light ones.
+       * Inside an `auro-radio-group`, the group's `appearance` replaces this value.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -80,7 +102,8 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * If set to true, the radio button will be filled.
+       * Selects the radio button and fills its circle. Set it in markup to preselect an option.
+       * @category behavior
        */
       checked: {
         type: Boolean,
@@ -88,7 +111,9 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * If set to true, the radio button will be non-clickable.
+       * Turns the radio button off, so it can't be selected.
+       * A disabled radio button is shown in a muted style, and arrow keys skip it.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -96,7 +121,9 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * If set to true, sets an error state on the radio button.
+       * Shows the radio button in its error style.
+       * Inside an `auro-radio-group`, the group sets and clears this from its own validation, so set `error` on the group instead.
+       * @category behavior
        */
       error: {
         type: Boolean,
@@ -104,7 +131,8 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
+       * Sets a unique identifier for the radio button, such as `seat-window` (the `id` attribute).
+       * @category behavior
        */
       id: {
         type: String,
@@ -122,18 +150,24 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * Label for the radio button.
+       * Sets the label text for the radio button, such as "Window seat".
+       * Content in the default slot replaces it.
+       * @category ui
        */
       label:    { type: String },
 
       /**
-       * Name for the radio button group.
+       * Sets the name of the radio button's inner `<input>` element, such as `seat` (the input's `name`).
+       * This doesn't group radio buttons or add them to form data: `auro-radio-group` groups them, and `auro-form` reads the group's `name` attribute.
+       * @category behavior
        */
       name:     { type: String },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the radio button in colors made for dark backgrounds.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -142,7 +176,9 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * Defines element as required.
+       * Tells screen readers that a selection is required, by setting `aria-required`.
+       * Inside an `auro-radio-group`, the group sets this from its own `required`, so set `required` on the group instead.
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -150,7 +186,7 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * Don't add to api.md since changing of this can easily break a11y.
+       * Kept out of the API docs, because changing it can easily break accessibility.
        * @private
        */
       role: {
@@ -169,18 +205,20 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * The value of the radio button.
+       * Sets the value the group takes when this radio button is selected, such as `window`.
+       * @requiredWhen always
+       * @category behavior
        */
       value:    { type: String }
     };
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-radio"] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-radio"] - The tag name to register the element under.
    *
    * @example
-   * AuroRadio.register("custom-radio") // This will resgiter this element to <custom-radio/>
+   * AuroRadio.register("custom-radio") // registers the element as <custom-radio>
    *
    */
   static register(name = "auro-radio") {
@@ -188,9 +226,10 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Method for handling content when change event is fired.
+   * Called when the inner `<input>` fires `change`.
+   * Updates `checked` and dispatches the event again from the host, because a native `change` event doesn't cross the shadow DOM boundary.
    * @private
-   * @param {Event} event - The trigger event tied to this function.
+   * @param {Event} event - The `change` event from the inner `<input>`.
    * @returns {void}
    */
   handleChange(event) {
@@ -200,9 +239,10 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Method for handling content when input event is fired.
+   * Called when the inner `<input>` fires `input`.
+   * Updates `checked` and dispatches `toggleSelected` so the group can update its selection.
    * @private
-   * @param {Event} event - The trigger event tied to this function.
+   * @param {Event} event - The `input` event from the inner `<input>`.
    * @returns {void}
    */
   handleInput(event) {
@@ -215,9 +255,10 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Method for handling focus event.
+   * Called when the radio button gets focus.
+   * Marks it as interacted with and dispatches `focusSelected`.
    * @private
-   * @param {Event} event - The trigger event tied to this function.
+   * @param {Event} event - The `focus` event.
    * @returns {void}
    */
   handleFocus(event) {
@@ -230,9 +271,9 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Method for handling blur event.
+   * Called when the radio button loses focus. Dispatches `auroRadio-blur`.
    * @private
-   * @param {Event} event - The trigger event tied to this function.
+   * @param {Event} event - The `blur` event.
    * @returns {void}
    */
   handleBlur(event) {
@@ -244,7 +285,7 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Resets the radio button: unchecks it, removes its error style, and marks it as not yet interacted with.
    * @returns {void}
    */
   reset() {
@@ -286,10 +327,10 @@ export class AuroRadio extends LitElement {
   }
 
   /**
-   * Method for handling passing the required status to aria.
+   * Gets the `aria-required` value for the radio button's required state.
    * @private
-   * @param {Boolean} required - The element's required attribute.
-   * @returns {void}
+   * @param {Boolean} required - The radio button's `required` state.
+   * @returns {string} The `aria-required` value: `'true'` or `'false'`.
    */
   isRequired(required) {
     if (required) {

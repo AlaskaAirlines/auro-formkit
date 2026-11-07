@@ -1,4 +1,4 @@
-Import the component and its dependencies, then register the custom elements:
+Import the component's registered module, which registers the custom elements for you:
 
 ```js
 import '@aurodesignsystem/auro-formkit/auro-radio';

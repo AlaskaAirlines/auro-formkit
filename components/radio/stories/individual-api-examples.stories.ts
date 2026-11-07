@@ -24,12 +24,6 @@ const specialConfigs = {
     },
     tags: ['!autodocs'],
   },
-  'appearance-inverse': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
   'appearance-inverse-error': {
     globals: {
       backgrounds: { value: 'dark' },
@@ -78,8 +72,6 @@ export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
 export const AppearanceInverseChecked = stories.AppearanceInverseChecked; 
 export const AppearanceInverseError = stories.AppearanceInverseError; 
 export const AppearanceInverseGroup = stories.AppearanceInverseGroup; 
-export const AppearanceInverse = stories.AppearanceInverse; 
-export const BasicStandalone = stories.BasicStandalone; 
 export const Basic = stories.Basic; 
 export const Checked = stories.Checked; 
 export const Custom = stories.Custom; 

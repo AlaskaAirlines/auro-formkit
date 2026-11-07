@@ -1,4 +1,4 @@
-The radio components can be loaded via CDN without a build step:
+Load the radio components from a CDN, without a build step:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-radio/+esm" type="module"></script>

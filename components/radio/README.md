@@ -20,23 +20,23 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-<code>&lt;auro-radio&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that is rendered as a small circle, which is filled or highlighted when selected. Only one <code>&lt;auro-radio&gt;</code> component in a given <code>&lt;auro-radio-group&gt;</code> can be selected at the same time.
+<code>&lt;auro-radio&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that shows a small circle, which fills in when selected. Only one <code>&lt;auro-radio&gt;</code> in an <code>&lt;auro-radio-group&gt;</code> can be selected at a time.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Radio Use Cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-radio>` element is designed to be a single component for the use of creating an input `type="radio"` with an associated `<label>` that meets all use case and accessibility standards.
+Use the `<auro-radio>` element when people need to choose exactly one option from a short list. It provides an accessible radio button with a label.
 
-The following examples illustrate fully functional `<auro-radio>` elements wrapped with the `<auro-radio-group>` element. The `<auro-radio-group>` element is REQUIRED in order to mantain the relationship between individual `<auro-radio>` elements for functional radio button actions.
+Always place `<auro-radio>` elements inside an `<auro-radio-group>` element. The group makes the radio buttons work together, so selecting one clears the others.
 
-**Note**: The `<auro-radio>` element is only for to for use as a set of two or more `<auro-radio>` elements within an `<auro-radio-group>` element.
+**Note**: Use `<auro-radio>` only as a set of two or more `<auro-radio>` elements within an `<auro-radio-group>` element.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Getting Started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-radio Getting Started page](https://auro.alaskaair.com/components/auro/radio/getting-started).
+For getting started instructions, visit the [auro-radio getting started page](https://auro.alaskaair.com/components/auro/radio/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

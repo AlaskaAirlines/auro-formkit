@@ -1,1 +1,1 @@
-For Getting Started instructions, visit the [auro-radio Getting Started page](https://auro.alaskaair.com/components/auro/radio/getting-started).
+For getting started instructions, visit the [auro-radio getting started page](https://auro.alaskaair.com/components/auro/radio/getting-started).

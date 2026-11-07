@@ -1,30 +1,30 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>radio group:</strong> a container element (<code>&lt;auro-radio-group&gt;</code>) that manages a collection of radio buttons, handles validation, and provides a shared legend and help text.
+    <strong>Radio group:</strong> A container element (<code>&lt;auro-radio-group&gt;</code>) that manages a collection of radio buttons, handles validation, and provides a shared legend and help text.
   </li>
   <li>
-    <strong>radio button:</strong> an individual selectable element (<code>&lt;auro-radio&gt;</code>) that can be toggled between selected and unselected states. Only one radio button in a group can be selected at a time.
+    <strong>Radio button:</strong> An individual option (<code>&lt;auro-radio&gt;</code>) that becomes selected when someone chooses it. Only one radio button in a group can be selected at a time.
   </li>
   <li>
-    <strong>legend:</strong> descriptive label rendered above the group of radio buttons, set via the <code>legend</code> slot on the group.
+    <strong>Legend:</strong> The group's label, shown above the radio buttons and set with the group's <code>legend</code> slot.
   </li>
   <li>
-    <strong>help text:</strong> descriptive text rendered below the group intended to help clarify the intended use of the component and any current validation error with instructions to resolve those errors.
+    <strong>Help text:</strong> Text shown below the group that explains how to use it. While the group shows an error, the error message replaces it.
   </li>
 </ul>
-<auro-header level="4" id="radioGroup">Radio Group</auro-header>
-<p>The group element coordinates shared behavior across all child radio buttons, including validation (e.g. <code>required</code>), error state display, and the <code>disabled</code> attribute which disables all options at once.</p>
-<auro-header level="4" id="radioButton">Radio Button</auro-header>
+<auro-header level="4" id="radioGroup">Radio group</auro-header>
+<p>The group element coordinates shared behavior across all child radio buttons, including validation (for example, <code>required</code>), error state display, and the <code>disabled</code> attribute, which turns off all options at once.</p>
+<auro-header level="4" id="radioButton">Radio button</auro-header>
 <p>Each radio button renders a visual indicator (filled circle) and a label. A radio button may be in one of the following states:</p>
 <ul>
   <li>
-    <code>checked</code> - The radio button is selected and its value becomes the group's value.
+    <code>checked</code>: The radio button is selected and its value becomes the group's value.
   </li>
   <li>
-    <code>disabled</code> - The radio button is not interactive and cannot be selected.
+    <code>disabled</code>: The radio button can't be selected.
   </li>
   <li>
-    <code>error</code> - Inherited from the parent group when validation fails.
+    <code>error</code>: The radio button shows its error style. The group sets this when its validation fails.
   </li>
 </ul>
