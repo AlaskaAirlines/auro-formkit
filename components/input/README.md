@@ -20,17 +20,17 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-<p><code>&lt;auro-input&gt;</code> is a customizable text input component for single-line data entry. It supports types <code>text</code>, <code>password</code>, and <code>email</code> with built-in validation, required input, error states, and a secondary <code>bordered</code> theme. Use the <code>label</code> and <code>helpText</code> slots for additional content support.</p>
+<p><code>&lt;auro-input&gt;</code> is a single-line text field for entering a value, such as a name, email address, password, phone number, card number, or date. Set <code>type</code> to <code>text</code>, <code>password</code>, <code>email</code>, <code>number</code>, <code>tel</code>, <code>credit-card</code>, or <code>date</code> to get the matching formatting and validation, and use the <code>label</code> and <code>helpText</code> slots to name the field and explain what to enter.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Input Use Cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-<p>The <code>&lt;auro-input&gt;</code> element should be used in situations where users may:</p>
+<p>Use <code>&lt;auro-input&gt;</code> when people need to:</p>
 <ul>
-<li>Need to enter information</li>
-<li>Be filling out a form</li>
+<li>Enter a single line of information, such as a name, email address, or date</li>
+<li>Fill out a form</li>
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 

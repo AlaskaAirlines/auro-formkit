@@ -1,17 +1,17 @@
-<auro-header level="1" id="overview">Input - Overview and UX Guide</auro-header>
+<auro-header level="1" id="overview">Input - Overview and UX guide</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-      <auro-anchorlink fluid href="#userStories">User Stories</auro-anchorlink>
-      <auro-anchorlink fluid href="#enterValue" class="level2 body-xs">Enter a Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#clearValue" class="level2 body-xs">Clear Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#passwordToggle" class="level2 body-xs">Password Input</auro-anchorlink>
-      <auro-anchorlink fluid href="#formattedInput" class="level2 body-xs">Formatted Input</auro-anchorlink>
-      <auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
+      <auro-anchorlink fluid href="#userStories">User stories</auro-anchorlink>
+      <auro-anchorlink fluid href="#enterValue" class="level2 body-xs">Enter a value</auro-anchorlink>
+      <auro-anchorlink fluid href="#clearValue" class="level2 body-xs">Clear value</auro-anchorlink>
+      <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset value</auro-anchorlink>
+      <auro-anchorlink fluid href="#passwordToggle" class="level2 body-xs">Password input</auro-anchorlink>
+      <auro-anchorlink fluid href="#formattedInput" class="level2 body-xs">Formatted input</auro-anchorlink>
+      <auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional date</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -20,7 +20,7 @@
       <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
       <!-- AURO-GENERATED-CONTENT:END -->
       <section>
-        <auro-header level="2" id="userStories">User Stories</auro-header>
+        <auro-header level="2" id="userStories">User stories</auro-header>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>

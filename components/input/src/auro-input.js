@@ -44,26 +44,41 @@ import formkitVersion from '@aurodesignsystem/version';
 import { createRef, ref } from "lit/directives/ref.js";
 
 /**
- * The `auro-input` element provides users a way to enter data into a text field.
+ * A single-line text field that lets people type a value, such as a name, email address, phone number, card number, or date.
+ *
+ * **Key capabilities**
+ * - **Formatting as people type**: Set `type` to `credit-card`, `tel`, or `date`, or set `format`, to format the value as the user types.
+ * - **Validation messages**: Set `required`, `minlength`, `maxlength`, `pattern`, `min`, or `max` to show an error message below the field when the value doesn't meet the rule.
+ * - **Clear button**: The input always shows a button that clears the value when the field has a value, isn't disabled or read-only, and the user hovers over it or moves focus into it.
+ * - **Password visibility**: Set `type="password"` to add a button that shows or hides the password in the `classic` layout.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-input>
+ *   <span slot="label">Full name</span>
+ * </auro-input>
+ * ```
+ * @summary A text field with formatting as people type, validation messages, a clear button, and password visibility.
  * @customElement auro-input
  *
- * @slot ariaLabel.clear - Sets aria-label on clear button for screen reader to read
- * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
- * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
- * @slot helpText - Sets the help text displayed below the input.
- * @slot label - Sets the label text for the input.
- * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
- * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
- * @csspart wrapper - Use for customizing the style of the root element
- * @csspart label - Use for customizing the style of the label element
- * @csspart helpText - Use for customizing the style of the helpText element
- * @csspart input - Use for customizing the style of the input element
- * @csspart accentIcon - Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon)
- * @csspart iconContainer - Use for customizing the style of the iconContainer (e.g. X icon for clearing input value)
- * @csspart accent-left - Use for customizing the style of the left accent element (e.g. padding, margin)
- * @csspart accent-right - Use for customizing the style of the right accent element (e.g. padding, margin)
- * @csspart displayValue - Use for customizing the style of the displayValue element
- * @csspart inputHelpText - Use for customizing the style of the input help text wrapper
+ * @slot ariaLabel.clear - Text screen readers announce for the clear button, for example "Clear full name". Defaults to "Clear Input". {@category a11y}
+ * @slot ariaLabel.password.show - Text screen readers announce for the button that shows the password, for example "Show password". Defaults to "Show Password". {@category a11y}
+ * @slot ariaLabel.password.hide - Text screen readers announce for the button that hides the password, for example "Hide password". Defaults to "Hide Password". {@category a11y}
+ * @slot helpText - Help text shown below the field, such as a hint about what to enter. An error message replaces it while the input is invalid. When the slot is empty, `password`, `email`, `credit-card`, and `tel` inputs show built-in help text. {@category ui}
+ * @slot label - The field's label, which screen readers also announce as the field's name. {@requiredWhen always} {@category ui}
+ * @slot optionalLabel - Text shown after the label when the input isn't `required`, in place of the default " (optional)". To show nothing, put an empty element in the slot, such as `<span slot="optionalLabel"></span>`. {@relevantWhen !required} {@category ui}
+ * @slot displayValue - Content shown in place of the value when the input has a value and doesn't have focus, such as a city name for an airport code. It also hides the label unless `dvInputOnly` is set. {@category ui}
+ * @csspart wrapper - The field's outer box, which holds the label, value, and icons but not the help text.
+ * @csspart label - The `<label>` element that holds the `label` slot.
+ * @csspart helpText - The `<p>` element that holds the help text or error message.
+ * @csspart input - The inner `<input>` element.
+ * @csspart accentIcon - The icon left of the value: the card icon when `icon` is set with `type="credit-card"`, or the calendar icon when `type="date"`. Not rendered in the emphasized layouts.
+ * @csspart accent-left - The area left of the value that holds `accentIcon`. Rendered only in the `classic` layout.
+ * @csspart accent-right - The area right of the value that holds the error icon, the show/hide password button, and the clear button. Rendered only in the `classic` layout.
+ * @csspart displayValue - The element that holds the `displayValue` slot content.
+ * @csspart inputHelpText - The area below the field that holds the help text or error message.
  */
 export class AuroInput extends BaseInput {
 
@@ -117,20 +132,20 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Whether the input has a value that the user can clear.
+   * Checks whether the input has a value the user can clear.
    * @private
-   * @returns {boolean} - True when the input has a value and is not read-only or disabled.
+   * @returns {boolean} - True if the input has a value and isn't read-only or disabled; false otherwise.
    */
   get isClearable() {
     return Boolean(this.hasValue && !this.readonly && !this.disabled);
   }
 
   /**
-   * Returns classmap configuration for the clear button wrapper visibility.
-   * The wrapper is hidden on the same condition as the button so an empty wrapper
+   * Gets the classes for the clear button's wrapper.
+   * The wrapper is hidden on the same condition as the button, so an empty wrapper
    * never takes up space in the accents row on hover or focus.
    * @private
-   * @returns {Record<string, boolean>} - Classmap object controlling clear button wrapper display state.
+   * @returns {Record<string, boolean>} - The class map that shows or hides the clear button's wrapper.
    */
   get clearWrapperClassMap() {
     return {
@@ -141,10 +156,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for the clear button visibility.
+   * Gets the classes for the clear button.
    * The button is hidden when the input has no value, is read-only, or is disabled.
    * @private
-   * @returns {Record<string, boolean>} - Classmap object controlling clear button display state.
+   * @returns {Record<string, boolean>} - The class map that shows or hides the clear button.
    */
   get clearBtnClassMap() {
     return {
@@ -155,10 +170,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Determines if the HTML input element should be visually hidden.
-   * Returns true when display value content exists without focus and has a value,
-   * or when the input has no value, is not focused, and has no placeholder text.
-   * @returns {boolean} - True if the input should be visually hidden, false otherwise.
+   * Checks whether the inner `<input>` element should be visually hidden.
+   * It's hidden when `displayValue` content is shown in its place, or when the input is empty,
+   * doesn't have focus, and has no placeholder, unless `activeLabel` keeps it visible in the classic layout.
+   * @returns {boolean} - True if the inner `<input>` should be visually hidden; false otherwise.
    * @private
    */
   get inputHidden() {
@@ -181,10 +196,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Whether the component is rendering the classic/default layout, meaning not
-   * emphasized and not snowflake. Kept as a single source of truth so
-   * layout-scoped behavior such as activeLabel stays consistent across getters.
-   * @returns {boolean} - True for the classic/default layout.
+   * Checks whether the component renders the classic layout, meaning neither an
+   * emphasized layout nor `snowflake`. Kept as a single source of truth so
+   * layout-scoped behavior such as `activeLabel` stays consistent across getters.
+   * @returns {boolean} - True if the classic layout is rendered; false otherwise.
    * @private
    */
   get isClassicLayout() {
@@ -192,10 +207,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Determines if the input should display in a state with no focus or value indication.
-   * Returns true when the input has display content without focus and has a value,
-   * or when the input has no value and is not focused.
-   * @returns {boolean} - True if the input should show no focus or value state, false otherwise.
+   * Checks whether the input should look empty and unfocused.
+   * That's the case when `displayValue` content is shown in place of the value,
+   * or when the input has no value and doesn't have focus.
+   * @returns {boolean} - True if the input should look empty and unfocused; false otherwise.
    * @private
    */
   get noFocusOrValue() {
@@ -203,8 +218,8 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Whether the label is being hidden currently based on state.
-   * @returns {boolean} - Returns true if the label is hidden.
+   * Checks whether the label is hidden because `displayValue` content is shown in its place.
+   * @returns {boolean} - True if the label is hidden; false otherwise.
    * @private
    */
   get labelHidden() {
@@ -212,7 +227,7 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns the label font class based on layout and visibility state.
+   * Gets the label's font class for the current layout and state.
    * @private
    * @returns {string} - The font class for the label.
    */
@@ -240,9 +255,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns the input font class based on layout and visibility state.
+   * Gets the inner `<input>` element's font class for the current layout and state.
    * @private
-   * @returns {string} - The font class for the input.
+   * @returns {string} - The font class for the inner `<input>` element.
    */
   get inputFontClass() {
     if (this.layout.startsWith('emphasized')) {
@@ -274,7 +289,7 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for html5 input labels in all layouts.
+   * Gets the label classes shared by all layouts.
    * @private
    * @returns {Record<string, boolean>}
    */
@@ -288,9 +303,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for html5 inputs in all layouts.
+   * Gets the inner `<input>` element classes shared by all layouts.
    * @private
-   * @returns {Record<string, boolean>} - Returns classmap.
+   * @returns {Record<string, boolean>} - The class map for the inner `<input>` element.
    */
   get commonInputClasses() {
     return {
@@ -300,7 +315,7 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Common display value wrapper classes.
+   * Gets the classes for the element that wraps the `displayValue` slot.
    * @private
    * @returns {Record<string, boolean>}
    */
@@ -312,9 +327,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for html5 inputs in each layout.
+   * Gets the inner `<input>` element classes for the classic layout.
    * @private
-   * @returns {object} - Returns classmap.
+   * @returns {object} - The class map for the inner `<input>` element.
    */
   get legacyInputClasses() {
     return {
@@ -323,9 +338,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for wrapper elements in each layout.
+   * Gets the wrapper element classes shared by all layouts.
    * @private
-   * @returns {object} - Returns classmap.
+   * @returns {object} - The class map for the wrapper element.
    */
   get commonWrapperClasses() {
     return {
@@ -338,9 +353,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for helpText elements in each layout.
+   * Gets the help text wrapper classes, which indent the help text for pill shapes.
    * @private
-   * @returns {object} - Returns classmap.
+   * @returns {object} - The class map for the help text wrapper.
    */
   get helpTextClasses() {
     return {
@@ -351,11 +366,11 @@ export class AuroInput extends BaseInput {
   };
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-input"] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-input"] - The tag name to register the element under.
    *
    * @example
-   * AuroInput.register("custom-input") // this will register this element to <custom-input/>
+   * AuroInput.register("custom-input") // registers the element as <custom-input>
    *
    */
   static register(name = "auro-input") {
@@ -363,7 +378,8 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Function to determine if there is any displayValue content to render.
+   * Called when the `displayValue` slot changes. Checks whether the slot has visible content
+   * and updates `hasDisplayValueContent`.
    * @private
    * @returns {void}
    */
@@ -433,10 +449,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Determines default help text string.
+   * Gets the built-in help text for the current `type`.
    * @private
    * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
-   * @returns {string} Evaluates pre-determined help text.
+   * @returns {string} The built-in help text for `password`, `email`, `credit-card`, and `tel` types, or an empty string for other types.
    */
   getHelpText() {
     const typeHelpText = [
@@ -454,10 +470,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
+   * Gets the `type` to put on the inner `<input>` element.
    * @private
-   * @param {string} type Value entered into component prop.
-   * @returns {string} Iterates over allowed types array.
+   * @param {string} type - The `type` set on the component.
+   * @returns {string} The given type when it's in `allowedInputTypes`, or `text` otherwise.
    */
   getInputType(type) {
     if (this.allowedInputTypes.includes(type)) {
@@ -468,7 +484,8 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Function to support show-password feature.
+   * Called when the show/hide password button is clicked. Shows or hides the password
+   * and moves focus back to the inner `<input>` element.
    * @private
    * @returns {void}
    */
@@ -478,6 +495,8 @@ export class AuroInput extends BaseInput {
   }
 
   /**
+   * Gets the `pattern` for the inner `<input>` element. For credit card numbers,
+   * builds a length check from `minLength` and `maxLength` instead.
    * @private
    * @returns {string}
    */
@@ -493,9 +512,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the validation error icon.
+   * Renders the error icon shown while the input is invalid.
    * @private
-   * @returns {html} - Returns HTML for the validation error icon.
+   * @returns {import("lit").TemplateResult} - The error icon template, which is empty while the input is valid.
    */
   renderValidationErrorIconHtml() {
     return html`
@@ -513,10 +532,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the HTML5 input element.
+   * Renders the label, the inner `<input>` element, and the `displayValue` slot.
    * @private
-   * @param {boolean} [useLegacyHiddenState=false] - If true, the input will be visually hidden when not focused and has no value.
-   * @returns {html} - Returns HTML for the HTML5 input element.
+   * @param {boolean} [useLegacyHiddenState=false] - If true, uses the classic layout's classes to hide the inner `<input>` element. If false, uses the classes shared by all layouts.
+   * @returns {import("lit").TemplateResult} - The label, input, and display value template.
    */
   renderHtmlInput(useLegacyHiddenState = false) {
     const displayValueClasses = {
@@ -578,9 +597,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the clear action button.
+   * Renders the button that clears the value.
    * @private
-   * @returns {html} - Returns HTML for the clear action button.
+   * @returns {import("lit").TemplateResult} - The clear button template.
    */
   renderHtmlActionClear() {
     return html`
@@ -607,9 +626,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the show password button.
+   * Renders the button that shows or hides the password.
    * @private
-   * @returns {html} - Returns HTML for the show password button.
+   * @returns {import("lit").TemplateResult} - The show/hide password button template.
    */
   renderHtmlNotificationPassword() {
     return html`
@@ -646,9 +665,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the input type icon.
+   * Renders the icon for the current `type`: a card icon for `credit-card` when `icon` is set,
+   * or a calendar icon for `date`.
    * @private
-   * @returns {html} - Returns HTML for the input type icon.
+   * @returns {import("lit").TemplateResult} - The type icon template.
    */
   renderHtmlTypeIcon() {
     return html`
@@ -686,9 +706,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the help text and error message.
+   * Renders the help text, or the error message while the input is invalid.
    * @private
-   * @returns {html} - Returns HTML for the help text and error message.
+   * @returns {import("lit").TemplateResult} - The help text template.
    */
   renderHtmlHelpText() {
     // Single `<p>` with stable identity across validity transitions —
@@ -718,9 +738,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the classic layout.
+   * Renders the classic layout.
    * @private
-   * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
+   * @returns {import("lit").TemplateResult} - The classic layout template.
    */
   renderLayoutClassic() {
     const classicClassMap = {
@@ -752,9 +772,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the emphasized layout. Does not support type="*".
+   * Renders the emphasized layouts. Doesn't render the `type` icon.
    * @private
-   * @returns {html} - Returns HTML for the emphasized layout.
+   * @returns {import("lit").TemplateResult} - The emphasized layout template.
    */
   renderLayoutEmphasized() {
     return html`
@@ -784,9 +804,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the emphasized layout. Does not support type="*".
+   * Renders the snowflake layouts.
    * @private
-   * @returns {html} - Returns HTML for the emphasized layout.
+   * @returns {import("lit").TemplateResult} - The snowflake layout template.
    */
   renderLayoutSnowflake() {
     return html`
@@ -812,10 +832,10 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Logic to determine the layout of the component.
+   * Renders the template for the current `layout`.
    * @private
-   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
-   * @returns {void}
+   * @param {string} [ForcedLayout] - The layout to render instead of `layout`.
+   * @returns {import("lit").TemplateResult} - The layout template.
    */
   renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;

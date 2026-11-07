@@ -1,12 +1,15 @@
 <auro-header level="1">CSS only with native input</auro-header>
 
-<p>For situations where the <code>&lt;auro-input&gt;</code> web component cannot be used, a native HTML <code>&lt;input&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-input</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.input</code> or <code>.form-*</code> class, so the styling must be authored manually using Auro design tokens.</p>
+<p>When you can't use the <code>&lt;auro-input&gt;</code> web component, style a native HTML <code>&lt;input&gt;</code> element with the Auro Design System tokens to approximate how <code>auro-input</code> looks. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.input</code> or <code>.form-*</code> class, so you write the styles yourself with Auro design tokens.</p>
 
 <auro-header level="2">Styling a native input</auro-header>
 
-<p>The native input can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
+<p>Reset and restyle the native input with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
 
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size, border-radius, and typography tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
 .input-field {
   display: block;
@@ -15,18 +18,18 @@
   height: var(--ds-size-600, 3rem);
   padding: 0 var(--ds-size-200, 1rem);
   font-family: var(--ds-font-family-default, sans-serif);
-  font-size: var(--ds-text-body-default-size, 1rem);
-  line-height: var(--ds-text-body-default-line-height, 1.5);
-  color: var(--ds-color-text-primary-default, #1d1d1d);
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
+  font-size: var(--ds-text-body-size-default, 1rem);
+  line-height: var(--ds-text-body-height-default, 1.5rem);
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
+  background-color: var(--ds-basic-color-surface-default, #ffffff);
+  border: 1px solid var(--ds-basic-color-border-bold, #585e67);
   border-radius: var(--ds-border-radius, 4px);
   outline: none;
 }
 
 .input-field:focus-visible {
-  border-color: var(--ds-color-border-active-default, #01426a);
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
+  border-color: var(--ds-basic-color-border-brand, #00274a);
+  outline: 2px solid var(--ds-basic-color-border-brand, #00274a);
   outline-offset: 1px;
 }
 
@@ -36,25 +39,25 @@
 }
 
 .input-field[aria-invalid="true"] {
-  border-color: var(--ds-color-border-error-default, #d50032);
+  border-color: var(--ds-basic-color-status-error, #e31f26);
 }
 
 .input-label {
   display: block;
   margin-bottom: var(--ds-size-50, 0.25rem);
-  font-size: var(--ds-text-body-sm-size, 0.875rem);
-  color: var(--ds-color-text-secondary-default, #6e767f);
+  font-size: var(--ds-text-body-size-sm, 0.875rem);
+  color: var(--ds-basic-color-texticon-muted, #676767);
 }
 
 .input-helptext {
   display: block;
   margin-top: var(--ds-size-50, 0.25rem);
-  font-size: var(--ds-text-body-sm-size, 0.875rem);
-  color: var(--ds-color-text-secondary-default, #6e767f);
+  font-size: var(--ds-text-body-size-sm, 0.875rem);
+  color: var(--ds-basic-color-texticon-muted, #676767);
 }
 
 .input-helptext[data-error="true"] {
-  color: var(--ds-color-text-error-default, #d50032);
+  color: var(--ds-basic-color-status-error, #e31f26);
 }
 </code></pre>
 
@@ -74,7 +77,7 @@
 
 <auro-header level="3">Password input</auro-header>
 
-<p>Use <code>type="password"</code> to mask the entered value. Note that the show/hide toggle provided by <code>auro-input</code> is not present:</p>
+<p>Use <code>type="password"</code> to mask the entered value. The show/hide toggle from <code>auro-input</code> isn't included:</p>
 
 <pre><code>&lt;label class="input-label" for="password"&gt;Password&lt;/label&gt;
 &lt;input id="password" type="password" class="input-field" name="password" /&gt;</code></pre>
@@ -88,11 +91,11 @@
 
 <auro-header level="3">Helper text</auro-header>
 
-<p>Pair the input with a sibling element and wire it up via <code>aria-describedby</code> so assistive technology announces the helper content:</p>
+<p>Pair the input with a sibling element and link them with <code>aria-describedby</code>, so screen readers announce the help text:</p>
 
 <pre><code>&lt;label class="input-label" for="username"&gt;Username&lt;/label&gt;
 &lt;input id="username" type="text" class="input-field" name="username" aria-describedby="username-help" /&gt;
-&lt;span id="username-help" class="input-helptext"&gt;Must be 3-20 characters.&lt;/span&gt;</code></pre>
+&lt;span id="username-help" class="input-helptext"&gt;Must be 3–20 characters.&lt;/span&gt;</code></pre>
 
 <auro-header level="3">Error state</auro-header>
 
@@ -104,63 +107,63 @@
 
 <auro-header level="2">What you lose without auro-input</auro-header>
 
-<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-input</code>, the following functionality built into the <code>auro-input</code> web component is <strong>not available</strong> when using plain HTML:</p>
+<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-input</code>, the following functionality built into the <code>auro-input</code> web component <strong>isn't available</strong> when using plain HTML:</p>
 
 <auro-header level="3">Input masking</auro-header>
 
-<p><code>auro-input</code> integrates IMask to apply format patterns as the user types — for example <code>format="(###) ###-####"</code> for phone numbers or <code>format="mm/dd/yyyy"</code> for dates. Native inputs have no concept of input masks, so you must integrate a third-party masking library and manage cursor position, paste handling, and value reconciliation yourself.</p>
+<p><code>auro-input</code> uses IMask to apply format patterns as the user types, such as <code>format="(000) 000-0000"</code> for phone numbers or <code>format="mm/dd/yyyy"</code> for dates. Native inputs have no concept of input masks, so you must integrate a third-party masking library and manage cursor position, paste handling, and value reconciliation yourself.</p>
 
 <auro-header level="3">Credit-card formatting and detection</auro-header>
 
-<p><code>auro-input</code> with <code>type="credit-card"</code> auto-detects Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits, applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex), and displays the matching card brand icon. None of this is available natively.</p>
+<p><code>auro-input</code> with <code>type="credit-card"</code> auto-detects Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits, applies the correct digit grouping, such as 4-4-4-4 for Visa or 4-6-5 for Amex, and shows the matching card brand icon when the <code>icon</code> attribute is set. None of this is available natively.</p>
 
 <auro-header level="3">Password show/hide toggle</auro-header>
 
-<p><code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide toggle with customizable ARIA labels via the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only masks the value — you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
+<p><code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide button, named with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only hides the value, so you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
 
 <auro-header level="3">Clear button</auro-header>
 
-<p><code>auro-input</code> renders an accessible clear button when the field has a value, with a customizable ARIA label via the <code>ariaLabel.clear</code> slot. Native inputs do not provide a clear control beyond the browser's built-in (and inconsistently styled) <code>type="search"</code> affordance.</p>
+<p><code>auro-input</code> renders an accessible clear button when the field has a value, named with the <code>ariaLabel.clear</code> slot. Native inputs don't provide a clear control beyond the browser's built-in (and inconsistently styled) <code>type="search"</code> affordance.</p>
 
 <auro-header level="3">Custom validation messages</auro-header>
 
-<p><code>auro-input</code> exposes a full set of per-constraint setters — <code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityTooLong</code>, <code>setCustomValidityTooShort</code>, <code>setCustomValidityBadInput</code>, <code>setCustomValidityCustomError</code>, and <code>setCustomValidityForType</code>. Native inputs surface browser-controlled validation messages that cannot be customized beyond a single <code>setCustomValidity()</code> string.</p>
+<p><code>auro-input</code> has a message attribute for each kind of error: <code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityTooLong</code>, <code>setCustomValidityTooShort</code>, <code>setCustomValidityPatternMismatch</code>, <code>setCustomValidityCustomError</code>, and <code>setCustomValidityForType</code>. Native inputs surface browser-controlled validation messages that can't be customized beyond a single <code>setCustomValidity()</code> string.</p>
 
 <auro-header level="3">Format types</auro-header>
 
-<p><code>auro-input</code> ships dedicated <code>type</code> values for <code>credit-card</code>, <code>month-day-year</code>, <code>year-month-day</code>, <code>day-month-year</code>, <code>month-year</code>, <code>month-fullYear</code>, and <code>year-month</code>, each applying the correct mask, validation, and accent icon. With native HTML you are limited to the standard input types and must implement format-specific behavior by hand.</p>
+<p><code>auro-input</code> has dedicated <code>type</code> values for <code>credit-card</code>, <code>tel</code>, and <code>date</code>, each applying the correct mask and validation. For dates, the <code>format</code> attribute sets the order of the parts, such as <code>mm/dd/yyyy</code>, <code>yyyy/mm/dd</code>, or <code>mm/yy</code>. With native HTML, you're limited to the standard input types and must implement format-specific behavior by hand.</p>
 
 <auro-header level="3">Floating and dynamic labels</auro-header>
 
-<p><code>auro-input</code> floats the label above the field when it is focused or populated, and automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
+<p><code>auro-input</code> floats the label above the field when it has focus or a value, and automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
 
 <auro-header level="3">Display value slot</auro-header>
 
-<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input is blurred — useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
+<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input doesn't have focus. It's useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
 
 <auro-header level="3">Layout and shape variants</auro-header>
 
-<p><code>auro-input</code> supports classic, emphasized, and snowflake layouts, as well as <code>shape</code> variants (<code>box</code>, <code>pill</code>, <code>pill-left</code>, <code>pill-right</code>). A bordered default and a borderless <code>simple</code> mode are also provided. With native HTML you must author each variant's CSS yourself.</p>
+<p><code>auro-input</code> supports the <code>classic</code>, <code>emphasized</code>, and <code>snowflake</code> layouts, as well as <code>shape</code> variants (<code>box</code>, <code>pill</code>, <code>pill-left</code>, and <code>pill-right</code>). It also has a bordered default and a borderless <code>simple</code> mode. With native HTML you must author each variant's CSS yourself.</p>
 
-<auro-header level="3">Icon slots and accents</auro-header>
+<auro-header level="3">Icons and accents</auro-header>
 
-<p><code>auro-input</code> renders left and right accent slots and an automatic accent icon for typed formats (credit-card brand icon, calendar icon for date types). Native inputs have no slotting mechanism, so icons must be positioned via wrapper elements and absolute positioning.</p>
+<p><code>auro-input</code> renders accent areas left and right of the value, exposed as the <code>accent-left</code> and <code>accent-right</code> parts in the classic layout, and an icon for some types: the card brand icon when <code>icon</code> is set with <code>type="credit-card"</code>, and a calendar icon for <code>type="date"</code>. With native HTML you must place icons with wrapper elements and absolute positioning.</p>
 
-<auro-header level="3">Help text and error slots</auro-header>
+<auro-header level="3">Help text and error messages</auro-header>
 
 <p><code>auro-input</code> exposes a <code>helpText</code> slot that automatically swaps to the validation error message when the field is invalid, with the correct ARIA wiring and color treatment. With native HTML you must manage <code>aria-describedby</code>, error-state styling, and the switch between help and error content yourself.</p>
 
 <auro-header level="3">Validation timing control</auro-header>
 
-<p><code>auro-input</code> supports <code>validateOnInput</code> to validate on every keystroke, <code>noValidate</code> to disable validation, and tracks touched state so errors do not appear before the user has interacted with the field. Native inputs validate on submit and have no built-in touched concept.</p>
+<p><code>auro-input</code> supports <code>validateOnInput</code> to validate on every keystroke, <code>noValidate</code> to skip validation when the field loses focus, and tracks touched state so errors don't appear before the user has interacted with an empty field. Native inputs validate on submit and have no built-in touched concept.</p>
 
 <auro-header level="3">Form integration events</auro-header>
 
-<p><code>auro-input</code> dispatches <code>auroFormElement-validated</code> events so a parent <code>auro-form</code> can coordinate validation across all child fields. Native inputs participate in form submission but do not emit the structured validation events that the Auro form system expects.</p>
+<p><code>auro-input</code> dispatches <code>auroFormElement-validated</code> events so a parent <code>auro-form</code> can coordinate validation across all child fields. Native inputs participate in form submission but don't emit the structured validation events that the Auro form system expects.</p>
 
 <auro-header level="3">Multi-brand theming</auro-header>
 
-<p><code>auro-input</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only input is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does.</p>
+<p>Both <code>auro-input</code> and the CSS above read Auro design tokens through CSS custom properties, so both follow the brand theme whose token file you load. The difference is upkeep: the component's styles update with the package, while you maintain the CSS-only styles yourself.</p>
 
 <auro-header level="2">Summary</auro-header>
 
@@ -224,9 +227,9 @@
       <td><code>simple</code>, <code>shape</code>, layout attributes</td>
     </tr>
     <tr>
-      <td>Icon slots / accents</td>
+      <td>Icons and accents</td>
       <td>Manual wrapper + positioning</td>
-      <td>Left/right accent slots</td>
+      <td>Built-in type icons and left/right accent parts</td>
     </tr>
     <tr>
       <td>Helper / error slot swap</td>
@@ -245,12 +248,12 @@
     </tr>
     <tr>
       <td>Multi-brand theming</td>
-      <td>Static (import-time tokens)</td>
-      <td>Full (design tokens + component logic)</td>
+      <td>Follows the loaded tokens; you maintain the CSS</td>
+      <td>Follows the loaded tokens; styles maintained in the component</td>
     </tr>
   </tbody>
 </table>
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-input</code> whenever possible. Fall back to a CSS-styled native input only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and be prepared to reimplement masking, format-specific validation, clear and password toggles, touched tracking, and label/help/error wiring yourself.</p>
+<p>Use <code>auro-input</code> whenever possible. Fall back to a CSS-styled native input only in environments where custom elements aren't supported or when integrating with third-party systems that require plain HTML, and be prepared to rebuild masking, format-specific validation, clear and password toggles, touched tracking, and label, help text, and error wiring yourself.</p>

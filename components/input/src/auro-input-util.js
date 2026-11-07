@@ -4,14 +4,14 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 import { AuroInputUtilities } from "./utilities.js";
 
 /**
- * Converts an ISO date string (yyyy-mm-dd) to a display string in the given format.
+ * Converts an ISO date string (`yyyy-mm-dd`) to the same date written in another format.
  *
- * Mirrors the approach of `toISOFormatString` in dateFormatter.mjs but in reverse:
- * instead of Date → ISO, this goes ISO → display format.
+ * Works like `AuroInputUtil.toISOFormatString` in reverse:
+ * instead of `Date` to ISO, it goes from ISO to a display format.
  *
- * @param {string} isoStr - ISO date string in yyyy-mm-dd format.
- * @param {string} format - Target display format (e.g. "mm/dd/yyyy", "dd/mm/yyyy", "yyyy/mm/dd").
- * @returns {string|undefined} Display-formatted date string, or undefined if the input is invalid.
+ * @param {string} isoStr - The ISO date string, such as "2024-01-15".
+ * @param {string} format - The display format, such as "mm/dd/yyyy", "dd/mm/yyyy", or "yyyy/mm/dd".
+ * @returns {string|undefined} The date in the display format, or undefined if either argument is empty or the date isn't valid.
  */
 function formatISODate(isoStr, format) {
   if (!isoStr || !format) {
@@ -48,6 +48,9 @@ function formatISODate(isoStr, format) {
   }
 }
 
+/**
+ * Helpers that convert dates between `Date` objects, ISO date strings (`YYYY-MM-DD`), and display formats, such as `mm/dd/yyyy`.
+ */
 export const AuroInputUtil = {
   toISOFormatString: dateFormatter.toISOFormatString,
   formatISODate,

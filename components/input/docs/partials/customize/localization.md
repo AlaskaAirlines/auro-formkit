@@ -1,15 +1,15 @@
-<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
-<auro-header level="4" id="localizationVisibleStrings">Visible Strings</auro-header>
-<p>The visible strings rendered in the input are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<p>Translate every string the input shows or announces, and use <code>locale</code> to set the date format.</p>
+<auro-header level="4" id="localizationVisibleStrings">Visible strings</auro-header>
+<p>The visible strings in the input don't come from <code>locale</code>. They're passed in through named slots, so you supply the translation for each language. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to translate.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="localizationA11yStrings">Screen Reader Strings</auro-header>
-<p>Assistive-technology announcements that are not visible in the UI are also exposed as named slots so they can be translated independently. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
+<auro-header level="4" id="localizationA11yStrings">Screen reader strings</auro-header>
+<p>Text that screen readers announce but that isn't shown on screen, such as the clear button's name, is also passed in through named slots, so you can translate it separately. These strings don't come from <code>locale</code> either, so supply translated text for every language you support.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-<p class="note"><strong>Note:</strong> Custom validation messages set via <code>setCustomValidity*</code> attributes are also not localized — supply translated strings yourself when using those properties.</p>
-<auro-header level="4" id="localizationDateFormatting">Date Formatting</auro-header>
-<p>When <code>type="date"</code> is set, the <code>locale</code> attribute drives the date format used by the input mask. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so <code>format</code> does not need to be set manually.</p>
+<p class="note"><strong>Note:</strong> The input doesn't translate the messages you set with the <code>setCustomValidity*</code> attributes either, so supply translated text when you use them. The built-in help text and error messages follow <code>lang</code>, which has Spanish (<code>es</code>) and English text.</p>
+<auro-header level="4" id="localizationDateFormatting">Date formatting</auro-header>
+<p>When <code>type="date"</code> is set, the <code>locale</code> attribute sets the date format the input uses as the user types. Setting <code>locale</code> picks the region's format from the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, such as <code>mm/dd/yyyy</code> for <code>en-US</code>, <code>dd.mm.yyyy</code> for <code>de-DE</code>, and <code>yyyy/mm/dd</code> for <code>ja-JP</code>, so you don't need to set <code>format</code>.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 <p>If no <code>locale</code> attribute is present, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute; if none is found, it defaults to <code>en-US</code>.</p>

@@ -16,10 +16,10 @@ import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHa
 import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
 
 /**
- * Base class for auro-input component that provides core input functionality.
- * @event input - Event fires when the value of an `auro-input` has been changed.
- * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
- * @event auroInput-validityChange - Notifies that the `validity` state of the input has changed.
+ * Shared base class for `auro-input` that handles the value, formatting, and validation.
+ * @event input - Fires when the value changes, whether the user types or code sets the value. Events from code changes have `isProgrammatic` set to `true`.
+ * @event auroFormElement-validated - Fires each time the input is validated, with the result in `event.detail.validity` and `event.detail.message`.
+ * @event auroInput-validityChange - Fires when `validity` changes.
  */
 export default class BaseInput extends AuroElement {
 
@@ -154,7 +154,7 @@ export default class BaseInput extends AuroElement {
    * These are assigned in a helper method rather than the constructor body so
    * the CEM analyzer keeps their `@type` string-literal unions (a literal
    * assignment in the constructor would make the analyzer infer `string` and
-   * override the union — see AlaskaAirlines/discussions#653, gotcha 1).
+   * override the union; see AlaskaAirlines/discussions#653, gotcha 1).
    * @private
    * @returns {void}
    */
@@ -170,9 +170,11 @@ export default class BaseInput extends AuroElement {
       ...super.properties,
 
       /**
-       * Sets the layout variant of the input.
+       * Sets how the label and value are arranged. `classic` raises the label above the value
+       * when the field has focus or a value; the `emphasized` and `snowflake` layouts always show the label inside the field.
        * @type {'classic' | 'emphasized' | 'emphasized-left' | 'emphasized-right' | 'snowflake' | 'snowflake-left' | 'snowflake-right'}
        * @default 'classic'
+       * @category ui
        */
       layout: {
         type: String,
@@ -181,9 +183,11 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets the shape of the input.
+       * Sets the shape of the field's border. The emphasized layouts support `pill`, `pill-left`,
+       * and `pill-right`, and the snowflake layout uses `snowflake`.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       shape: {
         type: String,
@@ -192,9 +196,11 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets the size of the input.
+       * Sets the field's size. The `classic` shape is the same height at every size, and the
+       * emphasized layouts support only `xl`.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'lg'
+       * @category ui
        */
       size: {
         type: String,
@@ -203,7 +209,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the role attribute.
+       * Sets the role screen readers announce for the inner `<input>` element, such as `combobox`
+       * when the input is part of `auro-combobox` (the input's `role`).
+       * @category a11y
        */
       a11yRole: {
         type: String,
@@ -212,7 +220,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the aria-controls attribute.
+       * Sets the ID of the element the input controls, such as a combobox's list of options
+       * (the inner `<input>` element's `aria-controls`).
+       * @category a11y
        */
       a11yControls: {
         type: String,
@@ -221,7 +231,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the aria-expanded attribute.
+       * Tells screen readers that the element the input controls, such as a list of options, is open
+       * (the inner `<input>` element's `aria-expanded`).
+       * @category a11y
        */
       a11yExpanded: {
         type: Boolean,
@@ -230,8 +242,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the aria-activedescendant attribute.
-       * Points to the ID of the currently active/highlighted option in a listbox.
+       * Sets the ID of the option screen readers announce as active while focus stays in the input,
+       * such as the highlighted option in a list (the inner `<input>` element's `aria-activedescendant`).
+       * @category a11y
        */
       a11yActivedescendant: {
         type: String,
@@ -240,9 +253,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * If set, the label will remain fixed in the active position.
-       * Only applies to the classic/default layout; the emphasized and snowflake
-       * layouts always render the label inside the field, so this has no effect there.
+       * Keeps the label raised above the value, even when the field is empty and doesn't have focus.
+       * Applies only to the `classic` layout; the emphasized and snowflake layouts always show the label inside the field.
+       * @relevantWhen layout === 'classic'
+       * @category ui
        */
       activeLabel: {
         type: Boolean,
@@ -251,9 +265,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the color scheme. Use `inverse` on dark backgrounds and `default` on light backgrounds.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -261,8 +276,11 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user.
+       * Sets whether mobile keyboards capitalize text as the user types, such as `words` for names
+       * (the input's `autocapitalize`). Does not currently apply: the input clears this value on every
+       * update, unless `spellcheck="false"`, which sets it to `none`.
        * @type {'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'}
+       * @category behavior
        */
       autocapitalize: {
         type: String,
@@ -270,7 +288,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       * Sets what the browser can suggest when filling in the field, such as `off` to turn off
+       * autofill suggestions (the input's `autocomplete`). Only `autocomplete="off"` is currently supported.
+       * @category behavior
        */
       autocomplete: {
         type: String,
@@ -278,8 +298,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
+       * Sets whether Safari on iOS corrects words as the user types. Use `off` for names, codes, and
+       * other text that isn't made of dictionary words. Always `off` when `spellcheck="false"`.
        * @type {'on' | 'off'}
+       * @category behavior
        */
       autocorrect: {
         type: String,
@@ -287,7 +309,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message for email type validity.
+       * Does not currently change any message. To set the error message for an invalid email address,
+       * use `setCustomValidityForType`.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       customValidityTypeEmail: {
         type: String,
@@ -295,7 +320,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * If set, disables the input.
+       * Turns the input off. A disabled input is shown in a muted style, can't be edited or reached
+       * with the keyboard, and doesn't show the clear button.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -303,7 +330,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       * Keeps the label visible while `displayValue` slot content is shown in place of the value.
+       * Without it, the `displayValue` content hides both the label and the value.
+       * @category ui
        */
       dvInputOnly: {
         type: Boolean,
@@ -312,7 +341,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       * Shows an error that stays until you remove the attribute, and sets `validity` to `customError`.
+       * The attribute value is the error message, unless `setCustomValidityCustomError` or `setCustomValidity` is set.
+       * @category behavior
        */
       error: {
         type: String,
@@ -320,7 +351,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Contains the help text message for the current validity error.
+       * Holds the error message shown below the field for the current `validity`.
+       * Validation sets it, so read it instead of setting it.
+       * @category behavior
        */
       errorMessage: {
         type: String,
@@ -328,7 +361,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Specifies the input mask format.
+       * Sets the pattern the value is formatted to as the user types, such as `mm/dd/yyyy` for a date or
+       * `+1 (000) 000-0000` for a phone number. Outside dates, `0` stands for a digit, `a` for a letter, and `*` for any character.
+       * For `type="date"`, it replaces the format that `locale` would set.
+       * @category behavior
        */
       format: {
         type: String,
@@ -337,7 +373,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Flag to indicate if the input currently has focus.
+       * Reports whether the input currently has focus. The input updates it, so read it instead of setting it.
+       * @category behavior
        */
       hasFocus: {
         type: Boolean,
@@ -346,7 +383,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Flag to indicate if the input currently has value.
+       * Reports whether the input currently has a value. The input updates it, so read it instead of setting it.
+       * @category behavior
        */
       hasValue: {
         type: Boolean,
@@ -355,7 +393,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * If set, the label will be hidden visually but still accessible to assistive technologies.
+       * Hides the label visually while screen readers still announce it.
        * @private
        */
       hideLabelVisually: {
@@ -366,7 +404,10 @@ export default class BaseInput extends AuroElement {
 
 
       /**
-       * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
+       * Shows a card icon left of the value that changes to the detected card brand, such as Visa, as the user types.
+       * Applies only when `type="credit-card"`.
+       * @relevantWhen type === 'credit-card'
+       * @category ui
        */
       icon: {
         type: Boolean,
@@ -374,7 +415,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
+       * Sets a unique ID for the element, such as `email`. The inner `<input>` element uses this ID
+       * followed by `-input`, such as `email-input`.
+       * @category behavior
        */
       id: {
         type: String,
@@ -382,7 +425,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The id for input node.
+       * The ID of the inner `<input>` element.
        * @private
        */
       inputId: {
@@ -391,14 +434,20 @@ export default class BaseInput extends AuroElement {
         attribute: false
       },
 
-      /** Exposes inputmode attribute for input.  */
+      /**
+       * Sets which on-screen keyboard mobile devices show, such as `numeric` for digits only or `email`
+       * (the input's `inputmode`). Defaults to `numeric` when `type` is `number`, `tel`, `credit-card`, or `date`.
+       * @category behavior
+       */
       inputmode: {
         type: String,
         reflect: true
       },
 
       /**
-       * Defines the language of an element.
+       * Sets the language of the input's built-in help text and error messages, such as `es` for Spanish.
+       * Only `es` changes the text; other values use English. When not set, the input follows the page's `lang`.
+       * @category behavior
        */
       lang: {
         type: String,
@@ -406,8 +455,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Defines the locale of an element.
-       * Used for locale-specific formatting, such as date formats.
+       * Sets the region whose date format `type="date"` uses, such as `en-GB` for `dd/mm/yyyy`.
+       * When not set, the input uses the nearest ancestor's `data-locale` attribute, or `en-US`.
+       * @category behavior
        */
       locale: {
         type: String,
@@ -415,15 +465,18 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The maximum value allowed. This only applies for inputs with a type of `number` and ISO format.
+       * Sets the largest value allowed, such as `10` for a number or `2025-12-31` for a date.
+       * Applies only when `type` is `number`, or `date` with a full date format; write dates in ISO format (`YYYY-MM-DD`).
+       * @category behavior
        */
       max: {
         type: String
       },
 
       /**
-       * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
-       * **Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers.
+       * Sets the most characters the user can enter, as a whole number `0` or higher.
+       * Don't set it when `type` is `credit-card`, `tel`, or `date`, because those types set their own length.
+       * @category behavior
        */
       maxLength: {
         type: Number,
@@ -432,14 +485,18 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The minimum value allowed. This only applies for inputs with a type of `number` and ISO date format.
+       * Sets the smallest value allowed, such as `1` for a number or `2024-01-01` for a date.
+       * Applies only when `type` is `number`, or `date` with a full date format; write dates in ISO format (`YYYY-MM-DD`).
+       * @category behavior
        */
       min: {
         type: String
       },
 
       /**
-       * The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`.
+       * Sets the fewest characters the value needs to be valid, as a whole number no larger than `maxlength`.
+       * An empty value isn't checked against it; use `required` for that.
+       * @category behavior
        */
       minLength: {
         type: Number,
@@ -448,7 +505,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Populates the `name` attribute on the input.
+       * Sets the field name `auro-form` uses for this input's value, such as `email`
+       * (the inner `<input>` element's `name`).
+       * @category behavior
        */
       name: {
         type: String,
@@ -456,8 +515,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets styles for nested operation - removes borders, hides help + error text, and
-       * hides accents.
+       * Marks the input as placed inside another component, such as the trigger of `auro-dropdown`.
+       * Does not currently change how the input looks or behaves; use `simple` to remove the border.
+       * @category ui
        */
       nested: {
         type: Boolean,
@@ -465,7 +525,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * If set, disables auto-validation on blur.
+       * Turns off validation when the input loses focus. Validation still runs when code sets the value
+       * or when `validateOnInput` is set.
+       * @category behavior
        */
       noValidate: {
         type: Boolean,
@@ -474,8 +536,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Styles the input for a dark background.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -484,7 +548,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Specifies a regular expression the form control's value should match.
+       * Sets a regular expression the whole value must match to be valid, such as `[a-z]{1,15}`
+       * (the input's `pattern`). Use `setCustomValidityPatternMismatch` to set the error message.
+       * @category behavior
        */
       pattern: {
         type: String,
@@ -492,7 +558,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Define custom placeholder text.
+       * Sets hint text shown in the empty field, such as `John Doe`.
+       * When not set and `type="date"`, the input shows the date format, such as `MM/DD/YYYY`.
+       * @category ui
        */
       placeholder: {
         type: String,
@@ -500,7 +568,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Makes the input read-only, but can be set programmatically.
+       * Stops the user from editing the value, while code can still set it.
+       * A read-only input can still get focus, and doesn't show the clear button.
+       * @category behavior
        */
       readonly: {
         type: Boolean,
@@ -508,7 +578,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Populates the `required` attribute on the input. Used for client-side validation.
+       * Makes the input invalid when it's left empty, and removes the " (optional)" text after the label.
+       * Use `setCustomValidityValueMissing` to set the error message.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -516,7 +589,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets a custom help text message to display for all validityStates.
+       * Sets one error message for every kind of validation error. When set, it replaces the messages from
+       * `error` and every other `setCustomValidity*` property.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidity: {
         type: String,
@@ -524,7 +600,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `badInput`.
+       * Sets the error message for `validity="badInput"`. Does not currently change any message,
+       * because the input never reports `badInput`.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityBadInput: {
         type: String,
@@ -532,7 +611,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `customError`.
+       * Sets the error message shown while the `error` attribute is set, in place of the `error` value.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityCustomError: {
         type: String,
@@ -540,7 +621,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display for the declared element `type` and type validity fails.
+       * Sets the error message shown when the value doesn't fit its `type`, such as a badly formed email address,
+       * an incomplete card number, or an incomplete date. When not set, `email`, `credit-card`, and most `date` inputs use a built-in message.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityForType: {
         type: String,
@@ -548,7 +632,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `patternMismatch`.
+       * Sets the error message shown when the value doesn't match `pattern`, or when a date isn't a real calendar date.
+       * For `pattern`, it does not currently work when set only as a property, so set the attribute instead.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityPatternMismatch: {
         type: String,
@@ -556,7 +643,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `rangeOverflow`.
+       * Sets the error message shown when the value is above `max`.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityRangeOverflow: {
         type: String,
@@ -564,7 +653,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `rangeUnderflow`.
+       * Sets the error message shown when the value is below `min`.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityRangeUnderflow: {
         type: String,
@@ -572,7 +663,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `tooLong`.
+       * Sets the error message shown when the value is longer than `maxlength`.
+       * Does not currently work when set only as a property, so set the attribute instead.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityTooLong: {
         type: String,
@@ -580,7 +674,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `tooShort`.
+       * Sets the error message shown when the value is shorter than `minlength`.
+       * Does not currently work when set only as a property, so set the attribute instead.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityTooShort: {
         type: String,
@@ -588,7 +685,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing`.
+       * Sets the error message shown when a `required` input is left empty.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityValueMissing: {
         type: String,
@@ -604,7 +703,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Simple makes the input render without a border.
+       * Removes the field's border and background, such as for an input placed inside another component.
+       * @category ui
        */
       simple: {
         type: Boolean,
@@ -612,8 +712,11 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * An enumerated attribute defines whether the element may be checked for spelling errors. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
+       * Sets whether the browser checks the value for spelling mistakes (the input's `spellcheck`).
+       * Use `false` for codes, names, and other text that isn't made of dictionary words; it also sets `autocorrect` to `off`
+       * and `autocapitalize` to `none`. Password inputs always use `false`.
        * @type {'true' | 'false'}
+       * @category behavior
        */
       spellcheck: {
         type: String,
@@ -621,7 +724,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Indicates whether the input is in a dirty state (has been interacted with).
+       * Records whether the user has interacted with the input, such as by moving focus into it.
        * @private
        */
       touched: {
@@ -631,9 +734,12 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Populates the `type` attribute on the input.
+       * Sets the kind of value the input expects, which controls its formatting, validation, and mobile keyboard.
+       * `credit-card`, `tel`, and `date` format the value as the user types, and `password` hides the text and adds a show/hide button.
+       * The show/hide button appears only in the `classic` layout.
        * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
        * @default 'text'
+       * @category behavior
        */
       type: {
         type: String,
@@ -641,7 +747,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets validation mode to re-eval with each input.
+       * Validates the value as the user types, instead of waiting until the input loses focus.
+       * Use it with `pattern` when the user needs feedback before leaving the field.
+       * @category behavior
        */
       validateOnInput: {
         type: Boolean,
@@ -649,7 +757,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Specifies the `validityState` this element is in.
+       * Reports the result of the last validation, such as `valid`, `valueMissing`, or `patternMismatch`.
+       * Validation sets it, so read it instead of setting it.
+       * @category behavior
        */
       validity: {
         type: String,
@@ -657,8 +767,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
-       * For `date` type inputs using a full date format (year/month/day), the `value` should be ISO (YYYY-MM-DD). Partial date formats use the display format.
+       * Sets or gets the input's current value. For `type="date"` with a full date format, the value is an ISO date,
+       * such as `2025-12-31`, whatever format the user sees; partial formats, such as `mm/yy`, use the text shown in the field.
+       * @category behavior
        */
       value: {
         type: String
@@ -667,24 +778,27 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Read-only Date object representation of `value` for full date formats.
+   * Gets `value` as a `Date` object, or `undefined` when `value` isn't a valid ISO date (`YYYY-MM-DD`).
    * @returns {Date|undefined}
+   * @category behavior
    */
   get valueObject() {
     return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
   }
 
   /**
-   * Read-only Date object representation of `min` for full date formats.
+   * Gets `min` as a `Date` object, or `undefined` when `min` isn't a valid ISO date (`YYYY-MM-DD`).
    * @returns {Date|undefined}
+   * @category behavior
    */
   get minObject() {
     return this.min && dateFormatter.isValidDate(this.min) ? dateFormatter.stringToDateInstance(this.min) : undefined;
   }
 
   /**
-   * Read-only Date object representation of `max` for full date formats.
+   * Gets `max` as a `Date` object, or `undefined` when `max` isn't a valid ISO date (`YYYY-MM-DD`).
    * @returns {Date|undefined}
+   * @category behavior
    */
   get maxObject() {
     return this.max && dateFormatter.isValidDate(this.max) ? dateFormatter.stringToDateInstance(this.max) : undefined;
@@ -694,10 +808,10 @@ export default class BaseInput extends AuroElement {
     return this._format;
   }
 
-  /**
-   * Overrides LitElement's generated accessor so we can track whether the
-   * consumer explicitly set `format`. Locale-derived updates use
-   * `_setFormatFromLocale` instead, which skips this flag.
+  /*
+   * Overrides Lit's generated accessor to record whether the consumer set
+   * `format` directly. Locale-derived updates use `_setFormatFromLocale`
+   * instead, which skips this flag.
    */
   set format(value) {
     const oldValue = this._format;
@@ -707,10 +821,10 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Sets format without marking it as user-set. Used by locale auto-derive
-   * so that a subsequent locale change can still update the format.
+   * Sets `format` without marking it as set by the consumer. Used when `locale` sets the format,
+   * so a later `locale` change can still update it.
    * @private
-   * @param {string} value
+   * @param {string} value - The format to set.
    */
   _setFormatFromLocale(value) {
     const oldValue = this._format;
@@ -776,8 +890,8 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Patches the input element to dispatch an 'input' event whenever its value is set programmatically.
-   * This ensures that changes to the input's value are consistently communicated, even if not triggered by user input.
+   * Patches the inner `<input>` element so it fires an `input` event whenever code sets its value.
+   * This reports value changes consistently, even when the user didn't type them.
    *
    * @param {HTMLInputElement} input - The input element to patch.
    * @returns {void}
@@ -829,9 +943,11 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * Sets `setCustomValidityForType` to the built-in message for the current `type` or date format,
+   * unless it's already set.
    * @private
    * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
-   * @returns {void} Sets the default help text for the input.
+   * @returns {void}
    */
   setCustomHelpTextMessage() {
     // if setCustomValidityForType is already set, don't override it
@@ -863,8 +979,8 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * LitElement lifecycle method. Called after the DOM has been updated.
-   * @param {Map<string, any>} changedProperties - Keys are the names of changed properties, values are the corresponding previous values.
+   * Called after Lit updates the DOM.
+   * @param {Map<string, any>} changedProperties - The changed properties, with each property's name as the key and its previous value as the value.
    * @returns {void}
    */
   // eslint-disable-next-line complexity
@@ -973,8 +1089,9 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * Fires the `auroInput-validityChange` event.
    * @private
-   * @returns {void} Notify validity state changed via event.
+   * @returns {void}
    */
   notifyValidityChange() {
     this.dispatchEvent(new CustomEvent('auroInput-validityChange', {
@@ -985,7 +1102,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Sets up IMasks and logic based on auto-formatting requirements.
+   * Sets up the IMask input mask for the current `type` and `format`.
    * @private
    * @returns {void}
    */
@@ -1067,7 +1184,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Sends event notifying that the input has changed it's value.
+   * Fires an `input` event, marked `isProgrammatic`, to report that the value changed.
    * @private
    * @returns {void}
    */
@@ -1088,7 +1205,7 @@ export default class BaseInput extends AuroElement {
 
 
   /**
-   * Handles clicking on the auro-input anywhere outside of the HTML5 input and still moving focus in.
+   * Called when the user clicks anywhere in the field. Moves focus to the inner `<input>` element.
    * @private
    * @return {void}
    */
@@ -1097,7 +1214,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to set element focus.
+   * Moves focus to the input.
    * @return {void}
    */
   focus() {
@@ -1105,7 +1222,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Handles event of clearing input content by clicking the X icon.
+   * Called when the clear button is clicked. Clears the value, resets validation, and moves focus back to the input.
    * @private
    * @return {void}
    */
@@ -1118,6 +1235,8 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * Called when the inner `<input>` element fires an `input` event. Updates `value` and validates
+   * when `validateOnInput` is set or when code changed the value.
    * @param {Event} event - The input event.
    * @private
    * @returns {void}
@@ -1174,7 +1293,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to support @focusin event.
+   * Called when focus moves into the input. Sets `hasFocus` and `touched`.
    * @private
    * @return {void}
    */
@@ -1185,7 +1304,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to support @focusout event.
+   * Called when focus moves out of the input. Clears `hasFocus`.
    * @private
    * @return {void}
    */
@@ -1194,7 +1313,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to support @blur event.
+   * Called when the inner `<input>` element loses focus. Validates the value unless `noValidate` is set.
    * @private
    * @return {void}
    */
@@ -1212,9 +1331,9 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Returns focused element, even if it's in the shadow DOM.
+   * Gets the focused element, even when it's inside a shadow root.
    * @private
-   * @param {Object} root - Element to check for focus.
+   * @param {Object} root - The document or shadow root to search.
    * @returns {Object}
    */
   getActiveElement(root = document) {
@@ -1232,9 +1351,9 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Sets the active descendant element for accessibility.
-   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
-   * This function is used in components that contain `auro-input` to set the active descendant.
+   * Sets the option screen readers announce as active while focus stays in the input.
+   * Uses `ariaActiveDescendantElement`, which works across shadow roots.
+   * Components that contain `auro-input`, such as `auro-combobox`, call it.
    * @private
    * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
    * @returns {void}
@@ -1246,15 +1365,15 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Checks the value against the input's validation rules and updates `validity` and `errorMessage`.
+   * @param {boolean} [force=false] - If true, validates even while the input has focus or before the user has interacted with it. If false, validates only when `validateOnInput` is set, or when the input doesn't have focus and has been interacted with or has a value.
    */
   validate(force = false) {
     this.validation.validate(this, force);
   }
 
   /**
-   * Resets component to initial state, including resetting the touched state and validity.
+   * Resets the input to its initial state: clears the value, the touched state, and `validity`.
    * @returns {void}
    */
   reset() {
@@ -1263,14 +1382,14 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Clears the input value.
+   * Clears the value. Unlike `reset()`, it doesn't clear the touched state, so a `required` input the user has already interacted with can show its error.
    */
   clear() {
     this.value = undefined;
   }
 
   /**
-   * Sets configuration data used elsewhere based on the `type` attribute.
+   * Sets the length, keyboard, and default date format for the current `type`.
    * @private
    * @returns {void}
    */
@@ -1297,9 +1416,9 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Support placeholder text.
+   * Gets the placeholder text to show: `placeholder`, or the uppercase date format when `type="date"` and no placeholder is set.
    * @private
-   * @returns {void}
+   * @returns {string}
    */
   get placeholderStr() {
     if (!this.placeholder && this.type === 'date') {
@@ -1312,7 +1431,7 @@ export default class BaseInput extends AuroElement {
   // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
   /**
-   * Function to support credit-card feature type.
+   * Applies the format, length, error message, and icon for the card brand detected from the value.
    * @private
    * @returns {void}
    */
@@ -1338,10 +1457,10 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to support credit-card feature type.
+   * Gets the card brand settings that match the start of the value, such as the mask and icon for Visa.
    * @private
    * @deprecated See https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296.
-   * @returns {object} JSON with data for credit card formatting.
+   * @returns {object} The matching card brand's format, length, error message, and icon settings.
    */
   matchInputValueToCreditCard() {
     const CreditCardValidationMessage = `${i18n(this.lang, 'validCard')}`;
