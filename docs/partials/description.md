@@ -1,8 +1,8 @@
 ## Description
 
-`auro-formkit` is a collection of web components that can be used to build forms.
+`auro-formkit` is a collection of web components for building forms.
 
-It is a monorepo that contains the following components:
+It's a monorepo that contains these components:
 
 - `auro-checkbox`
     - `auro-checkbox-group`
@@ -14,7 +14,7 @@ It is a monorepo that contains the following components:
 - `auro-form`
 - `auro-input`
 - `auro-menu`
-    - `auro-menu-option`
+    - `auro-menuoption`
 - `auro-radio`
     - `auro-radio-group`
 - `auro-select`

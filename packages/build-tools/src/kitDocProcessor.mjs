@@ -19,16 +19,16 @@ export const monorepoVars = {
 /**
  * Processor config object.
  * @typedef {Object} ProcessorConfig
- * @prop {String} [component=undefined] - The name of component to process docs.
- * @prop {boolean} [overwriteLocalCopies=true] - The release version tag to use instead of master.
- * @prop {string} [remoteReadmeVersion="master"] - The release version tag to use instead of master.
- * @prop {string} [remoteReadmeVariant=""] - The variant string to use for the README source.
- * (like "_esm" to make README_esm.md).
+ * @prop {String} [component=undefined] - The name of the component to process docs for. The processor doesn't currently read this option.
+ * @prop {boolean} [overwriteLocalCopies=true] - The processor doesn't currently read this option.
+ * @prop {string} [remoteReadmeVersion="master"] - The release version tag to use instead of master. The processor doesn't currently read this option.
+ * @prop {string} [remoteReadmeVariant=""] - The variant string to use for the README source, such as `_esm` for `README_esm.md`. The processor doesn't currently read this option.
  */
 
 
 /**
- * @param {ProcessorConfig} config - The configuration for this processor.
+ * The default processor configuration.
+ * @type {ProcessorConfig}
  */
 export const defaultDocsProcessorConfig = {
   component: undefined,

@@ -1,4 +1,4 @@
-# Quarantine: 5.9 Surface Artifacts
+# Quarantine: 5.9 surface artifacts
 
 API example files quarantined during the FormKit v6 revert (Sub-PR 2: Surface Removal).
 
@@ -6,8 +6,8 @@ These files demonstrate 5.9-only features (`allowDeselect`, `selectAllMatchingOp
 
 ## Contents
 
-- `menu-apiExamples/` — API examples from `components/menu/apiExamples/`
-- `select-apiExamples/` — API examples from `components/select/apiExamples/`
+- `menu-apiExamples/`: API examples from `components/menu/apiExamples/`
+- `select-apiExamples/`: API examples from `components/select/apiExamples/`
 
 ## Restoration
 
@@ -18,4 +18,4 @@ git mv quarantine/5-9-surface/menu-apiExamples/* components/menu/apiExamples/
 git mv quarantine/5-9-surface/select-apiExamples/* components/select/apiExamples/
 ```
 
-You will also need to re-add the corresponding story exports and documentation entries. See the Sub-PR 2 commit diff for the exact lines that were removed from docs and stories files.
+You'll also need to re-add the corresponding story exports and documentation entries. See the Sub-PR 2 commit diff for the exact lines that were removed from docs and stories files.

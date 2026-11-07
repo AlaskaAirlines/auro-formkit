@@ -1,7 +1,7 @@
 /**
- * Stylelint rule to detect unused namespace declarations in SCSS files.
- * This rule checks for @use statements with namespace aliases that are never referenced
- * and reports them as lint errors.
+ * Stylelint rule that detects unused namespace declarations in SCSS files.
+ * It reports each `@use` statement whose namespace alias is never referenced
+ * as a lint error.
  * @module stylelint-unused-namespace
  */
 
@@ -14,8 +14,8 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 
 
 /**
- * Main plugin rule function.
- * @param {boolean} primaryOption - Whether the rule is enabled.
+ * Creates the rule function that reports unused `@use` namespaces.
+ * @param {boolean} primaryOption - If true, the rule runs. If false, it reports nothing.
  * @returns {Function} The rule function that processes CSS and reports violations.
  */
 const ruleFunction = (primaryOption) => (root, result) => {
@@ -103,7 +103,7 @@ ruleFunction.messages = messages;
 ruleFunction.meta = { fixable: false };
 
 /**
- * Export the plugin as the default export and also named exports for ruleName and messages.
+ * Exports the plugin as the default export, and `ruleName` and `messages` as named exports.
  */
 export default stylelint.createPlugin(ruleName, ruleFunction);
 export { ruleName, messages };

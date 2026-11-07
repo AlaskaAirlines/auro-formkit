@@ -24,9 +24,9 @@ The following sections are editable by making changes to the following files:
 
 ## Description
 
-`auro-formkit` is a collection of web components that can be used to build forms.
+`auro-formkit` is a collection of web components for building forms.
 
-It is a monorepo that contains the following components:
+It's a monorepo that contains these components:
 
 - `auro-checkbox`
     - `auro-checkbox-group`
@@ -38,7 +38,7 @@ It is a monorepo that contains the following components:
 - `auro-form`
 - `auro-input`
 - `auro-menu`
-    - `auro-menu-option`
+    - `auro-menuoption`
 - `auro-radio`
     - `auro-radio-group`
 - `auro-select`
@@ -49,45 +49,41 @@ It is a monorepo that contains the following components:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 
-### 1. User Accounts
+### 1. User accounts
 - Sign up and login forms  
 - Email and password validation  
 
-### 2. Checkout & Payments
+### 2. Checkout and payments
 - Collect shipping and billing info  
 - Use autofill and validation to reduce errors  
 
-### 3. Booking & Scheduling
+### 3. Booking and scheduling
 - Select dates and times  
-- Prevent invalid selections (like past dates)  
+- Prevent invalid selections, such as past dates  
 
-### 4. Search & Filters
+### 4. Search and filters
 - Search inputs with suggestions  
-- Filters like price ranges or categories  
+- Filters, such as price ranges or categories  
 
-### 5. File Uploads
-- Upload images, documents, or media  
-- Restrict file types and allow multiple files  
-
-### 6. Feedback & Surveys
+### 5. Feedback and surveys
 - Collect ratings, choices, and comments  
 - Require answers where needed  
 
-### 7. Calculators & Dynamic Forms
-- Show real-time results (e.g., pricing, totals)  
+### 6. Calculators and dynamic forms
+- Show real-time results, such as prices and totals  
 
-### 8. Multi-Step Forms
+### 7. Multi-step forms
 - Break long forms into smaller steps  
 
-### 9. Mobile-Friendly Input
+### 8. Mobile-friendly input
 - Use input types that trigger the right keyboard  
 
-### 10. Accessible Forms
+### 9. Accessible forms
 - Proper labels and grouped inputs  
 - Built-in error handling  
 
-### 11. Built-in Validation
-- Use HTML5 rules instead of custom JavaScript
+### 10. Built-in validation
+- Set rules with attributes, such as `required` and `pattern`, instead of writing custom JavaScript
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Getting Started
@@ -99,7 +95,7 @@ It is a monorepo that contains the following components:
 [![License](https://img.shields.io/npm/l/@aurodesignsystem/auro-formkit?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 ![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
 
-#### NPM Installation
+#### NPM installation
 
 ```shell
 $ npm i @aurodesignsystem/auro-formkit
@@ -108,9 +104,9 @@ $ npm i @aurodesignsystem/auro-formkit
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
 
-### Getting Started
+### Getting started
 
-Each component contains its own Getting Started documentation.
+Each component has its own getting started guide:
 
 <ul>
   <li><a href="https://auro.alaskaair.com/components/auro/checkbox/getting-started">checkbox</a></li>
