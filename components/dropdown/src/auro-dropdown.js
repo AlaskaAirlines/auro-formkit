@@ -39,20 +39,38 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 /**
- * The `auro-dropdown` element provides a way to place content in a bib that can be toggled.
+ * A trigger that opens a panel, called the bib, to show interactive content, such as a list of options or a short form.
+ *
+ * **Key capabilities**
+ * - **Any trigger and content**: The `trigger` slot takes text, an icon, or a control, and the default slot takes any markup.
+ * - **Positioning**: `placement`, `offset`, and `shift` control where the bib opens, and it flips to the opposite side when it doesn't fit unless `noFlip` is set.
+ * - **Small screens**: `fullscreenBreakpoint` sets the screen width, such as `sm`, at or below which the bib fills the screen as a modal dialog.
+ * - **Modal on desktop**: `desktopModal` keeps keyboard focus in the open bib and makes the rest of the page inert.
+ * - **States**: `disabled` stops the bib from opening, and `error` shows the trigger in an error style.
+ * - **Light and dark backgrounds**: `appearance="inverse"` switches to colors designed for dark backgrounds.
+ *
+ * **Example**
+ * ```html
+ * <auro-dropdown>
+ *   <span slot="trigger">Trip options</span>
+ *   <p>Choose a seat, add bags, or change your flight.</p>
+ * </auro-dropdown>
+ * ```
+ *
+ * @summary A panel of interactive content that opens from a trigger, with flexible positioning and a fullscreen mode for small screens.
  * @customElement auro-dropdown
  *
- * @slot - Default slot for the dropdown bib content.
- * @slot helpText - Defines the content of the helpText.
- * @slot trigger - Defines the content of the trigger.
- * @csspart trigger - The trigger content container.
+ * @slot - Content shown in the bib, such as a list of options or a short form. {@requiredWhen always} {@category ui}
+ * @slot helpText - Text shown below the trigger to help people understand or fill in the dropdown. {@category ui}
+ * @slot trigger - Content people select to open and close the bib, such as text, an icon, or a button. When this content isn't focusable, screen readers also use it as the trigger's name. {@requiredWhen always} {@category ui}
+ * @csspart trigger - The trigger content container. Not currently rendered, so styles set on it have no effect; use `wrapper` instead.
  * @csspart wrapper - The trigger wrapper element surrounding the trigger content and chevron.
- * @csspart chevron - The collapsed/expanded state icon container.
- * @csspart size - The size of the dropdown bib. (height, width, maxHeight, maxWidth only)
- * @csspart helpText - The helpText content container.
- * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
- * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
- * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
+ * @csspart chevron - The container for the icon that shows whether the bib is open. Exists only when `chevron` is set.
+ * @csspart size - A hidden sizing element whose `width`, `height`, `max-width`, and `max-height` are copied to the bib. Applies only when `matchWidth` is set.
+ * @csspart helpText - The help text container. Not currently rendered, so styles set on it have no effect; style the content in the `helpText` slot instead.
+ * @event auroDropdown-triggerClick - Notifies that the trigger was clicked, or activated with Enter or Space.
+ * @event auroDropdown-toggled - Notifies that the bib opened or closed.
+ * @event auroDropdown-idAdded - Notifies that the dropdown has an ID you can use to reference its bib, such as in `aria-controls`. The detail's `id` is the dropdown's own `id`, generated when not set, and the bib's ID is that value followed by `-floater-bib`.
  */
 export class AuroDropdown extends AuroElement {
   static get shadowRootOptions() {
@@ -70,10 +88,9 @@ export class AuroDropdown extends AuroElement {
     this.noHideOnThisFocusLoss = false;
 
     /**
-     * When true, the dropdown skips its generic focus restoration on close.
-     * Set by consumers (for example combobox) that manage their own focus routing
-     * via setClearBtnFocus / setInputFocus / keyboard strategy.
-     * Separate from noHideOnThisFocusLoss (which controls auto-close behavior).
+     * Skips the dropdown's usual step of moving focus back to the trigger when the bib closes.
+     * Set by components that move focus themselves, such as combobox with `setClearBtnFocus`, `setInputFocus`, and its keyboard strategy.
+     * Separate from `noHideOnThisFocusLoss`, which controls whether losing focus closes the bib.
      * @private
      */
     this.noFocusRestoreOnClose = false;
@@ -97,8 +114,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
+   * Gets the classes for the trigger wrapper element, based on focus, `simple`, and `parentBorder`.
    * @private
-   * @returns {object} Class definition for the wrapper element.
+   * @returns {object} The class map for the trigger wrapper element.
    */
   get commonWrapperClasses() {
     return {
@@ -111,8 +129,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
+   * Sets the default property values and creates the helpers the dropdown uses, such as its floating UI and versioned tag names.
    * @private
-   * @returns {void} Internal defaults.
+   * @returns {void}
    */
   _intializeDefaults() {
     this.appearance = 'default';
@@ -157,7 +176,7 @@ export class AuroDropdown extends AuroElement {
     this.floater = new AuroFloatingUI();
 
     /**
-     * Generate unique names for dependency components.
+     * Creates versioned tag names for the components the dropdown renders, so they don't conflict with other versions on the page.
      */
     const versioning = new AuroDependencyVersioning();
 
@@ -196,7 +215,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Public method to hide the dropdown.
+   * Closes the bib.
    * @returns {void}
    */
   hide() {
@@ -204,7 +223,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Public method to show the dropdown.
+   * Opens the bib.
    * @returns {void}
    */
   show() {
@@ -223,8 +242,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * When bib is open, focus on the first element inside of bib.
-   * If not, trigger element will get focus.
+   * Moves focus to the first focusable element in the bib when it's open, or to the trigger when it's closed.
    */
   focus() {
     if (this.isPopoverVisible && this.bibContent) {
@@ -238,9 +256,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Focus the trigger content. When the trigger wrapper itself is focusable
-   * (has tabindex), focus it directly. Otherwise, focus the first focusable
-   * element slotted into the trigger slot (for example the auro-input).
+   * Moves focus to the trigger.
+   * When the trigger wrapper has a `tabindex`, focuses the wrapper.
+   * Otherwise, focuses the first focusable element in the `trigger` slot, such as an `auro-input`.
    * @private
    */
   focusTrigger() {
@@ -280,11 +298,11 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Sets the active descendant element for accessibility.
-   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
-   * This function is used in components that contain `auro-dropdown` to set the active descendant.
+   * Sets the trigger's active descendant, so screen readers announce the highlighted option while focus stays on the trigger.
+   * Uses `ariaActiveDescendantElement` to reach across shadow DOM boundaries.
+   * Called by components that wrap the dropdown.
    * @private
-   * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
+   * @param {HTMLElement|null} element - The element to set as the active descendant, or `null` to clear it.
    * @returns {void}
    */
   setActiveDescendant(element) {
@@ -314,7 +332,11 @@ export class AuroDropdown extends AuroElement {
     return {
 
       /**
-       * The value for the role attribute of the trigger element.
+       * Sets the ARIA role of the trigger, such as `combobox` when the trigger shows a chosen value and opens a list of options (the trigger's `role`).
+       * Applies only when the `trigger` slot content isn't focusable.
+       * With any role other than `button`, the trigger also gets `aria-expanded` and `aria-controls`, and `combobox` adds `aria-haspopup="listbox"`.
+       * @default 'button'
+       * @category a11y
        */
       a11yRole: {
         type: String,
@@ -323,9 +345,11 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the colors for the background the dropdown sits on.
+       * Use `inverse` on dark backgrounds and `default` everywhere else.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -333,7 +357,11 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, bib's position will be automatically calculated where to appear.
+       * Deprecated: Use `placement` instead.
+       * Moves the bib to whichever side of the trigger has the most space.
+       * The bib already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
+       * @deprecated Use `placement` instead.
+       * @category ui
        */
       autoPlacement: {
         type: Boolean,
@@ -342,7 +370,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will behave as a modal dialog when in a desktop viewport size.
+       * Makes the open bib act as a modal dialog when it isn't fullscreen.
+       * Keyboard focus stays in the bib, and the rest of the page can't be used until the bib closes.
+       * @category ui
        */
       desktopModal: {
         type: Boolean,
@@ -351,7 +381,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will only show by calling the API .show() public method.
+       * Stops the trigger from opening or closing the bib, so the bib opens only when you call `show()`.
+       * @category behavior
        */
       disableEventShow: {
         type: Boolean,
@@ -360,7 +391,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, applies a border around the trigger slot.
+       * Removes the trigger's border, background, and shadow.
+       * Applies only when `shape` and `size` are both set.
+       * @category ui
        */
       simple: {
         type: Boolean,
@@ -368,7 +401,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown displays a chevron on the right.
+       * Shows a chevron after the trigger content that points up while the bib is open and down while it's closed.
+       * @category ui
        */
       chevron: {
         type: Boolean,
@@ -377,7 +411,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown is not interactive.
+       * Turns the dropdown off.
+       * The trigger is shown in a muted style and can't open the bib, and an open bib closes.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -385,7 +421,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior.
+       * Stops the dropdown from handling Enter and Space on the trigger, and Escape while the bib isn't fullscreen, so you can handle those keys yourself.
+       * Set it before the dropdown first renders, because changing it later has no effect until the dropdown is removed from the page and added again.
+       * @category behavior
        */
       disableKeyboardHandling: {
         type: Boolean,
@@ -394,7 +432,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Sets the width of the dropdown bib in pixels.
+       * Sets the width of the bib in pixels.
+       * The dropdown doesn't currently apply this value to the bib itself.
+       * @category ui
        */
       dropdownWidth: {
         type: Number,
@@ -402,7 +442,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * The unique ID for the dropdown bib element.
+       * Sets the ID of the bib that the trigger's `aria-controls` points to.
        * @private
        */
       dropdownId: {
@@ -412,7 +452,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, will apply error UI to the dropdown.
+       * Shows the trigger in an error style.
+       * Doesn't show a message, so put one in the `helpText` slot.
+       * @category behavior
        */
       error: {
         type: Boolean,
@@ -420,7 +462,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Contains the help text message for the current validity error.
+       * Sets the message for the current validation error.
+       * The dropdown doesn't currently show this message; put the text in the `helpText` slot to show it.
+       * @category behavior
        */
       errorMessage: {
         type: String,
@@ -428,7 +472,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the bib will display when focus is applied to the trigger.
+       * Opens the bib when the trigger gets focus.
+       * @category behavior
        */
       focusShow: {
         type: Boolean,
@@ -437,7 +482,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If true, the dropdown bib is displayed.
+       * Marks the bib as open, and reflects as the `open` attribute.
+       * To open or close the bib, call `show()` or `hide()` instead of setting this directly.
+       * @category behavior
        */
       isPopoverVisible: {
         type: Boolean,
@@ -446,7 +493,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If true, the dropdown bib is taking the fullscreen when it's open.
+       * Marks the bib as fullscreen.
+       * The dropdown sets this itself from `fullscreenBreakpoint` and the screen width.
+       * @category behavior
        */
       isBibFullscreen: {
         type: Boolean,
@@ -455,7 +504,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
+       * Opens the bib when the pointer moves onto the trigger and closes it when the pointer leaves.
+       * Doesn't currently work as an HTML attribute, because the dropdown clears it when it first renders; set the property in JavaScript after that instead.
+       * @category behavior
        */
       hoverToggle: {
         type: Boolean,
@@ -472,12 +523,10 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
+       * Sets the screen width, such as `sm`, at or below which the open bib fills the screen as a modal dialog.
+       * When not set, or set to `disabled`, the bib never goes fullscreen.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
-       * @default 'sm'
+       * @category ui
        */
       fullscreenBreakpoint: {
         type: String,
@@ -486,9 +535,11 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Sets the layout of the dropdown.
+       * Sets the trigger's overall style.
+       * Use `classic` for the standard look, and `emphasized` or `snowflake` only on dark backgrounds.
+       * When not set, the classic layout styles aren't applied, so set `classic` explicitly.
        * @type {'classic' | 'emphasized' | 'snowflake'}
-       * @default 'classic'
+       * @category ui
        */
       layout: {
         type: String,
@@ -497,8 +548,12 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Sets the shape of the dropdown.
+       * Sets the shape of the trigger.
+       * Applies only when `size` is also set.
+       * Match it to the layout: `classic` for the `classic` layout; `pill`, `pill-left`, or `pill-right` for the `emphasized` layout; and `snowflake` for the `snowflake` layout.
+       * @relevantWhen size !== undefined
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @category ui
        */
       shape: {
         type: String,
@@ -507,8 +562,12 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Sets the size of the dropdown.
+       * Sets the height of the trigger, from `xs`, the shortest, to `xl`, the tallest.
+       * Applies only when `shape` is also set.
+       * The `classic` and `snowflake` shapes have a fixed height, so `size` doesn't change them.
+       * @relevantWhen shape !== undefined
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @category ui
        */
       size: {
         type: String,
@@ -517,7 +576,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Defines if the trigger should size based on the parent element providing the border UI.
+       * Removes the trigger's border and shadow and shortens it to fit inside a parent element that draws the border.
+       * Applies only when `shape` and `size` are both set.
        * @private
        */
       parentBorder: {
@@ -527,7 +587,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the popover and trigger will be set to the same width.
+       * Makes the bib the same width as the trigger.
+       * @category ui
        */
       matchWidth: {
         type: Boolean,
@@ -536,8 +597,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Keeps the bib at its `placement` when there isn't enough space, instead of flipping it to the opposite side.
+       * @category ui
        */
       noFlip: {
         type: Boolean,
@@ -546,7 +607,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Slides the bib along the trigger's edge to keep it inside the viewport.
+       * @category ui
        */
       shift: {
         type: Boolean,
@@ -554,7 +616,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will not hide when moving focus outside the element.
+       * Keeps the bib open when focus moves outside the dropdown.
+       * Clicking outside the dropdown or pressing Escape still closes it.
+       * @category behavior
        */
       noHideOnThisFocusLoss: {
         type: Boolean,
@@ -563,7 +627,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the trigger will only show the dropdown bib.
+       * Makes the trigger only open the bib, not close it.
+       * Pressing Escape or moving focus away still closes the bib.
+       * @category behavior
        */
       noToggle: {
         type: Boolean,
@@ -572,8 +638,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Gap between the trigger element and bib.
+       * Sets the gap between the trigger and the bib in pixels, such as `8`.
        * @default 0
+       * @category ui
        */
       offset: {
         type: Number,
@@ -581,8 +648,10 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the dropdown in colors designed for dark backgrounds.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -591,8 +660,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       *  If declared, and a function is set, that function will execute when the slot content is updated.
+       * Sets a function to call when the content in the default slot changes.
        * @type {() => void}
+       * @category behavior
        */
       onSlotChange: {
         type: Function,
@@ -601,9 +671,11 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
+       * Sets where the bib opens relative to the trigger, such as `bottom-start` for below the trigger, lined up with its start edge.
+       * The bib flips to the opposite side when there isn't room, unless `noFlip` is set.
        * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
        * @default 'bottom-start'
+       * @category ui
        */
       placement: {
         type: String,
@@ -611,7 +683,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Sets the tabindex applied to the dropdown trigger for keyboard focus order.
+       * Sets the trigger's position in the keyboard tab order (the trigger's `tabindex`).
+       * Applies only when the `trigger` slot content isn't focusable.
+       * @category a11y
        */
       tabIndex: {
         type: Number,
@@ -619,7 +693,8 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Accessible label for the dropdown bib dialog element.
+       * Sets the accessible name of the bib's `<dialog>` element.
+       * Set by components that wrap the dropdown, such as combobox and datepicker, from their label.
        * @private
        */
       bibDialogLabel: {
@@ -651,11 +726,11 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-dropdown"] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-dropdown"] - The tag name to register the element under.
    *
    * @example
-   * AuroDropdown.register("custom-dropdown") // this will register this element to <custom-dropdown/>
+   * AuroDropdown.register("custom-dropdown") // registers the element as <custom-dropdown>
    *
    */
   static register(name = "auro-dropdown") {
@@ -663,9 +738,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Accessor for reusing the focusable entity query string.
+   * Gets the selector for the elements in the `trigger` slot whose `focus` and `blur` events the dropdown forwards to the trigger.
    * @private
-   * @returns {string}
+   * @returns {string} The CSS selector list.
    */
   get focusableEntityQuery () {
     return 'auro-input, [auro-input], auro-button, [auro-button], button, input';
@@ -772,7 +847,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Handles the custom event `auroDropdown-toggled` to update the visibility of the dropdown bib.
+   * Called when the bib opens or closes (`auroDropdown-toggled`), to update `isPopoverVisible` and, when needed, move focus back to the trigger.
    * @private
    * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
    */
@@ -837,9 +912,9 @@ export class AuroDropdown extends AuroElement {
     });
 
     /**
-     * @description Let subscribers know that the dropdown ID ha been generated and added.
+     * @description Notifies that the dropdown has an ID you can use to reference its bib.
      * @event auroDropdown-idAdded
-     * @type {CustomEvent<{ id: string }>} - Detail carries the generated ID of the dropdown bib element.
+     * @type {CustomEvent<{ id: string }>} - The detail's `id` is the dropdown's own `id`, generated when not set; the bib's ID is that value followed by `-floater-bib`.
      */
     this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
@@ -862,7 +937,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Exposes CSS parts for styling from parent components.
+   * Re-exports the `trigger`, `chevron`, `helpText`, and `size` CSS parts as `dropdownTrigger`, `dropdownChevron`, `dropdownHelpText`, and `dropdownSize`, so a component that wraps the dropdown can expose them. The `trigger` and `helpText` parts aren't currently rendered.
    * @returns {void}
    */
   exposeCssParts() {
@@ -870,10 +945,10 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Determines if content is within a custom slot.
+   * Checks whether an element is inside an element that has a `slot` attribute.
    * @private
    * @param {HTMLElement} element - The element to check.
-   * @returns {Boolean}
+   * @returns {Boolean} True if one of the element's ancestors has a `slot` attribute; false otherwise.
    */
   isCustomSlotContent(element) {
     let path = []; // eslint-disable-line prefer-const
@@ -895,7 +970,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Function to support @focusin event.
+   * Called when focus moves into the trigger, to set `hasFocus`.
    * @private
    * @return {void}
    */
@@ -1047,9 +1122,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Returns the chain of active (focused) elements through shadow roots.
+   * Gets the focused element at each level, from the document's active element down through each shadow root.
    * @private
-   * @returns {Array<HTMLElement>}
+   * @returns {Array<HTMLElement>} The focused elements, outermost first.
    */
   _getActiveElements() {
     let { activeElement } = document;
@@ -1065,7 +1140,7 @@ export class AuroDropdown extends AuroElement {
 
   /**
    * Sets `inert` on sibling elements of the dropdown's top-level host
-   * so that content outside the dropdown is not interactive while the modal is open.
+   * so that people can't interact with content outside the dropdown while the modal is open.
    * Walks up through shadow DOM boundaries to find the outermost host element
    * in the light DOM, then sets `inert` on siblings at each ancestor level
    * to ensure all page content outside the host subtree is inert.
@@ -1110,10 +1185,10 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Restores `inert` state on siblings that were tracked by `_setPageInert`.
-   * Uses reference counting so inert is only cleared when the last modal
-   * dropdown releases a given element. Preserves the original inert state
-   * so externally-inerted elements are not inadvertently re-enabled.
+   * Restores the `inert` state of the siblings that `_setPageInert` changed.
+   * Uses reference counting so `inert` is cleared only when the last modal
+   * dropdown releases a given element. Keeps each element's original `inert` state,
+   * so elements that something else made inert stay inert.
    * @private
    */
   _clearPageInert() {
@@ -1134,7 +1209,8 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Function to support @focusout event.
+   * Clears `hasFocus` when focus leaves the trigger.
+   * Not currently called, because the trigger's `blur` listener refers to `handleFocusOut`, which doesn't exist.
    * @private
    * @return {void}
    */
@@ -1143,9 +1219,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Creates and dispatches a duplicate focus event on the trigger element.
+   * Called when an element in the `trigger` slot gains or loses focus, to dispatch a matching `focus` or `blur` event on the trigger.
    * @private
-   * @param {Event} event - The original focus event.
+   * @param {Event} event - The original `focus` or `blur` event.
    */
   bindFocusEventToTrigger(event) {
     const dupEvent = new FocusEvent(event.type, {
@@ -1157,8 +1233,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Sets up event listeners to deliver focus and blur events from nested Auro components within the trigger slot to trigger.
-   * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
+   * Adds listeners that forward `focus` and `blur` events from inputs and buttons in the `trigger` slot, including `auro-input` and `auro-button`, to the trigger.
    * @private
    */
   setupTriggerFocusEventBinding() {
@@ -1178,7 +1253,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Clears focus and blur event listeners from nested Auro components within the trigger slot.
+   * Removes the `focus` and `blur` listeners that `setupTriggerFocusEventBinding` added.
    * @private
    * @returns {void}
    */
@@ -1198,11 +1273,10 @@ export class AuroDropdown extends AuroElement {
     });
   }
 
-  /*
-   * Sets aria attributes for the trigger element if a custom one is passed in.
+  /**
+   * Removes the ARIA attributes the dropdown adds to the trigger, such as `role` and `aria-expanded`, because focusable trigger content provides its own.
    * @private
-   * @method setTriggerAriaAttributes
-   * @param { HTMLElement } triggerElement - The custom trigger element.
+   * @param {HTMLElement} triggerElement - The trigger element to clear.
    */
   clearTriggerA11yAttributes(triggerElement) {
 
@@ -1223,15 +1297,14 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Handles changes to the trigger content slot and updates related properties.
+   * Called when the content in the `trigger` slot changes, and again after some updates, such as when the bib opens or closes.
    *
-   * It first updates the floater settings
-   * Then, it retrieves the assigned nodes from the event target and checks if any of
-   * the nodes contain non-empty text content, updating the `hasTriggerContent` property accordingly.
+   * Sets the trigger's `tabindex` and ARIA attributes based on whether the content is focusable,
+   * forwards focus events from that content to the trigger, and sets `hasTriggerContent` when the content has text.
    *
    * @private
    * @method handleTriggerContentSlotChange
-   * @param {Event} event - Native slotchange event.
+   * @param {Event} [event] - The `slotchange` event, when the slot content changed.
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
@@ -1301,11 +1374,7 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Handles the default slot change event and updates the content.
-   *
-   * This method retrieves all nodes assigned to the default slot of the event target and appends them
-   * to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to
-   * notify about the slot change.
+   * Called when the content in the default slot changes, to call `onSlotChange` when it's set.
    *
    * @private
    * @method handleDefaultSlot
@@ -1319,10 +1388,10 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Returns HTML for the common portion of the layouts.
+   * Renders the markup that every layout shares: the trigger, the help text, and the bib.
    * @private
-   * @param {Object} helpTextClasses - Classes to apply to the help text container.
-   * @returns {html} - Returns HTML.
+   * @param {Object} helpTextClasses - The classes to apply to the help text container.
+   * @returns {html} - The template for the shared markup.
    */
   renderBasicHtml(helpTextClasses) {
     return html`
@@ -1382,9 +1451,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Returns HTML for the classic layout. Does not support type="*".
+   * Renders the classic layout.
    * @private
-   * @returns {html} - Returns HTML for the classic layout.
+   * @returns {html} - The template for the classic layout.
    */
   renderLayoutClassic() {
     // TODO: check with Doug why this was never used?
@@ -1398,9 +1467,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Returns HTML for the snowflake layout. Does not support type="*".
+   * Renders the snowflake layout, which indents the help text on both sides.
    * @private
-   * @returns {html} - Returns HTML for the snowflake layout.
+   * @returns {html} - The template for the snowflake layout.
    */
   renderLayoutSnowflake() {
     const helpTextClasses = {
@@ -1415,9 +1484,9 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Returns HTML for the emphasized layout. Does not support type="*".
+   * Renders the emphasized layout, which indents the help text on the rounded sides of a `pill` shape.
    * @private
-   * @returns {html} - Returns HTML for the emphasized layout.
+   * @returns {html} - The template for the emphasized layout.
    */
   renderLayoutEmphasized() {
     const helpTextClasses = {
@@ -1432,10 +1501,10 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Logic to determine the layout of the component.
+   * Renders the layout that `layout` sets, or the classic layout when it isn't set or isn't recognized.
    * @private
-   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
-   * @returns {HTMLCollection} - Returns the HTML for the layout.
+   * @param {string} [ForcedLayout] - The layout to render instead of `layout`, such as `emphasized`.
+   * @returns {HTMLCollection} - The template for the layout.
    */
   renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;

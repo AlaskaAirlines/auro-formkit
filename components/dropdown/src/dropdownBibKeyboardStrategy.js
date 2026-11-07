@@ -1,8 +1,8 @@
 /**
- * Creates a keyboard strategy for dialog-specific key handling.
- * All other keydown behavior is left to the browser's native bubbling path.
+ * Creates the keyboard strategy for the bib's dialog.
+ * Its `Enter` and `Escape` handlers do nothing, because the dropdown's floating UI handles those keys, and all other keys keep the browser's default behavior.
  * @param {HTMLElement} bib - The dropdown bib element.
- * @returns {Object} Keyboard handlers keyed by `event.key`.
+ * @returns {Object} The keyboard handlers, keyed by `event.key`.
  */
 // eslint-disable-next-line no-unused-vars
 export function createDropdownBibKeyboardStrategy(bib) {

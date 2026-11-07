@@ -28,11 +28,10 @@ const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
 ];
 
 /**
- * The `auro-dropdownbib` element renders the dropdown's bib as a dialog/popover container and manages its fullscreen and modal display.
- * @prop { String } fullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
- * @csspart bibContainer - Apply css to the bib container.
- * @event auro-dropdownbib-connected - Notifies that the dropdown bib has connected to the DOM, passing a reference to the element in the event detail.
- * @event auro-bib-cancel - Notifies that the bib was cancelled (e.g. via the ESC key) so parent components can close it.
+ * The panel that holds a dropdown's content, shown as a floating popover or, on small screens, as a fullscreen modal dialog.
+ * @csspart bibContainer - The `<dialog>` element that holds the bib content.
+ * @event auro-dropdownbib-connected - Notifies that the bib has rendered for the first time. The detail's `element` is the bib.
+ * @event auro-bib-cancel - Notifies that the bib was dismissed, such as with the Escape key, so a parent component can close it.
  */
 
 export class AuroDropdownBib extends LitElement {
@@ -56,6 +55,10 @@ export class AuroDropdownBib extends LitElement {
   // The `shape` default is set in a helper (not the constructor body) so the CEM
   // analyzer keeps its `@type` union instead of inferring `string` from a
   // constructor-literal assignment. See AlaskaAirlines/discussions#653.
+  /**
+   * Sets the bib's default `shape`, `rounded`.
+   * @returns {void}
+   */
   initializeArchitectureDefaults() {
     this.shape = "rounded";
   }
@@ -72,7 +75,8 @@ export class AuroDropdownBib extends LitElement {
     return {
 
       /**
-       * If declared, will take the fullscreen when the bib is displayed.
+       * Shows the bib fullscreen.
+       * The dropdown sets this itself from its `fullscreenBreakpoint` and the screen width.
        */
       isFullscreen: {
         type: Boolean,
@@ -81,7 +85,8 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * If declared, will apply all styles for the common theme.
+       * Rounds the bib's corners when it isn't fullscreen, and removes the corners and shadow when it is.
+       * Has the same effect as `rounded`.
        */
       common: {
         type: Boolean,
@@ -89,7 +94,7 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * If declared, will apply extra padding to bib content.
+       * Doesn't currently change the bib, because no styles use it.
        */
       inset: {
         type: Boolean,
@@ -97,7 +102,8 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * If declared, the bib width will match the trigger width.
+       * Lets the bib be narrower than its content, by removing its `fit-content` minimum width.
+       * The dropdown doesn't set this; its own `matchWidth` sizes the bib to the trigger.
        * @private
        */
       matchWidth: {
@@ -107,7 +113,7 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * If declared, will apply border-radius to the bib.
+       * Rounds the bib's corners when it isn't fullscreen, and removes the corners and shadow when it is.
        */
       rounded: {
         type: Boolean,
@@ -115,7 +121,8 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * A reference to the associated bib template element.
+       * Sets the `auro-bibtemplate` element inside the bib.
+       * The bib sets this itself when the template connects, and keeps the template's fullscreen state in sync with its own.
        */
       bibTemplate: {
         type: Object,
@@ -123,8 +130,10 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * Sets the shape of the dropdown bib.
-       * @type {'box' | 'classic' | 'pill' | 'rounded' | 'snowflake'}
+       * Sets the shape of the bib's corners when it isn't fullscreen.
+       * `box` has square corners, `classic` has slightly rounded corners, `rounded` has rounder corners, and the `pill` and `snowflake` shapes have the roundest corners.
+       * The dropdown passes its own `shape` to the bib.
+       * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'rounded'
        */
       shape: {
@@ -134,10 +143,10 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * Accessible label for the dialog element, used when displayed as a modal.
-       * Applied via aria-labelledby on a visually hidden element rather than
-       * aria-label because iOS VoiceOver does not reliably read aria-label
-       * on <dialog> elements.
+       * Sets the accessible name of the bib's `<dialog>` element.
+       * Applied with `aria-labelledby` on a visually hidden element instead of
+       * `aria-label`, because iOS VoiceOver doesn't reliably read `aria-label`
+       * on `<dialog>` elements.
        * @private
        */
       dialogLabel: {
@@ -146,10 +155,9 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * Overrides the native role of the dialog element.
-       * For example, set to `"presentation"` on desktop combobox to prevent
-       * VoiceOver from announcing "listbox inside of a dialog".
-       * When `undefined`, the dialog keeps its native role.
+       * Sets the role of the bib's `<dialog>` element, such as `presentation` on a
+       * desktop combobox, so VoiceOver doesn't announce "listbox inside of a dialog".
+       * When not set, the dialog keeps its native role.
        * @private
        */
       dialogRole: {
@@ -158,7 +166,8 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * Tracks whether a menu option is currently highlighted.
+       * Marks that an option is highlighted while the bib is fullscreen.
+       * The dropdown sets it, but nothing currently reads it.
        * @private
        */
       hasActiveDescendant: {
@@ -168,6 +177,11 @@ export class AuroDropdownBib extends LitElement {
     };
   }
 
+  /**
+   * Sets the screen width, such as `sm`, at or below which the bib goes fullscreen.
+   * Accepts `xs`, `sm`, `md`, `lg`, or `xl`; any other value, such as `disabled`, turns fullscreen off.
+   * Reading it returns that breakpoint's pixel width from the design tokens, such as `576px`.
+   */
   set mobileFullscreenBreakpoint(value) {
     // verify the defined breakpoint is valid and exit out if not
     // 'disabled' is a design token breakpoint so it acts as our "undefined" value
@@ -272,8 +286,8 @@ export class AuroDropdownBib extends LitElement {
    * The showModal() function places the dialog in the browser's **top layer**,
    * which is a separate rendering layer above the normal DOM. On mobile, the
    * compositor processes visual-viewport panning before top-layer touch
-   * handling. This means the entire viewport — including the top-layer dialog
-   * — can be panned by a touch gesture, causing the page behind the dialog to
+   * handling. This means the entire viewport, including the top-layer dialog,
+   * can be panned by a touch gesture, causing the page behind the dialog to
    * scroll into view. To prevent this, we add a touchmove listener that cancels
    * the event if the touch started outside the dialog or any scrollable child within it.
    *
@@ -316,6 +330,11 @@ export class AuroDropdownBib extends LitElement {
     }
   }
 
+  /**
+   * Opens the bib, unless it's already open.
+   * @param {boolean} [modal=true] - If true, opens the bib as a modal dialog that blocks the rest of the page. If false, opens it as a popover that doesn't block the page or move focus.
+   * @returns {void}
+   */
   open(modal = true) {
     const dialog = this.shadowRoot.querySelector('dialog');
 
@@ -357,7 +376,8 @@ export class AuroDropdownBib extends LitElement {
   }
 
   /**
-   * Closes the dialog.
+   * Closes the bib, whether it's open as a modal dialog or as a popover.
+   * @returns {void}
    */
   close() {
     this.hasActiveDescendant = false;

@@ -1,12 +1,15 @@
 <auro-header level="1">CSS only with native disclosure</auro-header>
 
-<p>For situations where the <code>&lt;auro-dropdown&gt;</code> web component cannot be used, a native HTML <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-dropdown</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.dropdown</code> class, so the styling must be authored manually using Auro design tokens.</p>
+<p>When you can't use the <code>&lt;auro-dropdown&gt;</code> web component, style a native HTML <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> element with Auro Design System tokens to approximate its look. <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.dropdown</code> class, as it does for <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, so write the styles yourself with Auro design tokens.</p>
 
 <auro-header level="2">Styling a native disclosure</auro-header>
 
-<p>The native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pair can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the trigger border, spacing, and panel colors used by <code>auro-dropdown</code>.</p>
+<p>Reset and restyle the native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pair with the Auro design tokens published by <auro-hyperlink href="https://www.npmjs.com/package/@aurodesignsystem/design-tokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the trigger border, spacing, and panel colors used by <code>auro-dropdown</code>.</p>
 
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size, border-radius, and typography tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
 .dropdown {
   position: relative;
@@ -20,10 +23,10 @@
   align-items: center;
   gap: var(--ds-size-100, 0.5rem);
   padding: var(--ds-size-100, 0.5rem) var(--ds-size-150, 0.75rem);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
+  border: 1px solid var(--ds-basic-color-border-bold, #585e67);
   border-radius: var(--ds-border-radius, 4px);
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  color: var(--ds-color-text-primary-default, #1d1d1d);
+  background-color: var(--ds-basic-color-surface-default, #ffffff);
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
   font-family: var(--ds-font-family-default, sans-serif);
 }
 
@@ -46,7 +49,7 @@
 }
 
 .dropdown &gt; summary:focus-visible {
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
+  outline: 2px solid var(--ds-basic-color-border-brand, #00274a);
   outline-offset: 2px;
 }
 
@@ -57,9 +60,9 @@
   z-index: 1;
   min-width: 100%;
   padding: var(--ds-size-100, 0.5rem);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
+  border: 1px solid var(--ds-basic-color-border-bold, #585e67);
   border-radius: var(--ds-border-radius, 4px);
-  background-color: var(--ds-color-container-primary-default, #ffffff);
+  background-color: var(--ds-basic-color-surface-default, #ffffff);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 </code></pre>
@@ -92,19 +95,19 @@
 
 <auro-header level="2">What you lose without auro-dropdown</auro-header>
 
-<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-dropdown</code>, the following functionality built into the <code>auro-dropdown</code> web component is <strong>not available</strong> when using plain HTML:</p>
+<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-dropdown</code>, the following functionality built into the <code>auro-dropdown</code> web component <strong>isn't available</strong> when you use plain HTML:</p>
 
-<auro-header level="3">Floating-UI positioning</auro-header>
+<auro-header level="3">Floating UI positioning</auro-header>
 
-<p><code>auro-dropdown</code> uses Floating UI to position the bib relative to the trigger and supports a <code>placement</code> attribute with twelve values (<code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>, and their <code>-start</code>/<code>-end</code> variants). A native <code>&lt;details&gt;</code> panel is absolutely positioned by the author and does not adapt to alternate placements without additional CSS for each case.</p>
+<p><code>auro-dropdown</code> uses Floating UI to position the bib relative to the trigger and supports a <code>placement</code> attribute with twelve values (<code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>, and their <code>-start</code>/<code>-end</code> variants). A native <code>&lt;details&gt;</code> panel is absolutely positioned by the author and doesn't adapt to alternate placements without additional CSS for each case.</p>
 
-<auro-header level="3">Auto-placement and flip</auro-header>
+<auro-header level="3">Flip to stay on-screen</auro-header>
 
-<p><code>auro-dropdown</code> exposes <code>autoPlacement</code> and the inverse <code>noFlip</code> option so the bib can automatically pick the side of the trigger with the most available space and flip when it would otherwise be clipped by the viewport. A CSS-only panel stays where it is authored and will overflow the viewport when there is not enough room.</p>
+<p><code>auro-dropdown</code> flips the bib to the opposite side of the trigger when it would otherwise be clipped by the viewport. Set <code>noFlip</code> to keep the bib at its <code>placement</code>. A CSS-only panel stays where it's authored and overflows the viewport when there isn't enough room.</p>
 
 <auro-header level="3">Shift to stay on-screen</auro-header>
 
-<p><code>auro-dropdown</code> supports a <code>shift</code> attribute that nudges the bib along its axis so it remains fully visible inside the viewport. Native disclosures have no equivalent — a panel positioned with CSS that runs past the viewport edge is simply clipped or causes horizontal scroll.</p>
+<p><code>auro-dropdown</code> supports a <code>shift</code> attribute that nudges the bib along its axis so it remains fully visible inside the viewport. Native disclosures have no equivalent: a panel positioned with CSS that runs past the viewport edge is simply clipped or causes horizontal scroll.</p>
 
 <auro-header level="3">Match-width and offset control</auro-header>
 
@@ -112,35 +115,35 @@
 
 <auro-header level="3">Mobile fullscreen behavior</auro-header>
 
-<p><code>auro-dropdown</code> supports a <code>fullscreenBreakpoint</code> (defaulting to <code>sm</code>) that switches the bib into a fullscreen presentation on small viewports, and a <code>desktopModal</code> option for modal behavior on larger viewports. Native <code>&lt;details&gt;</code> has no responsive presentation — the panel renders the same way on every screen size.</p>
+<p><code>auro-dropdown</code> supports a <code>fullscreenBreakpoint</code>, such as <code>sm</code>, that switches the bib into a fullscreen presentation at or below that screen width, and a <code>desktopModal</code> option for modal behavior on larger viewports. Native <code>&lt;details&gt;</code> has no responsive presentation: the panel renders the same way on every screen size.</p>
 
 <auro-header level="3">Hover trigger</auro-header>
 
-<p><code>auro-dropdown</code> supports a <code>hoverToggle</code> attribute that opens the bib on mouseover and closes it on mouseout. Native <code>&lt;details&gt;</code> only responds to click on the <code>&lt;summary&gt;</code>; hover-to-open requires custom JavaScript.</p>
+<p><code>auro-dropdown</code> supports a <code>hoverToggle</code> property that opens the bib on mouseover and closes it on mouseout. It doesn't currently work as an HTML attribute, so set it in JavaScript after the dropdown renders. Native <code>&lt;details&gt;</code> only responds to click on the <code>&lt;summary&gt;</code>; hover-to-open requires custom JavaScript.</p>
 
 <auro-header level="3">Focus management</auro-header>
 
-<p><code>auro-dropdown</code> provides a <code>focus()</code> method that moves focus to the first focusable element inside the bib when it is open, or to the trigger when it is closed. It also supports <code>focusShow</code> to open the bib on trigger focus. Native <code>&lt;details&gt;</code> leaves focus on the <code>&lt;summary&gt;</code> after toggle and offers no built-in focus-into-panel behavior.</p>
+<p><code>auro-dropdown</code> provides a <code>focus()</code> method that moves focus to the first focusable element inside the bib when it's open, or to the trigger when it's closed. It also supports <code>focusShow</code> to open the bib on trigger focus. Native <code>&lt;details&gt;</code> leaves focus on the <code>&lt;summary&gt;</code> after toggle and offers no built-in focus-into-panel behavior.</p>
 
 <auro-header level="3">Click-outside and focus-loss dismissal</auro-header>
 
-<p><code>auro-dropdown</code> closes the bib when the user clicks outside the component or moves focus out of it, and exposes <code>noHideOnThisFocusLoss</code> to opt out. Native <code>&lt;details&gt;</code> stays open until the <code>&lt;summary&gt;</code> is clicked again — click-outside and focus-out dismissal must be wired up manually.</p>
+<p><code>auro-dropdown</code> closes the bib when people click outside the component or move focus out of it, and exposes <code>noHideOnThisFocusLoss</code> to opt out. Native <code>&lt;details&gt;</code> stays open until the <code>&lt;summary&gt;</code> is clicked again, so click-outside and focus-out dismissal must be wired up manually.</p>
 
 <auro-header level="3">Keyboard handling</auro-header>
 
-<p><code>auro-dropdown</code> includes a keyboard strategy for arrow-key navigation, <code>Escape</code> to close, and <code>Tab</code> behavior coordinated with the bib contents, and lets consumers opt out via <code>disableKeyboardHandling</code>. Native <code>&lt;details&gt;</code> only toggles on <code>Enter</code>/<code>Space</code> on the <code>&lt;summary&gt;</code> and offers no panel-internal keyboard model.</p>
+<p><code>auro-dropdown</code> opens and closes the bib with <code>Enter</code> and <code>Space</code> on the trigger, closes it with <code>Escape</code>, and coordinates <code>Tab</code> behavior with the bib contents. Set <code>disableKeyboardHandling</code> to handle the trigger keys yourself. Native <code>&lt;details&gt;</code> only toggles on <code>Enter</code>/<code>Space</code> on the <code>&lt;summary&gt;</code> and offers no panel-internal keyboard model.</p>
 
 <auro-header level="3">ARIA wiring</auro-header>
 
-<p><code>auro-dropdown</code> sets an <code>a11yRole</code> on the trigger, manages <code>aria-expanded</code>, and emits an <code>auroDropdown-idAdded</code> event so consumers can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but does not expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
+<p><code>auro-dropdown</code> sets a role on the trigger with <code>a11yRole</code>, manages <code>aria-expanded</code> and <code>aria-controls</code> for roles other than the default <code>button</code>, such as <code>combobox</code>, and emits an <code>auroDropdown-idAdded</code> event so consumers can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but doesn't expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
 
 <auro-header level="3">Chevron indicator</auro-header>
 
-<p><code>auro-dropdown</code> supports a <code>chevron</code> attribute that renders a collapsed/expanded indicator with the correct rotation and design-token color. With native HTML you must author the indicator yourself — the example above uses a background-image SVG and a <code>[open]</code> selector to rotate it.</p>
+<p><code>auro-dropdown</code> supports a <code>chevron</code> attribute that renders a collapsed/expanded indicator with the correct rotation and design-token color. With native HTML you must author the indicator yourself: the example above uses a background-image SVG and a <code>[open]</code> selector to rotate it.</p>
 
 <auro-header level="3">Error and help-text presentation</auro-header>
 
-<p><code>auro-dropdown</code> exposes <code>error</code>, <code>errorMessage</code>, and a <code>helpText</code> slot that renders supporting text below the trigger with the correct error styling. Native <code>&lt;details&gt;</code> has no concept of error state or help text — both must be authored and toggled manually.</p>
+<p><code>auro-dropdown</code> exposes <code>error</code>, which shows the trigger in an error style, and a <code>helpText</code> slot that renders supporting text below the trigger. Native <code>&lt;details&gt;</code> has no concept of error state or help text, so both must be authored and toggled manually.</p>
 
 <auro-header level="3">Imperative show/hide and toggle events</auro-header>
 
@@ -148,7 +151,7 @@
 
 <auro-header level="3">Multi-brand theming</auro-header>
 
-<p><code>auro-dropdown</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only disclosure is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does.</p>
+<p>Both <code>auro-dropdown</code> and the CSS above read Auro design tokens through CSS custom properties, so both follow the brand theme whose token file you load. The difference is upkeep: the component's styles update with the package, while you maintain the CSS-only styles yourself.</p>
 
 <auro-header level="2">Summary</auro-header>
 
@@ -177,9 +180,9 @@
       <td>12 <code>placement</code> values</td>
     </tr>
     <tr>
-      <td>Auto-placement and flip</td>
+      <td>Flip</td>
       <td>Not supported</td>
-      <td><code>autoPlacement</code> / <code>noFlip</code></td>
+      <td>Automatic; disable with <code>noFlip</code></td>
     </tr>
     <tr>
       <td>Shift to stay on-screen</td>
@@ -224,7 +227,7 @@
     <tr>
       <td>Keyboard model</td>
       <td><code>Enter</code>/<code>Space</code> on summary only</td>
-      <td>Arrow / <code>Escape</code> / <code>Tab</code> strategy</td>
+      <td><code>Enter</code> / <code>Space</code> / <code>Escape</code> / <code>Tab</code></td>
     </tr>
     <tr>
       <td>ARIA wiring</td>
@@ -239,7 +242,7 @@
     <tr>
       <td>Error / help text</td>
       <td>Manual</td>
-      <td><code>error</code>, <code>errorMessage</code>, <code>helpText</code> slot</td>
+      <td><code>error</code>, <code>helpText</code> slot</td>
     </tr>
     <tr>
       <td>Imperative show / hide</td>
@@ -253,12 +256,12 @@
     </tr>
     <tr>
       <td>Multi-brand theming</td>
-      <td>Static (import-time tokens)</td>
-      <td>Full (design tokens + component logic)</td>
+      <td>Follows the loaded tokens; you maintain the CSS</td>
+      <td>Follows the loaded tokens; styles maintained in the component</td>
     </tr>
   </tbody>
 </table>
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-dropdown</code> whenever possible. Fall back to a CSS-styled native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and be prepared to reimplement positioning, focus management, click-outside dismissal, keyboard behavior, and responsive presentation yourself.</p>
+<p>Use <code>auro-dropdown</code> whenever possible. Fall back to a CSS-styled native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> only in environments that don't support custom elements or when integrating with third-party systems that require plain HTML, and be prepared to reimplement positioning, focus management, click-outside dismissal, keyboard behavior, and responsive presentation yourself.</p>

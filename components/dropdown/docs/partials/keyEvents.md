@@ -3,8 +3,8 @@
     <tr>
       <th>Key</th>
       <th>Modifier</th>
-      <th>Current State</th>
-      <th>Focus Element</th>
+      <th>Current state</th>
+      <th>Focus element</th>
       <th>Behavior</th>
     </tr>
   </thead>
@@ -40,7 +40,7 @@
       <td>-</td>
       <td>Collapsed</td>
       <td>
-        Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger, except an <code>&lt;input&gt;</code>.
       </td>
       <td>Opens the bib.</td>
     </tr>
@@ -48,7 +48,7 @@
       <td>-</td>
       <td>Expanded</td>
       <td>
-        Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger, except an <code>&lt;input&gt;</code>.
       </td>
       <td>Closes the bib.</td>
     </tr>
