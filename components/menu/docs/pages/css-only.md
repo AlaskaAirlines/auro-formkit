@@ -1,46 +1,51 @@
 <auro-header level="1">CSS only with native listbox</auro-header>
 
-<p>For situations where the <code>&lt;auro-menu&gt;</code> web component cannot be used, a native HTML <code>&lt;ul role="listbox"&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-menu</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.menu</code> class, so the styling must be authored manually using Auro design tokens. For very simple single-select use cases, a native <code>&lt;select&gt;</code> may also be an acceptable fallback, but it does not match the menu/listbox semantics as closely as a styled <code>&lt;ul&gt;</code>.</p>
+<p>For situations where the <code>&lt;auro-menu&gt;</code> web component can't be used, a native HTML <code>&lt;ul role="listbox"&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-menu</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.menu</code> class, so you write the styles yourself with Auro design tokens. For very simple single-select use cases, a native <code>&lt;select&gt;</code> may also be an acceptable fallback, but it doesn't match the menu/listbox semantics as closely as a styled <code>&lt;ul&gt;</code>.</p>
 
 <auro-header level="2">Styling a native listbox</auro-header>
 
-<p>A native <code>&lt;ul&gt;</code> can be given <code>role="listbox"</code> (or <code>role="menu"</code>) and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the spacing, hover, focus, and selected-state colors used by <code>auro-menu</code>.</p>
+<p>A native <code>&lt;ul&gt;</code> can be given <code>role="listbox"</code> (or <code>role="menu"</code>) and restyled with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below uses the same tokens as <code>auro-menu</code> for spacing and for the hover, focus, selected, and disabled states. It matches a menu with <code>nocheckmark</code> set, because it doesn't draw a checkmark.</p>
 
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
 .menu {
   list-style: none;
   margin: 0;
-  padding: var(--ds-size-100, 0.5rem) 0;
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
-  border-radius: var(--ds-border-radius, 4px);
+  padding: 0;
 }
 
 .menu__option {
-  padding: var(--ds-size-100, 0.5rem) var(--ds-size-200, 1rem);
-  color: var(--ds-color-text-primary-default, #1d1f24);
+  height: var(--ds-size-400, 2rem);
+  padding: 0 var(--ds-size-200, 1rem) 0 var(--ds-size-150, 0.75rem);
+  line-height: var(--ds-size-400, 2rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
   cursor: pointer;
   user-select: none;
 }
 
 .menu__option:hover {
-  background-color: var(--ds-color-container-ui-hover-default, #f0f5ff);
+  background-color: var(--ds-basic-color-surface-accent1-muted, #ebfafd);
 }
 
 .menu__option:focus-visible {
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
-  outline-offset: -2px;
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #00274a);
 }
 
 .menu__option[aria-selected="true"] {
-  background-color: var(--ds-color-container-ui-selected-default, #01426a);
-  color: var(--ds-color-text-inverse-default, #ffffff);
+  background-color: var(--ds-basic-color-surface-accent1-subtle, #b4eff9);
 }
 
 .menu__option[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: 0.5;
+  color: var(--ds-basic-color-texticon-disabled, #d0d0d0);
+  cursor: auto;
+  pointer-events: none;
 }
 </code></pre>
 
@@ -56,7 +61,7 @@
 
 <auro-header level="3">Listbox with a disabled option</auro-header>
 
-<p>Use <code>aria-disabled="true"</code> on individual options that should not be selectable:</p>
+<p>Use <code>aria-disabled="true"</code> on individual options that shouldn't be selectable:</p>
 
 <pre><code>&lt;ul class="menu" role="listbox" aria-label="Seat"&gt;
   &lt;li class="menu__option" role="option" tabindex="0" aria-selected="false"&gt;12A&lt;/li&gt;
@@ -66,27 +71,27 @@
 
 <auro-header level="2">What you lose without auro-menu</auro-header>
 
-<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-menu</code>, the following functionality built into the <code>auro-menu</code> and <code>auro-menuoption</code> web components is <strong>not available</strong> when using plain HTML:</p>
+<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-menu</code>, the following functionality built into the <code>auro-menu</code> and <code>auro-menuoption</code> web components <strong>isn't available</strong> when using plain HTML:</p>
 
 <auro-header level="3">Active-option tracking</auro-header>
 
-<p><code>auro-menu</code> tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving DOM focus between options. In typical integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), focus remains on the parent trigger/input and <code>aria-activedescendant</code> points at the active option; if you make <code>&lt;auro-menu&gt;</code> focusable (e.g., <code>tabindex="0"</code>), the same active-option model applies while focus is on the menu host. With plain HTML, you must pick one focus model — either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code>, or <code>aria-activedescendant</code> on the container — and wire up the DOM writes yourself on every key event.</p>
+<p><code>auro-menu</code> tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving DOM focus between options. In typical integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), focus remains on the parent trigger/input and <code>aria-activedescendant</code> points at the active option; if you make <code>&lt;auro-menu&gt;</code> focusable (for example, <code>tabindex="0"</code>), the same active-option model applies while focus is on the menu host. With plain HTML, you must pick one focus model, either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code> or <code>aria-activedescendant</code> on the container, and wire up the DOM writes yourself on every key event.</p>
 
 <auro-header level="3">Arrow-key navigation</auro-header>
 
-<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model — you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
+<p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model: you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
 
 <auro-header level="3">matchWord highlighting</auro-header>
 
-<p><code>auro-menu</code> supports a <code>matchWord</code> attribute that highlights matched substrings within option labels — used by <code>auro-combobox</code> to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
+<p><code>auro-menu</code> supports a <code>matchword</code> attribute (the <code>matchWord</code> property) that highlights matched substrings within option labels. <code>auro-combobox</code> uses it to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
 
 <auro-header level="3">Type-ahead navigation</auro-header>
 
-<p>Type-ahead — jumping the active option to whichever entry starts with the letters the user typed — is <strong>not</strong> handled by <code>auro-menu</code> itself. It is provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
+<p>Type-ahead, which moves the active option to whichever entry starts with the letters the user typed, <strong>isn't</strong> handled by <code>auro-menu</code> itself. It's provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
 
 <auro-header level="3">Nested submenu support</auro-header>
 
-<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. The root menu treats all descendant options as a single flat list, so selecting an option inside a nested menu updates the root menu's <code>value</code> and <code>optionSelected</code> — the root always owns the selection state. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
+<p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. The root menu treats all descendant options as a single flat list, so selecting an option inside a nested menu updates the root menu's <code>value</code> and <code>optionSelected</code>. The root always owns the selection state. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
 
 <auro-header level="3">Selection state coordination</auro-header>
 
@@ -94,11 +99,11 @@
 
 <auro-header level="3">ARIA roles and live announcements</auro-header>
 
-<p><code>auro-menu</code> automatically applies <code>role="listbox"</code>, <code>aria-multiselectable</code>, <code>aria-busy</code> during loading, and per-option <code>role="option"</code> with <code>aria-selected</code> and <code>aria-disabled</code>. Plain HTML requires you to author every one of these attributes by hand and keep them in sync with state — and to add any additional live-region announcements yourself.</p>
+<p><code>auro-menu</code> automatically applies <code>role="listbox"</code>, <code>aria-multiselectable</code>, <code>aria-busy</code> during loading, and per-option <code>role="option"</code> with <code>aria-selected</code> and <code>aria-disabled</code>. Plain HTML requires you to author every one of these attributes by hand and keep them in sync with state, and to add any additional live-region announcements yourself.</p>
 
 <auro-header level="3">Value emission and events</auro-header>
 
-<p><code>auro-menu</code> dispatches a structured set of events — <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, and <code>auroMenu-loadingChange</code> — so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
+<p><code>auro-menu</code> dispatches a structured set of events, including <code>auroMenu-selectedOption</code>, <code>auroMenu-activatedOption</code>, <code>auroMenu-optionsChange</code>, <code>auroMenu-selectValueReset</code>, <code>auroMenu-selectValueFailure</code>, and <code>auroMenu-loadingChange</code>, so parent components can react to highlight, selection, and lifecycle changes. Native listboxes emit no equivalent events; you must dispatch your own.</p>
 
 <auro-header level="3">Multi-select with array value</auro-header>
 
@@ -110,7 +115,7 @@
 
 <auro-header level="3">Select-by-value and reset</auro-header>
 
-<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (accepting a JSON-stringified array in multi-select mode) and a single <code>reset()</code> method that clears all selection and validation state. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
+<p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (accepting a JSON-stringified array in multi-select mode) and a single <code>reset()</code> method that clears the selection and the active option. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
 
 <auro-header level="3">Loading state</auro-header>
 
@@ -118,11 +123,11 @@
 
 <auro-header level="3">Shape and size variants</auro-header>
 
-<p><code>auro-menu</code> supports <code>shape</code> (<code>box</code>, <code>round</code>) and <code>size</code> (<code>sm</code>, <code>md</code>) variants that adjust spacing and corner radii consistently across the menu and its options. A CSS-only listbox must reauthor each variant by hand.</p>
+<p><code>auro-menu</code> supports <code>shape</code> (<code>box</code>, <code>pill</code>, <code>snowflake</code>) and <code>size</code> (<code>xs</code>–<code>xl</code>) variants that adjust spacing and corner radii consistently across the menu and its options. A CSS-only listbox must reauthor each variant by hand.</p>
 
 <auro-header level="3">Multi-brand theming</auro-header>
 
-<p><code>auro-menu</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only listbox is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does.</p>
+<p><code>auro-menu</code> reads Auro design tokens through CSS custom properties, such as <code>--ds-basic-color-texticon-default</code>, so it follows whichever theme stylesheet the page loads. A CSS-only listbox that uses the same tokens also follows the theme, but only for the styles you write.</p>
 
 <auro-header level="2">Summary</auro-header>
 
@@ -207,12 +212,12 @@
     </tr>
     <tr>
       <td>Multi-brand theming</td>
-      <td>Static (import-time tokens)</td>
-      <td>Full (design tokens + component logic)</td>
+      <td>Follows the theme for the tokens your CSS uses</td>
+      <td>Follows the theme</td>
     </tr>
   </tbody>
 </table>
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-menu</code> and <code>auro-menuoption</code> whenever possible. Fall back to a CSS-styled native listbox only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and be prepared to reimplement roving focus, keyboard navigation, selection coordination, and the full set of ARIA semantics yourself.</p>
+<p>Use <code>auro-menu</code> and <code>auro-menuoption</code> whenever possible. Fall back to a CSS-styled native listbox only in environments where custom elements aren't supported or when integrating with third-party systems that require plain HTML, and be prepared to reimplement roving focus, keyboard navigation, selection coordination, and the full set of ARIA semantics yourself.</p>

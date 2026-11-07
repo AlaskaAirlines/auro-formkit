@@ -20,16 +20,16 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-<p>The <code>&lt;auro-menu&gt;</code> element provides a list of options for a user to select from.</p>
-<p>A list of options is created within the <code>&lt;slot&gt;</code> of the <code>&lt;auro-menu&gt;</code> element by using the <code>&lt;auro-menuoption&gt;</code> element to define options. Use a standard <code>&lt;hr&gt;</code> element to create dividers within the list of options.</p>
-<p>The <code>&lt;auro-menu&gt;</code> element is designed for contextual menus, e.g. a dropdown menus. They are not intended to be used for navigation menus which have a different semantic meaning. The <code>&lt;auro-menu&gt;</code> element does not support hide/show functionality within its scope. This functionality will be managed by a wrapping element such as a drop-down menu composite element.</p>
+<p>The <code>&lt;auro-menu&gt;</code> element shows a list of options that people choose from.</p>
+<p>Add each option as an <code>&lt;auro-menuoption&gt;</code> element inside <code>&lt;auro-menu&gt;</code>. Use a standard <code>&lt;hr&gt;</code> element to add a divider between options.</p>
+<p>Use <code>&lt;auro-menu&gt;</code> as the options list of a selection control, such as a dropdown. Don't use it for site navigation menus, which need different ARIA roles. The menu doesn't show or hide itself: the component that wraps it, such as <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, handles that.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Menu Use Cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The <code>&lt;auro-menu&gt;</code> element is not intended for stand-alone use. It serves as the options list within <auro-hyperlink href="https://auro.alaskaair.com/components/auro/select" target="_blank">auro-select</auro-hyperlink> and <auro-hyperlink href="https://auro.alaskaair.com/components/auro/combobox" target="_blank">auro-combobox</auro-hyperlink>. Refer to those components for use cases and implementation guidance.
+The <code>&lt;auro-menu&gt;</code> element isn't intended for stand-alone use. It serves as the options list within <auro-hyperlink href="https://auro.alaskaair.com/components/auro/select" target="_blank">auro-select</auro-hyperlink> and <auro-hyperlink href="https://auro.alaskaair.com/components/auro/combobox" target="_blank">auro-combobox</auro-hyperlink>. Refer to those components for use cases and implementation guidance.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Getting Started

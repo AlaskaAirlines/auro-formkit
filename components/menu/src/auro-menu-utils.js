@@ -4,15 +4,13 @@
 // ---------------------------------------------------------------------
 
 /**
- * Converts value to an array.
- * If the value is a JSON string representing an array, it will be parsed.
- * If the value is already an array, it is returned.
- * If the value is undefined, it returns undefined.
+ * Converts a value to an array.
+ * Parses a JSON string of an array, returns an array as-is, and returns
+ * `undefined` for `undefined`.
  * @private
- * @param {any} value - The value to be converted. Can be a string, array, or undefined.
- * @returns {Array|undefined} - The converted array or undefined.
- * @throws {Error} - Throws an error if the value is not an array, undefined,
- * or if the value cannot be parsed into an array from a JSON string.
+ * @param {any} value - The value to convert: a JSON string of an array, an array, or undefined.
+ * @returns {Array|undefined} The array, or undefined when the value is undefined.
+ * @throws {Error} If the value isn't an array, undefined, or a JSON string of an array.
  */
 export function arrayConverter(value) {
   // Allow undefined
@@ -49,18 +47,18 @@ export function arrayConverter(value) {
  * clears `value` rather than reflecting a `"[]"` attribute.
  * @private
  * @param {Array<string>|undefined} values - The selected values.
- * @returns {string|undefined} JSON string of the values, or undefined when empty.
+ * @returns {string|undefined} The JSON string of the values, or undefined when the array is empty or missing.
  */
 export function serializeMultiSelectValue(values) {
   return values && values.length > 0 ? JSON.stringify(values) : undefined;
 }
 
 /**
- * Compare two arrays for equality.
+ * Checks whether two arrays hold the same items in the same order.
  * @private
- * @param {Array} arr1 - First array to compare.
- * @param {Array} arr2 - Second array to compare.
- * @returns {boolean} True if arrays are equal.
+ * @param {Array} arr1 - The first array to compare.
+ * @param {Array} arr2 - The second array to compare.
+ * @returns {boolean} True if both arrays hold the same items in the same order, or both are undefined; false otherwise.
  */
 export function arraysAreEqual(arr1, arr2) {
   // If both arrays undefined, they are equal (true)
@@ -83,16 +81,11 @@ export function arraysAreEqual(arr1, arr2) {
 }
 
 /**
- * Walks up through every ancestor `auro-menu` (root and any nested submenus
- * the option is slotted inside) and checks whether any of them is disabled.
- * A menu's `disabled` is never written onto its options (AB#1566578), so an
- * option's interactivity must be resolved at check-time against its owning
- * menu chain instead of a mutated attribute. Exported so every "is this
- * option interactive" check agrees — `auro-menuoption`'s `isActive` getter
- * uses it too (consumed by `auro-select`/`auro-combobox`), not just this
- * module's own `isOptionInteractive`/`isSelectableByValue`.
+ * Checks whether any `auro-menu` that contains the option, including nested menus, is disabled.
+ * Use it to decide whether an option can be used, because a menu's `disabled`
+ * setting isn't copied onto its options.
  * @param {HTMLElement} option - The option to check.
- * @returns {boolean} True if any ancestor menu (root or nested) is disabled.
+ * @returns {boolean} True if any menu containing the option is disabled; false otherwise.
  */
 export function hasDisabledAncestorMenu(option) {
   let ancestor = option.closest('auro-menu, [auro-menu]');
@@ -108,10 +101,11 @@ export function hasDisabledAncestorMenu(option) {
 }
 
 /**
- * Validates if an option can be interacted with.
+ * Checks whether an option can be highlighted and selected: it isn't `hidden`,
+ * `disabled`, or `static`, and no menu containing it is disabled.
  * @private
  * @param {HTMLElement} option - The option to check.
- * @returns {boolean} True if option is interactive.
+ * @returns {boolean} True if the option can be highlighted and selected; false otherwise.
  */
 export function isOptionInteractive(option) {
   return !option.hasAttribute('hidden') &&
@@ -121,13 +115,12 @@ export function isOptionInteractive(option) {
 }
 
 /**
- * Validates if an option may be selected by matching a programmatic value.
- * Unlike `isOptionInteractive`, `hidden` is allowed: the combobox toggles
- * `hidden` as its type-ahead filter, so a filtered-out option is still a
- * valid programmatic selection. Disabled (its own or an ancestor menu's) and
- * static options — which are never selectable — are rejected.
+ * Checks whether an option can be selected by setting the menu's `value` or calling `selectByValue()`.
+ * Options marked `disabled` or `static`, or inside a disabled menu, can't be.
+ * `hidden` options can, because `auro-combobox` hides options that don't match
+ * what someone typed and they're still valid selections.
  * @param {HTMLElement} option - The option to check.
- * @returns {boolean} True if option can be selected by value.
+ * @returns {boolean} True if the option can be selected by value; false otherwise.
  */
 export function isSelectableByValue(option) {
   return !option.hasAttribute('disabled') &&
@@ -246,10 +239,11 @@ export function resolveSelectedOptions(items, valueArray, selectedKeys) {
 /* eslint-enable no-underscore-dangle */
 
 /**
- * Helper method to dispatch custom events.
- * @param {HTMLElement} element - Element to dispatch event from.
- * @param {string} eventName - Name of the event to dispatch.
- * @param {Object} [detail] - Optional detail object to include with the event.
+ * Dispatches a custom event from an element.
+ * The event bubbles, crosses shadow DOM boundaries, and can't be canceled.
+ * @param {HTMLElement} element - The element to dispatch the event from.
+ * @param {string} eventName - The name of the event to dispatch.
+ * @param {Object} [detail] - The value for the event's `detail`, if any.
  */
 export function dispatchMenuEvent(element, eventName, detail = null) {
   const eventConfig = {

@@ -1,4 +1,4 @@
-The menu component can be loaded via CDN without a build step:
+Load the menu component from a CDN, without a build step:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-menu/+esm" type="module"></script>

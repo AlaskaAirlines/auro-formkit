@@ -26,14 +26,27 @@ import { hasDisabledAncestorMenu } from './auro-menu-utils.js';
 let menuOptionIdCounter = 0;
 
 /**
- * The `auro-menuoption` element provides users a way to define a menu option.
+ * One option in an `auro-menu` list, which people can highlight and select.
+ *
+ * **Key capabilities**
+ * - **Disabled option**: Set `disabled` to show the option in a muted style and stop it from being selected.
+ * - **Rows that can't be selected**: Set `static` to show a row, such as a section heading, that the arrow keys skip.
+ * - **Custom actions**: Set `event` to have the menu fire a named event instead of selecting the option.
+ * - **Unchanged text**: Set `persistent` to keep the option's text as written when the menu highlights matching text.
+ *
+ * @example
+ * <auro-menu>
+ *   <auro-menuoption value="stops">Stops</auro-menuoption>
+ * </auro-menu>
+ *
+ * @summary One option in a menu, which can be disabled, shown as a row that can't be selected, or set to fire a custom event.
  * @customElement auro-menuoption
  *
- * @attr {Boolean} static - When present, marks the option as non-interactive — it renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers, informational rows inside a menu, or attaching event listeners.
- * @slot default - The default slot for the menu option text.
+ * @attr {Boolean} static - Shows the option as a row that can't be highlighted or selected, and that the arrow keys skip. Use it for section headings or informational rows inside a menu.
+ * @slot default - The option's label text. {@requiredWhen always} {@category ui}
  *
- * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
- * @event auroMenuOption-click - Notifies that this option has been clicked.
+ * @event auroMenuOption-mouseover - Fires when the pointer moves over the option.
+ * @event auroMenuOption-click - Fires when the option is clicked, unless the option or a menu containing it is disabled.
  */
 export class AuroMenuOption extends AuroElement {
   constructor() {
@@ -79,9 +92,10 @@ export class AuroMenuOption extends AuroElement {
       ...super.properties,
 
       /**
-       * Sets the shape of the option. When unset, it inherits the shape of the parent `auro-menu`.
+       * Sets the option's corner shape. `box` and `snowflake` have square corners, and `pill` has fully rounded ends. Uses the parent menu's `shape` when not set.
        * @type {'box' | 'pill' | 'snowflake'}
        * @default 'box'
+       * @category ui
        */
       shape: {
         type: String,
@@ -90,9 +104,10 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * Sets the size of the option. When unset, it inherits the size of the parent `auro-menu`.
+       * Sets the option's text size and spacing, from `xs` (smallest) to `xl` (largest). Uses the parent menu's `size` when not set.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'sm'
+       * @category ui
        */
       size: {
         type: String,
@@ -101,7 +116,8 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * When true, this option will not show the checkmark when selected.
+       * Hides the checkmark when this option is selected. Whenever the menu's `nocheckmark` setting changes, the menu copies it onto every option, replacing this value.
+       * @category ui
        */
       noCheckmark: {
         type: Boolean,
@@ -110,9 +126,11 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * **Deprecated.** Use the `value` attribute on `auro-menu` to set the selected option when the menu renders (or call `menu.selectByValue(value)` programmatically). Support for the child-level `selected` attribute will be removed in a future major release.
+       * Deprecated: Use the `value` attribute on `auro-menu`, or call its `selectByValue()` method, instead.
+       * Shows whether the option is selected; the menu sets it to match its own selection. Support for setting it on the option will be removed in a future major release.
        *
-       * @deprecated Use the `value` attribute on `auro-menu` instead.
+       * @deprecated Use the `value` attribute on `auro-menu`, or call its `selectByValue()` method, instead.
+       * @category behavior
        */
       selected: {
         type: Boolean,
@@ -120,7 +138,8 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * When true, the option is disabled and cannot be selected.
+       * Turns the option off. A disabled option is shown in a muted style and can't be highlighted or selected.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -128,7 +147,9 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * The value associated with this menu option.
+       * Sets the value that identifies this option, such as `stops`. The menu's `value` becomes this value when the option is selected.
+       * @requiredWhen always
+       * @category behavior
        */
       value: {
         type: String,
@@ -136,7 +157,8 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * Sets the tab order of the menu option.
+       * Sets the option's position in the keyboard tab order. Leave it at `-1` (the default) so options stay out of the tab order, because the arrow keys move between options instead.
+       * @category a11y
        */
       tabIndex: {
         type: Number,
@@ -145,7 +167,8 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * When set, selecting this option dispatches a custom event of the given name from the parent `auro-menu` (and an `auroMenu-customEventFired` event) instead of selecting the option.
+       * Sets the name of a custom event, such as `custom-flight-search`, that the menu fires instead of selecting the option when someone chooses it. The menu also fires `auroMenu-customEventFired`, with the option in `detail.option`.
+       * @category behavior
        */
       event: {
         type: String,
@@ -153,8 +176,8 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * When true, marks this option as the "no matching results" placeholder shown by combobox
-       * when the user's input does not match any available options.
+       * Marks the option as the "no matching results" row that `auro-combobox` shows when nothing matches what someone typed.
+       * @category behavior
        */
       noMatch: {
         type: Boolean,
@@ -162,7 +185,10 @@ export class AuroMenuOption extends AuroElement {
         attribute: 'nomatch'
       },
 
-      /** When true, this option is excluded from `matchWord` DOM rewriting — useful for utility rows (e.g., "Add new…") that must render identically regardless of the current filter. */
+      /**
+       * Keeps the option's text as written when the menu highlights `matchword` text. Use it for utility rows, such as "Add new…", that should look the same whatever someone types.
+       * @category behavior
+       */
       persistent: {
         type: Boolean,
         reflect: true
@@ -179,11 +205,11 @@ export class AuroMenuOption extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-menuoption"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-menuoption"] - The tag name to register the element under.
    *
    * @example
-   * AuroMenuOption.register("custom-menuoption") // this will register this element to <custom-menuoption/>
+   * AuroMenuOption.register("custom-menuoption") // registers the element as <custom-menuoption>
    *
    */
   static register(name = "auro-menuoption") {
@@ -191,8 +217,9 @@ export class AuroMenuOption extends AuroElement {
   }
 
   /**
-   * Returns whether the menu option is currently active and selectable.
-   * @returns {boolean}
+   * Checks whether the option can be highlighted and selected: it isn't `hidden`, `disabled`, or `static`, and no menu containing it is disabled.
+   * @returns {boolean} True if the option can be highlighted and selected; false otherwise.
+   * @category behavior
    */
   get isActive() {
     return !this.hasAttribute('hidden') &&
@@ -303,7 +330,7 @@ export class AuroMenuOption extends AuroElement {
    *
    * @private
    * @param {string} svgContent - The SVG content to be embedded.
-   * @returns {Element} The HTML element containing the SVG icon.
+   * @returns {import("lit").TemplateResult} The template for the icon element containing the SVG.
    */
   generateIconHtml(svgContent) {
     const dom = new DOMParser().parseFromString(svgContent, 'text/html');
@@ -315,9 +342,9 @@ export class AuroMenuOption extends AuroElement {
   }
 
   /**
-   * Logic to determine the layout of the component.
+   * Renders the option: its label, with a checkmark when it's selected and `nocheckmark` isn't set.
    * @protected
-   * @returns {void}
+   * @returns {import("lit").TemplateResult} The template to render.
    */
   renderLayout() {
 
