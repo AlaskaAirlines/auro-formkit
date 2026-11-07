@@ -1,16 +1,19 @@
 <!-- Example of all available slots -->
 <auro-counter-group isDropdown>
   <!-- Group slots -->
+  <span slot="ariaLabel.bib.close">Close popup</span>
   <div slot="label">Group with all slots</div>
   <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+  <div slot="bib.fullscreen.footer">Footer shown in fullscreen</div>
   <div slot="helpText">Help text appears below the group</div>
   <div slot="valueText">Custom value display</div>
 
   <!-- Counter with all slots -->
   <auro-counter>
     Default slot content
-    <span slot="ariaLabel.minus">Custom Minus Button Label</span>
-    <span slot="ariaLabel.plus">Custom Plus Button Label</span>
+    <span slot="ariaLabel.minus">Decrease quantity</span>
+    <span slot="ariaLabel.plus">Increase quantity</span>
     <span slot="description">Description slot content</span>
+    <span slot="helpText">Help text slot content</span>
   </auro-counter>
 </auro-counter-group>

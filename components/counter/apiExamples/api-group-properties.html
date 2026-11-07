@@ -1,14 +1,19 @@
 <!-- Example of counter-group properties -->
 <auro-counter-group max="10" min="2" isDropdown>
+  <span slot="ariaLabel.bib.close">Close popup</span>
   <div slot="bib.fullscreen.headline">Group fullscreen label</div>
-  <div slot="label">Group with all properties</div>
-  <div slot="helpText">Total must be between 2-10</div>
+  <div slot="label">Group with min and max</div>
+  <div slot="helpText">Total must be between 2–10</div>
   <div slot="valueText">Custom total display</div>
   
   <auro-counter>
     Counter 1
+    <span slot="ariaLabel.minus">Decrease counter 1</span>
+    <span slot="ariaLabel.plus">Increase counter 1</span>
   </auro-counter>
   <auro-counter>
     Counter 2
+    <span slot="ariaLabel.minus">Decrease counter 2</span>
+    <span slot="ariaLabel.plus">Increase counter 2</span>
   </auro-counter>
 </auro-counter-group>

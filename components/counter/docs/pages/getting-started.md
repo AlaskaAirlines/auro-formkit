@@ -1,9 +1,9 @@
-<auro-header level="1" id="overview">Counter - Getting Started</auro-header>
+<auro-header level="1" id="overview">Counter - Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
       <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
@@ -11,7 +11,7 @@
       <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal config</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slotsGroup" class="level2 body-xs">auro-counter-group</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">- label</auro-anchorlink>
@@ -21,7 +21,7 @@
       <auro-anchorlink fluid href="#slot-default-counter" class="level2 body-xs">- (default)</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-description" class="level2 body-xs">- description</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-helpText-counter" class="level2 body-xs">- helpText</auro-anchorlink>
-      <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
+      <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
       <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#validate" class="level2 body-xs">validate()</auro-anchorlink>
@@ -41,20 +41,31 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-        <p>A standalone <code>&lt;auro-counter&gt;</code> requires only a label in the default slot:</p>
+        <auro-header level="3" id="minimalConfig">Minimal configuration</auro-header>
+        <p>A standalone <code>&lt;auro-counter&gt;</code> requires a label in the default slot and names for its minus and plus buttons in the <code>ariaLabel.minus</code> and <code>ariaLabel.plus</code> slots:</p>
         ```html
         <auro-counter>
           Adults
+          <span slot="ariaLabel.minus">Remove adult</span>
+          <span slot="ariaLabel.plus">Add adult</span>
         </auro-counter>
         ```
-        <p>For a grouped counter with dropdown, provide a <code>label</code> slot and <code>bib.fullscreen.headline</code> slot on the group:</p>
+        <p>For a grouped counter with dropdown, also provide the <code>label</code>, <code>bib.fullscreen.headline</code>, and <code>ariaLabel.bib.close</code> slots on the group:</p>
         ```html
         <auro-counter-group isDropdown>
           <span slot="label">Passengers</span>
           <span slot="bib.fullscreen.headline">Passengers</span>
-          <auro-counter>Adults</auro-counter>
-          <auro-counter>Children</auro-counter>
+          <span slot="ariaLabel.bib.close">Close passenger selector</span>
+          <auro-counter>
+            Adults
+            <span slot="ariaLabel.minus">Remove adult</span>
+            <span slot="ariaLabel.plus">Add adult</span>
+          </auro-counter>
+          <auro-counter>
+            Children
+            <span slot="ariaLabel.minus">Remove child</span>
+            <span slot="ariaLabel.plus">Add child</span>
+          </auro-counter>
         </auro-counter-group>
         ```
       </section>
@@ -63,22 +74,22 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="stateManagement">State Management</auro-header>
-        <p>The following properties reflect the current state of the component and can be accessed via JavaScript.</p>
+        <auro-header level="2" id="stateManagement">State management</auro-header>
+        <p>The following property reflects the current state of the component. Read it from JavaScript.</p>
         <auro-header level="3" id="validity">validity</auro-header>
-        <p>Returns the current <code>validityState</code> of the counter or counter group as a string. Possible values include <code>valid</code> and <code>customError</code>.</p>
+        <p>Returns the current validation result of the counter or counter group as a string. Possible values include <code>valid</code>, <code>customError</code>, <code>rangeOverflow</code>, and <code>rangeUnderflow</code>.</p>
       </section>
       <section>
         <auro-header level="2" id="publicFunctions">Functions</auro-header>
         <p>The following public methods are available.</p>
         <auro-header level="3" id="validate">validate()</auro-header>
-        <p>Triggers validation on the counter or counter group. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+        <p>Triggers validation on the counter or counter group. Pass <code>true</code> to validate even while the element has focus.</p>
         <auro-header level="3" id="increment">increment()</auro-header>
-        <p>Increments the counter value by 1. Optionally pass a number to increment by a specific amount.</p>
+        <p>Increases the counter's value by 1, or by the number you pass. Does nothing when the counter is disabled or already at its maximum.</p>
         <auro-header level="3" id="decrement">decrement()</auro-header>
-        <p>Decrements the counter value by 1. Optionally pass a number to decrement by a specific amount.</p>
+        <p>Decreases the counter's value by 1, or by the number you pass. Does nothing when the counter is disabled or already at its minimum.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
-        <p>Resets the counter or counter group, clearing each counter to its <code>min</code> value and clearing validation state — the same clear-on-reset behavior used by the other Auro form elements. This is also what <code>&lt;auro-form&gt;</code> calls when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
+        <p>Resets the counter or counter group, clearing each counter to its <code>min</code> value and clearing validation state, the same clear-on-reset behavior used by the other Auro form elements. <code>&lt;auro-form&gt;</code> also calls it when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->

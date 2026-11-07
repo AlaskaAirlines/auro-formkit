@@ -11,11 +11,11 @@
   <tbody>
     <tr>
       <td><code>dropdown</code></td>
-      <td>Apply CSS to the dropdown element in the shadow DOM</td>
+      <td>The dropdown element, rendered when <code>isDropdown</code> is set.</td>
     </tr>
     <tr>
       <td><code>helpText</code></td>
-      <td>Apply CSS to the group help text element</td>
+      <td>The paragraph that shows the help text, or the combined error message while a counter is invalid. Rendered only when <code>isDropdown</code> is set.</td>
     </tr>
   </tbody>
 </table>
@@ -31,19 +31,19 @@
   <tbody>
     <tr>
       <td><code>counterControl</code></td>
-      <td>Apply CSS to the counter control container</td>
+      <td>The spinbutton element that holds the minus button, the value, and the plus button.</td>
     </tr>
     <tr>
       <td><code>controlMinus</code></td>
-      <td>Apply CSS to the decrement button</td>
+      <td>The minus button, which lowers the value by 1.</td>
     </tr>
     <tr>
       <td><code>controlPlus</code></td>
-      <td>Apply CSS to the increment button</td>
+      <td>The plus button, which raises the value by 1.</td>
     </tr>
     <tr>
       <td><code>helpText</code></td>
-      <td>Apply CSS to the counter help text element</td>
+      <td>The paragraph that shows the help text, or the error message while the counter is invalid.</td>
     </tr>
   </tbody>
 </table>

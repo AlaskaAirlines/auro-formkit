@@ -1,17 +1,25 @@
 
 <div>
-  <auro-button id="counter-drawer-opener">Counter Group in Drawer</auro-button>
+  <auro-button id="counter-drawer-opener">Counter group in drawer</auro-button>
 
   <auro-drawer id="counter-drawer">
-    <span slot="header">Counter Group in Drawer</span>
+    <span slot="header">Counter group in drawer</span>
     <div slot="content">
       <auro-counter-group isDropdown>
-        <span slot="ariaLabel.bib.close">Close Popup</span>
+        <span slot="ariaLabel.bib.close">Close popup</span>
         <div slot="bib.fullscreen.headline">Group fullscreen label</div>
-        <div slot="label">Counter Group</div>
+        <div slot="label">Counter group</div>
         <div slot="helpText">Select a value</div>
-        <auro-counter>Counter 1</auro-counter>
-        <auro-counter>Counter 2</auro-counter>
+        <auro-counter>
+          Counter 1
+          <span slot="ariaLabel.minus">Decrease counter 1</span>
+          <span slot="ariaLabel.plus">Increase counter 1</span>
+        </auro-counter>
+        <auro-counter>
+          Counter 2
+          <span slot="ariaLabel.minus">Decrease counter 2</span>
+          <span slot="ariaLabel.plus">Increase counter 2</span>
+        </auro-counter>
       </auro-counter-group>
     </div>
   </auro-drawer>

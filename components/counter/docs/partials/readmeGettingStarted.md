@@ -1,1 +1,1 @@
-For Getting Started instructions, visit the [auro-counter Getting Started page](https://auro.alaskaair.com/components/auro/counter/getting-started).
+For getting started instructions, visit the [`auro-counter` getting started page](https://auro.alaskaair.com/components/auro/counter/getting-started).

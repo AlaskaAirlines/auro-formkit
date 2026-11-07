@@ -1,4 +1,4 @@
-The `auro-counter` element should be used in situations where users may:
+Use `auro-counter` when people need to:
 
-* Need to input a numeric value within a defined range
-* Need a user-friendly interface for quantity selection
+* Choose a number within a set range
+* Pick a quantity, such as the number of passengers

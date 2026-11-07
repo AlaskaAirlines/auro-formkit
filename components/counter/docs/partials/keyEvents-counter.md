@@ -3,8 +3,8 @@
     <tr>
       <th>Key</th>
       <th>Modifier</th>
-      <th>Current State</th>
-      <th>Focus Element</th>
+      <th>Current state</th>
+      <th>Focus element</th>
       <th>Behavior</th>
     </tr>
   </thead>
@@ -14,18 +14,18 @@
       <td>-</td>
       <td>*</td>
       <td>
-        Trigger element.
+        Counter.
       </td>
-      <td>Decrements the counter value by 1.</td>
+      <td>Decreases the value by 1, unless the counter is disabled or at its minimum.</td>
     </tr>
     <tr>
       <td>ArrowUp</td>
       <td>-</td>
       <td>*</td>
       <td>
-        Trigger element.
+        Counter.
       </td>
-      <td>Increments the counter value by 1.</td>
+      <td>Increases the value by 1, unless the counter is disabled or at its maximum.</td>
     </tr>
   </tbody>
 </table>

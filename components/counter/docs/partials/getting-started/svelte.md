@@ -1,6 +1,6 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-counter&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
 
 ```html
@@ -12,7 +12,7 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
 Use `<auro-counter-group>` directly in your Svelte template:
 
 ```html
@@ -23,14 +23,21 @@ Use `<auro-counter-group>` directly in your Svelte template:
   AuroCounterGroup.register('[custom]-counter-group');
 </script>
 <custom-counter-group>
-  <span slot="label">Passengers</span>
-  <custom-counter>Adults</custom-counter>
-  <custom-counter>Children</custom-counter>
+  <custom-counter>
+    Adults
+    <span slot="ariaLabel.minus">Remove adult</span>
+    <span slot="ariaLabel.plus">Add adult</span>
+  </custom-counter>
+  <custom-counter>
+    Children
+    <span slot="ariaLabel.minus">Remove child</span>
+    <span slot="ariaLabel.plus">Add child</span>
+  </custom-counter>
 </custom-counter-group>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-counter>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-counter>` props in templates, add the following to a `.d.ts` file in your project (for example, `src/auro-elements.d.ts`):
 
 ```js
 import type { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
@@ -43,10 +50,10 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting for attributes like `value`, `min`, `max`, `disabled`, and others directly in Svelte templates.
+This enables prop hinting in Svelte templates for attributes such as `value`, `min`, `max`, and `disabled`.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
-Auro components emit native `CustomEvent`s. Listen for the `countChanged` event on the element:
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
+Auro components emit native `CustomEvent`s. Listen for the `input` event, which the counter fires whenever its value changes:
 
 ```html
 <script lang="ts">
@@ -56,11 +63,15 @@ Auro components emit native `CustomEvent`s. Listen for the `countChanged` event 
     count = (e.target as HTMLElement & { value: number }).value;
   }
 </script>
-<custom-counter on:countChanged={handleChange}>Adults</custom-counter>
+<custom-counter on:input={handleChange}>
+  Adults
+  <span slot="ariaLabel.minus">Remove adult</span>
+  <span slot="ariaLabel.plus">Add adult</span>
+</custom-counter>
 <p>Count: {count}</p>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 
 ```js

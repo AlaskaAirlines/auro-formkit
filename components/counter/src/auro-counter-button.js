@@ -12,8 +12,9 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * The `auro-counter-button` element provides the increment and decrement control button used within an `auro-counter`.
+ * The minus or plus button inside `auro-counter`.
  * @customElement auro-counter-button
+ * @internal
  */
 export class AuroCounterButton extends AuroButton {
 
@@ -33,11 +34,11 @@ export class AuroCounterButton extends AuroButton {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-counter-button"] - The name of element that you want to register to.
+   * Registers the custom element with the browser.
+   * @param {string} [name="auro-counter-button"] - The tag name to register the element under.
    *
    * @example
-   * AuroCounterButton.register("custom-counter-button") // this will register this element to <custom-counter-button/>
+   * AuroCounterButton.register("custom-counter-button") // registers <custom-counter-button/>
    *
    */
   static register(name = "auro-counter-button") {

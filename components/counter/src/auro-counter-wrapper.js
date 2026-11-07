@@ -12,9 +12,10 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 
 /**
- * Wrapper element for auro-counter elements in an application to provide layout structure for multiple counters.
+ * Lays out the `auro-counter` elements inside `auro-counter-group`.
  *
- * @slot Default - Slot for counter elements.
+ * @slot default - The `auro-counter` elements to lay out.
+ * @internal
  */
 export class AuroCounterWrapper extends LitElement {
 
@@ -27,7 +28,7 @@ export class AuroCounterWrapper extends LitElement {
 
   /**
    * Registers the custom element with the browser.
-   * @param {string} [name="auro-counter-wrapper"] - Custom element name to register.
+   * @param {string} [name="auro-counter-wrapper"] - The tag name to register the element under.
    * @example
    * AuroCounterWrapper.register("custom-counter-wrapper") // registers <custom-counter-wrapper/>
    */

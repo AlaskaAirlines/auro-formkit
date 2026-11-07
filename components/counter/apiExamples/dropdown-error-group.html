@@ -1,13 +1,17 @@
 <auro-counter-group isDropdown>
-  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="ariaLabel.bib.close">Close popup</span>
   <div slot="bib.fullscreen.headline">Passengers</div>
   <div slot="label">Passengers</div>
   <auro-counter error="Custom error on Adults counter">
     Adults
+    <span slot="ariaLabel.minus">Remove adult</span>
+    <span slot="ariaLabel.plus">Add adult</span>
     <span slot="description">18 years or older</span>
   </auro-counter>
   <auro-counter error="Custom error on Children counter">
     Children
-    <span slot="description">2-17 years</span>
+    <span slot="ariaLabel.minus">Remove child</span>
+    <span slot="ariaLabel.plus">Add child</span>
+    <span slot="description">2–17 years</span>
   </auro-counter>
 </auro-counter-group>

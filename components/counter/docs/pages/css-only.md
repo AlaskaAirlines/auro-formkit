@@ -1,12 +1,15 @@
 <auro-header level="1">CSS only with native number input</auro-header>
 
-<p>For situations where the <code>&lt;auro-counter&gt;</code> web component cannot be used, a native HTML <code>&lt;input type="number"&gt;</code> element — optionally paired with <code>&lt;button&gt;</code> increment and decrement controls — can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-counter</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.counter</code> class, so the styling must be authored manually using Auro design tokens.</p>
+<p>When you can't use the <code>&lt;auro-counter&gt;</code> web component, style a native HTML <code>&lt;input type="number"&gt;</code> element, optionally paired with <code>&lt;button&gt;</code> increment and decrement controls, with the Auro Design System tokens so it looks like <code>auro-counter</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.counter</code> class, so you write the styles yourself with Auro design tokens.</p>
 
 <auro-header level="2">Styling a native number input</auro-header>
 
-<p>The native number input and its associated increment/decrement buttons can be restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the layout, button shape, and value typography used by <code>auro-counter</code>.</p>
+<p>Restyle a native number input and its increment and decrement buttons with the Auro design tokens from <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The following pattern approximates the look of <code>auro-counter</code>, with a round button on each side of the value.</p>
 
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size and typography tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
 .counter {
   display: inline-flex;
@@ -20,10 +23,10 @@
   -webkit-appearance: none;
   width: var(--ds-size-400, 2rem);
   height: var(--ds-size-400, 2rem);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
+  border: 1px solid var(--ds-advanced-color-state-focused, #01426a);
   border-radius: 50%;
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  color: var(--ds-color-text-primary-default, #00467f);
+  background-color: var(--ds-advanced-color-button-tertiary-background, rgba(0, 0, 0, 0.05));
+  color: var(--ds-advanced-color-button-tertiary-text, #01426a);
   font-size: var(--ds-size-300, 1.5rem);
   line-height: 1;
   cursor: pointer;
@@ -33,7 +36,7 @@
 }
 
 .counter__button:focus-visible {
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
+  outline: 2px solid var(--ds-advanced-color-state-focused, #01426a);
   outline-offset: 2px;
 }
 
@@ -50,7 +53,7 @@
   background: transparent;
   text-align: center;
   font-size: var(--ds-size-300, 1.5rem);
-  color: var(--ds-color-text-primary-default, #2a2a2a);
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
 }
 
 .counter__value::-webkit-outer-spin-button,
@@ -97,15 +100,15 @@
 
 <auro-header level="3">Increment and decrement button wiring</auro-header>
 
-<p><code>auro-counter</code> exposes <code>increment()</code> and <code>decrement()</code> methods and handles all click wiring between its buttons and the displayed value. With native HTML, the <code>&lt;button&gt;</code> controls have no inherent relationship to the <code>&lt;input type="number"&gt;</code> — you must write JavaScript click handlers that read the input, apply the step, clamp to <code>min</code>/<code>max</code>, and write the new value back.</p>
+<p><code>auro-counter</code> exposes <code>increment()</code> and <code>decrement()</code> methods and handles all click wiring between its buttons and the displayed value. With native HTML, the <code>&lt;button&gt;</code> controls have no built-in link to the <code>&lt;input type="number"&gt;</code>, so you write JavaScript click handlers that read the input, apply the step, clamp to <code>min</code>/<code>max</code>, and write the new value back.</p>
 
 <auro-header level="3">Automatic min/max button disabling</auro-header>
 
-<p><code>auro-counter</code> automatically disables the decrement button when the value is at <code>min</code> and the increment button when the value is at <code>max</code>, providing a clear visual signal that further changes are not allowed. Native HTML <code>min</code> and <code>max</code> only constrain validation — the surrounding <code>&lt;button&gt;</code> controls will not disable themselves at the boundaries unless you wire that behavior yourself.</p>
+<p><code>auro-counter</code> automatically disables the decrement button when the value is at <code>min</code> and the increment button when the value is at <code>max</code>, which shows that the value can't go any further. Native HTML <code>min</code> and <code>max</code> only constrain validation, so the surrounding <code>&lt;button&gt;</code> controls don't turn off at the limits unless you wire that behavior yourself.</p>
 
 <auro-header level="3">Group-level min/max coordination</auro-header>
 
-<p><code>auro-counter-group</code> supports <code>min</code> and <code>max</code> properties that apply to the <em>total</em> of all child counters. When the aggregate total reaches the group maximum, every child counter's increment button is disabled; when it reaches the minimum, every decrement button is disabled. Native HTML has no equivalent — you must write JavaScript to sum each input, compare against a group total, and toggle every button accordingly.</p>
+<p><code>auro-counter-group</code> supports <code>min</code> and <code>max</code> properties that apply to the <em>total</em> of all child counters. When the aggregate total reaches the group maximum, every child counter's increment button is disabled; when it reaches the minimum, every decrement button is disabled. Native HTML has no equivalent, so you write JavaScript to sum each input, compare against a group total, and toggle every button accordingly.</p>
 
 <auro-header level="3">Coordinated value object and total</auro-header>
 
@@ -113,23 +116,23 @@
 
 <auro-header level="3">Spinbutton ARIA semantics</auro-header>
 
-<p><code>auro-counter</code> renders a <code>role="spinbutton"</code> element with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, <code>aria-valuetext</code>, and <code>aria-labelledby</code> so assistive technology announces the value as a spinbutton — the role most screen readers expect for stepper controls. A native <code>&lt;input type="number"&gt;</code> is announced as an editable text field, not a spinbutton, and there is no built-in way to relabel the surrounding +/− buttons through ARIA slots.</p>
+<p><code>auro-counter</code> renders a <code>role="spinbutton"</code> element with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, <code>aria-valuetext</code>, and <code>aria-labelledby</code> so screen readers announce the value as a spinbutton, the role most of them expect for stepper controls. A native <code>&lt;input type="number"&gt;</code> is announced as an editable text field, not a spinbutton, and native HTML has no slots for naming the surrounding +/− buttons.</p>
 
 <auro-header level="3">Validation and error messaging</auro-header>
 
-<p><code>auro-counter</code> integrates with <code>@aurodesignsystem/form-validation</code> to expose a <code>validity</code> property, an <code>error</code> attribute, and a help text region that switches to an alert with <code>role="alert"</code> and <code>aria-live="assertive"</code> when invalid. Native number inputs surface browser-controlled validation tooltips that are not announced inline and cannot be styled or customized beyond <code>setCustomValidity()</code>.</p>
+<p><code>auro-counter</code> integrates with <code>@aurodesignsystem/form-validation</code> to expose a <code>validity</code> property, an <code>error</code> attribute, and a help text region that switches to an alert with <code>role="alert"</code> and <code>aria-live="assertive"</code> when invalid. Native number inputs surface browser-controlled validation tooltips that aren't announced inline and can't be styled or customized beyond <code>setCustomValidity()</code>.</p>
 
 <auro-header level="3">Keyboard strategy</auro-header>
 
-<p><code>auro-counter</code> and <code>auro-counter-group</code> install dedicated keyboard strategies that handle Arrow keys, Home/End, and tab order across the +/− buttons and the spinbutton, including ordered traversal of every counter inside a group. Native HTML gives you only the default browser behavior — Arrow keys step the number input by one, but they will not move focus between counters or coordinate Home/End across a group without custom code.</p>
+<p><code>auro-counter</code> changes its value with the Up Arrow and Down Arrow keys and keeps its +/− buttons out of the tab order, so each counter is a single tab stop. In a dropdown, <code>auro-counter-group</code> closes the bib on Escape without closing a surrounding dialog, and Shift+Tab on the first counter closes the bib and moves focus out of the group. Native HTML gives you only the default browser behavior, so you write that coordination yourself.</p>
 
 <auro-header level="3">Disabled state and propagation</auro-header>
 
-<p><code>auro-counter</code> exposes a single <code>disabled</code> attribute that disables both buttons and removes the spinbutton from the tab order, and <code>auro-counter-group</code> propagates appearance and theming to all child counters. With native HTML, you must apply <code>disabled</code> to each <code>&lt;input&gt;</code> and each <code>&lt;button&gt;</code> individually, or wrap them in a <code>&lt;fieldset disabled&gt;</code> with the side effects that entails.</p>
+<p><code>auro-counter</code> exposes a single <code>disabled</code> attribute that disables both buttons and removes the spinbutton from the tab order, and <code>auro-counter-group</code> passes its <code>appearance</code> to every child counter when it isn't a dropdown. <code>auro-counter-group</code> doesn't currently support <code>disabled</code>, so set it on each counter. With native HTML, you must apply <code>disabled</code> to each <code>&lt;input&gt;</code> and each <code>&lt;button&gt;</code> individually, or wrap them in a <code>&lt;fieldset disabled&gt;</code> with the side effects that entails.</p>
 
 <auro-header level="3">Dropdown layout</auro-header>
 
-<p><code>auro-counter-group</code> supports an <code>isDropdown</code> mode that renders the group inside an Auro dropdown with a trigger, value text, fullscreen breakpoint behavior, and configurable placement. There is no native HTML equivalent — reproducing this requires building the popover, focus management, and fullscreen transitions yourself.</p>
+<p><code>auro-counter-group</code> supports an <code>isDropdown</code> mode that renders the group inside an Auro dropdown with a trigger, value text, fullscreen breakpoint behavior, and configurable placement. Native HTML has no equivalent, so you build the popover, focus management, and fullscreen transitions yourself.</p>
 
 <auro-header level="3">Form integration events</auro-header>
 
@@ -137,7 +140,7 @@
 
 <auro-header level="3">Multi-brand theming</auro-header>
 
-<p><code>auro-counter</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only counter is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does.</p>
+<p>Both <code>auro-counter</code> and the CSS above read Auro design tokens through CSS custom properties, so both follow the brand theme whose token file you load. The difference is upkeep: the component's styles update with the package, while you maintain the CSS-only styles yourself.</p>
 
 <auro-header level="2">Summary</auro-header>
 
@@ -193,12 +196,12 @@
     <tr>
       <td>Keyboard strategy across group</td>
       <td>Browser default only</td>
-      <td>Coordinated arrow/Home/End handling</td>
+      <td>Arrow keys, one tab stop per counter, and Escape and Shift+Tab handling in the dropdown</td>
     </tr>
     <tr>
       <td>Disabled propagation</td>
       <td>Per-input and per-button</td>
-      <td>Single attribute on counter or group</td>
+      <td>Single attribute on each counter</td>
     </tr>
     <tr>
       <td>Dropdown layout</td>
@@ -212,12 +215,12 @@
     </tr>
     <tr>
       <td>Multi-brand theming</td>
-      <td>Static (import-time tokens)</td>
-      <td>Full (design tokens + component logic)</td>
+      <td>Follows the loaded tokens; you maintain the CSS</td>
+      <td>Follows the loaded tokens; styles maintained in the component</td>
     </tr>
   </tbody>
 </table>
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-counter</code> and <code>auro-counter-group</code> whenever possible. Fall back to a CSS-styled native number input only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and be prepared to reimplement button wiring, min/max disabling, group totals, spinbutton ARIA, and keyboard coordination yourself.</p>
+<p>Use <code>auro-counter</code> and <code>auro-counter-group</code> whenever possible. Fall back to a CSS-styled native number input only in environments that don't support custom elements, or when integrating with third-party systems that require plain HTML. Be prepared to rebuild button wiring, min/max disabling, group totals, spinbutton ARIA, and keyboard coordination yourself.</p>

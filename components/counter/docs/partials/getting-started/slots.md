@@ -4,7 +4,7 @@
 <p>The following slots are available on the <code>&lt;auro-counter-group&gt;</code> element.</p>
 
 <auro-header level="4" id="slot-label">label</auro-header>
-<p>Dropdown label content. Only used when <code>isDropdown</code> is true.</p>
+<p>The label shown in the dropdown trigger, such as "Passengers". Applies only when <code>isDropdown</code> is set.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -16,10 +16,10 @@
 </auro-accordion>
 
 <auro-header level="4" id="slot-helpText">helpText</auro-header>
-<p>Dropdown help text content. Only used when <code>isDropdown</code> is true.</p>
+<p>Extra guidance shown below the dropdown. An error message replaces it while any counter is invalid. Applies only when <code>isDropdown</code> is set.</p>
 
 <auro-header level="4" id="slot-valueText">valueText</auro-header>
-<p>Customize the value display text in the dropdown trigger.</p>
+<p>Custom text shown in the dropdown trigger in place of the default summary of each counter's value and label. Applies only when <code>isDropdown</code> is set.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-value-text.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -34,7 +34,7 @@
 <p>The following slots are available on the <code>&lt;auro-counter&gt;</code> element.</p>
 
 <auro-header level="4" id="slot-default-counter">(default)</auro-header>
-<p>Main label content for the counter. This is the primary text displayed alongside the increment/decrement controls.</p>
+<p>The counter's label, such as "Adults", shown next to the minus and plus buttons. Screen readers read it as the counter's name.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -46,7 +46,7 @@
 </auro-accordion>
 
 <auro-header level="4" id="slot-description">description</auro-header>
-<p>Descriptive content rendered below the counter label. Use this for supplementary information about the counter option.</p>
+<p>Short supporting text shown below the label, such as "18 years or older". Screen readers read it as part of the counter's name.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/description.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -58,7 +58,7 @@
 </auro-accordion>
 
 <auro-header level="4" id="slot-helpText-counter">helpText</auro-header>
-<p>Help text content displayed below the counter.</p>
+<p>Extra guidance shown below the counter. An error message replaces it while the counter is invalid.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-helptext.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->

@@ -33,22 +33,48 @@ import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
 
 /**
- * The `auro-counter-group` element provides a flexible interface for grouping multiple counters, supporting validation, custom validity messages, and disabled states based on the group's value.
+ * Groups related counters, such as passenger types, so they share one total and one set of limits.
+ *
+ * **Key capabilities**
+ * - **Shared limits**: The `min` and `max` attributes limit the total of all counters, and every counter's minus or plus button turns off when the total reaches a limit.
+ * - **Combined value**: The `value` property holds each counter's number, keyed by its `name`, and `total` adds them up.
+ * - **Dropdown**: The `isDropdown` attribute shows the counters in a dropdown with a label and a summary of their values, which fills the screen on small screens.
+ * - **Combined errors**: In a dropdown, the group's help text shows the error messages of every invalid counter.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use the group on dark backgrounds.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-counter-group max="9">
+ *   <auro-counter name="adults">
+ *     Adults
+ *     <span slot="ariaLabel.minus">Remove adult</span>
+ *     <span slot="ariaLabel.plus">Add adult</span>
+ *   </auro-counter>
+ *   <auro-counter name="children">
+ *     Children
+ *     <span slot="ariaLabel.minus">Remove child</span>
+ *     <span slot="ariaLabel.plus">Add child</span>
+ *   </auro-counter>
+ * </auro-counter-group>
+ * ```
+ * @summary A group of counters with a shared total, shared limits, combined errors, and an optional dropdown.
  * @customElement auro-counter-group
  *
- * @slot default - Slot for counter elements.
- * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
- * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required.
- * @slot bib.fullscreen.footer -  Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true.
- * @slot label - Dropdown label content. Only used when `isDropdown` is true.
- * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
- * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
+ * @slot default - The `auro-counter` elements in the group. {@requiredWhen always} {@category ui}
+ * @slot ariaLabel.bib.close - Text screen readers announce for the close button in the fullscreen dropdown, such as "Close passenger selector". Defaults to "Close". {@relevantWhen isDropdown} {@requiredWhen isDropdown} {@category a11y}
+ * @slot bib.fullscreen.headline - The heading shown at the top of the fullscreen dropdown, such as "Passengers". Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@requiredWhen isDropdown} {@category ui}
+ * @slot bib.fullscreen.footer - Content shown at the bottom of the fullscreen dropdown, such as Reset and Save buttons. Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@category ui}
+ * @slot label - The label shown in the dropdown trigger, such as "Passengers". Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@requiredWhen isDropdown} {@category ui}
+ * @slot valueText - Custom text shown in the dropdown trigger in place of the default summary of each counter's value and label. Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@category ui}
+ * @slot helpText - Extra guidance shown below the dropdown. An error message replaces it while any counter is invalid. Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@category ui}
+ * @slot typeIcon - An icon shown at the start of the dropdown trigger, such as a person icon for a passenger selector. Applies only when `isDropdown` is set. {@relevantWhen isDropdown} {@category ui}
  *
- * @csspart dropdown - The dropdown element rendered when `isDropdown` is true.
- * @csspart helpText - The help text and error message container.
+ * @csspart dropdown - The dropdown element, rendered when `isDropdown` is set.
+ * @csspart helpText - The paragraph that shows the help text, or the combined error message while a counter is invalid. Rendered only when `isDropdown` is set.
  *
- * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
- * @event input - Notifies that the counter group's value has changed.
+ * @event auroFormElement-validated - Fires each time the group is validated, with the result in `event.detail.validity` and `event.detail.message`.
+ * @event input - Fires when any counter's value changes, with the new `total` and `value` in `event.detail`.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
@@ -59,8 +85,14 @@ export class AuroCounterGroup extends AuroElement {
     this.max = undefined;
     this.min = undefined;
     this.onDark = false;
+
+    /** @readonly */
     this.total = undefined;
+
+    /** @readonly */
     this.validity = undefined;
+
+    /** @readonly */
     this.value = undefined;
 
     this.matchWidth = false;
@@ -116,7 +148,7 @@ export class AuroCounterGroup extends AuroElement {
     this.dropdownTag = versioning.generateTag("auro-formkit-counter-dropdown", formkitVersion, AuroDropdown);
 
     /**
-     * Dynamically generated bibtempalate tag.
+     * Dynamically generated bib template tag.
      * @private
      * @type {string}
      */
@@ -150,8 +182,9 @@ export class AuroCounterGroup extends AuroElement {
       ...super.properties,
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the colors to match the background behind the group. Use `inverse` on dark backgrounds and `default` on light ones.
        * @type {'default' | 'inverse'}
+       * @category ui
        * @default 'default'
        */
       appearance: {
@@ -160,8 +193,12 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, bib's position will be automatically calculated where to appear.
+       * Deprecated: Use `placement` instead.
+       * Moves the open dropdown to whichever side of the trigger has the most space. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
        * @default false
+       * @deprecated Use `placement` instead.
+       * @category ui
        */
       autoPlacement: {
         type: Boolean,
@@ -171,7 +208,7 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * The current error message to display when the component is invalid.
-       * This is set by validation and is not available to consumers.
+       * This is set by validation and isn't available to consumers.
        * @private
        */
       errorMessage: {
@@ -181,11 +218,10 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
+       * Sets the largest screen size at which the open dropdown fills the screen. Use `disabled` to keep it as a dropdown on every screen size. Applies only when `isDropdown` is set.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @relevantWhen isDropdown
+       * @category ui
        * @default 'sm'
        */
       fullscreenBreakpoint: {
@@ -195,7 +231,8 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If true, the counter group is displayed as a dropdown.
+       * Shows the counters in a dropdown with a label and a summary of their values. Use it to save space in forms.
+       * @category ui
        */
       isDropdown: {
         type: Boolean,
@@ -203,8 +240,10 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Determines the layout style of the counter group when it is a dropdown.
+       * Sets the dropdown's layout. Use `classic` for most forms, and `snowflake` only on dark backgrounds with `appearance="inverse"`. Applies only when `isDropdown` is set.
        * @type {'classic' | 'snowflake'}
+       * @relevantWhen isDropdown
+       * @category ui
        * @default 'classic'
        */
       layout: {
@@ -214,8 +253,10 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Sets the shape of the counter group when it is a dropdown.
+       * Sets the shape of the dropdown. Defaults to `snowflake` when `layout="snowflake"`, and to `classic` otherwise. Applies only when `isDropdown` is set.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
+       * @relevantWhen isDropdown
+       * @category ui
        * @default 'classic'
        */
       shape: {
@@ -225,8 +266,10 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Sets the size of the counter group when it is a dropdown.
+       * Sets the size of the dropdown. Defaults to `lg` when `layout="snowflake"`, and to `xl` otherwise. Applies only when `isDropdown` is set.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
+       * @relevantWhen isDropdown
+       * @category ui
        * @default 'xl'
        */
       size: {
@@ -236,8 +279,9 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will expand to the width of its parent container.
-       * Otherwise, the dropdown width will be determined by its content.
+       * Makes the open dropdown the same width as its trigger. Without it, the dropdown's content sets its width. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
+       * @category ui
        */
       matchWidth: {
         type: Boolean,
@@ -246,7 +290,8 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The maximum value allowed for the whole group of counters.
+       * Sets the highest total allowed across all counters. When the total reaches it, every counter's plus button turns off.
+       * @category behavior
        */
       max: {
         type: Number,
@@ -254,7 +299,8 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The minimum value allowed for the whole group of counters.
+       * Sets the lowest total allowed across all counters. When the total is at or below it, every counter's minus button turns off.
+       * @category behavior
        */
       min: {
         type: Number,
@@ -262,8 +308,9 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600.
+       * Shows the fullscreen dropdown's headline in a larger heading style. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
+       * @category ui
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -272,8 +319,9 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Keeps the open dropdown on the side set by `placement`, even when there isn't enough space there. Without it, the dropdown flips to the opposite side. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
+       * @category ui
        */
       noFlip: {
         type: Boolean,
@@ -282,7 +330,9 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Moves the open dropdown along its side so the edge of the screen doesn't cut it off. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
+       * @category ui
        */
       shift: {
         type: Boolean,
@@ -290,8 +340,9 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Gap between the trigger element and bib.
-       * @default 0
+       * Sets the gap in pixels between the trigger and the open dropdown, such as `20`. Uses `0` when not set. Applies only when `isDropdown` is set.
+       * @relevantWhen isDropdown
+       * @category ui
        */
       offset: {
         type: Number,
@@ -299,8 +350,10 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
-       * @deprecated Use `appearance` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the group in colors for dark backgrounds.
+       * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -309,9 +362,11 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
+       * Sets where the open dropdown appears relative to its trigger. The first word is the side, and `-start` or `-end` lines the dropdown up with the start or end edge of the trigger. Applies only when `isDropdown` is set.
        * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @relevantWhen isDropdown
        * @default 'bottom-start'
+       * @category ui
        */
       placement: {
         type: String,
@@ -319,14 +374,19 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The total value of the counters.
+       * Gets the sum of every counter's value, such as `3` for 2 adults and 1 child.
+       * @readonly
+       * @category behavior
        */
       total: {
-        type: Number
+        type: Number,
+        attribute: false
       },
 
       /**
-       * Reflects the validity state.
+       * Gets the group's validation result: `valid`, or the first invalid counter's reason, such as `customError` or `rangeOverflow`.
+       * @readonly
+       * @category behavior
        */
       validity: {
         type: String,
@@ -334,15 +394,19 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The current individual values of the nested counters.
+       * Gets each counter's value, keyed by the counter's `name`, such as `{ adults: 2, children: 1 }`. Counters without a `name` use `counter-0`, `counter-1`, and so on.
+       * @readonly
        * @type {Record<string, number>}
+       * @category behavior
        */
       value: {
         type: Object,
+        attribute: false
       },
 
       /**
        * The current text in the valueText slot.
+       * @category behavior
        * @private
        */
       valueText: {
@@ -391,9 +455,9 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Gets and returns an array of counters in an invalid state.
-   * @returns {Array<HTMLElement>} - Returns an array of invalid counters.
-   * @param {NodeList} counters - The NodeList of counter elements to check.
+   * Gets the counters in an invalid state.
+   * @returns {Array<HTMLElement>} The counters whose `validity` is set and isn't `valid`.
+   * @param {NodeList|Array<HTMLElement>} counters - The counter elements to check.
    * @private
    */
   getInvalidCounters(counters) {
@@ -402,8 +466,8 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Gets all valid error messages from errored counters.
-   * @param {NodeList} invalidCounters - The NodeList of counter elements to check.
-   * @returns {Array<string>} - Returns an array of error messages from invalid counters.
+   * @param {Array<HTMLElement>} invalidCounters - The invalid counters to read error messages from.
+   * @returns {Array<string>} The non-empty error messages of the invalid counters.
    * @private
    */
   getErrorMessages(invalidCounters) {
@@ -480,7 +544,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Hides the dropdown bib if its open.
+   * Closes the dropdown if it's open. Does nothing unless `isDropdown` is set.
    * @returns {void}
    */
   hideBib() {
@@ -490,7 +554,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Shows the dropdown bib if there are options to show.
+   * Opens the dropdown if it's closed. Does nothing unless `isDropdown` is set.
    * @returns {void}
    */
   showBib() {
@@ -534,7 +598,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * This sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
+   * Sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
    * @private
    */
   configureBibtemplate() {
@@ -556,7 +620,8 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Watch for slot changes and recalculate the menuoptions.
+   * Called when the `bib.fullscreen.headline` or `bib.fullscreen.footer` slot changes.
+   * Moves the slotted content into the bib template's header or footer.
    * @private
    * @param {Event} event - `slotchange` event.
    * @returns {void}
@@ -598,9 +663,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Updates the aggregate value based on the values of contained auro-counter components.
-   * This method queries for all `auro-counter` elements, sums their values, and updates the component's `value` property.
-   * Additionally, it iterates through each counter and calls `manageDisabled()` on it.
+   * Rebuilds `value` and `total` from the group's counters, then calls `manageDisabled()` on each counter.
    * @private
    */
   updateValue() {
@@ -639,8 +702,8 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Updates the group's `validity` from its counters and fires `auroFormElement-validated`.
+   * @param {boolean} [force=false] - If true, runs the group's own check even while it has focus. If false, skips that check while the group has focus; `validity` still updates from the counters.
    */
   validate(force = false) {
     this.validation.validate(this, force);
@@ -681,8 +744,8 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Resets the counter group to its initial state by resetting each child counter and clearing validity.
-   * Each child reset dispatches an `input` event, which triggers `updateValue()` to recompute `value`/`total`.
+   * Resets every counter to its `min` value and clears the group's validation state.
+   * `value` and `total` update as each counter finishes resetting.
    * @returns {void}
    */
   reset() {
@@ -744,7 +807,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Registers the custom element with the browser.
-   * @param {string} [name="auro-counter-group"] - The name of the element that you want to register.
+   * @param {string} [name="auro-counter-group"] - The tag name to register the element under.
    * @example
    * AuroCounterGroup.register("custom-counter-group") // registers <custom-counter-group/>
    */
@@ -753,9 +816,9 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Returns HTML for the help text and error message.
+   * Renders the help text, or the combined error message while a counter is invalid.
    * @private
-   * @returns {html} - Returns HTML for the help text and error message.
+   * @returns {TemplateResult} The help text or error message template.
    */
   renderHelpText() {
     return !this.validity || this.validity === undefined || this.validity === 'valid'
@@ -780,9 +843,9 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Returns HTML for the validation error icon.
+   * Renders the error icon shown in the dropdown trigger while a counter is invalid.
    * @private
-   * @returns {html} - Returns HTML for the validation error icon.
+   * @returns {TemplateResult|undefined} The error icon template, or undefined while the group is valid.
    */
   renderValidationErrorIcon() {
 
@@ -804,7 +867,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the dropdown structure for the counter group.
+   * Renders the dropdown structure for the counter group.
    * @returns {TemplateResult} The dropdown template.
    * @private
    */
@@ -835,7 +898,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the dropdown trigger for the dropdown.
+   * Renders the dropdown trigger.
    * @returns {TemplateResult} The dropdown trigger template.
    * @private
    */
@@ -868,7 +931,7 @@ export class AuroCounterGroup extends AuroElement {
   };
 
   /**
-   * Render the dropdown bib template for the dropdown.
+   * Renders the dropdown's bib template.
    * @returns {TemplateResult} The bib template.
    * @private
    */
@@ -882,7 +945,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the fullscreen bib slots for the dropdown.
+   * Renders the fullscreen bib slots for the dropdown.
    * @returns {TemplateResult} The fullscreen slots template.
    * @private
    */
@@ -896,8 +959,8 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the counter group container.
-   * @param {boolean} isInDropdown - Whether the counter group is inside a dropdown.
+   * Renders the counter group container.
+   * @param {boolean} [isInDropdown=this.isDropdown] - If true, lays the counters out for the dropdown bib. If false, lays them out inline.
    * @returns {TemplateResult} The counter group template.
    * @private
    */
@@ -912,7 +975,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the classic layout.
+   * Renders the classic layout.
    * @returns {TemplateResult} The classic layout template.
    * @private
    */
@@ -929,7 +992,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the snowflake layout.
+   * Renders the snowflake layout.
    * @returns {TemplateResult} The snowflake layout template.
    * @private
    */
@@ -947,7 +1010,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Renders the component by layout type.
-   * @param {string} [ForcedLayout] - Optionally force a specific layout for rendering.
+   * @param {string} [ForcedLayout] - The layout to render instead of `layout`.
    * @returns {TemplateResult} The layout template.
    * @private
    */

@@ -1,10 +1,14 @@
-<auro-counter-group disabled>
-  <auro-counter>
+<auro-counter-group>
+  <auro-counter disabled>
     Adults
+    <span slot="ariaLabel.minus">Remove adult</span>
+    <span slot="ariaLabel.plus">Add adult</span>
     <span slot="description">18 years or older</span>
   </auro-counter>
-  <auro-counter>
+  <auro-counter disabled>
     Children
-    <span slot="description">2-17 years</span>
+    <span slot="ariaLabel.minus">Remove child</span>
+    <span slot="ariaLabel.plus">Add child</span>
+    <span slot="description">2–17 years</span>
   </auro-counter>
 </auro-counter-group>
