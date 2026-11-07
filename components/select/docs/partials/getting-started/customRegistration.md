@@ -4,8 +4,7 @@
 ```js
 // Import the classes
 import { AuroSelect } from '@aurodesignsystem/auro-formkit/auro-select/class';
-import { AuroMenu } from '@aurodesignsystem/auro-formkit/auro-menu/class';
-import { AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menuoption/class';
+import { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
 
 // Register each component with a custom name
 AuroSelect.register('[custom]-select');
@@ -15,11 +14,11 @@ AuroMenuOption.register('[custom]-menuoption');
 
 The `<auro-menu>` and `<auro-menuoption>` components must also be custom registered when using a custom `<auro-select>` registration. All three components work together and need to be registered under the same custom naming convention.
 
-This will create new custom elements that behave exactly like their standard counterparts, allowing both to coexist on the same page without interfering with each other.
+This creates new custom elements that behave exactly like their standard counterparts, allowing both to coexist on the same page without interfering with each other.
 
 ```html
-<custom-select placeholder="Placeholder Text" id="custom-select">
-  <span slot="bib.fullscreen.headline">Bib Headline</span>
+<custom-select placeholder="Placeholder text" id="custom-select">
+  <span slot="bib.fullscreen.headline">Bib headline</span>
   <span slot="label">Label</span>
   <custom-menu>
     <custom-menuoption value="stops">Stops</custom-menuoption>

@@ -1,17 +1,17 @@
-<auro-header level="1" id="overview">Select - Getting Started</auro-header>
+<auro-header level="1" id="overview">Select - Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
-      <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recomended</auro-anchorlink>
+      <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
       <auro-anchorlink fluid href="#cdnSetup" class="level2 body-xs" onclick="openAccordion('cdnAccordion')">CDN</auro-anchorlink>
       <auro-anchorlink fluid href="#setup">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal config</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-default" class="level2 body-xs">(default)</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">label</auro-anchorlink>
@@ -21,14 +21,11 @@
       <auro-anchorlink fluid href="#slot-displayValue" class="level2 body-xs">displayValue</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">ariaLabel.bib.close</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">bib.fullscreen.headline</auro-anchorlink>
-      <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
-      <auro-anchorlink fluid href="#hasFocus" class="level2 body-xs">hasFocus</auro-anchorlink>
-      <auro-anchorlink fluid href="#isPopoverVisible" class="level2 body-xs">isPopoverVisible</auro-anchorlink>
-      <auro-anchorlink fluid href="#name" class="level2 body-xs">Name</auro-anchorlink>
+      <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
+      <auro-anchorlink fluid href="#name" class="level2 body-xs">name</auro-anchorlink>
       <auro-anchorlink fluid href="#optionSelected" class="level2 body-xs">optionSelected</auro-anchorlink>
-      <auro-anchorlink fluid href="#touched" class="level2 body-xs">Touched</auro-anchorlink>
-      <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
-      <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
+      <auro-anchorlink fluid href="#validity" class="level2 body-xs">validity</auro-anchorlink>
+      <auro-anchorlink fluid href="#value" class="level2 body-xs">value</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
       <auro-anchorlink fluid href="#updateActiveOption" class="level2 body-xs">updateActiveOption()</auro-anchorlink>
@@ -56,28 +53,22 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="stateManagement">State Management</auro-header>
-        <p>The following properties reflect the current state of the component and can be accessed via JavaScript.</p>
-        <auro-header level="3" id="hasFocus">hasFocus</auro-header>
-        <p>Returns <code>true</code> when the select trigger currently has focus.</p>
-        <auro-header level="3" id="isPopoverVisible">isPopoverVisible</auro-header>
-        <p>Returns <code>true</code> when the dropdown bib is currently visible.</p>
+        <auro-header level="2" id="stateManagement">State management</auro-header>
+        <p>The following properties reflect the current state of the component. Read them from JavaScript.</p>
         <auro-header level="3" id="name">name</auro-header>
-        <p>Gets or sets the name for the select element. Used when submitting form data.</p>
+        <p>Gets or sets the key for the select's value in form data. <code>auro-form</code> uses it to name the value.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
         <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected. When <code>multiSelect</code> is enabled, returns an <code>Array</code> of selected elements.</p>
-        <auro-header level="3" id="touched">touched</auro-header>
-        <p>Returns <code>true</code> after the user has interacted with the component (opened and closed the bib, or changed the value).</p>
         <auro-header level="3" id="validity">validity</auro-header>
-        <p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>"valid"</code>, <code>"valueMissing"</code>, and <code>"customError"</code>.</p>
+        <p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>valid</code>, <code>valueMissing</code>, and <code>customError</code>. It's <code>undefined</code> until the component first validates.</p>
         <auro-header level="3" id="value">value</auro-header>
-        <p>Gets or sets the selected value of the select. When set programmatically, the component will attempt to match and select the corresponding menu option. If the value matches an option marked <code>disabled</code> or <code>static</code>, the selection is rejected and <code>value</code> is cleared to <code>undefined</code>. <code>hidden</code> options remain selectable by value.</p>
+        <p>Gets or sets the selected value of the select. When set from code, the component selects the matching menu option. If the value matches no option, or matches a <code>disabled</code> or <code>static</code> option, the selection is rejected and <code>value</code> is cleared to <code>undefined</code>. Options marked <code>hidden</code> can still be selected by value.</p>
       </section>
       <section>
         <auro-header level="2" id="publicFunctions">Functions</auro-header>
         <p>The following public methods are available on the <code>&lt;auro-select&gt;</code> element.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
-        <p>Resets the component to its initial state, clearing the value and validation state.</p>
+        <p>Clears the selection and the validation state, and marks the component as not yet touched.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -90,13 +81,13 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="updateActiveOption">updateActiveOption()</auro-header>
-        <p>Updates the active option in the menu by index. The active option receives visual focus when navigating with the keyboard.</p>
+        <p>Sets the active option by its zero-based position in the menu. The active option is the one keyboard users are on, and it shows a focus highlight.</p>
         <auro-header level="3" id="hideBib">hideBib()</auro-header>
-        <p>Programmatically hides the dropdown bib if it is currently open.</p>
+        <p>Closes the bib if it's open.</p>
         <auro-header level="3" id="showBib">showBib()</auro-header>
-        <p>Programmatically shows the dropdown bib if there are options to display.</p>
+        <p>Opens the bib if it's closed. Does nothing while the component is disabled.</p>
         <auro-header level="3" id="validate">validate()</auro-header>
-        <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+        <p>Validates the component, even when <code>noValidate</code> is set. Pass <code>true</code> to validate right away, even before the user has interacted with the component.</p>
       </section>
     </div>
   </div>

@@ -36,27 +36,47 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
+ * A form control that lets people choose one option, or several, from a list, such as a sort order or a destination airport.
+ *
+ * **Key capabilities**
+ * - **Multiple selection**: Set `multiSelect` to let people choose more than one option.
+ * - **Validation**: Set `required` to require a selection, and `setCustomValidity` to change the error message.
+ * - **Fullscreen on small screens**: Set `fullscreenBreakpoint` to choose the largest screen size at which the list opens as a fullscreen dialog.
+ * - **Type-ahead**: Typing always moves to the first option whose text starts with the typed characters.
+ * - **Layouts**: Set `layout` to `classic`, `emphasized`, or `snowflake` to change the overall look.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-select>
+ *   <span slot="label">Sort by</span>
+ *   <auro-menu>
+ *     <auro-menuoption value="price">Price</auro-menuoption>
+ *     <auro-menuoption value="duration">Duration</auro-menuoption>
+ *   </auro-menu>
+ * </auro-select>
+ * ```
+ * @summary A form control for choosing one or more options, with validation, type-ahead, and a fullscreen mode for small screens.
  * @customElement auro-select
  *
- * @slot - Default slot for the menu content.
- * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
- * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
- * @slot label - Defines the content of the label.
- * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
- * @slot helpText - Defines the content of the helpText.
- * @slot valueText - Dropdown value text display.
- * @slot displayValue - Allows custom HTML content to display the selected value when select is not focused.
- * @event auroSelect-valueSet - Notifies that the component has a new value set.
- * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
- * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
- * @csspart dropdownTrigger - Apply CSS to the trigger content container.
- * @csspart dropdownChevron - Apply CSS to the collapsed/expanded state icon container.
- * @csspart dropdownSize - Apply size styles to the dropdown bib (height, width, maxHeight, maxWidth only).
- * @csspart helpText - Apply CSS to the help text.
- * @csspart wrapper - Apply CSS to the root wrapper element of the select.
- * @csspart dropdown - Apply CSS to the underlying dropdown element.
- * @csspart displayValue - Apply CSS to the custom displayValue container.
+ * @slot - The `<auro-menu>` that holds the options. {@requiredWhen always} {@category ui}
+ * @slot ariaLabel.bib.close - Text screen readers announce for the close button in the fullscreen bib, such as "Close sort options". Defaults to "Close". {@requiredWhen always} {@category a11y}
+ * @slot bib.fullscreen.headline - Headline shown above the options in the fullscreen bib, such as "Sort by". {@requiredWhen always} {@category ui}
+ * @slot label - Label that names the select. Screen readers announce it as the name of the select and of its option list. {@requiredWhen always} {@category ui}
+ * @slot {HTMLSlotElement} optionalLabel - Text shown after the label when `required` isn't set, such as a translated "(optional)". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
+ * @slot helpText - Help text shown below the select. An error message replaces it while the select is invalid. {@category ui}
+ * @slot valueText - Doesn't currently show its content. To change how the selected value looks, use the `displayValue` slot instead. {@category ui}
+ * @slot displayValue - Content shown in the trigger in place of the selected option's text while the bib is closed, such as an icon. Put it inside each `<auro-menuoption>` with `slot="displayValue"`, and the select copies the selected option's content here. {@category ui}
+ * @event auroSelect-valueSet - Fires whenever `value` changes. Use `input` in new code, which also includes the new value.
+ * @event input - Fires whenever `value` changes, with the new `value` and `optionSelected` in `event.detail`.
+ * @event auroFormElement-validated - Fires each time the select validates, with the current `validity` and error `message` in `event.detail`.
+ * @csspart dropdownTrigger - The trigger that shows the label and selected value. Doesn't currently match any element, so styles set on it have no effect.
+ * @csspart dropdownChevron - The container for the arrow icon that shows whether the bib is open.
+ * @csspart dropdownSize - A hidden element whose `height`, `width`, `max-height`, and `max-width` are copied to the bib. Applies only when the bib matches the trigger's width: in the classic layout unless `flexMenuWidth` is set, and in other layouts when `matchWidth` is set.
+ * @csspart helpText - The help text or error message shown below the select.
+ * @csspart wrapper - The outermost element inside the select.
+ * @csspart dropdown - The inner dropdown element that holds the trigger and the bib.
+ * @csspart displayValue - The container for `displayValue` content in the trigger.
  */
 
 // build the component class
@@ -99,7 +119,7 @@ export class AuroSelect extends AuroElement {
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
-     * Generate unique names for dependency components.
+     * Generates unique tag names for the dependency components.
      */
     const versioning = new AuroDependencyVersioning();
 
@@ -145,8 +165,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Sets the default property values.
    * @private
-   * @returns {void} Internal defaults.
+   * @returns {void}
    */
   _initializeDefaults() {
     this.appearance = 'default';
@@ -169,9 +190,10 @@ export class AuroSelect extends AuroElement {
     return {
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the colors to match the background behind the select. Use `inverse` on dark backgrounds and `default` on light ones.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -179,7 +201,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, bib's position will be automatically calculated where to appear.
+       * Deprecated: Use `placement` instead.
+       * The bib already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
+       * @deprecated Use `placement` instead.
+       * @category ui
        */
       autoPlacement: {
         type: Boolean,
@@ -188,7 +213,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, sets the autocomplete attribute for the select element.
+       * Sets the autofill hint for the hidden native select, such as `country-name` (the native `autocomplete` attribute).
+       * Doesn't currently apply when `layout="emphasized"`, which has no hidden native select.
+       * @relevantWhen layout !== 'emphasized'
+       * @category behavior
        */
       autocomplete: {
         type: String,
@@ -196,7 +224,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * When attribute is present, element shows disabled state.
+       * Turns the select off. A disabled select is shown in a muted style and can't be opened, but keyboard users can still tab to it.
+       * `auro-form` leaves a disabled select's value out of its form data.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -204,7 +234,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       * Forces the select into the `customError` state and shows this text as the error message, such as `Choose another option`.
+       * When `setCustomValidityCustomError` or `setCustomValidity` is set, that message replaces this text.
+       * Remove the attribute to clear the error and validate normally.
+       * @category behavior
        */
       error: {
         type: String,
@@ -212,7 +245,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, make the width of the bib match the width of the content, rather than the trigger.
+       * Sizes the bib to fit its options instead of matching the trigger's width. Use it when option text is wider than the trigger.
+       * Applies only when `layout="classic"`.
+       * @relevantWhen layout === 'classic'
+       * @category ui
        */
       flexMenuWidth: {
         type: Boolean,
@@ -221,7 +257,8 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * When attribute is present, element will be 100% width of container element.
+       * Stretches the select to fill the full width of its container.
+       * @category ui
        */
       fluid: {
         type: Boolean,
@@ -229,7 +266,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, the label and value will be visually hidden and the displayValue will render 100% of the time.
+       * Shows the selected option's `displayValue` content in the trigger even while the bib is open, and visually hides the label and value text.
+       * Applies only when the selected option has `displayValue` content.
+       * @category ui
        */
       forceDisplayValue: {
         type: Boolean,
@@ -238,12 +277,11 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
+       * Sets the largest screen size at which the bib opens as a fullscreen dialog instead of a popover, such as `sm`.
+       * Use `disabled` to never open it fullscreen.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
        * @default 'sm'
+       * @category ui
        */
       fullscreenBreakpoint: {
         type: String,
@@ -279,8 +317,8 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600.
+       * Makes the headline in the fullscreen bib larger, using the display heading style.
+       * @category ui
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -289,9 +327,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Determines the overall layout of the select component.
+       * Sets the select's overall look. Use `emphasized` for a large, prominent select on light backgrounds, and `snowflake` only on dark backgrounds with `appearance="inverse"`.
        * @type {'classic' | 'emphasized' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       layout: {
         type: String,
@@ -299,7 +338,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, the popover and trigger will be set to the same width.
+       * Makes the bib the same width as the trigger.
+       * Applies only when `layout` isn't `classic`; the classic layout always matches the trigger's width unless `flexMenuWidth` is set.
+       * @relevantWhen layout !== 'classic'
+       * @category ui
        */
       matchWidth: {
         type: Boolean,
@@ -308,7 +350,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Sets multi-select mode, allowing multiple options to be selected at once.
+       * Lets people select more than one option, and keeps the bib open between selections. `value` becomes a JSON array string, such as `["stops","price"]`.
+       * Consider checkboxes instead, which make choosing several options easier for everyone, including screen reader users.
+       * @category behavior
        */
       multiSelect: {
         type: Boolean,
@@ -317,7 +361,8 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * The name for the select element.
+       * Sets the key for the select's value in form data, such as `sortOrder` (the native `name` attribute).
+       * @category behavior
        */
       name: {
         type: String,
@@ -325,7 +370,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * When true, checkmark on selected option will no longer be present.
+       * Hides the checkmark next to the selected option.
+       * Removing the attribute doesn't currently bring the checkmark back.
+       * @category ui
        */
       noCheckmark: {
         type: Boolean,
@@ -334,8 +381,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Keeps the bib on the `placement` side even when there isn't enough room there.
+       * By default, the bib flips to the opposite side.
+       * @category ui
        */
       noFlip: {
         type: Boolean,
@@ -344,7 +392,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If set, disables auto-validation on blur.
+       * Turns off automatic validation when the select loses focus or its value changes.
+       * Use it when your code validates the select, such as on form submit, by calling `validate()`.
+       * @category behavior
        */
       noValidate: {
         type: Boolean,
@@ -353,8 +403,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Gap between the trigger element and bib.
+       * Sets the gap between the trigger and the bib, in pixels, such as `8`.
        * @default 0
+       * @category ui
        */
       offset: {
         type: Number,
@@ -362,8 +413,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Sets the colors for a dark background.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -372,8 +425,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
+       * Gets the selected `<auro-menuoption>` element, or `undefined` when nothing is selected.
+       * In `multiSelect` mode, it's an array of the selected options.
        * @type {HTMLElement|Array<HTMLElement>}
+       * @category behavior
        */
       optionSelected: {
         type: Object,
@@ -381,7 +436,8 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Define custom placeholder text.
+       * Sets the text shown in the trigger before an option is selected, such as `Choose a destination`.
+       * @category ui
        */
       placeholder: {
         type: String,
@@ -389,9 +445,11 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
+       * Sets where the bib opens relative to the trigger, such as `bottom-start` (below, lined up with the trigger's start edge) or `top`.
+       * The bib flips to the opposite side when there isn't enough room, unless `noFlip` is set.
        * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
        * @default 'bottom-start'
+       * @category ui
        */
       placement: {
         type: String,
@@ -399,7 +457,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Populates the `required` attribute on the element. Used for client-side validation.
+       * Requires a selection. A required select shows the `valueMissing` error when it's left empty, and doesn't show the "(optional)" text after the label.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -407,7 +467,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Sets a custom help text message to display for all validityStates.
+       * Sets one error message to show for every validation error, such as `Choose a sort order`.
+       * When set, it replaces the `setCustomValidityValueMissing` and `setCustomValidityCustomError` messages and the `error` text.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidity: {
         type: String,
@@ -415,7 +478,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `customError`.
+       * Sets the error message shown while the `error` attribute is set, in place of the `error` text.
+       * Ignored when `setCustomValidity` is set.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityCustomError: {
         type: String,
@@ -423,7 +489,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing`.
+       * Sets the error message shown when a `required` select is left empty, such as `Choose a sort order`.
+       * Ignored when `setCustomValidity` is set.
+       * @relevantWhen !noValidate
+       * @category behavior
        */
       setCustomValidityValueMissing: {
         type: String,
@@ -431,8 +500,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Determines the shape of the dropdown bib.
+       * Sets the shape of the trigger. Use `classic` with the classic layout, `pill`, `pill-left`, or `pill-right` with the emphasized layout, and `snowflake` with the snowflake layout.
        * @type {'classic' | 'pill' | 'pill-left' | 'pill-right' | 'snowflake'}
+       * @default 'classic'
+       * @category ui
        */
       shape: {
         type: String,
@@ -440,7 +511,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If set, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Slides the bib along the trigger's edge to keep it on screen when it would otherwise be cut off.
+       * Applies only when `layout="emphasized"`.
+       * @relevantWhen layout === 'emphasized'
+       * @category ui
        */
       shift: {
         type: Boolean,
@@ -448,8 +522,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Determines the size of the dropdown bib. Only the `emphasized` layout supports size=`xl`, while all other layouts support size=`lg`.
+       * Sets the height of the trigger. Use `xl` only with the emphasized layout, and `lg` with the other layouts.
        * @type {'lg' | 'xl'}
+       * @default 'lg'
+       * @category ui
        */
       size: {
         type: String,
@@ -457,7 +533,7 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Indicates whether the input is in a dirty state (has been interacted with).
+       * Whether focus has moved into the select since it was created or last reset.
        * @private
        */
       touched: {
@@ -467,9 +543,10 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Milliseconds of keyboard inactivity before the type-ahead buffer resets.
-       * Increase for users who type slowly.
+       * Sets how long, in milliseconds, typed characters keep adding to the type-ahead search before it starts over.
+       * Increase it, for example to `1000`, for people who type slowly.
        * @default 500
+       * @category behavior
        */
       typeaheadTimeoutMs: {
         type: Number,
@@ -478,7 +555,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Specifies the `validityState` this element is in.
+       * Reports the select's current validity state, such as `valid`, `valueMissing`, or `customError`.
+       * Validation sets it, and it stays `undefined` until the select first validates.
+       * @category behavior
        */
       validity: {
         type: String,
@@ -486,7 +565,9 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Value selected for the component. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable by value.
+       * Sets the selected option by its value, such as `price`. In `multiSelect` mode, it's a JSON array string, such as `["stops","price"]`.
+       * A value that matches no option, or matches a `disabled` or `static` option, clears both `value` and `optionSelected`; `hidden` options can still be selected by value.
+       * @category behavior
        */
       value: {
         type: String,
@@ -506,19 +587,18 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Formatted value based on `multiSelect` state.
-   * Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+   * Gets the value formatted for the current mode: a string, or an array of strings in `multiSelect` mode.
    * @private
-   * @returns {String|Array<String>}
+   * @returns {String|Array<String>} The formatted value.
    */
   get formattedValue() {
     return this.menu.formattedValue;
   }
 
   /**
-   * Returns classmap configuration for html5 input labels in all layouts.
+   * Gets the class map for the label in every layout.
    * @private
-   * @returns {Record<string, boolean>}
+   * @returns {Record<string, boolean>} The label's class names, each mapped to whether it applies.
    */
   get commonLabelClasses() {
     const obj = {
@@ -541,7 +621,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns the label font class based on layout and selection state.
+   * Gets the label's font class for the current layout and selection state.
    * @private
    * @returns {string} - The font class for the label.
    */
@@ -561,8 +641,8 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Whether or not the component has a value.
-   * @returns {boolean} - Returns true if the component has a value or placeholder.
+   * Checks whether the select has a value or a placeholder.
+   * @returns {string|boolean|undefined} - A truthy value if the select has a value or placeholder; a falsy value otherwise.
    * @private
    */
   get hasValue() {
@@ -675,7 +755,7 @@ export class AuroSelect extends AuroElement {
   /**
    * Reads the current label slot text and pushes it to the dropdown bib
    * (for dialog naming) and the menu (for listbox aria-label). Safe to call
-   * before either child has been wired up — each branch self-guards.
+   * before either child has been wired up, because each branch checks for it.
    * @private
    */
   _syncLabelText() {
@@ -694,13 +774,13 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Keeps the dialog/menu accessible names in sync when consumers mutate the
-   * label slot at runtime (e.g., i18n locale swap). `slotchange` alone is
-   * insufficient — it doesn't fire when textContent of an already-assigned
-   * slotted node changes, which is the common case. We scope the observer to
-   * the label node itself (not the whole host subtree) so option-content
-   * mutations don't trigger label re-syncs, and re-target on `slotchange`
-   * when consumers add or replace the label element.
+   * Keeps the dialog and menu accessible names in sync when the label slot
+   * changes at runtime, such as a locale swap. `slotchange` alone isn't
+   * enough: it doesn't fire when the text of an already-assigned slotted node
+   * changes, which is the common case. The observer watches only the label
+   * node, not the whole host subtree, so option changes don't trigger label
+   * re-syncs, and it re-targets on `slotchange` when the label element is
+   * added or replaced.
    * @private
    */
   _observeLabelChanges() {
@@ -729,11 +809,11 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-select"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name, such as `custom-select`.
+   * @param {string} [name="auro-select"] - The tag name to register the element under.
    *
    * @example
-   * AuroSelect.register("custom-select") // this will register this element to <custom-select/>
+   * AuroSelect.register("custom-select") // registers the element as <custom-select>
    *
    */
   static register(name = "auro-select") {
@@ -793,7 +873,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
+   * Sets the menu's size and shape: the defaults in the fullscreen bib, otherwise based on `size`, `shape`, and `layout`.
    * @private
    */
   updateMenuShapeSize() {
@@ -843,11 +923,11 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns the shadow root containing the live region for screen reader announcements.
-   * When the bib is open in fullscreen modal mode, everything outside the <dialog>
-   * is inert, so we target the bib's own shadow root instead of the host's.
+   * Gets the shadow root containing the live region for screen reader announcements.
+   * When the bib is open as a fullscreen modal, everything outside the `<dialog>`
+   * is inert, so this returns the bib's own shadow root instead of the host's.
    * @private
-   * @returns {ShadowRoot}
+   * @returns {ShadowRoot} The shadow root to announce in.
    */
   _getAnnouncementRoot() {
     if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible && this.dropdown.bibElement && this.dropdown.bibElement.value) {
@@ -861,8 +941,8 @@ export class AuroSelect extends AuroElement {
    *
    * The `<auro-menu>` reference is captured once and not re-targeted on
    * `slotchange`. Runtime option mutations are covered via
-   * `auroMenu-optionsChange`, so swap options inside the menu freely; do not
-   * swap the `<auro-menu>` element itself under a live select — remount the
+   * `auroMenu-optionsChange`, so swap options inside the menu freely, but don't
+   * swap the `<auro-menu>` element itself under a live select. Remount the
    * parent `<auro-select>` instead.
    * @private
    * @returns {void}
@@ -1055,8 +1135,8 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Updates the active option in the menu.
-   * @param {number} index - Index of the option to make active.
+   * Sets the active option, the one keyboard users are on, by its position in the menu.
+   * @param {number} index - The zero-based index of the option to make active.
    */
   updateActiveOption(index) {
     if (this.menu) {
@@ -1065,10 +1145,10 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns the lowercase, trimmed text content of a menu option.
+   * Gets the lowercase, trimmed text of a menu option.
    * @private
    * @param {HTMLElement} option - The menu option element.
-   * @returns {string}
+   * @returns {string} The option's lowercase, trimmed text.
    */
   _getOptionDisplayText(option) {
     return (option.textContent || '').trim().toLowerCase();
@@ -1166,12 +1246,10 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Manages the visibility of the dropdown based on loading state changes.
+   * Called when the menu's loading state changes. Hides the bib while the menu loads and shows it again afterward.
    *
-   * This method listens for loading state changes and adjusts the visibility of the dropdown accordingly.
-   * If the dropdown is visible and loading is true without any loading placeholders, it hides the dropdown
-   * and sets a flag to indicate it is hidden while loading. If loading is false and the dropdown was previously
-   * hidden, it checks if the active element is within the dropdown and shows it again if true.
+   * When the bib is open and loading starts without a loading placeholder, it hides the bib and
+   * remembers that it did. When loading ends, it shows the bib again if focus is still inside the select.
    *
    * @private
    * @param {CustomEvent} event - The event object containing details about the loading state change.
@@ -1192,7 +1270,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Hides the dropdown bib if its open.
+   * Closes the bib if it's open.
    * @returns {void}
    */
   hideBib() {
@@ -1202,7 +1280,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Shows the dropdown bib if there are options to show.
+   * Opens the bib if it's closed. Does nothing while the select is disabled.
    * @returns {void}
    */
   showBib() {
@@ -1212,7 +1290,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Function to support @focusin event.
+   * Called when focus moves into the select. Marks the select as focused and touched.
    * @private
    * @return {void}
    */
@@ -1223,9 +1301,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Watch for slot changes and recalculate the menuoptions.
+   * Called when the `bib.fullscreen.headline` slot changes. Copies its content into the fullscreen bib's header.
    * @private
-   * @param {Event} event - `slotchange` event.
+   * @param {Event} event - The `slotchange` event.
    * @returns {void}
    */
   handleSlotChange(event) {
@@ -1242,7 +1320,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Resets all options to their default state.
+   * Clears the value and syncs the menu's `multiSelect` mode.
    * @private
    */
   clearSelection() {
@@ -1251,7 +1329,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Handle element attributes on update.
+   * Syncs the error, disabled, and checkmark states to the dropdown and menu on each update.
    * @private
    * @returns {void}
    */
@@ -1314,8 +1392,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Sets the selected value by matching it against the menu options. Options marked `disabled` or `static` are not selectable: if the value matches one, the selection is rejected and `value` is cleared to `undefined` while `optionSelected` is cleared to `undefined` in single-select or `[]` in multiSelect. `hidden` options remain selectable.
-   * @param {string} value - The value to match against the menu options.
+   * Selects the menu option whose value matches, as setting `value` does.
+   * A value that matches no option, or matches a `disabled` or `static` option, clears `value` and `optionSelected`; `hidden` options can still be selected.
+   * @param {string} value - The option value to select, such as `price`.
    */
   setMenuValue(value) {
     if (!this.menu) return;
@@ -1433,7 +1512,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Clears the selection and the validation state, and marks the select as not yet touched.
    * @returns {void}
    */
   reset() {
@@ -1445,8 +1524,8 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Checks the selection and updates `validity` and the error message. Runs even when `noValidate` is set.
+   * @param {boolean} [force=false] - If true, validates right away, even before the user has interacted with the select. If false, validates only when focus is outside the select and the user has interacted with it or a value is set.
    */
   validate(force = false) {
     this.validation.validate(this, force);
@@ -1454,7 +1533,7 @@ export class AuroSelect extends AuroElement {
 
   /**
    * Syncs the value from the native select element to the component's value.
-   * @param {Event} event // The change event from the native select element.
+   * @param {Event} event - The `change` event from the native select element.
    * @returns {void}
    * @private
    */
@@ -1499,9 +1578,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns HTML for the hidden HTML5 select.
+   * Renders the hidden native `<select>`.
    * @private
-   * @returns {html} - Returns HTML for the hidden HTML5 select.
+   * @returns {html} - The template for the hidden native `<select>`.
    */
   renderNativeSelect() {
     return html`
@@ -1532,9 +1611,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns HTML for the help text and error message.
+   * Renders the help text, or the error message while the select is invalid.
    * @private
-   * @returns {html} - Returns HTML for the help text and error message.
+   * @returns {html} - The template for the help text or error message.
    */
   renderHtmlHelpText() {
     return html`
@@ -1558,9 +1637,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns HTML for the emphasized layout.
+   * Renders the emphasized layout.
    * @private
-   * @returns {import("lit").TemplateResult} - Returns HTML for the emphasized layout.
+   * @returns {import("lit").TemplateResult} - The template for the emphasized layout.
    */
   renderLayoutEmphasized() {
     const placeholderClass = {
@@ -1639,9 +1718,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns HTML for the snowflake layout.
+   * Renders the snowflake layout.
    * @private
-   * @returns {import("lit").TemplateResult} - Returns HTML for the snowflake layout.
+   * @returns {import("lit").TemplateResult} - The template for the snowflake layout.
    */
   renderLayoutSnowflake() {
     const placeholderClass = {
@@ -1720,9 +1799,9 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns HTML for the classic layout.
+   * Renders the classic layout.
    * @private
-   * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
+   * @returns {import("lit").TemplateResult} - The template for the classic layout.
    */
   renderLayoutClassic() {
     const placeholderClass = {
@@ -1806,10 +1885,10 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Logic to determine the layout of the component.
+   * Renders the template for the current layout.
    * @private
-   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
-   * @returns {void}
+   * @param {string} [ForcedLayout] - A layout name to render instead of `layout`, such as `emphasized`.
+   * @returns {import("lit").TemplateResult} - The template for the layout.
    */
   renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;

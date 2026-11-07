@@ -9,15 +9,15 @@
 <p><code>auro-select</code> provides:</p>
 
 <ul>
-  <li><strong>ARIA combobox pattern</strong> — The trigger uses <code>role="combobox"</code> with <code>aria-expanded</code>, <code>aria-controls</code>, and <code>aria-activedescendant</code> for proper screen reader semantics.</li>
-  <li><strong>Full keyboard navigation</strong> — Arrow Up/Down navigate options (with Alt modifier for jumping to first/last), Enter selects, Escape closes, Home/End jump to boundaries, Tab closes and advances focus.</li>
-  <li><strong>Screen reader announcements</strong> — <code>aria-live="polite"</code> announces selections, <code>aria-live="assertive"</code> announces validation errors. Each option carries <code>aria-setsize</code> and <code>aria-posinset</code> for position context.</li>
-  <li><strong>Active descendant</strong> — Focus stays on the trigger while arrow keys highlight options, so screen readers announce the highlighted option without disrupting focus.</li>
+  <li><strong>ARIA combobox pattern:</strong> The trigger uses <code>role="combobox"</code> with <code>aria-expanded</code>, <code>aria-controls</code>, and <code>aria-activedescendant</code> for proper screen reader semantics.</li>
+  <li><strong>Full keyboard navigation:</strong> Arrow Up and Arrow Down move through the options (with Alt or Control to jump to the first or last option), Enter selects, Escape closes, Home and End jump to the first and last options, and Tab selects the active option, closes the bib, and moves focus on.</li>
+  <li><strong>Screen reader announcements:</strong> <code>aria-live="polite"</code> announces selections, and <code>aria-live="assertive"</code> announces validation errors. Each option carries <code>aria-setsize</code> and <code>aria-posinset</code> for position context.</li>
+  <li><strong>Active descendant:</strong> Focus stays on the trigger while arrow keys highlight options, so screen readers announce the highlighted option without disrupting focus.</li>
 </ul>
 
 <auro-header level="2" id="richOptionContent">Rich option content</auro-header>
 
-<p><code>&lt;option&gt;</code> elements accept only plain text. There is no native way to add icons, secondary text, or nested groups.</p>
+<p><code>&lt;option&gt;</code> elements accept only plain text, with no native way to add icons, secondary text, or nested groups.</p>
 
 <p><code>auro-select</code> uses <code>auro-menu</code> internally, enabling:</p>
 
@@ -25,32 +25,31 @@
   <li>Full HTML content in each option (icons, descriptions, badges)</li>
   <li>Nested option groups for hierarchical organization</li>
   <li>Checkmark indicators for the selected option</li>
-  <li>Option sizing (sm, md) for different information density</li>
 </ul>
 
 <auro-header level="2" id="multiselect">Multi-select</auro-header>
 
-<p>Native <code>&lt;select multiple&gt;</code> renders a scrollable list box — a UI pattern widely regarded as confusing. Users must Ctrl+click to select multiple items, and there is no checkmark or visual feedback.</p>
+<p>Native <code>&lt;select multiple&gt;</code> renders a scrollable list box, a UI pattern widely regarded as confusing. Users must Ctrl+click to select multiple items, and the list shows no checkmarks or other visual feedback.</p>
 
 <p><code>auro-select</code> with <code>multiSelect</code> provides:</p>
 
 <ul>
-  <li>A dropdown trigger that stays closed between selections</li>
+  <li>A bib that stays open between selections</li>
   <li>Checkmarks on each selected option</li>
   <li>A JSON-stringified array value for easy consumption</li>
-  <li><code>clearSelection()</code> to reset all selections</li>
+  <li><code>reset()</code> to clear all selections</li>
 </ul>
 
 <auro-header level="2" id="responsiveLayout">Responsive layout</auro-header>
 
-<p>Native <code>&lt;select&gt;</code> renders a browser-controlled popup that cannot be repositioned, resized, or presented differently on mobile.</p>
+<p>Native <code>&lt;select&gt;</code> renders a browser-controlled popup that can't be repositioned, resized, or presented differently on mobile.</p>
 
 <p><code>auro-select</code> adapts to the viewport:</p>
 
 <ul>
-  <li><strong>Desktop</strong> — Options appear in a positioned dropdown using Floating UI, with configurable placement, offset, flip, shift, and auto-placement</li>
-  <li><strong>Mobile</strong> — Options open in a fullscreen dialog below a configurable breakpoint (<code>fullscreenBreakpoint</code>)</li>
-  <li><strong>Width control</strong> — <code>matchWidth</code> sizes the dropdown to the trigger, <code>flexMenuWidth</code> lets it size independently</li>
+  <li><strong>Desktop:</strong> Options appear in a positioned dropdown using Floating UI, with configurable placement, offset, and flip behavior, plus shift in the emphasized layout</li>
+  <li><strong>Mobile:</strong> Options open in a fullscreen dialog at or below a configurable breakpoint (<code>fullscreenBreakpoint</code>)</li>
+  <li><strong>Width control:</strong> In the classic layout, the dropdown matches the trigger's width unless <code>flexMenuWidth</code> lets it size to its options; in other layouts, <code>matchWidth</code> sizes it to the trigger</li>
 </ul>
 
 <auro-header level="2" id="validation">Validation</auro-header>
@@ -63,21 +62,20 @@
   <li>Required field validation with custom messaging</li>
   <li>Custom error messages per validity state (<code>setCustomValidityCustomError</code>, <code>setCustomValidityValueMissing</code>)</li>
   <li><code>noValidate</code> to disable auto-validation on blur</li>
-  <li>Error display via the <code>helpText</code> slot</li>
+  <li>Error messages shown in place of the <code>helpText</code> slot content</li>
   <li>Dispatches <code>auroFormElement-validated</code> events for parent form coordination</li>
 </ul>
 
 <auro-header level="2" id="displayValueCustomization">Display value customization</auro-header>
 
-<p>Native <code>&lt;select&gt;</code> always shows the selected option's text. There is no way to display a formatted or alternative representation.</p>
+<p>Native <code>&lt;select&gt;</code> always shows the selected option's text and can't display a formatted or alternative representation.</p>
 
 <p><code>auro-select</code> provides:</p>
 
 <ul>
   <li>A <code>displayValue</code> slot for custom HTML rendering of the selected value</li>
-  <li>A <code>valueText</code> slot for formatted text display</li>
-  <li>A <code>placeholder</code> slot (or attribute) for empty-state messaging</li>
-  <li><code>forceDisplayValue</code> to always show the custom display slot</li>
+  <li>A <code>placeholder</code> attribute for empty-state text</li>
+  <li><code>forceDisplayValue</code> to keep showing the <code>displayValue</code> content while the bib is open</li>
 </ul>
 
 <auro-header level="2" id="designSystemIntegration">Design system integration</auro-header>
@@ -87,11 +85,11 @@
 <p><code>auro-select</code> is built with the Auro Design System:</p>
 
 <ul>
-  <li>Three layout options: classic, emphasized, snowflake</li>
-  <li>Shape variants: box, pill, pill-left, pill-right</li>
-  <li>Size options (lg, xl for emphasized layout)</li>
+  <li>Three layout options: <code>classic</code>, <code>emphasized</code>, and <code>snowflake</code></li>
+  <li>Shape variants: <code>classic</code>, <code>pill</code>, <code>pill-left</code>, <code>pill-right</code>, and <code>snowflake</code></li>
+  <li>Size options: <code>lg</code>, and <code>xl</code> for the emphasized layout</li>
   <li>Light and dark theme support (<code>appearance</code>)</li>
-  <li>CSS <code>::part()</code> selectors (<code>dropdownTrigger</code>, <code>dropdownChevron</code>, <code>dropdownSize</code>, <code>helpText</code>)</li>
+  <li>CSS <code>::part()</code> selectors, such as <code>dropdownChevron</code>, <code>dropdownSize</code>, <code>helpText</code>, and <code>displayValue</code></li>
 </ul>
 
 <auro-header level="2" id="summary">Summary</auro-header>
@@ -138,7 +136,7 @@
     <tr>
       <td>Viewport-aware positioning</td>
       <td>No</td>
-      <td>Floating UI with flip/shift/auto</td>
+      <td>Floating UI with flip</td>
     </tr>
     <tr>
       <td>Custom validation messages</td>
@@ -148,7 +146,7 @@
     <tr>
       <td>Display value customization</td>
       <td>No</td>
-      <td><code>displayValue</code> and <code>valueText</code> slots</td>
+      <td><code>displayValue</code> slot</td>
     </tr>
     <tr>
       <td>Theming</td>

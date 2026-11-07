@@ -4,11 +4,11 @@
  * applies. A menu never writes `disabled` onto its options (AB#1566578), so
  * an ancestor's disabled state has to be resolved at check-time by walking
  * up, mirroring `auro-menu`'s own `isOptionInteractive()`/
- * `isSelectableByValue()` — duplicated here rather than imported since
+ * `isSelectableByValue()`. It's duplicated here rather than imported because
  * `auro-select` only ever talks to `auro-menu` through its public DOM
  * contract, not its internal module.
  * @param {HTMLElement} option - The option to check.
- * @returns {boolean} True if the option or any ancestor menu is disabled.
+ * @returns {boolean} True if the option or any ancestor menu is disabled; false otherwise.
  */
 function isOptionOrAncestorMenuDisabled(option) {
   if (option.disabled) {
@@ -28,30 +28,28 @@ function isOptionOrAncestorMenuDisabled(option) {
 }
 
 /**
- * Returns the enabled (non-disabled) options for a menu, safely.
+ * Gets the options in a menu that aren't disabled, or an empty array when there are none.
  *
- * Auro-menu's `options` getter returns `undefined` when the menu has no items
- * (initItems sets `items` to undefined for empty menus). Callers that reach for
- * `.find()` / `[...spread]` would otherwise crash; this helper normalizes the
- * empty case to `[]` so array methods are always safe.
+ * Options inside a disabled menu or submenu count as disabled. Use it instead of
+ * reading `options` directly, because `auro-menu` returns `undefined` for a menu
+ * with no options, and array methods such as `.find()` would throw.
  *
- * @param {HTMLElement | null | undefined} menu - The auro-menu element.
- * @returns {Array<HTMLElement>} Non-disabled options, empty array when none.
+ * @param {HTMLElement | null | undefined} menu - The `<auro-menu>` element to read options from.
+ * @returns {Array<HTMLElement>} The options that aren't disabled, or an empty array when there are none.
  */
 export function getEnabledOptions(menu) {
   return (menu?.options || []).filter((option) => !isOptionOrAncestorMenuDisabled(option));
 }
 
 /**
- * Returns the active (selectable + visible) options for type-ahead navigation.
+ * Gets the options in a menu that keyboard and type-ahead navigation can land on, or an empty array when there are none.
  *
- * Uses auro-menuoption's `isActive` getter, which excludes disabled, hidden,
- * and static options (e.g. `static nomatch` placeholders) so the type-ahead
- * cursor never lands on a non-actionable item. Same empty-safe handling as
- * `getEnabledOptions`.
+ * Leaves out options that are disabled, hidden, or static, such as a `static nomatch`
+ * placeholder, using each option's `isActive` getter. Like `getEnabledOptions`, it
+ * returns an empty array for a menu with no options.
  *
- * @param {HTMLElement | null | undefined} menu - The auro-menu element.
- * @returns {Array<HTMLElement>} Active options, empty array when none.
+ * @param {HTMLElement | null | undefined} menu - The `<auro-menu>` element to read options from.
+ * @returns {Array<HTMLElement>} The options that aren't disabled, hidden, or static, or an empty array when there are none.
  */
 export function getActiveOptions(menu) {
   return (menu?.options || []).filter((option) => option.isActive);

@@ -1,39 +1,39 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>trigger:</strong> shows the component label, current value and will render to reflect state of the component (e.g. <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, <code>invalid</code>), and a flag marking instances that are required.
+    <strong>Trigger:</strong> Shows the label, the current value, and the component's state, such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, or <code>invalid</code>, plus an "(optional)" flag when the component isn't required.
   </li>
   <li>
-    <strong>options list:</strong> a list of options that may be selected which are rendered in an element which can be expanded/collapsed by interacting with the trigger.
+    <strong>Options list:</strong> The options people can select, shown in a bib that opens and closes from the trigger.
   </li>
   <li>
-    <strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
+    <strong>Help text:</strong> Text below the trigger that explains how to use the component, or, when it's invalid, what's wrong and how to fix it.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>
-<p>The trigger includes the component label, a flag marking the component optional/required and the current value. This label is required in order to ensure correct behavior when a guest is using accessibility tools such as screen readers and VoiceOver utilities. The invalid state will also announce to accessibility tools when applied.</p>
-<p>The optional/required flag content may be customized.</p>
-<p>When rendering the value of a selected option, the entire text content of the option will render in the trigger, including any icons.</p>
-<p>The trigger is a focusable element and will visually respond to common UI states - <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
-<auro-header level="4" id="options">List Options</auro-header>
-<p>The component will render a list of options that may be selected. Each option may be in one of the following states when rendered:</p>
+<p>The trigger includes the label, an "(optional)" flag when the component isn't required, and the current value. The label is required so screen reader users, including VoiceOver users, know what the component is for. When the component becomes invalid, screen readers announce the error message.</p>
+<p>To change the "(optional)" text, use the <code>optionalLabel</code> slot.</p>
+<p>In single-select mode, the trigger shows the selected option's full content, including any icons. In <code>multiSelect</code> mode, it shows the selected options' text, separated by commas.</p>
+<p>The trigger can receive focus and visually responds to common UI states: <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, and <strong>Disabled</strong> <em>(:disabled)</em>. The component doesn't have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
+<auro-header level="4" id="options">List options</auro-header>
+<p>The component renders a list of options that people can select. Each option can be in one of the following states:</p>
 <ul>
   <li>
-    <code>selected</code> - One option may be selected at a time and identifies the current value of the component. There is an optional feature that may be used to enable more than one option to be selected at a time.
+    <code>selected</code>: One option can be selected at a time, and it sets the component's current value. Set <code>multiSelect</code> to allow more than one selected option.
   </li>
   <li>
-    <code>active</code> - One option may be active at a time. The active option indicates the item that will become selected if the user chooses.
+    <code>active</code>: One option can be active at a time. The active option is the one that becomes selected when the user confirms a choice.
   </li>
   <li>
-    <code>disabled</code> - One or more options may be disabled. Disabled options are not interactive and cannot be marked as active or selected.
+    <code>disabled</code>: One or more options can be disabled. Disabled options aren't interactive and can't become active or selected.
   </li>
 </ul>
-<auro-header level="4" id="helpText">Help Text</auro-header>
-<p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers. In certain cases, a component label alone may be confusing.</p>
-<p>If the component fails validation, the help text will change to show a validation help message instead of the default help text.</p>
+<auro-header level="4" id="helpText">Help text</auro-header>
+<p>Help text isn't required. Still, consider how people understand the full context of the component, particularly screen reader users. In some cases, a label alone may be confusing.</p>
+<p>When the component fails validation, an error message replaces the help text.</p>
 <auro-header level="3" id="colors">Colors</auro-header>
-<auro-header level="4" id="defaultColor">Default Color</auro-header>
-<p>When the component is used on a light background.</p>
+<auro-header level="4" id="defaultColor">Default color</auro-header>
+<p>Use the default colors when the component is on a light background.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -43,8 +43,8 @@
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="inverseColor">Inverse Color</auro-header>
-<p>When the component is used on a darker background, set <code>appearance="inverse"</code> to invert the component colors for proper contrast and visibility.</p>
+<auro-header level="4" id="inverseColor">Inverse color</auro-header>
+<p>When the component is on a dark background, set <code>appearance="inverse"</code> to invert the component colors for proper contrast and visibility.</p>
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
