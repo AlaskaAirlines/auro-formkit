@@ -3,10 +3,10 @@ import { doubleRaf, navigateArrow } from '@aurodesignsystem/utils';
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 /**
- * Returns the clear button element from the active input's shadow
+ * Gets the clear button element from the active input's shadow
  * DOM, if available.
- * @param {Object} ctx - Display context with activeInput.
- * @returns {Element|null}
+ * @param {Object} ctx - The display context, with `activeInput`.
+ * @returns {Element|null} The clear button, or null when there isn't one.
  */
 function getClearBtn(ctx) {
   const root = ctx && ctx.activeInput && ctx.activeInput.shadowRoot;
@@ -17,12 +17,12 @@ function getClearBtn(ctx) {
 }
 
 /**
- * Returns true when the clear button inside the active input's shadow DOM has focus.
- * Uses shadowRoot.activeElement to detect focus inside auro-button,
- * since Safari does not propagate :focus-within through shadow DOM.
- * @param {Object} ctx - Display context with activeInput.
- * @param {Element} [clearBtn=getClearBtn(ctx)] - Pre-fetched clear button element.
- * @returns {boolean}
+ * Checks whether the clear button inside the active input's shadow DOM has focus.
+ * Uses `shadowRoot.activeElement` to detect focus inside `auro-button`,
+ * because Safari doesn't propagate `:focus-within` through shadow DOM.
+ * @param {Object} ctx - The display context, with `activeInput`.
+ * @param {Element} [clearBtn=getClearBtn(ctx)] - The clear button, when the caller already has it.
+ * @returns {boolean} True if the clear button has focus; false otherwise.
  */
 function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
   if (!clearBtn) {
@@ -33,7 +33,7 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
 }
 
 /**
- * Reconcile the menu `_index` from `optionActive` so subsequent `makeSelection` calls find the correct option after async clearSelection has reset it.
+ * Restores the menu's `_index` from `optionActive` after an async `clearSelection` has reset it, so later `makeSelection` calls find the correct option.
  * @param {Object} menu - The menu component.
  */
 function reconcileMenuIndex(menu) {
@@ -46,8 +46,8 @@ function reconcileMenuIndex(menu) {
 }
 
 /**
- * Commit the highlighted option and close the bib.
- * @param {Element} component - The auro-combobox host element.
+ * Selects the active (highlighted) option and closes the bib.
+ * @param {Element} component - The `auro-combobox` host element.
  */
 function selectAndClose(component) {
   reconcileMenuIndex(component.menu);
@@ -56,12 +56,12 @@ function selectAndClose(component) {
 }
 
 /**
- * Whether `el` is currently visible enough to receive focus. Prefers the
+ * Checks whether `el` is currently visible enough to receive focus. Prefers the
  * browser's `checkVisibility()` (Chrome/Safari; Firefox behind a flag until
  * recently); otherwise combines a display/visibility check with an
- * ancestor-hidden probe that keeps position:fixed elements visible.
+ * ancestor-hidden probe that keeps `position: fixed` elements visible.
  * @param {Element} el - The element to test.
- * @returns {boolean}
+ * @returns {boolean} True if the element is visible enough to receive focus; false otherwise.
  */
 function isVisibleForFocus(el) {
   if (typeof el.checkVisibility === 'function') {
@@ -75,10 +75,10 @@ function isVisibleForFocus(el) {
 }
 
 /**
- * Return the tab stop that comes before `component` in page tab order,
+ * Gets the tab stop that comes before `component` in page tab order,
  * skipping any hidden entries the walker doesn't filter itself.
- * @param {Element} component - The auro-combobox host element.
- * @returns {Element|null}
+ * @param {Element} component - The `auro-combobox` host element.
+ * @returns {Element|null} The previous visible tab stop, or null when there isn't one.
  */
 function getPreviousTabStop(component) {
   const tabStops = getFocusableElements(component.ownerDocument.body);
@@ -92,13 +92,12 @@ function getPreviousTabStop(component) {
 }
 
 /**
- * Commit the highlighted option, close the bib, and move focus to the tab
- * stop before the combobox — the Shift+Tab exit path (AB#1592239).
- * Returns true when this function moved focus and the caller should
- * preventDefault; false when no previous tab stop was found and the browser's
- * native traversal should run.
- * @param {Element} component - The auro-combobox host element.
- * @returns {boolean}
+ * Selects the active (highlighted) option, closes the bib, and moves focus to the tab
+ * stop before the combobox. This is the Shift+Tab exit path (AB#1592239).
+ * @param {Element} component - The `auro-combobox` host element.
+ * @returns {boolean} True if this function moved focus and the caller should call
+ *   `preventDefault()`; false when no previous tab stop was found and the browser's
+ *   native traversal should run.
  */
 function selectAndExitBackward(component) {
   const previousTabStop = getPreviousTabStop(component);

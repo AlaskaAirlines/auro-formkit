@@ -1,6 +1,6 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
 
 ```html
@@ -14,7 +14,7 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
 Use `<auro-combobox>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
 
 ```html
@@ -35,7 +35,9 @@ Use `<auro-combobox>` directly in your Svelte template. Properties can be bound 
   let comboboxValue = $state<string>('');
 </script>
 <custom-combobox value={comboboxValue}>
+  <span slot="bib.fullscreen.headline">Search airports</span>
   <span slot="label">Search airports</span>
+  <span slot="ariaLabel.input.clear">Clear airport</span>
   <custom-menu>
     {#each options as [value, label]}
       <custom-menuoption {value}>{label}</custom-menuoption>
@@ -45,8 +47,8 @@ Use `<auro-combobox>` directly in your Svelte template. Properties can be bound 
 </custom-combobox>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-combobox>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-combobox>` props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`):
 
 ```js
 import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
@@ -63,7 +65,7 @@ declare namespace svelteHTML {
 
 This enables prop hinting for attributes like `value`, `disabled`, and others directly in Svelte templates.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
 
 ```html
@@ -75,7 +77,9 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
   }
 </script>
 <custom-combobox oninput={handleInput}>
+  <span slot="bib.fullscreen.headline">Search airports</span>
   <span slot="label">Search airports</span>
+  <span slot="ariaLabel.input.clear">Clear airport</span>
   <custom-menu>
     <custom-menuoption value="SEA">Seattle-Tacoma International</custom-menuoption>
     <custom-menuoption value="LAX">Los Angeles International</custom-menuoption>
@@ -85,7 +89,7 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
 <p>Selected: {value}</p>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 
 ```js

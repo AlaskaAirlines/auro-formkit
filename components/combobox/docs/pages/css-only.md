@@ -1,12 +1,15 @@
 <auro-header level="1">CSS only with native input and datalist</auro-header>
 
-<p>For situations where the <code>&lt;auro-combobox&gt;</code> web component cannot be used, a native HTML <code>&lt;input type="text"&gt;</code> paired with a <code>&lt;datalist&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-combobox</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.combobox</code> class, so the styling must be authored manually using Auro design tokens.</p>
+<p>For situations where the <code>&lt;auro-combobox&gt;</code> web component can't be used, a native HTML <code>&lt;input type="text"&gt;</code> paired with a <code>&lt;datalist&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-combobox</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.combobox</code> class, so the styling must be authored manually using Auro design tokens.</p>
 
 <auro-header level="2">Styling a native input with datalist</auro-header>
 
 <p>The native input can be restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the size, border, and focus-state colors used by the <code>auro-combobox</code> trigger input.</p>
 
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size, border-radius, and typography tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
 .combobox {
   display: inline-block;
@@ -17,7 +20,7 @@
 .combobox-label {
   display: block;
   font-size: var(--ds-size-150, 0.75rem);
-  color: var(--ds-color-text-secondary-default, #6e767f);
+  color: var(--ds-basic-color-texticon-muted, #676767);
   margin-bottom: var(--ds-size-50, 0.25rem);
 }
 
@@ -28,27 +31,27 @@
   height: var(--ds-size-600, 3rem);
   padding: 0 var(--ds-size-200, 1rem);
   font-size: var(--ds-size-200, 1rem);
-  color: var(--ds-color-text-primary-default, #00256c);
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
+  background-color: var(--ds-basic-color-surface-default, #ffffff);
+  border: 1px solid var(--ds-basic-color-border-bold, #585e67);
   border-radius: var(--ds-border-radius, 4px);
   box-sizing: border-box;
 }
 
 .combobox-input:focus-visible {
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
+  outline: 2px solid var(--ds-basic-color-border-brand, #00274a);
   outline-offset: 2px;
-  border-color: var(--ds-color-border-active-default, #01426a);
+  border-color: var(--ds-basic-color-border-brand, #00274a);
 }
 
 .combobox-input:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-  background-color: var(--ds-color-container-disabled-default, #f2f3f5);
+  background-color: var(--ds-advanced-color-state-background-disabled, #dddddd);
 }
 
 .combobox-input[aria-invalid="true"] {
-  border-color: var(--ds-color-border-error-default, #d23153);
+  border-color: var(--ds-basic-color-status-error, #e31f26);
 }
 </code></pre>
 
@@ -101,11 +104,11 @@
 
 <auro-header level="3">Filter vs. suggestion behavior</auro-header>
 
-<p><code>auro-combobox</code> exposes a <code>behavior</code> attribute (<code>"filter"</code> or <code>"suggestion"</code>) that controls whether the user must select a menu option or may submit a freeform typed value. Native <code>&lt;datalist&gt;</code> always behaves like suggestion mode — there is no way to require the user to choose from the list without writing custom JavaScript to compare the input value against the option set.</p>
+<p><code>auro-combobox</code> exposes a <code>behavior</code> attribute (<code>filter</code> or <code>suggestion</code>) that controls whether the user must select a menu option or may submit a freeform typed value. Native <code>&lt;datalist&gt;</code> always behaves like suggestion mode. There's no way to require the user to choose from the list without writing custom JavaScript to compare the input value against the option set.</p>
 
 <auro-header level="3">Custom filtering and matching</auro-header>
 
-<p><code>auro-combobox</code> filters options against the typed value and supports a <code>suggest</code> attribute on each menu option for additional matching keywords, plus <code>persistent</code>, <code>static</code>, and <code>nomatch</code> options that change how the list reacts to input. <code>&lt;datalist&gt;</code> matching is browser-controlled, varies across browsers, and cannot be extended with synonyms, persistent items, or a "no match" placeholder.</p>
+<p><code>auro-combobox</code> filters options against the typed value and supports a <code>suggest</code> attribute on each menu option for additional matching keywords, plus <code>persistent</code>, <code>static</code>, and <code>nomatch</code> options that change how the list reacts to input. <code>&lt;datalist&gt;</code> matching is browser-controlled, varies across browsers, and can't be extended with synonyms, persistent items, or a "no match" placeholder.</p>
 
 <auro-header level="3">Highlighted match text</auro-header>
 
@@ -113,19 +116,19 @@
 
 <auro-header level="3">Custom validation messages</auro-header>
 
-<p><code>auro-combobox</code> exposes <code>setCustomValidity</code>, <code>setCustomValidityCustomError</code>, <code>setCustomValidityValueMissing</code>, and <code>setCustomValidityValueMissingFilter</code> for fully customizable error messages per validity state, including a distinct message for "did not pick a value from the list" when <code>behavior="filter"</code>. Native inputs surface browser-controlled validation messages that cannot be customized beyond a single <code>setCustomValidity()</code> string.</p>
+<p><code>auro-combobox</code> exposes <code>setCustomValidity</code>, <code>setCustomValidityCustomError</code>, <code>setCustomValidityValueMissing</code>, and <code>setCustomValidityValueMissingFilter</code> for fully customizable error messages per validity state, including a distinct message for "did not pick a value from the list" when <code>behavior="filter"</code>. Native inputs surface browser-controlled validation messages that can't be customized beyond a single <code>setCustomValidity()</code> string.</p>
 
 <auro-header level="3">Touched-state tracking</auro-header>
 
-<p><code>auro-combobox</code> tracks a <code>touched</code> state so validation errors only appear after the user has interacted with the field. Native inputs have no built-in touched concept — you must implement focus/blur tracking yourself to avoid showing errors on initial render.</p>
+<p><code>auro-combobox</code> tracks a <code>touched</code> state so validation errors only appear after the user has interacted with the field. Native inputs have no built-in touched concept, so you must implement focus/blur tracking yourself to avoid showing errors on initial render.</p>
 
 <auro-header level="3">Keyboard navigation and ARIA</auro-header>
 
-<p><code>auro-combobox</code> implements the WAI-ARIA combobox pattern: <code>role="combobox"</code> on the input, <code>aria-expanded</code>, <code>aria-controls</code>, <code>aria-activedescendant</code>, and <code>aria-setsize</code>/<code>aria-posinset</code> on each option, plus arrow-key navigation, Home/End, Escape to close, and Enter to select. <code>&lt;datalist&gt;</code> exposes none of these hooks — keyboard behavior is whatever the browser provides, and the experience differs substantially between Chrome, Safari, and Firefox.</p>
+<p><code>auro-combobox</code> implements the WAI-ARIA combobox pattern: <code>role="combobox"</code> on the input, <code>aria-expanded</code>, <code>aria-controls</code>, <code>aria-activedescendant</code>, and <code>aria-setsize</code>/<code>aria-posinset</code> on each option, plus arrow-key navigation, Home/End, Escape to close, and Enter to select. <code>&lt;datalist&gt;</code> exposes none of these hooks. Keyboard behavior is whatever the browser provides, and the experience differs substantially between Chrome, Safari, and Firefox.</p>
 
 <auro-header level="3">Screen reader announcements</auro-header>
 
-<p><code>auro-combobox</code> dispatches live-region announcements when an option becomes active ("Seattle, not selected, 1 of 5") and when an option is selected, including special handling for fullscreen dialog mode where the trigger is inert. <code>&lt;datalist&gt;</code> announcements depend entirely on the assistive technology and browser combination.</p>
+<p><code>auro-combobox</code> uses a live region to announce each selection and, in the fullscreen dialog where the trigger is inert, each option that becomes active ("Seattle, not selected, 1 of 5"). <code>&lt;datalist&gt;</code> announcements depend entirely on the screen reader and browser combination.</p>
 
 <auro-header level="3">Mobile fullscreen presentation</auro-header>
 
@@ -133,27 +136,27 @@
 
 <auro-header level="3">Rich option content and display value</auro-header>
 
-<p><code>auro-combobox</code> works with <code>auro-menuoption</code> elements that can contain markup, icons, and a <code>displayValue</code> slot that lets the visible trigger content differ from the underlying value (paired with <code>persistInput</code> for advanced filter UIs). <code>&lt;datalist&gt;</code> options are plain strings — no markup, no icons, and the visible value always equals the submitted value.</p>
+<p><code>auro-combobox</code> works with <code>auro-menuoption</code> elements that can contain markup, icons, and a <code>displayValue</code> slot that lets the visible trigger content differ from the underlying value (paired with <code>persistInput</code> for advanced filter UIs). <code>&lt;datalist&gt;</code> options are plain strings: no markup, no icons, and the visible value always equals the submitted value.</p>
 
 <auro-header level="3">Coordinated value and option-selected state</auro-header>
 
-<p><code>auro-combobox</code> exposes both <code>value</code> (the selected option's value) and <code>optionSelected</code> (a reference to the chosen <code>auro-menuoption</code> element), and fires <code>input</code> and <code>inputValue</code> events with structured detail. With native HTML, you only get the input's string value — there is no concept of which datalist option the user picked because the browser does not report it.</p>
+<p><code>auro-combobox</code> exposes both <code>value</code> (the selected option's value) and <code>optionSelected</code> (a reference to the chosen <code>auro-menuoption</code> element), and fires <code>input</code> and <code>inputValue</code> events with structured detail. With native HTML, you only get the input's string value. There's no way to know which datalist option the user picked, because the browser doesn't report it.</p>
 
 <auro-header level="3">Form integration events</auro-header>
 
-<p><code>auro-combobox</code> dispatches <code>auroFormElement-validated</code> events so parent <code>auro-form</code> elements can coordinate validation across all child fields. Native inputs participate in form submission but do not emit the structured validation events that the Auro form system expects.</p>
+<p><code>auro-combobox</code> dispatches <code>auroFormElement-validated</code> events so parent <code>auro-form</code> elements can coordinate validation across all child fields. Native inputs participate in form submission but don't emit the structured validation events that the Auro form system expects.</p>
 
 <auro-header level="3">Reset behavior</auro-header>
 
-<p><code>auro-combobox</code> provides <code>reset()</code> and <code>clear()</code> methods that clear the input, menu selection, validation state, and touched flag in one call. With native HTML, you must clear the input value and separately reset any custom validation state you are tracking.</p>
+<p><code>auro-combobox</code> provides a <code>reset()</code> method that clears the input, menu selection, validation state, and touched flag in one call, and a <code>clear()</code> method that clears only the value, input, and menu selection. With native HTML, you must clear the input value and separately reset any custom validation state you're tracking.</p>
 
 <auro-header level="3">Layouts, shapes, and sizes</auro-header>
 
-<p><code>auro-combobox</code> supports <code>layout</code> (<code>classic</code>, <code>emphasized</code>, <code>snowflake</code>), <code>shape</code>, and <code>size</code> attributes that coordinate the appearance of the trigger, dropdown, and menu options together. With native HTML, every variant must be authored from scratch and the dropdown UI cannot be restyled at all.</p>
+<p><code>auro-combobox</code> supports <code>layout</code> (<code>classic</code>, <code>emphasized</code>, <code>snowflake</code>), <code>shape</code>, and <code>size</code> attributes that coordinate the appearance of the trigger, dropdown, and menu options together. With native HTML, every variant must be authored from scratch and the dropdown UI can't be restyled at all.</p>
 
 <auro-header level="3">Multi-brand theming</auro-header>
 
-<p><code>auro-combobox</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only input is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does. The browser-rendered <code>&lt;datalist&gt;</code> popup cannot be themed at all.</p>
+<p>Both <code>auro-combobox</code> and the CSS above read Auro design tokens through CSS custom properties, so both follow the brand theme whose token file you load. The difference is upkeep: the component's styles update with the package, while you maintain the CSS-only styles yourself. The browser-rendered <code>&lt;datalist&gt;</code> popup can't be themed at all.</p>
 
 <auro-header level="2">Summary</auro-header>
 
@@ -243,12 +246,12 @@
     </tr>
     <tr>
       <td>Multi-brand theming</td>
-      <td>Static (import-time tokens)</td>
-      <td>Full (design tokens + component logic)</td>
+      <td>Follows the loaded tokens; you maintain the CSS</td>
+      <td>Follows the loaded tokens; styles maintained in the component</td>
     </tr>
   </tbody>
 </table>
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-combobox</code> whenever possible. Fall back to a CSS-styled native <code>&lt;input list&gt;</code> with a <code>&lt;datalist&gt;</code> only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and be prepared to accept browser-controlled dropdown styling, inconsistent keyboard and screen reader behavior, and the loss of filter-mode validation, match highlighting, fullscreen presentation, and structured form integration.</p>
+<p>Use <code>auro-combobox</code> whenever possible. Fall back to a CSS-styled native <code>&lt;input list&gt;</code> with a <code>&lt;datalist&gt;</code> only in environments where custom elements aren't supported or when integrating with third-party systems that require plain HTML. When you do, expect browser-controlled dropdown styling, inconsistent keyboard and screen reader behavior, and the loss of filter-mode validation, match highlighting, fullscreen presentation, and structured form integration.</p>

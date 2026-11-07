@@ -1,9 +1,9 @@
-<auro-header level="1" id="overview">Combobox - Getting Started</auro-header>
+<auro-header level="1" id="overview">Combobox - Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
       <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
@@ -11,7 +11,7 @@
       <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal config</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-default" class="level2 body-xs">(default)</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">label</auro-anchorlink>
@@ -21,12 +21,12 @@
       <auro-anchorlink fluid href="#slot-ariaLabel-input-clear" class="level2 body-xs">ariaLabel.input.clear</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">ariaLabel.bib.close</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">bib.fullscreen.headline</auro-anchorlink>
-      <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
+      <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
       <auro-anchorlink fluid href="#inputValue" class="level2 body-xs">inputValue</auro-anchorlink>
       <auro-anchorlink fluid href="#optionSelected" class="level2 body-xs">optionSelected</auro-anchorlink>
       <auro-anchorlink fluid href="#typedValue" class="level2 body-xs">typedValue</auro-anchorlink>
-      <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
-      <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
+      <auro-anchorlink fluid href="#validity" class="level2 body-xs">validity</auro-anchorlink>
+      <auro-anchorlink fluid href="#value" class="level2 body-xs">value</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#clear" class="level2 body-xs">clear()</auro-anchorlink>
       <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
@@ -55,18 +55,18 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="stateManagement">State Management</auro-header>
-        <p>The following read-only properties reflect the current state of the component and can be accessed via JavaScript.</p>
+        <auro-header level="2" id="stateManagement">State management</auro-header>
+        <p>The following properties hold the combobox's current state. Read them with JavaScript. You can also set <code>value</code> and <code>typedValue</code>.</p>
         <auro-header level="3" id="inputValue">inputValue</auro-header>
-        <p>Returns the current value of the internal HTML5 <code>input</code> element. This reflects exactly what the user has typed, regardless of whether it matches a menu option.</p>
+        <p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types. Read-only.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
         <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected.</p>
         <auro-header level="3" id="typedValue">typedValue</auro-header>
-        <p>Gets or sets the value of the internal input element. Unlike <code>value</code>, this represents what the user typed (or what was programmatically set in the input), not the selected option value.</p>
+        <p>Sets the text shown in the input, such as a search the user started earlier. It doesn't update as the user types, so read <code>inputValue</code> to get the current text.</p>
         <auro-header level="3" id="validity">validity</auro-header>
-        <p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>"valid"</code>, <code>"valueMissing"</code>, and <code>"customError"</code>.</p>
+        <p>Gets the result of the last validation as a string, such as <code>valid</code>, <code>valueMissing</code>, or <code>customError</code>. It's <code>undefined</code> until the combobox validates.</p>
         <auro-header level="3" id="value">value</auro-header>
-        <p>Gets or sets the selected value of the combobox. When set programmatically, the component will attempt to match and select the corresponding menu option.</p>
+        <p>Gets or sets the combobox's value: the chosen option's <code>value</code>, or the text in the input when no option is chosen. When you set it to the <code>value</code> of an option that isn't <code>disabled</code> or <code>static</code>, the combobox selects that option.</p>
       </section>
       <section>
         <auro-header level="2" id="publicFunctions">Functions</auro-header>
@@ -89,11 +89,11 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="validate">validate()</auro-header>
-        <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+        <p>Validates the component and updates <code>validity</code> and the error message. Pass <code>true</code> to validate even when the combobox has focus or the user hasn't interacted with it yet.</p>
         <auro-header level="3" id="hideBib">hideBib()</auro-header>
-        <p>Programmatically hides the dropdown bib if it is currently open.</p>
+        <p>Hides the bib if it's open.</p>
         <auro-header level="3" id="showBib">showBib()</auro-header>
-        <p>Programmatically shows the dropdown bib if there are options to display.</p>
+        <p>Shows the bib when the input has a value and there are options, a loading state, or a <code>nomatch</code> option to show.</p>
       </section>
     </div>
   </div>

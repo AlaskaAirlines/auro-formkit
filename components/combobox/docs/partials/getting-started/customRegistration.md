@@ -9,12 +9,13 @@ import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class
 AuroCombobox.register('custom-combobox');
 ```
 
-This will create a new custom element `<custom-combobox>` that behaves exactly like `<auro-combobox>`, allowing both to coexist on the same page without interfering with each other.
+This creates a new custom element, `<custom-combobox>`, that behaves exactly like `<auro-combobox>`, so both can coexist on the same page without interfering with each other.
 
 ```html
   <custom-combobox>
-    <span slot="bib.fullscreen.headline">Bib Header</span>
+    <span slot="bib.fullscreen.headline">Bib header</span>
     <span slot="label">Name</span>
+    <span slot="ariaLabel.input.clear">Clear name</span>
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
       <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
