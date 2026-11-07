@@ -1,6 +1,6 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-form&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
 
 ```html
@@ -11,7 +11,7 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
 Use `<auro-form>` directly in your Svelte template:
 
 ```html
@@ -26,8 +26,8 @@ Use `<auro-form>` directly in your Svelte template:
 </custom-form>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-form>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-form>` props in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
 
 ```js
 import type { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
@@ -39,9 +39,9 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting for attributes like `disabled` and others directly in Svelte templates.
+This adds autocomplete and type checking for `<auro-form>` properties, such as `value` and `validity`, in Svelte templates.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Listen for the `submit` and `reset` events on the element:
 
 ```html
@@ -56,7 +56,7 @@ Auro components emit native `CustomEvent`s. Listen for the `submit` and `reset` 
 </custom-form>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 
 ```js

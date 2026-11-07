@@ -1,8 +1,8 @@
 ## Custom Component Registration for Version Management
 
-There are two key parts to every Auro component: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so it can be used in HTML.
+There are two key parts to every Auro component: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so you can use it in HTML.
 
-You can do this by importing only the component class and using the <code>register(name)</code> method with a unique name:
+To register the component under your own name, import only the component class and call the <code>register(name)</code> method with a unique name:
 
 ```js
 // Import the class only
@@ -12,13 +12,13 @@ import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 AuroForm.register('[custom]-form');
 ```
 
-This will create a new custom element `<custom-form>` that behaves exactly like `<auro-form>`, allowing both to coexist on the same page without interfering with each other.
+This creates a new custom element `<custom-form>` that behaves exactly like `<auro-form>`, so both can be on the same page without interfering with each other.
 
-### Using Custom-Named Child Form Elements
+### Using custom-named child form elements
 
-When consuming custom-named Auro form elements (like `auro-input` registered as `custom-input`),
-these elements _must_ be registered BEFORE auro-form due to rendering order limitations.
-Auro form elements are automatically recognized based on their tag name (e.g. `auro-input`) or special auro attributes which are only assigned during the initial render.
+When you use custom-named Auro form elements, such as `auro-input` registered as `custom-input`,
+register them _before_ `auro-form`, because of the order in which the elements render.
+`auro-form` recognizes Auro form elements by their tag name, such as `auro-input`, or by a matching attribute that each custom-named element adds to itself once it's registered and on the page.
 
 For example, the following is correct:
 
@@ -26,16 +26,16 @@ For example, the following is correct:
 import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
 import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 
-AuroInput.register('[custom]-input'); // adds an internal identifier auro-form uses to recognize the custom element
-AuroForm.register('[custom]-form'); // render looks for said identifier
+AuroInput.register('[custom]-input'); // register child form elements first
+AuroForm.register('[custom]-form'); // the form then recognizes each custom-input when it looks for its fields
 ```
 
-The following is NOT correct and will result in forms not working as expected:
+The following is _not_ correct, and the form doesn't work as expected:
 
 ```javascript
 import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
 import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 
-AuroForm.register('[custom]-form'); // forms start rendering, looking for auro inputs, or custom-named inputs
-AuroInput.register('[custom]-input'); // too late, form has already rendered and did not find the custom element
+AuroForm.register('[custom]-form'); // the form looks for its fields when it first renders
+AuroInput.register('[custom]-input'); // too late: the form has already looked and didn't recognize the custom input
 ```

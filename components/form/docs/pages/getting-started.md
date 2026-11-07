@@ -1,9 +1,9 @@
-<auro-header level="1" id="overview">Form - Getting Started</auro-header>
+<auro-header level="1" id="overview">Form - Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
       <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
@@ -11,7 +11,7 @@
       <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal configuration</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#functions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#fnSubmit" class="level2 body-xs">submit()</auro-anchorlink>
@@ -29,7 +29,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="minimalConfig">Minimal Configuration</auro-header>
+        <auro-header level="2" id="minimalConfig">Minimal configuration</auro-header>
         <p>The most basic use of <code>auro-form</code> requires one or more named Auro form elements inside the form. Add a button with <code>type="submit"</code> to trigger form submission.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -43,7 +43,7 @@
       </section>
       <section>
         <auro-header level="2" id="slots">Slots</auro-header>
-        <p>The <code>default</code> slot accepts any Auro form elements (e.g., <code>auro-input</code>, <code>auro-select</code>, <code>auro-datepicker</code>, <code>auro-counter-group</code>) as well as any HTML elements for layout and structure.</p>
+        <p>The <code>default</code> slot accepts Auro form elements, such as <code>auro-input</code>, <code>auro-select</code>, <code>auro-datepicker</code>, and <code>auro-counter-group</code>, as well as any HTML elements for layout and structure.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/complex.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -59,9 +59,9 @@
       <section>
         <auro-header level="2" id="functions">Functions</auro-header>
         <auro-header level="3" id="fnSubmit">submit()</auro-header>
-        <p>Validates all form elements. If all are valid, fires a <code>submit</code> event with <code>detail.value</code> containing the current form values. If any element is invalid, its error state is surfaced and the <code>submit</code> event is not fired.</p>
+        <p>Validates every enabled form element and, when none is invalid or required but empty, fires a <code>submit</code> event with the form's current values in <code>detail.value</code>. Otherwise, each invalid field shows its error and the <code>submit</code> event doesn't fire.</p>
         <auro-header level="3" id="fnReset">reset()</auro-header>
-        <p>Resets all form elements to their initial state and fires a <code>reset</code> event. The event's <code>detail.previousValue</code> contains the form values captured immediately before the reset.</p>
+        <p>Resets every tracked form element by calling its own <code>reset()</code>, then fires a <code>reset</code> event with the form's values from just before the reset in <code>detail.previousValue</code>. Each element decides what resetting means: for example, <code>auro-input</code> clears its value instead of restoring the one it started with.</p>
       </section>
     </div>
   </div>

@@ -13,27 +13,45 @@ import styleCss from "./styles/style-css.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * @typedef {Object} FormStateMember - The form state member.
- * @property {string | number | boolean | string[] | Record<string, number> | null} value - The value of the form element. Mirrors the child component's own `.value`, so the shape varies by element type (e.g. an array for `auro-checkbox-group`, an object keyed by counter name for `auro-counter-group`). A `range` `auro-datepicker` is the one form-specific case: its `.values` array is stored rather than its single `.value` string.
- * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
- * @property {boolean} required - Whether the form element is required or not.
- * @property {boolean} disabled - Whether the form element is currently disabled. Cached from the live attribute via the MutationObserver in `connectedCallback` and refreshed from `_handleAttributeMutations`.
+ * @typedef {Object} FormStateMember - The tracked state of one named form element.
+ * @property {string | number | boolean | string[] | Record<string, number> | null} value - The value of the form element. Mirrors the child component's own `.value`, so the shape varies by element type, for example an array for `auro-checkbox-group` or an object keyed by counter name for `auro-counter-group`. A `range` `auro-datepicker` is the one form-specific case: after user input, its `.values` array is stored rather than its single `.value` string.
+ * @property {string | null} validity - The validity of the form element, such as `valid` or `valueMissing`, stored when the form element is added and each time it fires `auroFormElement-validated`. It's `null` until the element reports a validity.
+ * @property {boolean} required - True if the form element has the `required` attribute; false otherwise.
+ * @property {boolean} disabled - True if the form element has the `disabled` attribute; false otherwise. The form caches it when it adds the element, and `_handleAttributeMutations` refreshes it when the attribute changes.
  */
 
 /**
- * @typedef {Object.<string, FormStateMember>} FormState - The form state.
+ * @typedef {Object.<string, FormStateMember>} FormState - The tracked state of every named form element, keyed by its `name` attribute.
  */
 
 /**
- * The `auro-form` element provides users a way to create and manage forms in a consistent manner.
+ * Collects the values and validity of the Auro form elements inside it, and handles submitting and resetting them together.
+ *
+ * **Key capabilities**
+ * - **Collects values**: The form always gathers the value of every named, enabled Auro form element inside it, such as `auro-input` or `auro-select`, into one object in `value`.
+ * - **Tracks validity and changes**: The form always reports whether its fields pass validation in `validity`, and whether any field has changed from its starting value in `isInitialState`.
+ * - **Manages submit and reset buttons**: The form always turns on a `button` or `auro-button` with `type="submit"` only while no enabled field is invalid or required but empty, and one with `type="reset"` only when the form has changed or holds a value.
+ * - **Submits on Enter**: Pressing Enter in an enabled form element always runs `submit()`.
+ * - **Skips disabled fields**: The form always leaves fields with the `disabled` attribute out of `value`, validation, and the `submit` event.
+ *
+ * **Example**
+ * ```html
+ * <auro-form>
+ *   <auro-input name="email" type="email" required>
+ *     <span slot="label">Email</span>
+ *   </auro-input>
+ *   <auro-button type="submit">Submit</auro-button>
+ * </auro-form>
+ * ```
+ * @summary A form wrapper that collects values and validity from Auro form elements and manages submit and reset buttons.
  * @customElement auro-form
  *
- * @slot default - The default slot for form elements.
+ * @slot default - Named Auro form elements, such as `auro-input` and `auro-select`, plus the submit and reset buttons the form controls. Fields can be nested in other elements, such as a `div` or `fieldset`. {@requiredWhen always} {@category ui}
  *
  * @event input - Fires when a child form element receives user input.
- * @event change - Fires when a child form element's value changes or the form is initialized.
- * @event reset - Fires when the form is reset. The event detail contains the previous value of the form before reset.
- * @event submit - Fires when the form is submitted. The event detail contains the current value of the form.
+ * @event change - Fires when a child form element's value changes, and when the form rebuilds its state, such as after its content changes or a reset.
+ * @event reset - Fires after the form resets. The event's `detail.previousValue` holds the form's values from just before the reset.
+ * @event submit - Fires when the form is submitted and no enabled field is invalid or required but empty. The event's `detail.value` holds the form's current values.
  */
 export class AuroForm extends LitElement {
   static get properties() {
@@ -102,11 +120,11 @@ export class AuroForm extends LitElement {
     this.mutationObservers = [];
 
     /**
-     * Captured initial (default) value per field `name`. Populated on first
-     * sight of each name in `_addElementToState` and preserved across
-     * subsequent `initializeState` cycles (slot change, rename, reset) so
-     * `_setInitialState` can detect user edits as `current !== initial`,
-     * matching HTML's `dirtyValueFlag` semantics.
+     * Holds each field's starting value, keyed by its `name`.
+     * `_addElementToState` records a value the first time it sees a name, and
+     * later `initializeState` cycles (slot change, rename, reset) keep it, so
+     * `_setInitialState` can detect user edits as `current !== initial`, like
+     * the HTML dirty value flag.
      * @private
      * @type {Record<string, string | number | boolean | string[] | Record<string, number> | null | undefined>}
      */
@@ -148,6 +166,10 @@ export class AuroForm extends LitElement {
 
   // Note: button is NOT considered a form element in this context
   // as it does not have a .value property.
+  /**
+   * Gets the tag names of the Auro form elements the form tracks. Elements registered under a custom tag name are matched by an attribute named after the original tag, such as `auro-input`.
+   * @returns {string[]} The tracked form element tag names.
+   */
   static get formElementTags() {
     return [
       'auro-input',
@@ -163,10 +185,10 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Compare tag name with element to identify it (for API purposes).
-   * @param {string} elementTag - The HTML tag name like `auro-datepicker`.
-   * @param {HTMLElement} element - The actual HTML element to compare.
-   * @returns {boolean}
+   * Checks whether the element matches a tag name, either by its own tag or by an attribute of the same name.
+   * @param {string} elementTag - The tag name to match, such as `auro-datepicker`.
+   * @param {HTMLElement} element - The element to check.
+   * @returns {boolean} True if the element matches the tag name; false otherwise.
    * @private
    */
   _isElementTag(elementTag, element) {
@@ -174,10 +196,10 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Shared code for determining if an element is something we care about (submit, form element, etc.).
-   * @param {string[]} collection - The array to use for tag name search.
-   * @param {HTMLElement} element - The element to compare against the master list.
-   * @returns {boolean}
+   * Checks whether the element matches any tag name in a collection, such as the form element or button tag names.
+   * @param {string[]} collection - The tag names to match.
+   * @param {HTMLElement} element - The element to check.
+   * @returns {boolean} True if the element matches a tag name in the collection; false otherwise.
    * @private
    */
   _isInElementCollection(collection, element) {
@@ -185,9 +207,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Check if the tag name is a form element.
-   * @param {HTMLElement} element - The element to check (attr or tag name).
-   * @returns {boolean}
+   * Checks whether the element is one of the Auro form elements the form tracks, by tag name or attribute.
+   * @param {HTMLElement} element - The element to check.
+   * @returns {boolean} True if the element is a tracked form element; false otherwise.
    * @private
    */
   isFormElement(element) {
@@ -195,12 +217,12 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Whether a given element is currently disabled. Disabled controls are excluded
-   * from submission, validity, and initial-state checks per the HTML spec
+   * Checks whether an element is currently disabled. The HTML spec leaves
+   * disabled controls out of submission and validation
    * (section 4.10.19.2 "Enabling and disabling form controls":
    * https://www.w3.org/TR/2011/WD-html5-20110113/association-of-controls-and-forms.html).
    *
-   * Implementation note: we deliberately read only the attribute. Every Auro
+   * Implementation note: this reads only the attribute on purpose. Every Auro
    * form element in `formElementTags` declares `disabled` with `reflect: true`,
    * so the attribute and property stay in sync. Reading the attribute also
    * lets the MutationObserver in `connectedCallback` (which is filtered to
@@ -208,7 +230,7 @@ export class AuroForm extends LitElement {
    * If a future form-element type ships without attribute reflection, expand
    * this helper to also read `element.disabled`.
    * @param {HTMLElement | undefined | null} element - The element to check.
-   * @returns {boolean}
+   * @returns {boolean} True if the element has the `disabled` attribute; false otherwise.
    * @private
    */
   _isDisabled(element) {
@@ -216,7 +238,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Whether the tracked form element registered under `name` is currently disabled.
+   * Checks whether the tracked form element registered under `name` is currently disabled.
    * See `_isDisabled` for the HTML-spec rationale behind excluding disabled
    * controls from form state.
    *
@@ -226,7 +248,7 @@ export class AuroForm extends LitElement {
    * `hasAttribute('disabled')` read as `_isDisabled`, so the "future form-element
    * type without attribute reflection" caveat documented there applies here too.
    * @param {string} name - The `name` attribute used to register the element.
-   * @returns {boolean}
+   * @returns {boolean} True if the element registered under `name` is disabled; false otherwise.
    * @private
    */
   _isNameDisabled(name) {
@@ -234,9 +256,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Validates if an event is from a valid form element with a name.
-   * @param {Event} event - The event to validate.
-   * @returns {boolean} - True if event is valid for processing.
+   * Checks whether an event comes from a tracked form element that has a `name`.
+   * @param {Event} event - The event to check.
+   * @returns {string | false | null} The element's `name` when the event comes from a named, tracked form element; otherwise a falsy value.
    * @private
    */
   _eventIsValidFormEvent(event) {
@@ -245,6 +267,10 @@ export class AuroForm extends LitElement {
   }
 
 
+  /**
+   * Gets the tag names of the buttons the form can use as submit and reset buttons, when they have `type="submit"` or `type="reset"`.
+   * @returns {string[]} The button tag names.
+   */
   static get buttonElementTags() {
     return [
       'button',
@@ -253,9 +279,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Check if the tag name is a button element.
+   * Checks whether the element is a `button` or `auro-button`, by tag name or attribute.
    * @param {HTMLElement} element - The element to check.
-   * @returns {boolean}
+   * @returns {boolean} True if the element is a button; false otherwise.
    * @private
    */
   isButtonElement(element) {
@@ -267,8 +293,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns the current values of all named, enabled form elements as a key-value object, keyed by each element's `name` attribute. Each value is the child component's own `.value`, so the shape depends on the element type — see that component's documentation for its exact shape (for example, `auro-checkbox-group` yields an array, `auro-counter-group` yields an object keyed by counter name, and `auro-select` with `multiSelect` yields a JSON-encoded string). The one form-specific exception is a `range` `auro-datepicker`, whose `.values` array (`[start, end]`) is stored instead of its single `.value` string.
+   * Gets the current values of all named, enabled form elements as one object, keyed by each element's `name` attribute. Each value is the child component's own `.value`, so its shape depends on the element type: for example, `auro-checkbox-group` gives an array, `auro-counter-group` gives an object keyed by counter name, and `auro-select` with `multiSelect` gives a JSON-encoded string. The one form-specific exception is a `range` `auro-datepicker`, which gives its `.values` array (`[start, end]`) instead of its single `.value` string once the user has entered dates.
    * @returns {Record<string, string | number | boolean | string[] | Record<string, number> | null>} The current form values.
+   * @category behavior
    */
   get value() {
     return Object.keys(this.formState).reduce((acc, key) => {
@@ -282,8 +309,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Getter for internal _submitElements.
-   * @returns {HTMLButtonElement[]}
+   * Gets the submit buttons the form controls.
+   * @returns {HTMLButtonElement[]} The submit buttons.
    * @private
    */
   get submitElements() {
@@ -291,8 +318,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns a collection of elements that will reset the form.
-   * @returns {HTMLButtonElement[]}
+   * Gets the reset buttons the form controls.
+   * @returns {HTMLButtonElement[]} The reset buttons.
    * @private
    */
   get resetElements() {
@@ -300,13 +327,12 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Raw constraint-validation check. Returns `true` when no enabled field
-   * has a validity error. Unlike the public `validity` getter, this does
-   * NOT gate on `isInitialState` — callers that need to make a decision
-   * based on the actual constraint state (submit-button enablement, the
-   * internal `submit()` gate) read this so a pre-filled valid form is
-   * correctly recognized as submittable at first render.
-   * @returns {boolean}
+   * Checks whether no enabled field has a validity error or is required but empty.
+   * Unlike the public `validity` getter, this doesn't depend on `isInitialState`,
+   * so callers that act on the actual validation result, such as submit-button
+   * enablement and the `submit()` check, see a pre-filled valid form as
+   * submittable at first render.
+   * @returns {boolean} True if every enabled field passes; false otherwise.
    * @private
    */
   _isFormValid() {
@@ -334,12 +360,12 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Whether the reset button should be enabled. True when the form has
-   * diverged from its initial state (so the user can always return to
-   * defaults — even if the dirty value lives behind a now-disabled field),
-   * OR when any non-disabled field has a current value or captured initial
-   * value (covers pre-filled forms and user-cleared-back-to-empty cases).
-   * @returns {boolean}
+   * Checks whether the reset buttons should be turned on. They're on when the
+   * form has changed from its initial state, even if the changed value is in a
+   * field that's now disabled, or when any enabled field has a current value or
+   * a captured initial value, which covers pre-filled forms and fields the user
+   * cleared.
+   * @returns {boolean} True if there's anything to reset; false otherwise.
    * @private
    */
   _hasResetableState() {
@@ -361,24 +387,22 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Collapse empty representations to a single canonical `null`.
+   * Converts every empty value to `null`.
    *
    * `_addElementToState` captures `null` for a field that mounts without a
-   * `value` attribute (`element.value || element.getAttribute('value')` is
-   * falsy → resolves to `null`), but `sharedInputListener` later stores the
-   * raw `event.target.value` — which is `''` for a user-cleared text input.
-   * Without this normalization, backspacing back to empty would taint the
-   * form forever (`'' !== null`) and Reset would stay enabled with nothing
-   * to actually reset.
+   * `value` attribute, because `element.value || element.getAttribute('value')`
+   * is falsy. Later, `sharedInputListener` stores the raw `event.target.value`,
+   * which is `''` for a text input the user cleared. Without this step,
+   * deleting back to empty would mark the form as changed for good
+   * (`'' !== null`), and Reset would stay on with nothing to reset.
    *
-   * `''`, `undefined`, and `[]` all collapse to `null`. The empty-array case
-   * covers checkbox-group, radio-group, and multiselect, where `[]` means
-   * "no selection" — semantically the same as `null`/`''`. Genuine values
-   * — including `0`, `false`, non-empty strings, and non-empty arrays —
-   * pass through unchanged so number, boolean, and populated multi-value
-   * fields still compare correctly.
-   * @param {*} value - Value to normalize.
-   * @returns {*}
+   * `''`, `undefined`, and `[]` all become `null`. The empty-array case covers
+   * checkbox groups, radio groups, and multi-select, where `[]` means "nothing
+   * selected". Real values, such as `0`, `false`, non-empty strings, and
+   * non-empty arrays, pass through unchanged, so number, boolean, and
+   * multi-value fields still compare correctly.
+   * @param {*} value - The value to normalize.
+   * @returns {*} The value, or `null` when it's empty.
    * @private
    */
   _normalizeEmpty(value) {
@@ -392,13 +416,12 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Infer validity status based on current formState.
+   * Sets the form's validity from the current form state.
    *
-   * Validity stays `null` while the form is in its initial state — this is
-   * the "stay quiet until the user interacts" UX contract that consumers
-   * depend on to delay error indicators. Code that needs the raw
-   * constraint-validation result regardless of interaction (e.g.,
-   * submit-button enablement) should call `_isFormValid()` directly.
+   * Validity stays `null` while the form is in its initial state. Consumers
+   * rely on that to hold back error indicators until the user interacts. Code
+   * that needs the actual validation result regardless of interaction, such as
+   * submit-button enablement, should call `_isFormValid()` directly.
    * @private
    */
   _calculateValidity() {
@@ -410,8 +433,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns `'valid'` if all required and interacted-with form elements are valid, `'invalid'` if any are not, or `null` if the form has not been interacted with yet.
-   * @returns {"valid" | "invalid" | null}
+   * Gets the form's overall validity: `invalid` when any enabled field has failed validation or is required but empty, and `valid` otherwise. Stays `null` while `isInitialState` is true, so you can hold back error messages until the user changes something.
+   * @returns {"valid" | "invalid" | null} The form's validity.
+   * @category behavior
    */
   get validity() {
     // Force calculate, as sometimes validity won't reflect
@@ -421,16 +445,16 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Determines whether the form is in its initial (untouched) state.
+   * Sets whether the form is in its initial (untouched) state.
    *
    * A field is tainted if either:
-   *   - its value differs from the value captured on first render, OR
-   *   - its validity is failing (anything other than `null` or `'valid'`).
+   *   - its value differs from the value captured on first render, or
+   *   - its validity is failing (anything other than `null` or `valid`).
    *
    * Validity acts as a backup signal: it catches users who interact with a
-   * field without changing its value (e.g., focusing and blurring a required
-   * field). We skip `null` (not yet validated) and `'valid'` (the default
-   * after Auro's auto-validation on mount) because neither proves the user
+   * field without changing its value, such as focusing and blurring a required
+   * field. `null` (not yet validated) and `valid` (the default after Auro's
+   * auto-validation on mount) are skipped, because neither proves the user
    * touched anything.
    * @returns {void}
    * @private
@@ -456,8 +480,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns `true` if no form element has been interacted with or had its value changed since the form was initialized or last reset.
-   * @returns {boolean}
+   * Checks whether the form is unchanged, with every field still holding its starting value, the value it had when the form first found it. The form counts as changed while any field's value differs from its starting value or any field has failed validation, so changing a value back makes this true again.
+   * @returns {boolean} True if the form is unchanged; false otherwise.
+   * @category behavior
    */
   get isInitialState() {
     return this._isInitialState;
@@ -487,8 +512,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Construct the query strings from elements, append them together, execute, and return the NodeList.
-   * @returns {NodeList}
+   * Finds the named form elements and the submit and reset buttons inside the form.
+   * @returns {NodeList} The matching elements.
    * @private
    */
   queryAuroElements() {
@@ -514,8 +539,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Store an element in state and on the _elements array.
-   * @param {HTMLElement} element - The element to add to our state.
+   * Adds an element to the form state and the `_elements` list, and captures its starting value the first time its `name` is seen.
+   * @param {HTMLElement} element - The element to add.
    * @private
    */
   _addElementToState(element) {
@@ -544,7 +569,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Initialize (or reinitialize) the form state.
+   * Rebuilds the form state from the form elements and buttons inside the form, fires `change`, and updates the buttons' disabled state.
    * @returns {void}
    * @private
    */
@@ -596,7 +621,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Resets all form elements to their initial state and fires a `reset` event. The event's `detail.previousValue` contains the form values captured immediately before the reset.
+   * Resets every tracked form element by calling its own `reset()`, then fires a `reset` event with the form's values from just before the reset in `detail.previousValue`. Each element decides what resetting means: for example, `auro-input` clears its value instead of restoring the one it started with.
    * @returns {void}
    */
   reset() {
@@ -630,7 +655,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Validates all form elements. If all are valid, fires a `submit` event with `detail.value` containing the current form values. If any element is invalid, its error state is surfaced and the `submit` event is not fired.
+   * Validates every enabled form element and, when none is invalid or required but empty, fires a `submit` event with the form's current values in `detail.value`. Otherwise, each invalid field shows its error and the `submit` event doesn't fire.
    * @returns {Promise<void>}
    */
   async submit() {
@@ -671,8 +696,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Shared input listener for all form elements.
-   * @param {Event} event - The event that is fired from the form element.
+   * Called when a tracked form element fires `input`. Stores the element's new value and fires `change`.
+   * @param {Event} event - The `input` event from the form element.
    * @private
    */
   sharedInputListener(event) {
@@ -704,8 +729,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Shared validation listener for all form elements.
-   * @param {Event} event - The event that is fired from the form element.
+   * Called when a tracked form element fires `auroFormElement-validated`. Stores the element's validity and recalculates the form's validity.
+   * @param {Event} event - The `auroFormElement-validated` event from the form element.
    * @private
    */
   sharedValidationListener(event) {
@@ -731,14 +756,14 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Handle Enter key press on form elements.
+   * Called when a key is pressed in a tracked form element. Enter runs `submit()`, unless the element is disabled or has a `textarea` attribute.
    * @param {KeyboardEvent} event - The keyboard event.
    * @private
    */
   handleKeyDown(event) {
 
     /**
-     * Use `currentTarget` because it is the tracked form element
+     * Use `currentTarget` because it's the tracked form element
      * handling the event, while `target` may be an inner radio,
      * checkbox, or counter inside that form control.
      */
@@ -782,11 +807,11 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Handle batched MutationObserver records for `disabled` and `name`
-   * attribute changes on tracked form elements. A `name` change invalidates
-   * the formState keying — we resolve it by re-initializing state. A `disabled`
-   * change simply needs a re-render (so `value` / `validity` getters re-evaluate)
-   * and a refresh of the submit/reset button enablement.
+   * Called with batched MutationObserver records for `disabled` and `name`
+   * attribute changes on tracked form elements. A `name` change breaks the
+   * `formState` keys, so the state is rebuilt. A `disabled` change only needs
+   * a re-render, so the `value` and `validity` getters re-evaluate, and a
+   * refresh of the submit and reset buttons' disabled state.
    * @param {MutationRecord[]} mutations - The batched mutation records.
    * @returns {void}
    * @private
@@ -897,7 +922,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * @param {import('lit').PropertyValues} _changedProperties - Map of changed properties with their previous values.
+   * @param {import('lit').PropertyValues} _changedProperties - The map of changed properties to their previous values.
    * @returns {void}
    */
   firstUpdated(_changedProperties) {
@@ -907,7 +932,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * @param {import('lit').PropertyValues} _changedProperties - Map of changed properties with their previous values.
+   * @param {import('lit').PropertyValues} _changedProperties - The map of changed properties to their previous values.
    * @returns {void}
    */
   updated(_changedProperties) {
@@ -926,9 +951,9 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Mutation observer for form elements. Slot change does not trigger unless
-   * root-level elements are added/removed. This is a workaround to ensure
-   * nested form elements are also observed.
+   * Called when children are added to or removed from a slotted wrapper element, and rebuilds the form state and listeners.
+   * `slotchange` only fires when top-level elements are added or removed, so
+   * this works around it to track nested form elements too.
    *
    * @returns {void}
    * @private
@@ -939,8 +964,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Slot change event listener. This is the main entry point for the form element.
-   * @param {Event} event - The slot change event.
+   * Called when the default slot's content changes. Rebuilds the form state, listeners, and wrapper observers, and is the form's main setup path.
+   * @param {Event} event - The `slotchange` event.
    * @returns {void}
    * @private
    */

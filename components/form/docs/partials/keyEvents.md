@@ -3,8 +3,8 @@
     <tr>
       <th>Key</th>
       <th>Modifier</th>
-      <th>Current State</th>
-      <th>Focus Element</th>
+      <th>Current state</th>
+      <th>Focus element</th>
       <th>Behavior</th>
     </tr>
   </thead>
@@ -12,14 +12,14 @@
     <tr>
       <td>Enter</td>
       <td>-</td>
-      <td>Focus on a form element (not a textarea)</td>
-      <td>Any tracked form element (input, select, datepicker, etc.)</td>
+      <td>Focus is on an enabled form element</td>
+      <td>Any tracked form element, such as <code>auro-input</code>, <code>auro-select</code>, or <code>auro-datepicker</code></td>
       <td>
-        Prevents default behavior and calls <code>submit()</code> on the form. Validates all elements and dispatches the <code>submit</code> event if the form is valid.
+        Prevents the default behavior and calls <code>submit()</code> on the form, which validates every enabled form element and fires the <code>submit</code> event when none is invalid or required but empty.
       </td>
     </tr>
   </tbody>
 </table>
 <div class="note">
-  <p><strong>Note:</strong> The <code>Enter</code> key handler is skipped for <code>&lt;textarea&gt;</code> elements and elements with a <code>textarea</code> attribute to allow normal newline entry.</p>
+  <p><strong>Note:</strong> Enter doesn't submit the form from a disabled form element, a <code>&lt;textarea&gt;</code> element, or an element with a <code>textarea</code> attribute, so those elements keep their normal Enter behavior, such as starting a new line.</p>
 </div>
