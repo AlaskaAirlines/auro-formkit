@@ -62,6 +62,27 @@ async function waitForBibClosed(page: Page, fixture: string) {
   await expect.poll(() => isBibVisible(page, fixture), { timeout: 5_000 }).toBe(false);
 }
 
+/**
+ * Wait for focus to settle on the fullscreen bib's close button.
+ *
+ * `showModal()` first focuses the dialog's first focusable element — often a
+ * menuoption, before the close button renders — and auro-select moves focus
+ * to the close button a couple of frames later. Keys pressed inside that
+ * window land on the menuoption and are handled by both auro-menu and
+ * auro-select (e.g. one ArrowDown skips an option), so keyboard tests must
+ * wait for the handoff, as a real user's first keypress always would.
+ */
+async function waitForFullscreenFocus(page: Page, fixture: string) {
+  await expect.poll(() =>
+    select(page, fixture).evaluate((el: any) => {
+      const root = el.bibtemplate?.shadowRoot;
+      const closeBtn = root?.querySelector('#closeButton');
+      return Boolean(closeBtn) && root.activeElement === closeBtn;
+    }),
+    { timeout: 5_000 },
+  ).toBe(true);
+}
+
 /** Focus the select's trigger element (without opening). */
 async function focusTrigger(page: Page, fixture: string) {
   await select(page, fixture).evaluate((el: any) => {
@@ -718,6 +739,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
           return Boolean(dropdown?.isBibFullscreen);
         }),
       ).toBe(true);
+      await waitForFullscreenFocus(page, 'default');
 
       await page.keyboard.press('ArrowDown');
       await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -727,6 +749,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
       await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
+      await waitForFullscreenFocus(page, 'default');
 
       await page.keyboard.press('ArrowDown');
       await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -739,6 +762,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
     test('Escape closes the fullscreen dialog', async ({ page }) => {
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
+      await waitForFullscreenFocus(page, 'default');
 
       await page.keyboard.press('Escape');
       await waitForBibClosed(page, 'default');
@@ -747,6 +771,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
     test('Tab closes the fullscreen dialog', async ({ page }) => {
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
+      await waitForFullscreenFocus(page, 'default');
 
       await page.keyboard.press('Tab');
       await waitForBibClosed(page, 'default');
