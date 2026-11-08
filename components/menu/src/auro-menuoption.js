@@ -274,14 +274,34 @@ export class AuroMenuOption extends AuroElement {
     }
   }
 
+  /**
+   * Deprecated: Remove calls to it; it has no effect.
+   * Does nothing. It updated the option when the menu changed, before the menu took back control of its options' state. It will be removed in a future major release.
+   *
+   * @deprecated Has no effect. Remove calls to it.
+   */
   handleMenuChange() {
     // no-op: menu owns state in the distributed architecture
   }
 
+  /**
+   * Deprecated: Use the `value` attribute on `auro-menu`, or call its `selectByValue()` method, instead.
+   * Sets the option's `selected` property, the same as setting it directly. It will be removed in a future major release.
+   *
+   * @deprecated Use the `value` attribute on `auro-menu`, or call its `selectByValue()` method, instead.
+   * @param {boolean} value - If true, marks the option as selected. If false, clears it.
+   */
   setSelected(value) {
     this.selected = value;
   }
 
+  /**
+   * Deprecated: Call `updateActiveOption()` on `auro-menu` instead.
+   * Sets the option's `active` property and `active` class directly. The menu isn't told, so its own active option stays as it was. It will be removed in a future major release.
+   *
+   * @deprecated Call `updateActiveOption()` on `auro-menu` instead.
+   * @param {boolean} active - If true, marks the option as active. If false, clears it.
+   */
   updateActive(active) {
     this.active = active;
     if (active) {
@@ -291,6 +311,12 @@ export class AuroMenuOption extends AuroElement {
     }
   }
 
+  /**
+   * Deprecated: Remove calls to it; it has no effect.
+   * Does nothing. It connected the option to the menu, before the menu took back control of its options' state. It will be removed in a future major release.
+   *
+   * @deprecated Has no effect. Remove calls to it.
+   */
   attachTo() {
     // no-op: menu owns state in the distributed architecture
   }
