@@ -14,13 +14,20 @@
       <auro-anchorlink fluid href="#minimalConfig">Minimal config</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slotsGroup" class="level2 body-xs">auro-counter-group</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-default-group" class="level2 body-xs">- (default)</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">- label</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-helpText" class="level2 body-xs">- helpText</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-valueText" class="level2 body-xs">- valueText</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-typeIcon" class="level2 body-xs">- typeIcon</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">- bib.fullscreen.headline</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-bib-fullscreen-footer" class="level2 body-xs">- bib.fullscreen.footer</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">- ariaLabel.bib.close</auro-anchorlink>
       <auro-anchorlink fluid href="#slotsCounter" class="level2 body-xs">auro-counter</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-default-counter" class="level2 body-xs">- (default)</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-description" class="level2 body-xs">- description</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-helpText-counter" class="level2 body-xs">- helpText</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-minus" class="level2 body-xs">- ariaLabel.minus</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-plus" class="level2 body-xs">- ariaLabel.plus</auro-anchorlink>
       <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
       <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
@@ -28,6 +35,8 @@
       <auro-anchorlink fluid href="#increment" class="level2 body-xs">increment()</auro-anchorlink>
       <auro-anchorlink fluid href="#decrement" class="level2 body-xs">decrement()</auro-anchorlink>
       <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
+      <auro-anchorlink fluid href="#showBib" class="level2 body-xs">showBib()</auro-anchorlink>
+      <auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -101,6 +110,10 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="showBib">showBib()</auro-header>
+        <p>Opens a counter group's dropdown if it's closed. Does nothing unless <code>isDropdown</code> is set.</p>
+        <auro-header level="3" id="hideBib">hideBib()</auro-header>
+        <p>Closes a counter group's dropdown if it's open. Does nothing unless <code>isDropdown</code> is set.</p>
       </section>
     </div>
   </div>

@@ -74,7 +74,7 @@ import iconVersion from "./iconVersion.js";
  * @csspart helpText - The paragraph that shows the help text, or the combined error message while a counter is invalid. Rendered only when `isDropdown` is set.
  *
  * @event auroFormElement-validated - Fires each time the group is validated, with the result in `event.detail.validity` and `event.detail.message`.
- * @event input - Fires when any counter's value changes, with the new `total` and `value` in `event.detail`.
+ * @event input - Fires when any counter's value changes, with the new `total` and `value` in `event.detail`. It doesn't currently bubble, so listen on the group itself.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
@@ -206,8 +206,8 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The current error message to display when the component is invalid.
-       * This is set by validation and isn't available to consumers.
+       * Holds the error message shown while the group is invalid.
+       * Validation sets it, and it isn't available to consumers.
        * @private
        */
       errorMessage: {
@@ -404,7 +404,7 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * The current text in the valueText slot.
+       * Holds the text in the `valueText` slot.
        * @category behavior
        * @private
        */
@@ -476,9 +476,9 @@ export class AuroCounterGroup extends AuroElement {
   };
 
   /**
-   * Synchronously recomputes this.validity/this.errorMessage from the current
-   * validity of the child counters. Extracted from updateValidity() so that
-   * validate() can re-apply this aggregation immediately after the shared
+   * Synchronously recomputes `this.validity` and `this.errorMessage` from the current
+   * validity of the child counters. Extracted from `updateValidity()` so that
+   * `validate()` can re-apply this aggregation immediately after the shared
    * validation engine runs, instead of waiting on a deferred timer.
    * @returns {void}
    * @private
@@ -563,9 +563,9 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Configures the dropdown counters by selecting all `auro-counter` elements,
-   * appending them to the `auro-counter-wrapper` element within the shadow DOM,
-   * and setting up keyboard navigation and input event listeners.
+   * Finds the dropdown and the counters slotted into its `auro-counter-wrapper`,
+   * adds `input` and `auroFormElement-validated` listeners to each counter, and
+   * updates `value` and the group's validity. Also sets up the bib template when `isDropdown` is set.
    * @private
    */
   configureDropdownCounters() {
@@ -597,7 +597,7 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
+   * Finds the bib template, closes the dropdown when its close button is clicked, and moves focus to the close button when the fullscreen dropdown opens.
    * @private
    */
   configureBibtemplate() {

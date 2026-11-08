@@ -61,7 +61,7 @@ import { keyboardStrategy } from './keyboardStrategy.js';
  * @csspart controlPlus - The plus button, which raises the value by 1.
  * @csspart helpText - The paragraph that shows the help text, or the error message while the counter is invalid.
  *
- * @event input - Notifies that the counter's value has changed.
+ * @event input - Fires whenever `value` changes, including when the counter sets its starting value, with the new number in `event.detail.value`. It doesn't currently bubble, so listen on the counter itself.
  */
 export class AuroCounter extends LitElement {
 
@@ -182,7 +182,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The trimmed text of the default slot, which `auro-counter-group` shows in its dropdown summary.
+       * Holds the trimmed text of the default slot, which `auro-counter-group` shows in its dropdown summary.
        * @private
        */
       defaultSlot: {
@@ -220,7 +220,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set it with the `error` attribute: setting only the `error` property doesn't currently mark the counter invalid.
+       * Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set the `error` attribute before the counter first renders, or call `validate()` after changing it: setting only the property, or changing the attribute later, doesn't currently update `validity`.
        * @category behavior
        */
       error: {
