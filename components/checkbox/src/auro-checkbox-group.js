@@ -74,7 +74,6 @@ export class AuroCheckboxGroup extends LitElement {
     /**
      * Indicates whether the checkbox group is in a dirty state (has been interacted with).
      * @type {boolean}
-     * @default false
      * @private
      */
     this.touched = false;
