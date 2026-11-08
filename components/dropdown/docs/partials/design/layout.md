@@ -1,16 +1,16 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>Trigger:</strong> shows the component label or content, and changes to reflect the component's state, such as <code>focus</code>, <code>hover</code>, or <code>disabled</code>.
+    <strong>Trigger:</strong> Shows the component label or content, and changes to reflect the component's state, such as <code>focus</code>, <code>hover</code>, or <code>disabled</code>.
   </li>
   <li>
-    <strong>Bib:</strong> the expandable content area that is shown/hidden when the trigger is activated.
+    <strong>Bib:</strong> Holds the dropdown's content, and opens and closes when someone activates the trigger.
   </li>
   <li>
-    <strong>Chevron:</strong> an optional icon indicating the expanded/collapsed state of the dropdown. Visible when the <code>chevron</code> attribute is set.
+    <strong>Chevron:</strong> Points up while the bib is open and down while it's closed. It appears only when the <code>chevron</code> attribute is set.
   </li>
   <li>
-    <strong>Help text:</strong> text below the trigger that helps people understand how to use the dropdown.
+    <strong>Help text:</strong> Shows text below the trigger that helps people understand how to use the dropdown.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>

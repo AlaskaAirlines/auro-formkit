@@ -105,7 +105,7 @@
       <section>
         <auro-header level="2" id="customBehavior">Behavior</auro-header>
         <auro-header level="3" id="chevron">Chevron</auro-header>
-        <p>Use the <code>chevron</code> attribute to add a chevron icon to the dropdown trigger indicating expand/collapse state.</p>
+        <p>Use the <code>chevron</code> attribute to show a chevron on the trigger that points up while the bib is open and down while it's closed.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/chevron.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

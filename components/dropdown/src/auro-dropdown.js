@@ -68,8 +68,8 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @csspart chevron - The container for the icon that shows whether the bib is open. Exists only when `chevron` is set.
  * @csspart size - A hidden sizing element whose `width`, `height`, `max-width`, and `max-height` are copied to the bib. Applies only when `matchWidth` is set.
  * @csspart helpText - The help text container. Not currently rendered, so styles set on it have no effect; style the content in the `helpText` slot instead.
- * @event auroDropdown-triggerClick - Notifies that the trigger was clicked, or activated with Enter or Space.
- * @event auroDropdown-toggled - Notifies that the bib opened or closed.
+ * @event auroDropdown-triggerClick - Notifies that the trigger was clicked, or activated with Enter or Space. A click currently fires it twice: first with `event.detail.expanded`, then again without a detail, bubbling. With `disableEventShow` set, only the second one fires, and Enter and Space don't fire it.
+ * @event auroDropdown-toggled - Notifies that the bib opened or closed, with `event.detail.expanded` set to true when it opened. When it closed, `event.detail.eventType` says why, such as `click`, `keydown`, or `focusloss`.
  * @event auroDropdown-idAdded - Notifies that the dropdown has an ID you can use to reference its bib, such as in `aria-controls`. The detail's `id` is the dropdown's own `id`, generated when not set, and the bib's ID is that value followed by `-floater-bib`.
  */
 export class AuroDropdown extends AuroElement {
