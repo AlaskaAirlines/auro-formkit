@@ -205,7 +205,7 @@
       <td>Collapsed or expanded, type-ahead buffer active</td>
       <td>Trigger element</td>
       <td>
-        Extends the type-ahead buffer with a space character. The <code>active</code> option advances if the buffer matches an enabled option; the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-ahead</a> section on the Customize page.
+        Extends the type-ahead buffer with a space character. When the buffer matches an enabled option's displayed text, the <code>active</code> option moves to that option and the bib opens if it was collapsed. See the <a href="customize.html#typeAhead">Type-ahead</a> section on the Customize page.
       </td>
     </tr>
     <tr>

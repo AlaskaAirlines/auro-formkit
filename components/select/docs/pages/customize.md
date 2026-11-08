@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Select - Customize</auro-header>
+<auro-header level="1" id="overview">Select: Customize</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
@@ -254,7 +254,7 @@
         <p>The entire component can be disabled. A disabled component is shown in a muted style, doesn't respond to pointer events, and can't be opened, but keyboard users can still tab to it.</p>
         <p>When the select is disabled, <code>auro-form</code> leaves its value out of the form data, as a native form does for disabled controls.</p>
         <p class="note">
-        <strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
+        <strong>Note:</strong> When the component is both <strong>invalid</strong> and <code>disabled</code>, it can't be opened, but the error message still shows below the trigger.
         </p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
@@ -301,19 +301,19 @@
         <p>Certain use cases may require the guest to make a selection from the component to continue the intended workflow, such as submitting a form.</p>
         <p>When the component is marked required:</p>
         <ol>
-        <li>Move focus to the <code>&lt;auro-select&gt;</code> element</li>
-        <li>Activate the trigger (such as with a mouse click, tap, or key press)</li>
-        <li>Navigate the list of options</li>
+        <li>Move focus to the <code>&lt;auro-select&gt;</code> element.</li>
+        <li>Activate the trigger (such as with a mouse click, tap, or key press).</li>
+        <li>Navigate the list of options.</li>
         <li>
-            Collapse the bib without making a selection
+            Collapse the bib without making a selection.
             <p class="note">
             The component then shows the validation error. To resolve it, the guest continues with the following steps.
             </p>
         </li>
-        <li>Activate the trigger</li>
-        <li>Navigate the list of options marking any option as active</li>
+        <li>Activate the trigger.</li>
+        <li>Navigate the list of options, marking any option as active.</li>
         <li>
-            Select the active option
+            Select the active option.
             <p class="note">
             The component then removes the validation error.
             </p>
@@ -345,8 +345,8 @@
         <p>The select provides several properties to customize the error messages displayed for different validation states. When a validation error occurs, the component shows the <code>setCustomValidity</code> message if it's set. Otherwise, it shows the message for the current validity state.</p>
         <ul>
         <li><strong><code>setCustomValidity</code>:</strong> Sets one error message to show for every validation error. When set, it replaces the state-specific messages.</li>
-        <li><strong><code>setCustomValidityCustomError</code>:</strong> Shown when the <code>error</code> attribute is set on the component, putting it into a <code>customError</code> validity state. If not defined, the value of the <code>error</code> attribute is used as the message.</li>
-        <li><strong><code>setCustomValidityValueMissing</code>:</strong> Shown when the component is <code>required</code> and the user leaves it empty (<code>valueMissing</code> validity state).</li>
+        <li><strong><code>setCustomValidityCustomError</code>:</strong> Sets the message shown while the <code>error</code> attribute puts the component into the <code>customError</code> validity state. When it isn't set, the <code>error</code> value is the message.</li>
+        <li><strong><code>setCustomValidityValueMissing</code>:</strong> Sets the message shown when the component is <code>required</code> and the user leaves it empty (the <code>valueMissing</code> validity state).</li>
         </ul>
         <p>The priority order for error messages is: <code>setCustomValidity</code> &gt; state-specific property &gt; the <code>error</code> attribute value (for <code>customError</code>). Without any of these, the component shows its error state with no message text.</p>
         <div class="exampleWrapper">

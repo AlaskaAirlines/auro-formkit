@@ -1,10 +1,10 @@
-<auro-header level="1" id="overview">Select - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Select: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-select&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>
 
 <auro-header level="3" id="voiceOverFocusAnnouncement">Focus</auro-header>
-<p>When focus is given to the component trigger the following is announced:</p>
+<p>When the component trigger gets focus, VoiceOver announces the following:</p>
 <ol>
   <li><strong>Label:</strong> <code>label</code> slot content</li>
   <li><strong>Current value:</strong> [current value or <em>"no selection"</em>]</li>
@@ -36,7 +36,7 @@
           <td><em>"dimmed"</em></td>
         </tr>
         <tr>
-          <td>autocomplete</td>
+          <td>Autocomplete</td>
           <td>Not announced: <code>autocomplete</code> sets an autofill hint on the hidden native select, which screen readers don't reach.</td>
         </tr>
       </tbody>
@@ -76,9 +76,9 @@
   </li>
   <li><strong>Navigate options</strong></li>
   <li>
-    <strong>Select an option:</strong> Collapses the list, announces the <strong>expanded</strong> state change.
+    <strong>Select an option:</strong> Collapses the list and announces the <strong>expanded</strong> state change, then the selected value, such as <em>"Apples, selected"</em>.
     <p>~OR~</p>
-    <strong>Close | Collapse without selecting an option:</strong> Collapses the list, announces the <strong>expanded</strong> state change.
+    <strong>Close | Collapse without selecting an option:</strong> Collapses the list and announces the <strong>expanded</strong> state change.
   </li>
 </ol>
 
@@ -94,9 +94,9 @@
   </li>
   <li><strong>Navigate options</strong></li>
   <li>
-    <strong>Select option:</strong> Closes the fullscreen modal dialog, announces the <strong>expanded</strong> state change.
+    <strong>Select option:</strong> Closes the fullscreen modal dialog and announces the <strong>expanded</strong> state change, then the selected value, such as <em>"Apples, selected"</em>.
     <p>~OR~</p>
-    <strong>Close | Collapse without selecting an option:</strong> Closes the fullscreen modal dialog, announces the <strong>expanded</strong> state change.
+    <strong>Close | Collapse without selecting an option:</strong> Closes the fullscreen modal dialog and announces the <strong>expanded</strong> state change.
   </li>
 </ol>
 <p>Key characteristics across both platforms:</p>
@@ -128,7 +128,7 @@
   <li><strong>Open | Expand</strong></li>
   <li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
   <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection, and VoiceOver announces <em>"selected"</em> or <em>"not selected"</em>.</li>
-  <li><strong>Close | Collapse:</strong> Collapses the list, announces the expanded state change.</li>
+  <li><strong>Close | Collapse:</strong> Collapses the list and announces the expanded state change.</li>
 </ol>
 
 <auro-header level="4" id="voiceOverStateMultiSelectSmallVP">Small viewport multi-select</auro-header>
@@ -138,7 +138,7 @@
   <li><strong>Open | Expand</strong></li>
   <li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
   <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection, and VoiceOver announces <em>"selected"</em> or <em>"not selected"</em>.</li>
-  <li><strong>Close | Collapse:</strong> Collapses the list, announces the expanded state change.</li>
+  <li><strong>Close | Collapse:</strong> Collapses the list and announces the expanded state change.</li>
 </ol>
 
 <p>Key differences from single-select:</p>

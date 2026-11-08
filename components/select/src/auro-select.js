@@ -458,7 +458,6 @@ export class AuroSelect extends AuroElement {
 
       /**
        * Requires a selection. A required select shows the `valueMissing` error when it's left empty, and doesn't show the "(optional)" text after the label.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       required: {
@@ -469,7 +468,6 @@ export class AuroSelect extends AuroElement {
       /**
        * Sets one error message to show for every validation error, such as `Choose a sort order`.
        * When set, it replaces the `setCustomValidityValueMissing` and `setCustomValidityCustomError` messages and the `error` text.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -480,7 +478,7 @@ export class AuroSelect extends AuroElement {
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the `error` text.
        * Ignored when `setCustomValidity` is set.
-       * @relevantWhen !noValidate
+       * @relevantWhen error
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -491,7 +489,7 @@ export class AuroSelect extends AuroElement {
       /**
        * Sets the error message shown when a `required` select is left empty, such as `Choose a sort order`.
        * Ignored when `setCustomValidity` is set.
-       * @relevantWhen !noValidate
+       * @relevantWhen required
        * @category behavior
        */
       setCustomValidityValueMissing: {

@@ -47,9 +47,9 @@
 <p><code>auro-select</code> adapts to the viewport:</p>
 
 <ul>
-  <li><strong>Desktop:</strong> Options appear in a positioned dropdown using Floating UI, with configurable placement, offset, and flip behavior, plus shift in the emphasized layout</li>
-  <li><strong>Mobile:</strong> Options open in a fullscreen dialog at or below a configurable breakpoint (<code>fullscreenBreakpoint</code>)</li>
-  <li><strong>Width control:</strong> In the classic layout, the dropdown matches the trigger's width unless <code>flexMenuWidth</code> lets it size to its options; in other layouts, <code>matchWidth</code> sizes it to the trigger</li>
+  <li><strong>Desktop:</strong> Options appear in a positioned dropdown using Floating UI, with configurable placement, offset, and flip behavior, plus shift in the emphasized layout.</li>
+  <li><strong>Mobile:</strong> Options open in a fullscreen dialog at or below a configurable breakpoint (<code>fullscreenBreakpoint</code>).</li>
+  <li><strong>Width control:</strong> In the classic layout, the dropdown matches the trigger's width unless <code>flexMenuWidth</code> lets it size to its options; in other layouts, <code>matchWidth</code> sizes it to the trigger.</li>
 </ul>
 
 <auro-header level="2" id="validation">Validation</auro-header>

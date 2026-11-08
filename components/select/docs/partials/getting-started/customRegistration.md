@@ -12,7 +12,7 @@ AuroMenu.register('[custom]-menu');
 AuroMenuOption.register('[custom]-menuoption');
 ```
 
-The `<auro-menu>` and `<auro-menuoption>` components must also be custom registered when using a custom `<auro-select>` registration. All three components work together and need to be registered under the same custom naming convention.
+When you register `<auro-select>` under a custom name, also register `<auro-menu>` and `<auro-menuoption>` under custom names. All three components work together and need to be registered under the same custom naming convention.
 
 This creates new custom elements that behave exactly like their standard counterparts, allowing both to coexist on the same page without interfering with each other.
 

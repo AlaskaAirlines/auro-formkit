@@ -14,7 +14,7 @@
 <p>The trigger includes the label, an "(optional)" flag when the component isn't required, and the current value. The label is required so screen reader users, including VoiceOver users, know what the component is for. When the component becomes invalid, screen readers announce the error message.</p>
 <p>To change the "(optional)" text, use the <code>optionalLabel</code> slot.</p>
 <p>In single-select mode, the trigger shows the selected option's full content, including any icons. In <code>multiSelect</code> mode, it shows the selected options' text, separated by commas.</p>
-<p>The trigger can receive focus and visually responds to common UI states: <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, and <strong>Disabled</strong> <em>(:disabled)</em>. The component doesn't have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
+<p>The trigger can receive focus and visually responds to common UI states: <strong>Hover</strong> <em>(<code>:hover</code>)</em>, <strong>Focus</strong> <em>(<code>:focus-within</code>)</em>, and <strong>Disabled</strong> <em>(the <code>disabled</code> attribute)</em>. The <strong>Active</strong> <em>(<code>:active</code>)</em> state uses the same style as focus.</p>
 <auro-header level="4" id="options">List options</auro-header>
 <p>The component renders a list of options that people can select. Each option can be in one of the following states:</p>
 <ul>

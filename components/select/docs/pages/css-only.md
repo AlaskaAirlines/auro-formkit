@@ -138,11 +138,11 @@
 
 <auro-header level="3">Touched-state tracking</auro-header>
 
-<p><code>auro-select</code> tracks a touched state so validation errors only appear after the user has interacted with the field. Native <code>&lt;select&gt;</code> has no built-in touched concept, so you must implement focus and blur tracking yourself to avoid showing errors on initial render.</p>
+<p><code>auro-select</code> tracks whether the user has interacted with the field, so a required select doesn't show its missing-value error on initial render. Native <code>&lt;select&gt;</code> has no built-in touched concept, so you must implement focus and blur tracking yourself to avoid showing errors on initial render.</p>
 
 <auro-header level="3">Reset behavior</auro-header>
 
-<p><code>auro-select</code> provides a single <code>reset()</code> method that clears the value and resets validation state in one call. With a native <code>&lt;select&gt;</code>, you must clear the selection and separately clear any custom validation state you are tracking.</p>
+<p><code>auro-select</code> provides a single <code>reset()</code> method that clears the value and resets validation state in one call. With a native <code>&lt;select&gt;</code>, you must clear the selection and separately clear any custom validation state you're tracking.</p>
 
 <auro-header level="3">Layout and shape variants</auro-header>
 
@@ -253,4 +253,4 @@
 
 <auro-header level="2">Recommendation</auro-header>
 
-<p>Use <code>auro-select</code> whenever possible. Fall back to a CSS-styled native <code>&lt;select&gt;</code> only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML. In that case, the dropdown panel stays unstyled, multi-select and rich option content aren't available, and you must rebuild validation, help text, and ARIA wiring by hand.</p>
+<p>Use <code>auro-select</code> whenever possible. Fall back to a CSS-styled native <code>&lt;select&gt;</code> only in environments where custom elements aren't supported or when integrating with third-party systems that require plain HTML. In that case, the dropdown panel stays unstyled, multi-select and rich option content aren't available, and you must rebuild validation, help text, and ARIA wiring by hand.</p>

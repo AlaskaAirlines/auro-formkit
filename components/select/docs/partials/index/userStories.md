@@ -1,10 +1,10 @@
 <auro-header level="3" id="select">Select an option from the list</auro-header>
   <ol>
     <li>
-      Move focus to the <code>&lt;auro-select&gt;</code> element
+      Move focus to the <code>&lt;auro-select&gt;</code> element.
     </li>
     <li>
-      Activate the trigger (such as with a mouse click, tap, or key press)
+      Activate the trigger (such as with a mouse click, tap, or key press).
       <div class="note">
         <p>
           In desktop view, the list of options opens in a bib below the trigger. If there isn't enough room in the viewport below the trigger, the bib opens above it.
@@ -15,7 +15,7 @@
       </div>
     </li>
     <li>
-      Choose an option
+      Choose an option.
       <div class="note">
         <p>
           The guest may navigate through the list of options to make their choice. An option becomes active through pointer hover, keyboard navigation (such as the arrow keys), or screen reader gestures that emulate keyboard navigation.
@@ -23,7 +23,7 @@
       </div>
     </li>
     <li>
-      Select the option
+      Select the option.
       <div class="note">
         <p>
           Any previously selected option is deselected. Select the active option with a click, a tap, or a key such as <code>Enter</code> or <code>Tab</code> while focus is in the component.
@@ -55,10 +55,10 @@
   <p>Set the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> attribute to give the browser an autofill hint, such as <code>country-name</code>.</p>
   <auro-header level="3" id="skipSelection">Close the list of options without making a selection</auro-header>
   <ol>
-    <li>Move focus to the <code>&lt;auro-select&gt;</code> element</li>
-    <li>Activate the trigger (such as with a mouse click, tap, or key press)</li>
-    <li>Navigate the list of options but don't make a selection</li>
-    <li>Collapse the bib
+    <li>Move focus to the <code>&lt;auro-select&gt;</code> element.</li>
+    <li>Activate the trigger (such as with a mouse click, tap, or key press).</li>
+    <li>Navigate the list of options but don't make a selection.</li>
+    <li>Collapse the bib.
       <div class="note">
         <p>The guest can collapse the bib without making a selection, such as by clicking or tapping outside the component or pressing <code>Escape</code>.</p>
       </div>
