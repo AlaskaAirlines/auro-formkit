@@ -10,7 +10,7 @@ import { LitElement } from "lit";
  * implements `renderLayout()`, which `render()` calls.
  *
  * **Key capabilities**
- * - **Layout and shape classes**: The base class always updates the `.wrapper` element's `layout-*` and `shape-*` classes when `layout`, `shape`, or `size` changes.
+ * - **Layout and shape classes**: The base class updates the `.wrapper` element's `layout-*` and `shape-*` classes whenever `layout`, `shape`, or `size` changes, unless a subclass overrides `updated()` without calling `super.updated()`.
  * - **Dark background flag**: `ondark` tells a subclass that the component sits on a dark background, so the subclass can switch colors.
  *
  * **Example**
@@ -101,7 +101,7 @@ export class AuroElement extends LitElement {
   }
 
   /**
-   * Updates the `layout-*` and `shape-*` classes on the `.wrapper` element. Called whenever `layout`, `shape`, or `size` changes.
+   * Updates the `layout-*` and `shape-*` classes on the `.wrapper` element. Called whenever `layout`, `shape`, or `size` changes, unless a subclass overrides `updated()` without calling `super.updated()`.
    * @returns {void}
    */
   updateComponentArchitecture() {
