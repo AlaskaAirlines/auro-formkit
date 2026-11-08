@@ -28,6 +28,10 @@ export default class BaseInput extends AuroElement {
   // programmatic .focus() calls on elements in the shadow DOM work correctly.
   // The initial-load focus theft was caused by the static `autofocus`
   // attribute on the bib input (now conditional), not by delegatesFocus.
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...AuroElement.shadowRootOptions,
@@ -101,6 +105,8 @@ export default class BaseInput extends AuroElement {
     /** @private */
     this.label = 'Input label is undefined';
     this.locale = 'en-US';
+
+    /** @internal */
     this._format = undefined;
 
     /** @private */
