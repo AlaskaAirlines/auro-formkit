@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Checkbox - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Checkbox: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-checkbox&gt;</code> component. It covers announcements and gestures for interacting with checkbox groups.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>

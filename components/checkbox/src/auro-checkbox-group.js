@@ -198,8 +198,7 @@ export class AuroCheckboxGroup extends LitElement {
 
       /**
        * Requires at least one checked checkbox in the group and hides the "(optional)" text after the legend.
-       * The group shows an error when focus leaves it with nothing checked, or when someone unchecks the last checked option.
-       * @relevantWhen !noValidate
+       * Unless `noValidate` is set, the group shows an error when focus leaves it with nothing checked, or when someone unchecks the last checked option.
        * @category behavior
        */
       required: {
@@ -210,7 +209,6 @@ export class AuroCheckboxGroup extends LitElement {
       /**
        * Sets one error message for every kind of error, such as "Choose at least one option".
        * It replaces the `error` text and the `setCustomValidityValueMissing` and `setCustomValidityCustomError` messages.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -221,7 +219,7 @@ export class AuroCheckboxGroup extends LitElement {
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the attribute's own text.
        * `setCustomValidity` takes priority when both are set.
-       * @relevantWhen !noValidate
+       * @relevantWhen error
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -232,7 +230,7 @@ export class AuroCheckboxGroup extends LitElement {
       /**
        * Sets the error message shown when the group is `required` and no checkbox is checked, such as "Select at least one option".
        * `setCustomValidity` takes priority when both are set.
-       * @relevantWhen !noValidate
+       * @relevantWhen required
        * @category behavior
        */
       setCustomValidityValueMissing: {
