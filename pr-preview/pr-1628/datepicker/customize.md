@@ -121,17 +121,17 @@
 </tr>
 </thead>
 <tbody>
-<tr><td><code>dropdown</code></td><td>The outer dropdown container.</td></tr>
-<tr><td><code>trigger</code></td><td>The trigger content container.</td></tr>
+<tr><td><code>dropdown</code></td><td>The dropdown that holds the trigger, the calendar, and the help text.</td></tr>
+<tr><td><code>trigger</code></td><td>The <code>&lt;div&gt;</code> in the dropdown's trigger that holds the calendar icon, the inputs, and the clear button or error icon.</td></tr>
 <tr><td><code>wrapper</code></td><td>The container inside <code>trigger</code> that lays out the calendar icon, the inputs, and the clear button or error icon.</td></tr>
 <tr><td><code>mainLabel</code></td><td>The label for the whole datepicker, rendered only when <code>layout="snowflake"</code>.</td></tr>
 <tr><td><code>inputSection</code></td><td>The container that holds the date inputs.</td></tr>
 <tr><td><code>accentIcon</code></td><td>The calendar icon shown before the inputs in the <code>snowflake</code> layout. The <code>classic</code> layout hides it and shows the start date input's own calendar icon instead.</td></tr>
-<tr><td><code>input</code></td><td>The date input element(s).</td></tr>
+<tr><td><code>input</code></td><td>Each date input: one, or two when <code>range</code> is set.</td></tr>
 <tr><td><code>calendarWrapper</code></td><td>The container in the dropdown that holds the calendar.</td></tr>
-<tr><td><code>calendar</code></td><td>The calendar element.</td></tr>
-<tr><td><code>helpTextSpan</code></td><td>The help text container wrapper.</td></tr>
-<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
+<tr><td><code>calendar</code></td><td>The calendar in the dropdown, with the month grids, the previous and next month buttons, and the Done button.</td></tr>
+<tr><td><code>helpTextSpan</code></td><td>The <code>&lt;div&gt;</code> that holds the help text or error message.</td></tr>
+<tr><td><code>helpText</code></td><td>The <code>&lt;p&gt;</code> inside <code>helpTextSpan</code> that holds the help text or error message.</td></tr>
 </tbody>
 </table>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -268,10 +268,10 @@
 <auro-header level="3" id="localization">Localization</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/localization.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/localization.md -->
-<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
+<p>The component supports localization of the date format, the calendar's month and weekday names, and most visible strings and screen reader announcements. A few strings don't currently have a slot or attribute, such as the calendar's Done button and the word "selected" in date selection announcements, so they're always in English.</p>
 <auro-header level="4" id="localizationTrigger">Trigger</auro-header>
 <auro-header level="5" id="localizationTriggerVisibleStrings">Visible strings</auro-header>
-<p>The visible strings rendered in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. They're projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<p>The visible strings rendered in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. Most of them are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker&gt;
@@ -491,7 +491,7 @@
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
 <span slot="ariaLabel.bib.close">Kalender schließen</span>
-<span slot="fromLabel">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+<span slot="fromLabel">Abreisedatum (geerbt aus <code>data-locale="de-DE"</code>)</span>
 <span slot="toLabel">Rückkehrdatum</span>
 <span slot="helpText">Hilfetext</span>
 <span slot="optionalFromLabel">(freiwillig)</span>
@@ -591,7 +591,7 @@
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
     &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
-    &lt;span slot="fromLabel"&gt;Abreisedatum (geerbt aus `data-locale="de-DE"`)&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Abreisedatum (geerbt aus &lt;code&gt;data-locale="de-DE"&lt;/code&gt;)&lt;/span&gt;
     &lt;span slot="toLabel"&gt;Rückkehrdatum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;

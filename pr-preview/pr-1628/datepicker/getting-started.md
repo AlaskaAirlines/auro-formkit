@@ -94,7 +94,7 @@ This creates a new custom element `<custom-datepicker>` that behaves exactly lik
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-datepicker';</code></pre>
-<p>This import registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This import registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -114,7 +114,7 @@ This creates a new custom element `<custom-datepicker>` that behaves exactly lik
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-datepicker/+esm"&gt;&lt;/script&gt;</code></pre>
-<p>This script registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This script registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -326,7 +326,7 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 </section>
 <section>
 <auro-header level="2" id="stateManagement">State management</auro-header>
-<p>Use the following properties in JavaScript to read the datepicker's current state. You can also set <code>value</code> and <code>valueEnd</code>.</p>
+<p>Use the following properties in JavaScript to read the datepicker's current state, and set <code>value</code> and <code>valueEnd</code> to change the chosen dates.</p>
 <auro-header level="3" id="validity">validity</auro-header>
 <p>Gets the datepicker's current validation state as a string: <code>valid</code>, <code>valueMissing</code>, <code>tooShort</code>, <code>tooLong</code>, <code>patternMismatch</code>, <code>rangeOverflow</code>, <code>rangeUnderflow</code>, or <code>customError</code>. It's <code>undefined</code> until the datepicker is validated.</p>
 <auro-header level="3" id="value">value</auro-header>
