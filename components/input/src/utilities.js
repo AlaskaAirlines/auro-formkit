@@ -11,6 +11,9 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 
 import IMask from 'imask';
 
+/**
+ * Helpers that set up input masks and convert between the text shown in the field, `Date` objects, and ISO date strings (`YYYY-MM-DD`), for one locale and date format.
+ */
 export class AuroInputUtilities {
 
   /**
@@ -30,7 +33,17 @@ export class AuroInputUtilities {
     } else {
       this.locale = 'en-US';
     }
+
+    /**
+     * Sets the date format to use instead of the locale's format, such as `mm/dd/yyyy`. `updateFormat()` also sets it.
+     * @type {string|undefined}
+     */
     this.overrideFormat = config.format;
+
+    /**
+     * The `Intl.DateTimeFormat` date formatter for the helpers' locale. The helpers don't currently use it.
+     * @type {Intl.DateTimeFormat}
+     */
     this.formatter = new Intl.DateTimeFormat(this.locale);
 
     // Bindings - many of these are passed into IMask callbacks,

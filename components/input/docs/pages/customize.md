@@ -400,7 +400,7 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/name.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="noValidate">noValidate</auro-header>
+        <auro-header level="3" id="noValidate">No validation</auro-header>
         <p>When a field is <code>required</code> but shouldn't be validated when it loses focus, use the <code>noValidate</code> attribute. Validation still runs when code sets the value or when <code>validateOnInput</code> is set.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/no-validate.html) -->

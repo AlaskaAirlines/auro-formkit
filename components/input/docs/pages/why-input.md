@@ -1,6 +1,6 @@
 <auro-header level="1" id="overview">Why auro-input?</auro-header>
 
-<p>The native <code>&lt;input&gt;</code> element is the workhorse of HTML forms, but it has significant limitations in styling, validation messaging, input formatting, and accessibility. <code>auro-input</code> addresses these while remaining a drop-in upgrade for common input types.</p>
+<p>The native <code>&lt;input&gt;</code> element is the workhorse of HTML forms, but it has significant limitations in styling, validation messaging, input formatting, and accessibility. <code>auro-input</code> addresses these for common input types. To include its value in form data, place it inside <code>auro-form</code> and set <code>name</code>, because a native <code>&lt;form&gt;</code> doesn't include it.</p>
 
 <auro-header level="2" id="accessibility">Accessibility</auro-header>
 

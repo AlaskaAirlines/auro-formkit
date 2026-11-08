@@ -189,8 +189,9 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets the shape of the field's border. The emphasized layouts support `pill`, `pill-left`,
-       * and `pill-right`, and the snowflake layout uses `snowflake`.
+       * Sets the shape of the field's border. `classic` and `rounded` have slightly rounded corners, `box` has square corners,
+       * and `pill` has fully rounded ends, or only the left or right end for `pill-left` and `pill-right`.
+       * The emphasized layouts support `pill`, `pill-left`, and `pill-right`, and the snowflake layout uses `snowflake`.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
        * @category ui
