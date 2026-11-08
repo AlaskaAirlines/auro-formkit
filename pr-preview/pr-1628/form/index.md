@@ -27,7 +27,7 @@
 <p>For the form to collect an Auro form element automatically, the element must meet both of these requirements:</p>
 <ol>
 <li>It <strong>must</strong> have a <code>name</code> attribute, the same as in plain HTML forms.</li>
-<li>It <strong>must</strong> be an Auro form element. See the section on custom elements for more information.</li>
+<li>It <strong>must</strong> be one of the Auro form elements the form tracks: <code>auro-input</code>, <code>auro-select</code>, <code>auro-datepicker</code>, <code>auro-combobox</code>, <code>auro-checkbox-group</code>, <code>auro-radio-group</code>, or <code>auro-counter-group</code>, including one registered under a custom tag name.</li>
 </ol>
 <p>Form elements don't need to be direct children of <code>auro-form</code>. Nest them in other elements for styling, such as a <code>div</code>, <code>span</code>, or <code>fieldset</code>.</p>
 <auro-header level="3" id="formDataStructure">Form data structure</auro-header>
@@ -49,7 +49,7 @@
 </ul>
 <p><strong>Events</strong>:</p>
 <ul>
-<li><code>input</code>: Fires when a child form element receives user input.</li>
+<li><code>input</code>: Bubbles up from a child form element when it receives user input. <code>auro-counter-group</code> doesn't currently bubble its <code>input</code> event, so listen for <code>change</code> to catch every field.</li>
 <li><code>change</code>: Fires when a child form element's value changes, and when the form rebuilds its state.</li>
 <li><code>reset</code>: Fires after the form resets.</li>
 <li><code>submit</code>: Fires when the form is submitted and no enabled field is invalid or required but empty.</li>

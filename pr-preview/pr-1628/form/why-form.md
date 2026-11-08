@@ -42,7 +42,7 @@
 <p>Each Auro component dispatches its own events, such as <code>auroSelect-valueSet</code> and <code>auroDatePicker-toggled</code>. Listening for all of these individually is error-prone.</p>
 <p><code>auro-form</code> normalizes events:</p>
 <ul>
-<li><code>input</code>: Fires when any child element receives user input.</li>
+<li><code>input</code>: Bubbles up from any child element that receives user input, except <code>auro-counter-group</code>, which doesn't currently bubble it.</li>
 <li><code>change</code>: Fires when any child element's value changes, and when the form rebuilds its state.</li>
 <li><code>submit</code>: Fires with aggregated form values on valid submission.</li>
 <li><code>reset</code>: Fires with the previous values on reset.</li>

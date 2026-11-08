@@ -40,12 +40,12 @@ Collects the values and validity of the Auro form elements inside it, and handle
 
 ### Events
 
-| Name   | Description                                                                                                                                         |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| change | Fires when a child form element's value changes, and when the form rebuilds its state, such as after its content changes or a reset.                |
-| input  | Fires when a child form element receives user input.                                                                                                |
-| reset  | Fires after the form resets. The event's `detail.previousValue` holds the form's values from just before the reset.                                 |
-| submit | Fires when the form is submitted and no enabled field is invalid or required but empty. The event's `detail.value` holds the form's current values. |
+| Name   | Description                                                                                                                                                                                                           |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| change | Fires when a child form element's value changes, and when the form rebuilds its state, such as after its content changes or a reset.                                                                                  |
+| input  | Bubbles up from a child form element when it receives user input; the form doesn't fire `input` itself. `auro-counter-group` doesn't currently bubble its `input` event, so listen for `change` to catch every field. |
+| reset  | Fires after the form resets. The event's `detail.previousValue` holds the form's values from just before the reset.                                                                                                   |
+| submit | Fires when the form is submitted and no enabled field is invalid or required but empty. The event's `detail.value` holds the form's current values.                                                                   |
 
 ### Slots
 
