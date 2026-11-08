@@ -1,6 +1,6 @@
 ## Custom Component Registration for Version Management
 
-There are two key parts to every Auro component: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so you can use it in HTML.
+Every Auro component has two key parts: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so you can use it in HTML.
 
 To register the component under your own name, import only the component class and call the <code>register(name)</code> method with a unique name:
 

@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Form - Customize</auro-header>
+<auro-header level="1" id="overview">Form: Customize</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">

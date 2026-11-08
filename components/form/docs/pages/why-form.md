@@ -42,7 +42,7 @@
 <ul>
   <li><strong><code>value</code></strong>: A key-value object of all enabled form element values, keyed by element <code>name</code></li>
   <li><strong><code>isInitialState</code></strong>: Whether every element still holds its starting value, with no failed validation</li>
-  <li><strong>Submit and reset button state</strong>: The form turns submit and reset buttons on and off to match its state, such as turning reset off while the form is unchanged and empty</li>
+  <li><strong>Submit and reset button state</strong>: The form turns submit and reset buttons on and off to match its state, such as turning reset off while the form is unchanged and empty.</li>
 </ul>
 
 <auro-header level="2" id="submitAndReset">Submit and reset</auro-header>
@@ -54,7 +54,7 @@
 <ul>
   <li><strong><code>submit()</code></strong>: Validates every enabled element. If they're valid, dispatches a <code>submit</code> event with a <code>detail.value</code> object containing all enabled form values. No page navigation.</li>
   <li><strong><code>reset()</code></strong>: Calls each child element's own <code>reset()</code>, then dispatches a <code>reset</code> event with <code>detail.previousValue</code> containing the pre-reset values.</li>
-  <li><strong>Enter key</strong>: Pressing Enter on an enabled form element runs <code>submit()</code>, matching native form behavior. The form skips textareas, so Enter still adds a new line there.</li>
+  <li><strong>Enter key</strong>: Pressing Enter on a named, enabled form element runs <code>submit()</code>, matching native form behavior. The form skips textareas, so Enter still adds a new line there.</li>
 </ul>
 
 <auro-header level="2" id="eventNormalization">Event normalization</auro-header>
@@ -64,10 +64,10 @@
 <p><code>auro-form</code> normalizes events:</p>
 
 <ul>
-  <li><code>input</code>: Fires when any child element receives user input</li>
-  <li><code>change</code>: Fires when any child element's value changes, and when the form rebuilds its state</li>
-  <li><code>submit</code>: Fires with aggregated form values on valid submission</li>
-  <li><code>reset</code>: Fires with the previous values on reset</li>
+  <li><code>input</code>: Fires when any child element receives user input.</li>
+  <li><code>change</code>: Fires when any child element's value changes, and when the form rebuilds its state.</li>
+  <li><code>submit</code>: Fires with aggregated form values on valid submission.</li>
+  <li><code>reset</code>: Fires with the previous values on reset.</li>
 </ul>
 
 <auro-header level="2" id="summary">Summary</auro-header>
@@ -94,7 +94,7 @@
     <tr>
       <td>Centralized values</td>
       <td><code>FormData</code> (native inputs only)</td>
-      <td><code>value</code> object (all Auro components)</td>
+      <td><code>value</code> object (Auro form elements)</td>
     </tr>
     <tr>
       <td>Force validation on submit</td>
@@ -109,12 +109,12 @@
     <tr>
       <td>Reset fields</td>
       <td>Native inputs only</td>
-      <td>All Auro components</td>
+      <td>Auro form elements</td>
     </tr>
     <tr>
       <td>Enter key submit</td>
       <td>Native inputs only</td>
-      <td>All Auro components</td>
+      <td>Auro form elements</td>
     </tr>
     <tr>
       <td>Event normalization</td>

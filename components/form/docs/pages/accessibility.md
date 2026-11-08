@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Form - Accessibility</auro-header>
+<auro-header level="1" id="overview">Form: Accessibility</auro-header>
 <div class="contentWrapper">
   <div class="mainContent">
     <div class="scrollWrapper">
@@ -16,7 +16,7 @@
       </section>
       <section>
         <auro-header level="2" id="keyboardInteraction">Keyboard interaction</auro-header>
-        <p>The <code>auro-form</code> component isn't in the tab sequence itself. Each child form element is focusable on its own. Pressing <code>Enter</code> in an enabled form element runs <code>submit()</code>, which validates the form and submits it when no enabled field is invalid or required but empty.</p>
+        <p>The <code>auro-form</code> component isn't in the tab sequence itself. Each child form element is focusable on its own. Pressing <code>Enter</code> in a named, enabled form element runs <code>submit()</code>, which validates the form and submits it when no enabled field is invalid or required but empty.</p>
       </section>
     </div>
   </div>

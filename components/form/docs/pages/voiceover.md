@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Form - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Form: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-form&gt;</code> component. It covers announcements, interactions, and workflows for form submission and validation.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>
@@ -19,25 +19,25 @@
 <auro-header level="3" id="voiceOverValidation">Validation errors</auro-header>
 <p>When <code>submit()</code> runs and a form element fails validation:</p>
 <ul>
-  <li>The invalid element shows its error state</li>
-  <li>The help text region updates to show the validation error message</li>
-  <li>VoiceOver announces the error through the element's accessible description when it receives focus</li>
+  <li>The invalid element shows its error state.</li>
+  <li>The help text region updates to show the validation error message.</li>
+  <li>VoiceOver announces the error through the element's accessible description when it receives focus.</li>
 </ul>
 
 <auro-header level="2" id="voiceOverWorkflow">Submission workflow</auro-header>
 <ol>
-  <li><strong>Navigate form elements:</strong> Tab through each form element; VoiceOver announces labels, roles, and states</li>
-  <li><strong>Enter values:</strong> Interact with each element to provide input</li>
-  <li><strong>Submit:</strong> Focus the submit button and activate it, or press <code>Enter</code> while focus is on an enabled form element</li>
-  <li><strong>Validation feedback:</strong> If validation fails, each invalid element shows its error. <code>auro-form</code> doesn't move focus, so VoiceOver announces the error when the user moves to the invalid element</li>
+  <li><strong>Navigate form elements:</strong> Tab through each form element; VoiceOver announces labels, roles, and states.</li>
+  <li><strong>Enter values:</strong> Interact with each element to provide input.</li>
+  <li><strong>Submit:</strong> Focus the submit button and activate it, or press <code>Enter</code> while focus is on a named, enabled form element.</li>
+  <li><strong>Validation feedback:</strong> If validation fails, each invalid element shows its error. <code>auro-form</code> doesn't move focus, so VoiceOver announces the error when the user moves to the invalid element.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverReset">Reset workflow</auro-header>
 <ol>
-  <li><strong>Focus the reset button:</strong> VoiceOver announces the button's label, such as <em>"Reset"</em></li>
-  <li><strong>Activate:</strong> Each form element resets itself; for example, <code>auro-input</code> clears its value</li>
-  <li><strong>Announcement:</strong> VoiceOver announces the focused element's cleared state</li>
+  <li><strong>Focus the reset button:</strong> VoiceOver announces the button's label, such as <em>"Reset"</em>.</li>
+  <li><strong>Activate:</strong> Each form element resets itself; for example, <code>auro-input</code> clears its value.</li>
+  <li><strong>Announcement:</strong> VoiceOver announces the focused element's cleared state.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverKeyboard">Keyboard interaction</auro-header>
-<p><strong>Enter key:</strong> When focus is on an enabled form element, pressing Enter runs <code>submit()</code>, which validates the form and submits it when no enabled field is invalid or required but empty. VoiceOver users can use this as an alternative to navigating to the submit button.</p>
+<p><strong>Enter key:</strong> When focus is on a named, enabled form element, pressing Enter runs <code>submit()</code>, which validates the form and submits it when no enabled field is invalid or required but empty. VoiceOver users can use this as an alternative to navigating to the submit button.</p>
