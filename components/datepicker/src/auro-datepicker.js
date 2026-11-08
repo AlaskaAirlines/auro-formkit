@@ -108,6 +108,11 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @event input - Notifies that the datepicker's value has changed.
  */
 export class AuroDatePicker extends AuroElement {
+
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...AuroElement.shadowRootOptions,
@@ -168,6 +173,8 @@ export class AuroDatePicker extends AuroElement {
 
     /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
+
+    /** @internal */
     this._validLocale = 'en-US';
     // floaterConfig
     /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
@@ -283,6 +290,10 @@ export class AuroDatePicker extends AuroElement {
   // helper (not the constructor body) so the CEM analyzer keeps their `@type`
   // unions instead of inferring `string` from a constructor-literal assignment.
   // See AlaskaAirlines/discussions#653.
+  /**
+   * Sets the default `layout`, `shape`, and `size` values. Called from the constructor.
+   * @internal
+   */
   initializeArchitectureDefaults() {
     this.layout = 'classic';
     this.shape = 'classic';

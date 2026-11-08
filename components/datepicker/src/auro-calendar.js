@@ -53,10 +53,17 @@ export class AuroCalendar extends RangeDatepicker {
      */
     this.utilCalRender = new UtilitiesCalendarRender();
 
+    /** @internal */
     this.calendarStartDate = undefined;
+
+    /** @internal */
     this.calendarEndDate = undefined;
     this.centralDate = undefined;
+
+    /** @internal */
     this.showPrevMonthBtn = true;
+
+    /** @internal */
     this.showNextMonthBtn = true;
 
     this.visible = false;
@@ -1907,6 +1914,13 @@ export class AuroCalendar extends RangeDatepicker {
     });
   }
 
+  /**
+   * Stores slot content the datepicker copies into the calendar, keyed by slot name.
+   * @param {string} slotName - The name of the slot the content is for.
+   * @param {Node} nodes - The copied slot content.
+   * @returns {void}
+   * @internal
+   */
   injectSlot(slotName, nodes) {
     this.slots[slotName] = nodes;
   }

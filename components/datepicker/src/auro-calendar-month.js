@@ -153,6 +153,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     }
   }
 
+  /** @internal */
   localeChanged() {
     this.dayNamesOfTheWeek = getWeekdayNames(this.localeCode, 'narrow');
     this.dayFullNames = getWeekdayNames(this.localeCode, 'long');
@@ -211,12 +212,24 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     }));
   }
 
+  /**
+   * Renders one row of the month grid.
+   * @param {Array<Object>} week - The days in the week, one per column.
+   * @returns {import("lit").TemplateResult}
+   * @internal
+   */
   renderWeek(week) {
     return html`
       <div class="tr" role="row">${week.map((day) => this.renderDay(day))}</div>
     `;
   }
 
+  /**
+   * Renders one grid cell: a calendar cell for the day, or an empty placeholder when there's no day.
+   * @param {Object} day - The day to show: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @returns {import("lit").TemplateResult}
+   * @internal
+   */
   renderDay(day) {
     return html`
       <div class="td ${this.tdIsEnabled(day)}">

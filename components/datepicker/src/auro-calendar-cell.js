@@ -41,18 +41,24 @@ export class AuroCalendarCell extends LitElement {
     /** @type {number[]} */
     this.disabledDays = [];
     this.isCurrentDate = false;
+
+    /** @internal */
     this._locale = null;
     this.dateStr = null;
     this.renderForDateSlot = false; // When false, the numerical date will render vertically centered. When true, the date will render off-center to the top and leave room below for the slot content.
+    /** @internal */
     this.active = false;
     this.hasPopoverContent = false;
 
+    /** @internal */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
+
+    /** @internal */
     this.popoverTag = versioning.generateTag('auro-formkit-datepicker-popover', popoverVersion, AuroPopover);
   }
 
@@ -887,6 +893,7 @@ export class AuroCalendarCell extends LitElement {
     btn.classList.toggle('rangeReturnDate', Boolean(isReturn));
   }
 
+  /** @internal */
   renderCellButton() {
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     const blackout = this.isBlackout();
