@@ -62,7 +62,7 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * - **Limits and unavailable dates**: `minDate` and `maxDate` turn off dates outside a range, and `blackoutDates` marks single dates people can't select.
  * - **Validation**: `required` shows an error when no date is chosen, and the `setCustomValidity` attributes replace the built-in error messages.
  * - **Content on dates**: The `date_YYYY_MM_DD` and `popover_YYYY_MM_DD` slots add content to a date in the calendar, such as a price.
- * - **Localization**: `locale` sets the date format and the month and weekday names, and attributes and slots let you translate every other label.
+ * - **Localization**: `locale` sets the date format and the month and weekday names, and attributes and slots let you translate most other text, except the calendar's Done button and the word "selected" in screen reader announcements.
  * - **Fullscreen on small screens**: `fullscreenBreakpoint` sets the screen size at or below which the calendar opens fullscreen.
  *
  * **Example**
@@ -519,7 +519,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the shape of the datepicker.
+       * Sets the shape of the date field. Use `classic` (the default) with the `classic` layout, and `snowflake` with the `snowflake` layout.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
        * @category ui
@@ -531,7 +531,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the size of the datepicker.
+       * Sets the height of the date field, from `xs`, the shortest, to `xl`, the tallest. The `classic` and `snowflake` shapes have a fixed height, so `size` doesn't change them. The `rounded` shape supports only `lg`, and the `pill`, `pill-left`, and `pill-right` shapes support only `md` and `xl`.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'lg'
        * @category ui

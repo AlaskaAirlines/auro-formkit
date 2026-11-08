@@ -1,6 +1,9 @@
 import { AuroDatepickerUtilities } from './utilities.js';
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Helpers the datepicker's calendar uses to change the month it shows, show or hide the previous and next month buttons, and scroll to a month.
+ */
 export class CalendarUtilities {
   constructor() {
     this.util = new AuroDatepickerUtilities();

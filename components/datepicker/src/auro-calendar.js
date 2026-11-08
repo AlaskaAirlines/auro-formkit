@@ -32,7 +32,7 @@ import buttonVersion from './buttonVersion.js';
  * @event auroCalendar-dateSelected - Notifies that someone selected a date in the calendar.
  * @event auroCalendar-centralDateChanged - Notifies that the month shown has changed. Doesn't bubble; `event.detail.date` is the new `centralDate`.
  * @event auroCalendar-dismissRequest - Notifies that someone selected the close or Done button, so the datepicker closes the dropdown.
- * @event narrow-changedProperties - Notifies that the calendar's narrow (mobile) layout state has changed.
+ * @event narrow-changedProperties - Notifies once, after the calendar first renders, with `event.detail.value` set to `false`. The calendar doesn't currently track whether the screen is narrow, so the event doesn't fire again.
  */
 export class AuroCalendar extends RangeDatepicker {
   constructor() {

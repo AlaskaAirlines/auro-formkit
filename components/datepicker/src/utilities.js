@@ -2,6 +2,9 @@
 
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Date helpers the datepicker and its calendar share, such as finding the first day of a month and counting the months between two dates.
+ */
 export class AuroDatepickerUtilities {
 
   /**

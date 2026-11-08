@@ -57,7 +57,7 @@
       </section>
       <section>
         <auro-header level="2" id="stateManagement">State management</auro-header>
-        <p>Use the following properties in JavaScript to read the datepicker's current state. You can also set <code>value</code> and <code>valueEnd</code>.</p>
+        <p>Use the following properties in JavaScript to read the datepicker's current state, and set <code>value</code> and <code>valueEnd</code> to change the chosen dates.</p>
         <auro-header level="3" id="validity">validity</auro-header>
         <p>Gets the datepicker's current validation state as a string: <code>valid</code>, <code>valueMissing</code>, <code>tooShort</code>, <code>tooLong</code>, <code>patternMismatch</code>, <code>rangeOverflow</code>, <code>rangeUnderflow</code>, or <code>customError</code>. It's <code>undefined</code> until the datepicker is validated.</p>
         <auro-header level="3" id="value">value</auro-header>

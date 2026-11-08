@@ -2,6 +2,9 @@ import { html } from 'lit';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Helpers the datepicker and its calendar use to set the month the calendar shows, and to choose and render the calendar's months.
+ */
 export class UtilitiesCalendarRender {
   constructor() {
     this.util = new AuroDatepickerUtilities();

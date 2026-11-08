@@ -13,6 +13,9 @@
 // This file is an intentional placeholder for most keys. When datepicker bib keyboard navigation is
 // added, handlers should go here following the same strategy pattern used by
 // auro-select (selectKeyboardStrategy.js) and auro-combobox (comboboxKeyboardStrategy.js).
+/**
+ * Holds the datepicker's keyboard handlers, one function each for `Escape`, `Enter`, and the space bar. Escape closes the open calendar without closing a dialog or drawer around it, and Enter or Space opens the closed calendar unless the clear button has focus.
+ */
 export const datepickerKeyboardStrategy = {
   Escape(component, evt, ctx) {
     if (!ctx.isExpanded) {

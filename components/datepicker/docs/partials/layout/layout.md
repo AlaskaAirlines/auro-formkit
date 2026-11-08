@@ -1,30 +1,30 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>trigger:</strong> shows the component label(s), current date value(s), and the state of the component, such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, or <code>invalid</code>. The trigger includes one or two text inputs (depending on whether <code>range</code> is set) that allow the user to type a date directly.
+    <strong>Trigger:</strong> Shows the component label(s), current date value(s), and the state of the component, such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, or <code>invalid</code>. The trigger includes one or two text inputs (depending on whether <code>range</code> is set) that allow the user to type a date directly.
   </li>
   <li>
-    <strong>calendar:</strong> a monthly calendar grid rendered in a dropdown. Users can navigate between months and select dates by clicking or tapping calendar cells. On smaller viewports the calendar opens in a fullscreen modal dialog.
+    <strong>Calendar:</strong> Shows a monthly calendar grid in a dropdown. Users can navigate between months and select dates by clicking or tapping calendar cells. On smaller viewports the calendar opens in a fullscreen modal dialog.
   </li>
   <li>
-    <strong>help text:</strong> text shown below the trigger that explains what to enter. The error message replaces it when validation fails.
+    <strong>Help text:</strong> Shows text below the trigger that explains what to enter. The error message replaces it when validation fails.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>
-<p>The trigger includes the component label(s) and the current date value(s). The label is required to ensure correct behavior with accessibility tools such as screen readers.</p>
+<p>The trigger includes the component label(s) and the current date value(s). The label is required, so screen reader users know what the datepicker is for.</p>
 <p>When <code>range</code> is set, two inputs are shown, one for the start date and one for the end date, separated by a visual divider.</p>
-<p>The trigger is a focusable element and visually responds to common UI states: <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component doesn't have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
+<p>The trigger is a focusable element and visually responds to common UI states: <strong>Hover</strong> (<code>:hover</code>), <strong>Focus</strong> (<code>:focus</code> and <code>:focus-visible</code>), and <strong>Disabled</strong> (<code>:disabled</code>). The component doesn't have a visual response to the <strong>Active</strong> (<code>:active</code>) state.</p>
 <auro-header level="4" id="triggerConditional">Conditional elements</auro-header>
 <p>The trigger contains the following elements that render conditionally:</p>
 <ul>
   <li>
-    <strong>Calendar icon:</strong> a decorative calendar icon rendered to the left of the input field(s). Provides a visual cue that the component opens a calendar.
+    <strong>Calendar icon:</strong> A decorative calendar icon to the left of the input fields gives a visual cue that the component opens a calendar.
   </li>
   <li>
-    <strong>Clear button:</strong> shown when the input has a value and someone hovers over the field or moves focus into it, so they can clear the date.
+    <strong>Clear button:</strong> Shows when the input has a value and someone hovers over the field or moves focus into it, so they can clear the date.
   </li>
   <li>
-    <strong>Validation error icon:</strong> rendered when the component is in an invalid state, visually indicating a validation problem.
+    <strong>Validation error icon:</strong> Shows when the component is invalid, to flag a validation problem.
   </li>
 </ul>
 <auro-header level="4" id="calendar">Calendar</auro-header>
@@ -43,7 +43,7 @@
 <p>If the component fails validation, the help text changes to show a validation help message instead of the default help text.</p>
 <auro-header level="3" id="colors">Colors</auro-header>
 <auro-header level="4" id="defaultColor">Default color</auro-header>
-<p>When the component is used on a light background.</p>
+<p>Use the default colors when the component is on a light background.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->

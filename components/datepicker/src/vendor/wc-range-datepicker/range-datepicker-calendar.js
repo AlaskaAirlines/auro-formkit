@@ -14,12 +14,12 @@ export class RangeDatepickerCalendar extends LitElement {
     super();
 
     /**
-     * Date from. Format is Unix timestamp.
+     * Sets the chosen date, or the start date of a range, as a Unix timestamp in seconds.
      */
     this.dateFrom = null;
 
     /**
-     * Date to. Format is Unix timestamp.
+     * Sets the end date of a range, as a Unix timestamp in seconds.
      */
     this.dateTo = null;
     this.hoveredDate = null;
@@ -33,12 +33,12 @@ export class RangeDatepickerCalendar extends LitElement {
     this.disabledDays = [];
 
     /**
-     * Max date. Format is Unix timestamp.
+     * Sets the latest date people can choose, as a Unix timestamp in seconds.
      */
     this.max = null;
 
     /**
-     * Minimal date. Format is Unix timestamp.
+     * Sets the earliest date people can choose, as a Unix timestamp in seconds.
      */
     this.min = null;
     this.yearsList = [];

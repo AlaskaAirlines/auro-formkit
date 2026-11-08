@@ -16,7 +16,7 @@ The trigger contains one or two `<auro-input>` elements (depending on whether `r
 | Attribute | Value | Description |
 |---|---|---|
 | `<label for>` | slot text | The input gets its accessible name from a `<label>` that holds the `fromLabel` or `toLabel` slot content. |
-| `aria-invalid` | `true` / `false` | Reflects whether the current value fails validation. |
+| `aria-invalid` | `true` / `false` | Set to `true` when the value fails validation and `false` when it passes. It's also `true` before the datepicker is first validated, so screen readers can announce a new, empty datepicker as invalid. |
 
 <auro-header level="3" id="clearButton">Clear button</auro-header>
 
@@ -37,7 +37,7 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 
 | Attribute | Applied to | Description |
 |---|---|---|
-| `role="grid"` | Calendar table | Identifies the calendar as a grid. The month heading is rendered as visible text adjacent to the grid but is excluded from the accessibility tree (announcements are handled via the live region described below). |
+| `role="grid"` | Calendar table | Identifies each month's days as a grid. The month heading above the grid is visible text that screen readers can reach, but it isn't linked to the grid as its name. The live region described below announces month changes. |
 | `role="rowgroup"` | Body group | Groups the week rows. |
 | `role="row"` | Week row | Groups each week of date cells. |
 | `role="columnheader"` | Day-of-week header | Each weekday cell in the header row exposes the abbreviated day name as visible text and the full localized day name via `aria-label`, for example `aria-label="Sunday"`. |
@@ -72,7 +72,7 @@ When the calendar bib opens, focus moves to the calendar grid wrapper (`#calenda
 
 - **Date selection**: When a date is selected, the calendar's live region (`aria-live="assertive"`) announces the formatted date followed by "selected", for example "Wednesday, January 15, 2025, selected". For range datepickers, both the start and end date selections are announced, with the `rangeLabelStart` or `rangeLabelEnd` text.
 - **Debounced navigation announcement**: During arrow-key navigation, a debounced live region (150 ms) announces the full date context (date, slot content, range position, availability) after the user pauses. This prevents overlapping announcements during rapid navigation.
-- **Date cell labels**: Each date cell has an `aria-label` on the host element with the full localized label, including any date slot content, such as a price. VoiceOver reads this content instead of `aria-label`, which iOS VoiceOver does not reliably announce on buttons.
+- **Date cell labels**: Each date cell has an `aria-label` on the host element with the full localized label, including any date slot content, such as a price. The cell's button content is hidden from screen readers, so the date isn't read twice.
 - **Validation errors**: When a validation error occurs, the error message is rendered with `role="alert"` and `aria-live="assertive"`, causing it to be announced immediately without requiring focus.
 - **Help text**: The help text isn't currently linked to the inputs with `aria-describedby`, so screen readers don't announce it when an input gets focus.
 

@@ -108,7 +108,7 @@
   <li>The element is removed from the Tab order, but the VoiceOver cursor can still reach it.</li>
   <li>The user can't interact with it: the calendar can't be opened, and no date can be entered.</li>
 </ul>
-<p>Key distinction from <code>aria-hidden</code>: A disabled element is <em>reachable but not operable</em>. If you want VoiceOver to skip it entirely, you would need <code>aria-hidden="true"</code> or <code>tabindex="-1"</code>, but that's generally not recommended for disabled controls: users benefit from knowing the field exists and why it may be unavailable.</p>
+<p>Key distinction from <code>aria-hidden</code>: A disabled element is <em>reachable but not operable</em>. <code>tabindex="-1"</code> removes it only from the Tab order. To make VoiceOver skip it entirely, you'd need <code>aria-hidden="true"</code>, but that's generally not recommended for disabled controls: users benefit from knowing the field exists and why it may be unavailable.</p>
 <p>This is consistent across NVDA and JAWS as well, though the announcement wording differs. For example, NVDA says <em>"unavailable"</em>.</p>
 
 <auro-header level="3" id="voiceOverStateInvalid">Invalid</auro-header>

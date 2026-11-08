@@ -1,7 +1,7 @@
-<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
+<p>The component supports localization of the date format, the calendar's month and weekday names, and most visible strings and screen reader announcements. A few strings don't currently have a slot or attribute, such as the calendar's Done button and the word "selected" in date selection announcements, so they're always in English.</p>
 <auro-header level="4" id="localizationTrigger">Trigger</auro-header>
 <auro-header level="5" id="localizationTriggerVisibleStrings">Visible strings</auro-header>
-<p>The visible strings rendered in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. They're projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<p>The visible strings rendered in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. Most of them are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="4" id="localizationCalendar">Calendar</auro-header>
