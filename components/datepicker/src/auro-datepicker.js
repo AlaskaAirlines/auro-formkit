@@ -101,9 +101,9 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @csspart calendar - The calendar shown in the dropdown.
  * @csspart helpTextSpan - The `<div>` that holds the help text or error message.
  * @csspart helpText - The `<p>` that holds the help text or error message.
- * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
- * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
- * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
+ * @event auroDatePicker-toggled - Notifies that the calendar dropdown opened or closed, with `event.detail.expanded` set to `true` when it opened.
+ * @event auroDatePicker-monthChanged - Notifies that the calendar moved to a different month, such as when someone selects the next month button.
+ * @event auroFormElement-validated - Notifies each time the datepicker validates, with the result in `event.detail.validity` and `event.detail.message`.
  * @event auroDatePicker-newSlotContent - Notifies the calendar's day cells to copy their `date_YYYY_MM_DD` and `popover_YYYY_MM_DD` slot content again, such as after `blackoutDates` or `referenceDates` changes. The datepicker doesn't currently fire it on its own when slot content is added.
  * @event input - Notifies that the datepicker's value has changed.
  */
@@ -981,7 +981,7 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Gets the classes shared by every display value wrapper.
    * @private
-   * @returns {Object} Class map for Lit's classMap directive.
+   * @returns {Object} The class map for Lit's `classMap` directive.
    */
   get commonDisplayValueWrapperClasses() {
     return {
@@ -1150,8 +1150,8 @@ export class AuroDatePicker extends AuroElement {
    * regression suite (`npm run test:hst`, UTC-10) will catch the symptom.
    *
    * @private
-   * @param {number} time - Unix timestamp (seconds), local midnight of the day.
-   * @returns {string} ISO date string (yyyy-mm-dd) reflecting the local calendar day.
+   * @param {number} time - The Unix timestamp, in seconds, of local midnight on the day.
+   * @returns {string} The ISO date string (`YYYY-MM-DD`) for the local calendar day.
    */
   convertWcTimeToDate(time) {
     return dateFormatter.toISOFormatString(new Date(time * 1000));
@@ -1197,8 +1197,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sends event notifying that the calendar's visible month has changed.
-   * @param {Object} event - Event passed in from auro-calendar when the event triggered this function.
+   * Dispatches `auroDatePicker-monthChanged` when the calendar's visible month changes.
+   * @param {Object} event - The `auroCalendar-centralDateChanged` event from the calendar.
    * @private
    * @returns {void}
    */
@@ -1639,9 +1639,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sets the datepicker's values to the auro-calendar-cell that was clicked.
+   * Sets `value`, or `valueEnd` in a range, to the date of the calendar cell someone selected.
    * @private
-   * @param {Number} time - Unix timestamp to be converted to a date.
+   * @param {Number} time - The Unix timestamp, in seconds, of the selected date.
    * @returns {void}
    */
   handleCellClick(time) {
@@ -1714,7 +1714,7 @@ export class AuroDatePicker extends AuroElement {
    * Checks whether a formatted date string matches a blackout date.
    * @private
    * @param {string} dateStr - An ISO date string (`YYYY-MM-DD`), such as `value`.
-   * @returns {boolean} True if the date is in the blackoutDates list.
+   * @returns {boolean} True if the date is in `blackoutDates`; false otherwise.
    */
   isBlackoutDate(dateStr) {
     if (!Array.isArray(this.blackoutDates) ||
@@ -1817,7 +1817,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Lifecycle method to check if the locale is valid.
+   * Checks whether `locale` is supported before each update, and keeps `format`, the calendar's reference dates, and `valueEnd` in sync.
    * @ignore
    * @param {Map} changedProperties - The map of properties that have changed since the last update.
    * @returns {void}
@@ -2147,7 +2147,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Set up click handling for the datepicker.
+   * Sets up click handling for the datepicker.
    * @private
    * @returns {void}
    */
@@ -2344,7 +2344,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Format and render the provided date value.
+   * Formats a date as a short month and day and renders it.
    * @private
    * @param {Date} date - The date value to format and render.
    * @returns {import('lit').TemplateResult}
@@ -2586,7 +2586,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Separate method for rendering the calendar.
+   * Renders the calendar.
    * @private
    * @returns {import('lit').TemplateResult}
    */

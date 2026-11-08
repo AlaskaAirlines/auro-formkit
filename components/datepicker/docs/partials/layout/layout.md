@@ -7,7 +7,7 @@
     <strong>calendar:</strong> a monthly calendar grid rendered in a dropdown. Users can navigate between months and select dates by clicking or tapping calendar cells. On smaller viewports the calendar opens in a fullscreen modal dialog.
   </li>
   <li>
-    <strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
+    <strong>help text:</strong> text shown below the trigger that explains what to enter. The error message replaces it when validation fails.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>
@@ -39,7 +39,7 @@
   <li>Cell popovers via the <code>popover_YYYY_MM_DD</code> slot.</li>
 </ul>
 <auro-header level="4" id="helpText">Help text</auro-header>
-<p>Help text isn't required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers.</p>
+<p>Help text isn't required. Add it when people, especially screen reader users, need more context to know what to enter.</p>
 <p>If the component fails validation, the help text changes to show a validation help message instead of the default help text.</p>
 <auro-header level="3" id="colors">Colors</auro-header>
 <auro-header level="4" id="defaultColor">Default color</auro-header>

@@ -29,7 +29,7 @@ The clear button (shown when the input has a value) exposes:
 <auro-header level="3" id="helpTextAndErrors">Help text and errors</auro-header>
 
 - Help text shows below the datepicker. It isn't currently linked to the inputs with `aria-describedby`, so screen readers don't read it as part of an input's description.
-- When validation fails, the error message is rendered with `role="alert"` and `aria-live="assertive"` to ensure it is announced immediately.
+- When validation fails, the datepicker renders the error message with `role="alert"` and `aria-live="assertive"`, so screen readers announce it immediately.
 
 <auro-header level="3" id="calendarGrid">Calendar grid</auro-header>
 
@@ -45,7 +45,7 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | Out-of-range date cell | Cells outside the valid min/max range | The button uses the native `disabled` attribute (spec-compliant way to express "not actionable" on a `<button>`) and is filtered out of keyboard navigation. The host cell drops its `role` and `aria-label` so screen readers don't browse into it. No `aria-hidden` or `role="presentation"` is applied. |
 | `aria-disabled="true"` | Blackout date cell | Cells for the dates in `blackoutDates`. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label adds the `blackoutLabel` text, ", unavailable" by default, to say the date can't be selected. |
 | `aria-selected` | Date cell host | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
-| Accessible name | Date cell host | Provided via `aria-label` on the cell host element (set by `updateHostAria()` on each render), with the button's inner content marked `aria-hidden="true"` so screen readers don't double-announce. Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus any date slot content, such as a price, any popover slot content, the range position label, such as "range start", and availability status (", unavailable" for blackout dates). |
+| Accessible name | Date cell host | Provided via `aria-label` on the cell host element, kept in sync as the date and selection change, with the button's inner content marked `aria-hidden="true"` so screen readers don't double-announce. Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus any date slot content, such as a price, any popover slot content, the range position label, such as "range start", and availability status (", unavailable" for blackout dates). |
 
 <auro-header level="2" id="focusManagement">Focus management</auro-header>
 
@@ -81,14 +81,14 @@ When the calendar bib opens, focus moves to the calendar grid wrapper (`#calenda
 WCAG 2.1 SC 4.1.3 (Status Messages) generally recommends `aria-live="polite"` for non-critical status updates so screen readers don't interrupt the user. The calendar's navigation live region intentionally uses `aria-live="assertive"` instead. This is a knowing deviation, made for the following reasons:
 
 - **VoiceOver behavior**: VoiceOver treats `polite` announcements as "wait until idle," and during active arrow-key traversal the screen reader is never idle. Polite announcements are silently dropped, leaving keyboard users with no feedback about which cell is now active. `assertive` is the only reliable way to communicate the newly focused date on macOS/iOS VoiceOver during navigation.
-- **Interruption mitigation**: A 150 ms debounce is applied in [`announceFocusDebounced`](../../src/auro-calendar.js) so only the final cell after a burst of arrow keys is announced. Rapid navigation produces one announcement per pause, not one per keystroke, which minimizes the interruption cost of `assertive`.
-- **Scope**: The same live region is reused for date selection and month-change announcements, all of which are user-initiated and expected. It is never used for background/system-generated updates.
+- **Interruption mitigation**: The calendar waits 150 ms after the last arrow key before it announces, so screen readers hear only the final cell after a burst of arrow keys. Rapid navigation produces one announcement per pause, not one per keystroke, which minimizes the interruption cost of `assertive`.
+- **Scope**: The same live region is reused for date selection and month-change announcements, all of which are user-initiated and expected. It's never used for background/system-generated updates.
 
 Consumers auditing against APG or WCAG 4.1.3 should treat this as an intentional, documented trade-off between spec-preferred politeness and reliable VoiceOver support.
 
 <auro-header level="2" id="accessibleLabels">Accessible labels</auro-header>
 
-- The `fromLabel` slot content is used as the accessible name for the first date input. It is also forwarded to the dropdown bib as the dialog's accessible name (`aria-labelledby`).
+- The `fromLabel` slot content is used as the accessible name for the first date input. It's also forwarded to the dropdown bib as the dialog's accessible name (`aria-labelledby`).
 - When `range` is set, the `toLabel` slot content provides the accessible name for the second date input.
 - The `label` slot is used as the main label when `layout="snowflake"`.
 - The `ariaLabel.bib.close` slot sets the close button's accessible name in fullscreen mode. It has no default, so always provide it.

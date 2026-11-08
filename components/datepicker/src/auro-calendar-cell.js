@@ -20,8 +20,8 @@ import { isBlackoutTimestamp } from './blackoutUtils.js';
 /**
  * One day in the datepicker's calendar: a button people select to choose that date.
  *
- * @event calendar-cell-activate - Notifies that this cell has been activated by a click, a tap, or Enter or Space.
- * @event date-is-hovered - Notifies that this cell's date is being hovered.
+ * @event calendar-cell-activate - Notifies that someone activated this cell with a click, a tap, or Enter or Space.
+ * @event date-is-hovered - Notifies that the pointer moved over this cell's date.
  * @event calendar-cell-focused - Notifies that this cell's button has received focus.
  * @csspart dateSlot - The container under the day number that holds the date's `date_YYYY_MM_DD` slot content, shown only when that slot has content.
  */
@@ -182,13 +182,11 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Handles selected state of the calendar cell when the selection changes.
-   * Also clears any imperative range preview classes so classMap is the
-   * sole source of truth after a selection update.
+   * Sets `selected` when the cell's date matches the start or end date of the selection.
    * @private
-   * @param {Number} dateFrom - Depart date.
-   * @param {Number} dateTo - Return date.
-   * @param {Object} day - An object containing the dateFrom and day of month values.
+   * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
+   * @param {Number} dateTo - The end date, as a Unix timestamp in seconds.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
    * @returns {void}
    */
   dateChanged(dateFrom, dateTo, day) {
@@ -273,7 +271,7 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is a blackout date (in disabledDays but within range).
+   * Checks whether the cell's date is a blackout date, from the datepicker's `blackoutDates` or the deprecated `disabledDays`, and within `min` and `max`.
    * Blackout cells are focusable but not selectable.
    * @private
    * @returns {Boolean} True if the date is a blackout date; false otherwise.
@@ -407,7 +405,7 @@ export class AuroCalendarCell extends LitElement {
   /**
    * Determines the range position of this cell relative to the current selection.
    * @private
-   * @returns {String|null} Range position label or null if not in range mode.
+   * @returns {String|null} The range position label, or null when the datepicker isn't a range or has no start date.
    */
   getRangePosition() {
     if (!this.datepicker || !this.datepicker.hasAttribute('range')) return null;
@@ -437,11 +435,11 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is the depart date.
+   * Checks whether the cell's date is the selected start date.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} dateFrom - Depart date.
-   * @returns {Boolean} True if the date is the depart date.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
+   * @returns {Boolean} True if the cell is selected and its date is the start date; false otherwise.
    */
   isDepartDate(day, dateFrom) {
     const parsedDateFrom = parseInt(dateFrom, 10);
@@ -451,12 +449,12 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is the return date.
+   * Checks whether the cell's date is the selected end date.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} dateFrom - Depart date.
-   * @param {Number} dateTo - Return date.
-   * @returns {Boolean} True if the date is the return date.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
+   * @param {Number} dateTo - The end date, as a Unix timestamp in seconds.
+   * @returns {Boolean} True if the cell is selected, a start date is set, and the cell's date is the end date; false otherwise.
    */
   isReturnDate(day, dateFrom, dateTo) {
     const parsedDateTo = parseInt(dateTo, 10);
@@ -466,12 +464,12 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is between dateFrom and dateTo.
+   * Checks whether the cell's date is between dateFrom and dateTo.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} dateFrom - Depart date.
-   * @param {Number} dateTo - Return date.
-   * @returns {Boolean} True if the current date is between dateFrom and dateTo.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
+   * @param {Number} dateTo - The end date, as a Unix timestamp in seconds.
+   * @returns {Boolean} True if the datepicker is a range and the cell's date is after dateFrom and before dateTo; false otherwise.
    */
   isInRange(day, dateFrom, dateTo) {
 
@@ -490,13 +488,13 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Determines the hovered date appearing latest in the calendar.
+   * Checks whether the cell's date is the hovered date while someone chooses the end date of a range.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} dateFrom - Depart date.
-   * @param {Number} dateTo - Return date.
-   * @param {Number} hoveredDate - Hovered date.
-   * @returns {Boolean} True if the hovered date is the latest hovered date in the calendar.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
+   * @param {Number} dateTo - The end date, as a Unix timestamp in seconds.
+   * @param {Number} hoveredDate - The hovered date, as a Unix timestamp in seconds.
+   * @returns {Boolean} True if no end date is set and the cell's date is the hovered date, later than the start date; false otherwise.
    */
   isLastHoveredDate(day, dateFrom, dateTo, hoveredDate) {
     return dateFrom && hoveredDate > dateFrom && day.date === hoveredDate && !dateTo;
@@ -549,7 +547,7 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Gets the name of the date slot.
+   * Sets `dateStr` to the cell's date in `YYYY_MM_DD` format, which names its date slots, or to null when the cell has no date.
    * @private
    * @returns {void}
    */
@@ -827,9 +825,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Updates range preview classes imperatively (no Lit re-render).
-   * Called by the calendar component when the hovered date changes
-   * during range selection (dateFrom set, dateTo not yet set).
+   * Updates the classes that preview a range on the cell's button, without re-rendering the cell.
+   * The calendar calls it when the hovered or focused date changes while someone is choosing the end date of a range.
    * @param {Number} hoveredDate - The Unix timestamp of the date that's hovered or active.
    * @param {Number} dateFrom - The Unix timestamp of the chosen start date.
    * @returns {void}
@@ -853,8 +850,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Clears all imperative range preview classes from the cell button.
-   * Called when a selection occurs so classMap becomes the sole source of truth.
+   * Removes the range preview classes from the cell's button, without re-rendering the cell.
+   * The calendar calls it when someone moves to another month, and, until a range has both dates, when the pointer leaves a month's dates or keyboard focus leaves the calendar grid.
    * @returns {void}
    */
   clearRangePreviewClasses() {

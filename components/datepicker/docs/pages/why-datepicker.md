@@ -33,7 +33,7 @@
 
 <auro-header level="2" id="blackoutDates">Blackout dates</auro-header>
 
-<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>minDate</code> and <code>maxDate</code> can restrict to a range, but they can't express "these specific dates within the range are not selectable."</p>
+<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a range, but they can't express "these specific dates within the range are not selectable."</p>
 
 <p><code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings. Blacked-out dates are:</p>
 

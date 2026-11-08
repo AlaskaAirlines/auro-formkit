@@ -7,14 +7,10 @@
  */
 
 /**
- * Converts a `YYYY-MM-DD` ISO date string to a Unix timestamp (seconds)
- * representing local midnight on that calendar day. Returns `null` for
- * inputs that don't parse to a finite timestamp.
- *
- * Uses the `new Date(year, monthIndex, day)` constructor, not
- * `new Date(isoStr)`, so the result is local midnight rather than UTC
- * midnight. This keeps the calendar grid aligned with the user's
- * local calendar day in negative-offset timezones.
+ * Converts a `YYYY-MM-DD` ISO date string to a Unix timestamp, in seconds,
+ * for local midnight on that calendar day. Returns `null` when the value
+ * isn't a real date in that format. It uses local midnight, not UTC midnight,
+ * so calendar days line up in time zones west of UTC.
  *
  * @param {string} isoStr - The date string, in `YYYY-MM-DD` format.
  * @returns {number|null} The local-midnight Unix timestamp, in seconds, or null.

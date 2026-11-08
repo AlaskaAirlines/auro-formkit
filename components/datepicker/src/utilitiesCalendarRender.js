@@ -55,7 +55,7 @@ export class UtilitiesCalendarRender {
   /**
    * Determines how many calendar months can be rendered based on the screen size and defined range.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - True if it's to render for mobile view.
+   * @param {Boolean} isMobile - If true, sizes the calendar for the fullscreen mobile view. If false, sizes it for the dropdown.
    * @private
    * @returns {Number} The maximum number of months that can be rendered.
    */
@@ -89,7 +89,7 @@ export class UtilitiesCalendarRender {
   /**
    * Determines the number of months rendered inside the calendar.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - True if it's to render for mobile view.
+   * @param {Boolean} isMobile - If true, sizes the calendar for the fullscreen mobile view. If false, sizes it for the dropdown.
    * @private
    * @returns {void}
    */
@@ -139,8 +139,8 @@ export class UtilitiesCalendarRender {
    * Renders one auro-calendar-month HTML for the given month/date combination.
    * @private
    * @param {Object} elem - The auro-calendar element.
-   * @param {Number} month - Month the calendar displays.
-   * @param {Number} year - Year the calendar displays.
+   * @param {Number} month - The month the calendar displays.
+   * @param {Number} year - The year the calendar displays.
    * @returns {Object} The auro-calendar-month HTML.
    */
   renderCalendar(elem, month, year) {

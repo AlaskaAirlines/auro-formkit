@@ -47,7 +47,7 @@ const getWeekdayNames = (locale, weekday) => {
 /**
  * One month of the datepicker's calendar: a localized heading and a grid of day cells people can select.
  * @event hovered-date-changed - Notifies that the date currently hovered within the month grid has changed.
- * @event calendar-month-mouseleave - Notifies that the mouse has left the month's date grid so the range hover preview can be cleared.
+ * @event calendar-month-mouseleave - Notifies that the pointer left the month's date grid, so the calendar can clear the range preview.
  */
 export class AuroCalendarMonth extends RangeDatepickerCalendar {
   static get styles() {
