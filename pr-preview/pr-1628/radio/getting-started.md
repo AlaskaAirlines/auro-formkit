@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Radio - Getting started</auro-header>
+<auro-header level="1" id="overview">Radio: Getting started</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
@@ -284,13 +284,13 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="4" id="slot-helpText">helpText</auro-header>
 <p>Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it.</p>
 <auro-header level="4" id="slot-optionalLabel">optionalLabel</auro-header>
-<p>Text shown after the legend when the group isn't <code>required</code>, such as "- optional". It replaces the default <em>"(optional)"</em> text.</p>
+<p>Text shown after the legend when the group isn't <code>required</code>, such as a translated "(optional)". It replaces the default <em>"(optional)"</em> text.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
 <!-- The below content is automatically added from ./../apiExamples/optional-label.html -->
 <auro-radio-group>
 <span slot="legend">Form label goes here</span>
-<span slot="optionalLabel"> - custom optional flag</span>
+<span slot="optionalLabel"> (not required)</span>
 <auro-radio id="labelRadio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
 <auro-radio id="labelRadio2" label="No" name="radioDemo" value="no"></auro-radio>
 <auro-radio id="labelRadio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
@@ -303,7 +303,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- The below code snippet is automatically added from ./../apiExamples/optional-label.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-radio-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;span slot="optionalLabel"&gt; - custom optional flag&lt;/span&gt;
+  &lt;span slot="optionalLabel"&gt; (not required)&lt;/span&gt;
   &lt;auro-radio id="labelRadio1" label="Yes" name="radioDemo" value="yes"&gt;&lt;/auro-radio&gt;
   &lt;auro-radio id="labelRadio2" label="No" name="radioDemo" value="no"&gt;&lt;/auro-radio&gt;
   &lt;auro-radio id="labelRadio3" label="Maybe" name="radioDemo" value="maybe"&gt;&lt;/auro-radio&gt;
