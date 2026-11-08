@@ -14,13 +14,20 @@
 <auro-anchorlink fluid href="#minimalConfig">Minimal config</auro-anchorlink>
 <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
 <auro-anchorlink fluid href="#slotsGroup" class="level2 body-xs">auro-counter-group</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-default-group" class="level2 body-xs">- (default)</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">- label</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-helpText" class="level2 body-xs">- helpText</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-valueText" class="level2 body-xs">- valueText</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-typeIcon" class="level2 body-xs">- typeIcon</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">- bib.fullscreen.headline</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-bib-fullscreen-footer" class="level2 body-xs">- bib.fullscreen.footer</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">- ariaLabel.bib.close</auro-anchorlink>
 <auro-anchorlink fluid href="#slotsCounter" class="level2 body-xs">auro-counter</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-default-counter" class="level2 body-xs">- (default)</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-description" class="level2 body-xs">- description</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-helpText-counter" class="level2 body-xs">- helpText</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-ariaLabel-minus" class="level2 body-xs">- ariaLabel.minus</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-ariaLabel-plus" class="level2 body-xs">- ariaLabel.plus</auro-anchorlink>
 <auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
 <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
 <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
@@ -28,6 +35,8 @@
 <auro-anchorlink fluid href="#increment" class="level2 body-xs">increment()</auro-anchorlink>
 <auro-anchorlink fluid href="#decrement" class="level2 body-xs">decrement()</auro-anchorlink>
 <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
+<auro-anchorlink fluid href="#showBib" class="level2 body-xs">showBib()</auro-anchorlink>
+<auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -49,7 +58,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/customRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/customRegistration.md -->
 <auro-header level="4">Custom component registration for version management</auro-header>
-There are two key parts to every Auro component: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so it can be used in HTML.
+Every Auro component has two key parts: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
 Import only the component class, then call its `register(name)` method with a unique name:
 
@@ -329,6 +338,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="2" id="slots">Slots</auro-header>
 <auro-header level="3" id="slotsGroup">auro-counter-group</auro-header>
 <p>The following slots are available on the <code>&lt;auro-counter-group&gt;</code> element.</p>
+<auro-header level="4" id="slot-default-group">(default)</auro-header>
+<p>The <code>auro-counter</code> elements in the group. Every group needs at least one.</p>
 <auro-header level="4" id="slot-label">label</auro-header>
 <p>The label shown in the dropdown trigger, such as "Passengers". Applies only when <code>isDropdown</code> is set.</p>
 <div class="exampleWrapper">
@@ -455,6 +466,14 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="4" id="slot-typeIcon">typeIcon</auro-header>
+<p>An icon shown at the start of the dropdown trigger, such as a person icon for a passenger selector. Applies only when <code>isDropdown</code> is set.</p>
+<auro-header level="4" id="slot-bib-fullscreen-headline">bib.fullscreen.headline</auro-header>
+<p>The heading shown at the top of the fullscreen dropdown, such as "Passengers". Set it whenever <code>isDropdown</code> is set.</p>
+<auro-header level="4" id="slot-bib-fullscreen-footer">bib.fullscreen.footer</auro-header>
+<p>Content shown at the bottom of the fullscreen dropdown, such as Reset and Save buttons. Applies only when <code>isDropdown</code> is set.</p>
+<auro-header level="4" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
+<p>Text screen readers announce for the close button in the fullscreen dropdown, such as "Close passenger selector". Defaults to "Close". Applies only when <code>isDropdown</code> is set.</p>
 <auro-header level="3" id="slotsCounter">auro-counter</auro-header>
 <p>The following slots are available on the <code>&lt;auro-counter&gt;</code> element.</p>
 <auro-header level="4" id="slot-default-counter">(default)</auro-header>
@@ -530,6 +549,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 &lt;/auro-counter&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="4" id="slot-ariaLabel-minus">ariaLabel.minus</auro-header>
+<p>Text screen readers announce for the minus button, such as "Remove adult". Defaults to "−" (a minus sign), so set it on every counter.</p>
+<auro-header level="4" id="slot-ariaLabel-plus">ariaLabel.plus</auro-header>
+<p>Text screen readers announce for the plus button, such as "Add adult". Defaults to "+", so set it on every counter.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
@@ -602,6 +625,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="showBib">showBib()</auro-header>
+<p>Opens a counter group's dropdown if it's closed. Does nothing unless <code>isDropdown</code> is set.</p>
+<auro-header level="3" id="hideBib">hideBib()</auro-header>
+<p>Closes a counter group's dropdown if it's open. Does nothing unless <code>isDropdown</code> is set.</p>
 </section>
 </div>
 </div>

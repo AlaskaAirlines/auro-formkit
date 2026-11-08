@@ -22,17 +22,17 @@ A counter that lets people choose a number, such as how many passengers are trav
 
 ### Properties and attributes
 
-| Properties | Attributes | Modifiers | Type                   | Default   | Category | Range | Description                                                                                                                                                                                                                                           |
-| ---------- | ---------- | --------- | ---------------------- | --------- | -------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| appearance | appearance |           | `default` \| `inverse` | `default` | ui       |       | Sets the colors to match the background behind the counter. Use `inverse` on dark backgrounds and `default` on light ones.                                                                                                                            |
-| disabled   | disabled   |           | boolean                |           | ui       |       | Turns the counter off. A disabled counter is shown in a muted style, its buttons can't be clicked, and it's removed from the keyboard tab order.                                                                                                      |
-| onDark     | ondark     |           | boolean                |           | ui       |       | Deprecated: Use `appearance="inverse"` instead.<br>Shows the counter in colors for dark backgrounds.                                                                                                                                                  |
-| error      | error      |           | string                 |           | behavior |       | Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set it with the `error` attribute: setting only the `error` property doesn't currently mark the counter invalid. |
-| max        | max        |           | number                 | `9`       | behavior | 0–9   | Sets the highest value the counter allows. The plus button turns off at this value.                                                                                                                                                                   |
-| min        | min        |           | number                 | `0`       | behavior | 0–9   | Sets the lowest value the counter allows. The counter starts at this value, and the minus button turns off at it.                                                                                                                                     |
-| name       | name       |           | string                 |           | behavior |       | Sets the key for this counter's entry in the group's `value` object, such as `adults`. Applies only inside `auro-counter-group`, which uses `counter-0`, `counter-1`, and so on for counters without a name.                                          |
-| validity   | validity   | readonly  | string                 |           | behavior |       | Reports whether the counter passes validation: `valid`, or the reason it fails, such as `customError`, `rangeOverflow`, or `rangeUnderflow`.                                                                                                          |
-| value      | value      |           | number \| undefined    |           | behavior |       | Sets the counter's value. A value outside `min` and `max` (0–9 by default) isn't moved back into range; it marks the counter invalid instead. A value that's `undefined`, `null`, or not a number clears the value to `undefined`.                    |
+| Properties | Attributes | Modifiers | Type                   | Default   | Category | Range | Description                                                                                                                                                                                                                                                                                                                               |
+| ---------- | ---------- | --------- | ---------------------- | --------- | -------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| appearance | appearance |           | `default` \| `inverse` | `default` | ui       |       | Sets the colors to match the background behind the counter. Use `inverse` on dark backgrounds and `default` on light ones.                                                                                                                                                                                                                |
+| disabled   | disabled   |           | boolean                |           | ui       |       | Turns the counter off. A disabled counter is shown in a muted style, its buttons can't be clicked, and it's removed from the keyboard tab order.                                                                                                                                                                                          |
+| onDark     | ondark     |           | boolean                |           | ui       |       | Deprecated: Use `appearance="inverse"` instead.<br>Shows the counter in colors for dark backgrounds.                                                                                                                                                                                                                                      |
+| error      | error      |           | string                 |           | behavior |       | Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set the `error` attribute before the counter first renders, or call `validate()` after changing it: setting only the property, or changing the attribute later, doesn't currently update `validity`. |
+| max        | max        |           | number                 | `9`       | behavior | 0–9   | Sets the highest value the counter allows. The plus button turns off at this value.                                                                                                                                                                                                                                                       |
+| min        | min        |           | number                 | `0`       | behavior | 0–9   | Sets the lowest value the counter allows. The counter starts at this value, and the minus button turns off at it.                                                                                                                                                                                                                         |
+| name       | name       |           | string                 |           | behavior |       | Sets the key for this counter's entry in the group's `value` object, such as `adults`. Applies only inside `auro-counter-group`, which uses `counter-0`, `counter-1`, and so on for counters without a name.                                                                                                                              |
+| validity   | validity   | readonly  | string                 |           | behavior |       | Reports whether the counter passes validation: `valid`, or the reason it fails, such as `customError`, `rangeOverflow`, or `rangeUnderflow`.                                                                                                                                                                                              |
+| value      | value      |           | number \| undefined    |           | behavior |       | Sets the counter's value. A value outside `min` and `max` (0–9 by default) isn't moved back into range; it marks the counter invalid instead. A value that's `undefined`, `null`, or not a number clears the value to `undefined`.                                                                                                        |
 
 ### Methods
 
@@ -46,9 +46,9 @@ A counter that lets people choose a number, such as how many passengers are trav
 
 ### Events
 
-| Name  | Description                                    |
-| ----- | ---------------------------------------------- |
-| input | Notifies that the counter's value has changed. |
+| Name  | Description                                                                                                                                                                                    |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| input | Fires whenever `value` changes, including when the counter sets its starting value, with the new number in `event.detail.value`. It doesn't currently bubble, so listen on the counter itself. |
 
 ### Slots
 
@@ -134,10 +134,10 @@ Groups related counters, such as passenger types, so they share one total and on
 
 ### Events
 
-| Name                      | Description                                                                                                    |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| auroFormElement-validated | Fires each time the group is validated, with the result in `event.detail.validity` and `event.detail.message`. |
-| input                     | Fires when any counter's value changes, with the new `total` and `value` in `event.detail`.                    |
+| Name                      | Description                                                                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| auroFormElement-validated | Fires each time the group is validated, with the result in `event.detail.validity` and `event.detail.message`.                                          |
+| input                     | Fires when any counter's value changes, with the new `total` and `value` in `event.detail`. It doesn't currently bubble, so listen on the group itself. |
 
 ### Slots
 

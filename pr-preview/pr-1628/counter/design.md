@@ -116,7 +116,7 @@
 <auro-header level="2" id="shapeSizeLayout">Shape, size, and layout support</auro-header>
 <p>The <code>auro-counter-group</code> component supports the <code>shape</code>, <code>size</code>, and <code>layout</code> feature set when <code>isDropdown</code> is set. The component defaults to <code>layout="classic"</code>, <code>shape="classic"</code>, and <code>size="xl"</code>.</p>
 <auro-header level="3" id="classicLayout">Classic layout</auro-header>
-<p>The <code>classic</code> layout is default for <code>auro-counter-group</code>. No customization is needed to achieve this look.</p>
+<p>The <code>classic</code> layout is the default for <code>auro-counter-group</code>. You don't need to set anything to get this look.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown.html) -->
 <!-- The below content is automatically added from ./../apiExamples/dropdown.html -->
