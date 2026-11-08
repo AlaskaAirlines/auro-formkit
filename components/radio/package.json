@@ -33,7 +33,7 @@
     "build:sass": "sass --no-source-map --quiet-deps --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
-    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; npm run docs; node ../../packages/build-tools/src/generatePageManifest.mjs",
+    "build:docs": "npm run docs -- --api --manifest ../../custom-elements.json && node ../../packages/build-tools/src/generatePageManifest.mjs",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
