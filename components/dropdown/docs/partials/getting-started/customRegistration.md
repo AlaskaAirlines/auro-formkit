@@ -1,4 +1,4 @@
-## Custom Component Registration for Version Management
+## Custom component registration for version management
 
 Every Auro component has two key parts: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
