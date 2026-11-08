@@ -10,7 +10,7 @@
 
 <ul>
   <li><strong>Automatic label binding</strong>: The label slot is automatically associated with the input. You don't need to wire up <code>for</code> and <code>id</code>.</li>
-  <li><strong>Dynamic label positioning</strong>: Labels float above the input when focused or populated, providing context without consuming space.</li>
+  <li><strong>Dynamic label positioning</strong>: In the <code>classic</code> layout, labels float above the input when focused or populated, providing context without consuming space.</li>
   <li><strong>Clear button</strong>: An accessible clear button appears when the input has a value. Set its accessible name with the <code>ariaLabel.clear</code> slot.</li>
   <li><strong>Password toggle</strong>: For <code>type="password"</code>, a show/hide button is built in. Set its accessible name for each state with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots.</li>
   <li><strong>Validation announcements</strong>: Error messages display in help text with appropriate ARIA roles so screen readers announce validity changes.</li>

@@ -4,7 +4,7 @@
 
 <auro-header level="2">Styling a native input</auro-header>
 
-<p>Reset and restyle the native input with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
+<p>Reset and restyle the native input with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
 
 <pre><code>/* Color tokens */
 @import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
@@ -135,11 +135,11 @@
 
 <auro-header level="3">Floating and dynamic labels</auro-header>
 
-<p><code>auro-input</code> floats the label above the field when it has focus or a value, and automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
+<p>In the <code>classic</code> layout, <code>auro-input</code> floats the label above the field when it has focus or a value. In every layout, it automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
 
 <auro-header level="3">Display value slot</auro-header>
 
-<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input doesn't have focus. It's useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
+<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input has a value and doesn't have focus. It's useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
 
 <auro-header level="3">Layout and shape variants</auro-header>
 
