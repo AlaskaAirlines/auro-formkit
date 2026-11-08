@@ -64,6 +64,11 @@ import { keyboardStrategy } from './keyboardStrategy.js';
  * @event input - Notifies that the counter's value has changed.
  */
 export class AuroCounter extends LitElement {
+
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...LitElement.shadowRootOptions,
@@ -77,6 +82,10 @@ export class AuroCounter extends LitElement {
     this._initializeDefaults();
   }
 
+  /**
+   * Sets the initial property values. Called from the constructor.
+   * @internal
+   */
   _initializeDefaults() {
     this.appearance = "default";
     this.defaultSlot = undefined;
