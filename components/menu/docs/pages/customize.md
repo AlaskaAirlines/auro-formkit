@@ -77,7 +77,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="dividers">Dividers</auro-header>
-        <p>Insert standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers are non-interactive and are skipped during keyboard navigation.</p>
+        <p>Insert standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers can't be selected, and keyboard navigation skips them.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/hr.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -135,7 +135,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="nomatch">No match placeholder</auro-header>
-        <p>Mark an option with the <code>nomatch</code> attribute to designate it as the placeholder shown when no other options match the user's input. When paired with <code>&lt;auro-combobox&gt;</code>, the combobox toggles the <code>hidden</code> attribute on this option automatically based on filter results.</p>
+        <p>Add the <code>nomatch</code> attribute to an option to mark it as the "no matching results" row. <code>&lt;auro-combobox&gt;</code> shows it only when nothing matches what someone typed, and hides it otherwise. On its own, <code>auro-menu</code> shows it like any other option.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nomatch.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -190,7 +190,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="multiselect">Multi-select</auro-header>
-        <p>Use the <code>multiselect</code> attribute on <code>auro-menu</code> to allow multiple options to be selected simultaneously.</p>
+        <p>Use the <code>multiselect</code> attribute on <code>auro-menu</code> to let people select more than one option. Choosing a selected option again deselects it.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multi-select.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

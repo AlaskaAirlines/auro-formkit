@@ -52,14 +52,7 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    /**
-     * @private
-     */
     this.shape = undefined;
-
-    /**
-     * @private
-     */
     this.size = undefined;
 
     /**
@@ -73,10 +66,6 @@ export class AuroMenuOption extends AuroElement {
     this.disabled = false;
     this.noMatch = false;
     this.persistent = false;
-
-    /**
-     * @private
-     */
     this.tabIndex = -1;
 
     /**
@@ -94,7 +83,6 @@ export class AuroMenuOption extends AuroElement {
       /**
        * Sets the option's corner shape. `box` and `snowflake` have square corners, and `pill` has fully rounded ends. Uses the parent menu's `shape` when not set.
        * @type {'box' | 'pill' | 'snowflake'}
-       * @default 'box'
        * @category ui
        */
       shape: {
@@ -106,7 +94,6 @@ export class AuroMenuOption extends AuroElement {
       /**
        * Sets the option's text size and spacing, from `xs` (smallest) to `xl` (largest). Uses the parent menu's `size` when not set.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
-       * @default 'sm'
        * @category ui
        */
       size: {
@@ -116,7 +103,7 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * Hides the checkmark when this option is selected. Whenever the menu's `nocheckmark` setting changes, the menu copies it onto every option, replacing this value.
+       * Hides the checkmark when this option is selected. The menu replaces this value with its own `nocheckmark` setting when it first renders and whenever that setting changes, so set `nocheckmark` on the menu instead.
        * @category ui
        */
       noCheckmark: {

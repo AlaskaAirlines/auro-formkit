@@ -56,7 +56,7 @@
       <td>No option becomes active.</td>
     </tr>
     <tr>
-      <td rowspan="4">Enter</td>
+      <td rowspan="5">Enter</td>
       <td>Single-select, active option isn't currently selected</td>
       <td>The active option is selected. Any previous selection is cleared. <code>auroMenu-selectedOption</code> fires.</td>
     </tr>
@@ -67,6 +67,10 @@
     <tr>
       <td>Multi-select</td>
       <td>The active option toggles selected. Other selections are preserved.</td>
+    </tr>
+    <tr>
+      <td>Active option has an <code>event</code> attribute</td>
+      <td>The menu fires the named event and <code>auroMenu-customEventFired</code> instead of selecting the option.</td>
     </tr>
     <tr>
       <td>Active option is disabled, hidden, or static</td>

@@ -9,7 +9,7 @@
 <p>When the listbox is exposed, such as when the parent's dropdown opens or a standalone focusable menu receives focus, VoiceOver announces:</p>
 <ol>
   <li><strong>Role:</strong> <em>"list box"</em>, from the root <code>&lt;auro-menu&gt;</code>. Nested menus use <code>role="group"</code> with <code>aria-label="submenu"</code>.</li>
-  <li><strong>Item count:</strong> The number of visible options, such as <em>"5 items"</em></li>
+  <li><strong>Item count:</strong> The number of visible options, such as <em>"5 items"</em>.</li>
   <li><strong>Multi-select:</strong> When <code>multiSelect</code> is set on the root menu, <code>aria-multiselectable="true"</code> is exposed so VoiceOver announces the listbox as multi-selectable.</li>
   <li><strong>Loading:</strong> While <code>loading</code> is set, <code>aria-busy="true"</code> is exposed so VoiceOver signals that the option set isn't stable yet.</li>
 </ol>

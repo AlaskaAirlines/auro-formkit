@@ -14,7 +14,7 @@
         <auro-header level="3" id="menuOption">Menu option</auro-header>
         <p>Each <code>auro-menuoption</code> has a distinct look for these states: <strong>Hover</strong>, <strong>Active</strong> (keyboard-highlighted), <strong>Selected</strong>, and <strong>Disabled</strong>. Options support a default slot for display text and a <code>value</code> attribute that identifies the option when it's selected.</p>
         <auro-header level="3" id="dividers">Dividers</auro-header>
-        <p>Use standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers are non-interactive and are skipped during keyboard navigation.</p>
+        <p>Use standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers can't be selected, and keyboard navigation skips them.</p>
         <auro-header level="3" id="checkmark">Checkmark</auro-header>
         <p>By default, a checkmark icon appears next to each selected option. Use the <code>nocheckmark</code> attribute on <code>auro-menu</code> to hide this indicator when you want a simpler look.</p>
       </section>

@@ -10,9 +10,9 @@
 
 <ul>
   <li><strong>Keyboard navigation:</strong> Arrow Up/Down move the active option; Enter selects it; Tab selects and moves focus out of the menu.</li>
-  <li><strong>Active option tracking:</strong> The currently highlighted option is tracked programmatically, enabling <code>aria-activedescendant</code> patterns in parent components, such as <code>auro-select</code> and <code>auro-combobox</code>.</li>
-  <li><strong>Multi-select semantics:</strong> When <code>multiSelect</code> is enabled, <code>aria-multiselectable</code> is set on the menu.</li>
-  <li><strong>Loading state:</strong> <code>aria-busy</code> is set during loading, with customizable loading icon and text slots.</li>
+  <li><strong>Active option tracking:</strong> The menu tracks the highlighted option, so parent components, such as <code>auro-select</code> and <code>auro-combobox</code>, can point <code>aria-activedescendant</code> at it.</li>
+  <li><strong>Multi-select semantics:</strong> When <code>multiSelect</code> is on, the menu sets <code>aria-multiselectable</code>.</li>
+  <li><strong>Loading state:</strong> The menu sets <code>aria-busy</code> while loading, and the <code>loadingIcon</code> and <code>loadingText</code> slots let you customize the loading indicator.</li>
 </ul>
 
 <auro-header level="2" id="richOptionContent">Rich option content</auro-header>
@@ -75,7 +75,7 @@
   <li><strong><code>auro-combobox</code>:</strong> Autocomplete with filtering</li>
 </ul>
 
-<p>This architecture means selection behavior, keyboard navigation, and ARIA semantics are consistent across all selection components.</p>
+<p>This architecture means selection behavior, keyboard navigation, and ARIA semantics are consistent across <code>auro-select</code> and <code>auro-combobox</code>.</p>
 
 <auro-header level="2" id="summary">Summary</auro-header>
 

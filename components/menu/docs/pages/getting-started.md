@@ -56,7 +56,7 @@
         <auro-header level="2" id="stateManagement">State management</auro-header>
         <p>Read these properties in JavaScript to get the menu's current state.</p>
         <auro-header level="3" id="value">value</auro-header>
-        <p>Gets or sets the selected value. In multi-select mode, this is a JSON array string of the selected option values, such as <code>'["stops","duration"]'</code>. In single-select mode, if the value matches only an option marked <code>disabled</code> or <code>static</code>, or no option at all, the selection is cleared (<code>optionSelected</code> becomes <code>undefined</code>) and <code>auroMenu-selectValueFailure</code> is dispatched. In multi-select mode, values that match only <code>disabled</code> or <code>static</code> options are dropped, and the event is dispatched only when no value matches. <code>hidden</code> options remain selectable by value.</p>
+        <p>Gets or sets the selected value. In multi-select mode, it's a JSON array string of the selected option values, such as <code>'["stops","duration"]'</code>. When the value matches no option, or only options marked <code>disabled</code> or <code>static</code>, the menu clears the selection (<code>optionSelected</code> becomes <code>undefined</code>) and fires <code>auroMenu-selectValueFailure</code>. In multi-select mode, the menu drops values that match only <code>disabled</code> or <code>static</code> options, and fires the event only when no value matches. Options marked <code>hidden</code> can still be selected by value.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
         <p>Returns the selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected. When <code>multiSelect</code> is enabled, returns an array of selected elements.</p>
         <auro-header level="3" id="optionActive">optionActive</auro-header>
@@ -107,7 +107,7 @@
           <li><code>auroMenu-activatedOption</code>: the active (highlighted) option changed through the keyboard, hover, or <code>updateActiveOption()</code>.</li>
           <li><code>auroMenu-optionsChange</code>: the set of available options was updated, such as after a slot change.</li>
           <li><code>auroMenu-selectValueReset</code>: the menu's <code>value</code> was reset with <code>reset()</code>.</li>
-          <li><code>auroMenu-selectValueFailure</code>: a value selection (through <code>selectByValue()</code>, the <code>value</code> attribute, or setting the <code>value</code> property) found no matching selectable option. This includes values that match an option marked <code>disabled</code> or <code>static</code>, which are never selectable.</li>
+          <li><code>auroMenu-selectValueFailure</code>: a value selection (through <code>selectByValue()</code>, the <code>value</code> attribute, or setting the <code>value</code> property) found no matching selectable option. This includes values that match an option marked <code>disabled</code> or <code>static</code>, which are never selectable. It also fires in multi-select mode when someone chooses an option with no <code>value</code>.</li>
           <li><code>auroMenu-loadingChange</code>: the <code>loading</code> attribute changed.</li>
           <li><code>auroMenu-customEventFired</code>: the menu fired the event named in an option's <code>event</code> attribute. See <a href="#eventAttribute">Option event attribute</a>.</li>
         </ul>

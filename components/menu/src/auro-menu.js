@@ -57,7 +57,7 @@ let menuInstanceIdCounter = 0;
  * @event {CustomEvent<any>} auroMenu-customEventFired - Fires right after the menu fires the event named in an option's `event` attribute. The option is in `detail.option`.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Fires when `loading` changes.
  * @event {CustomEvent<{ options: Array<HTMLElement> }>} auroMenu-optionsChange - Fires when the set of options in the menu changes.
- * @event {CustomEvent<any>} auroMenu-selectValueFailure - Fires when a value doesn't match any option that can be selected.
+ * @event {CustomEvent<any>} auroMenu-selectValueFailure - Fires when a value doesn't match any option that can be selected, or when someone chooses an option with no `value` in multi-select mode.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Fires when `reset()` clears the menu.
  * @event {CustomEvent<any>} auroMenu-selectedOption - Fires when the selection changes, including when an option is deselected or the selection is cleared. In single-select mode, it also fires when someone chooses the option that's already selected.
  * @slot loadingText - Text shown while the menu is loading, such as "Loading...". {@relevantWhen loading} {@category ui}
