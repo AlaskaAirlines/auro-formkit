@@ -9,7 +9,7 @@
 <p><code>auro-counter</code> provides:</p>
 
 <ul>
-  <li><strong>ARIA spinbutton pattern</strong>: The component uses <code>role="spinbutton"</code> with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, and <code>aria-valuetext</code> for complete screen reader semantics.</li>
+  <li><strong>ARIA spinbutton pattern</strong>: The component uses <code>role="spinbutton"</code> with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, and <code>aria-valuetext</code>, so screen readers announce its range and current value. It doesn't currently set <code>aria-invalid</code>.</li>
   <li><strong>Labeled controls</strong>: Increment and decrement buttons take their ARIA labels from the <code>ariaLabel.plus</code> and <code>ariaLabel.minus</code> slots.</li>
   <li><strong>Single tab stop</strong>: The Up Arrow and Down Arrow keys change the value, and the increment and decrement buttons stay out of the tab order, so each counter is one tab stop.</li>
   <li><strong>Focus delegation</strong>: <code>delegatesFocus</code> ensures focus reaches the interactive control regardless of where the user clicks.</li>
@@ -94,7 +94,7 @@
     <tr>
       <td>ARIA spinbutton semantics</td>
       <td>No</td>
-      <td>Full implementation</td>
+      <td>Yes, except <code>aria-invalid</code></td>
     </tr>
     <tr>
       <td>Auto-disable at min/max</td>

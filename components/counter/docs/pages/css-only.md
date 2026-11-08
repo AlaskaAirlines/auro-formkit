@@ -186,7 +186,7 @@
     <tr>
       <td>Spinbutton ARIA semantics</td>
       <td>Not supported</td>
-      <td><code>role="spinbutton"</code> with full ARIA</td>
+      <td><code>role="spinbutton"</code> with value, range, and label attributes</td>
     </tr>
     <tr>
       <td>Validation messages</td>
