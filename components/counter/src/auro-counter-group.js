@@ -196,7 +196,6 @@ export class AuroCounterGroup extends AuroElement {
        * Deprecated: Use `placement` instead.
        * Moves the open dropdown to whichever side of the trigger has the most space. Applies only when `isDropdown` is set.
        * @relevantWhen isDropdown
-       * @default false
        * @deprecated Use `placement` instead.
        * @category ui
        */
