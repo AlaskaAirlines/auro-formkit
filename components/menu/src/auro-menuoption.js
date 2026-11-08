@@ -322,7 +322,7 @@ export class AuroMenuOption extends AuroElement {
   }
 
   /**
-   * Handles click events on the menu option.
+   * Called when the option is clicked. Fires `auroMenuOption-click`, unless the option or a menu containing it is disabled.
    * @private
    */
   handleClick() {
