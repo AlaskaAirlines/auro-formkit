@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Input - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Input: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-input&gt;</code> component. It covers announcements, focus behavior, and how different states affect the screen reader experience.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>

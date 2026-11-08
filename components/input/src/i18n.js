@@ -91,8 +91,8 @@ const stringsEN = {
 
 /**
  * Gets a built-in string in the requested language. Only `es` returns Spanish; every other language returns English.
- * @param {string} lang - The language to return the string in, such as "es".
- * @param {string} requestedString - The key of the string to return, such as "email".
+ * @param {string} lang - The language to return the string in, such as `es`.
+ * @param {string} requestedString - The key of the string to return, such as `email`.
  * @private
  * @returns {string} The string in the requested language.
  */

@@ -405,7 +405,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Shows a card icon left of the value that changes to the detected card brand, such as Visa, as the user types.
-       * Applies only when `type="credit-card"`.
+       * Applies only when `type="credit-card"`, and the emphasized layouts don't show it.
        * @relevantWhen type === 'credit-card'
        * @category ui
        */

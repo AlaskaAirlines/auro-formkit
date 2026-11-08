@@ -9,9 +9,9 @@ import { AuroInputUtilities } from "./utilities.js";
  * Works like `AuroInputUtil.toISOFormatString` in reverse:
  * instead of `Date` to ISO, it goes from ISO to a display format.
  *
- * @param {string} isoStr - The ISO date string, such as "2024-01-15".
- * @param {string} format - The display format, such as "mm/dd/yyyy", "dd/mm/yyyy", or "yyyy/mm/dd".
- * @returns {string|undefined} The date in the display format, or undefined if either argument is empty or the date isn't valid.
+ * @param {string} isoStr - The ISO date string, such as `2024-01-15`.
+ * @param {string} format - The display format, such as `mm/dd/yyyy`, `dd/mm/yyyy`, or `yyyy/mm/dd`.
+ * @returns {string|undefined} The date in the display format, or `undefined` if either argument is empty or the date isn't valid.
  */
 function formatISODate(isoStr, format) {
   if (!isoStr || !format) {

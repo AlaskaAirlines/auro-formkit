@@ -16,8 +16,8 @@ export class AuroInputUtilities {
   /**
    * Creates a set of date and mask helpers for one locale and format.
    * @param {object} config - The settings for the helpers.
-   * @param {string} [config.locale] - The BCP 47 language tag, such as "en-US", "fr-FR", or "ja-JP". Defaults to "en-US" when missing or invalid.
-   * @param {string} [config.format] - The date format to use instead of the locale's format, such as "mm/dd/yyyy".
+   * @param {string} [config.locale] - The BCP 47 language tag, such as `en-US`, `fr-FR`, or `ja-JP`. Defaults to `en-US` when missing or invalid.
+   * @param {string} [config.format] - The date format to use instead of the locale's format, such as `mm/dd/yyyy`.
    */
   constructor(config = { locale: undefined, format: undefined }) {
     if (config.locale) {
@@ -43,7 +43,7 @@ export class AuroInputUtilities {
 
   /**
    * Sets the date format to use instead of the locale's format.
-   * @param {string} newFormat - The new date format, such as "dd/mm/yyyy".
+   * @param {string} newFormat - The new date format, such as `dd/mm/yyyy`.
    * @returns {void}
    */
   updateFormat(newFormat) {
@@ -52,8 +52,8 @@ export class AuroInputUtilities {
 
   /**
    * Converts an IMask date mask to a date-fns format string.
-   * @param {string} mask - The IMask date mask, such as "MM/DD/YYYY".
-   * @returns {string} The date-fns format string, such as "MM/dd/yyyy".
+   * @param {string} mask - The IMask date mask, such as `MM/DD/YYYY`.
+   * @returns {string} The date-fns format string, such as `MM/dd/yyyy`.
    */
   toDateFnsMask(mask) {
     return mask
@@ -64,9 +64,9 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Gets the uppercase date mask for the instance's locale, such as "MM/DD/YYYY" for en-US.
+   * Gets the uppercase date mask for the instance's locale, such as `MM/DD/YYYY` for `en-US`.
    * Returns the override format in uppercase instead when one is set.
-   * @param {string} [locale] - A BCP 47 language tag, such as "fr-FR". Used only when the instance has no locale, which doesn't happen because the constructor always sets one.
+   * @param {string} [locale] - A BCP 47 language tag, such as `fr-FR`. Used only when the instance has no locale, which doesn't happen because the constructor always sets one.
    * @returns {string} The uppercase date mask.
    */
   getDateMaskFromLocale(locale) {
@@ -236,7 +236,7 @@ export class AuroInputUtilities {
    * Day-only and year-only formats (`dd`, `yy`, `yyyy`) are checked as number ranges; other partial formats are parsed
    * with date-fns and formatted back to confirm the date is valid and written exactly in the format.
    * @param {string} value - The value as shown in the field.
-   * @param {string} format - The partial date format, such as "mm/yyyy", "yyyy", or "dd".
+   * @param {string} format - The partial date format, such as `mm/yyyy`, `yyyy`, or `dd`.
    * @returns {boolean} True if the value is a valid date in the format; false otherwise.
    */
   isValidPartialDate(value, format) {
@@ -306,7 +306,7 @@ export class AuroInputUtilities {
    * Returns `undefined` when `valueObject` isn't a valid `Date` or `format` is empty.
    * @private
    * @param {Date|undefined} valueObject - The date to format, such as the input's `valueObject`.
-   * @param {string} format - The date format, such as "mm/dd/yyyy".
+   * @param {string} format - The date format, such as `mm/dd/yyyy`.
    * @returns {string | undefined}
    */
   toFormattedValue(valueObject, format) {
@@ -330,9 +330,9 @@ export class AuroInputUtilities {
 }
 
 /**
- * Gets the date format a locale uses, such as `mm/dd/yyyy` for en-US or `dd.mm.yyyy` for de-DE.
+ * Gets the date format a locale uses, such as `mm/dd/yyyy` for `en-US` or `dd.mm.yyyy` for `de-DE`.
  *
- * @param {string} locale - The BCP 47 language tag, such as "en-US" or "fr-FR". Invalid tags fall back to en-US.
+ * @param {string} locale - The BCP 47 language tag, such as `en-US` or `fr-FR`. Invalid tags fall back to `en-US`.
  * @returns {string} The locale's date format in lowercase.
  */
 export function getDateFormatFromLocale (locale) {
