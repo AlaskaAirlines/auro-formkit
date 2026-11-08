@@ -38,9 +38,9 @@
 <p><code>auro-dropdown</code> adapts to the viewport:</p>
 
 <ul>
-  <li><strong>Desktop:</strong> Content appears as a positioned panel with optional modal behavior</li>
+  <li><strong>Desktop:</strong> Content appears as a positioned panel with optional modal behavior.</li>
   <li><strong>Mobile:</strong> Content opens as a fullscreen dialog at or below the breakpoint you set with <code>fullscreenBreakpoint</code> (<code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, or <code>xl</code>). It doesn't go fullscreen when <code>fullscreenBreakpoint</code> isn't set or is <code>disabled</code>.</li>
-  <li><strong>Desktop modal:</strong> <code>desktopModal</code> makes background siblings inert, traps focus within the dropdown, and prevents interaction with page content, all without going fullscreen</li>
+  <li><strong>Desktop modal:</strong> <code>desktopModal</code> makes background siblings inert, traps focus within the dropdown, and prevents interaction with page content, all without going fullscreen.</li>
 </ul>
 
 <auro-header level="2" id="contentagnostic">Content-agnostic</auro-header>

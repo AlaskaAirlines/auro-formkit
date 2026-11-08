@@ -127,7 +127,7 @@
 
 <auro-header level="3">Click-outside and focus-loss dismissal</auro-header>
 
-<p><code>auro-dropdown</code> closes the bib when people click outside the component or move focus out of it, and exposes <code>noHideOnThisFocusLoss</code> to opt out. Native <code>&lt;details&gt;</code> stays open until the <code>&lt;summary&gt;</code> is clicked again, so click-outside and focus-out dismissal must be wired up manually.</p>
+<p><code>auro-dropdown</code> closes the bib when people click outside the component or move focus out of it. Set <code>noHideOnThisFocusLoss</code> to keep it open when focus moves out. Native <code>&lt;details&gt;</code> stays open until the <code>&lt;summary&gt;</code> is clicked again, so click-outside and focus-out dismissal must be wired up manually.</p>
 
 <auro-header level="3">Keyboard handling</auro-header>
 
@@ -222,7 +222,7 @@
     <tr>
       <td>Click-outside / focus-loss dismiss</td>
       <td>Manual JS</td>
-      <td>Built-in (with opt-out)</td>
+      <td>Built-in; <code>noHideOnThisFocusLoss</code> keeps it open on focus loss</td>
     </tr>
     <tr>
       <td>Keyboard model</td>

@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Dropdown - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Dropdown: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-dropdown&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>
@@ -20,7 +20,7 @@
       <tbody>
         <tr>
           <td>Expanded</td>
-          <td><em>"collapsed"</em> or <em>"expanded"</em></td>
+          <td><em>"collapsed"</em> or <em>"expanded"</em>, only when <code>a11yRole</code> isn't <code>button</code></td>
         </tr>
         <tr>
           <td>Disabled</td>
@@ -29,11 +29,11 @@
       </tbody>
     </table>
   </li>
-  <li><strong>Additional description:</strong> <code>helpText</code> slot content if present</li>
+  <li><strong>Additional description:</strong> None. The dropdown doesn't currently connect the <code>helpText</code> slot content to the trigger, so VoiceOver doesn't announce it on focus.</li>
 </ol>
 
 <auro-header level="3" id="voiceOverExpandAnnouncement">Expand and collapse</auro-header>
-<p>When the dropdown is expanded or collapsed, VoiceOver announces the state change.</p>
+<p>When <code>a11yRole</code> isn't <code>button</code>, VoiceOver announces the state change when the dropdown expands or collapses.</p>
 
 <auro-header level="3" id="voiceOverCloseGesture">Close gesture</auro-header>
 <p>People can also <strong>close</strong> the dropdown with a gesture:</p>
@@ -45,19 +45,19 @@
 <auro-header level="2" id="voiceOverLargeVPWorkflow">Large viewport workflow</auro-header>
 <p>For example, a large tablet or a desktop browser window.</p>
 <ol>
-  <li><strong>Focus trigger:</strong> Announces the trigger label and state</li>
-  <li><strong>Open | Expand:</strong> Activating the trigger opens the dropdown bib; focus moves to the first focusable element within the bib</li>
-  <li><strong>Navigate bib content:</strong> Tab through focusable elements within the bib</li>
-  <li><strong>Close | Collapse:</strong> Pressing Escape or clicking outside collapses the dropdown</li>
+  <li><strong>Focus trigger:</strong> Announces the trigger label and state.</li>
+  <li><strong>Open | Expand:</strong> Activating the trigger opens the dropdown bib; focus moves to the first focusable element within the bib.</li>
+  <li><strong>Navigate bib content:</strong> Tab through focusable elements within the bib.</li>
+  <li><strong>Close | Collapse:</strong> Pressing Escape or clicking outside collapses the dropdown.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverSmallVPWorkflow">Small viewport workflow</auro-header>
 <p>For example, a mobile phone or a very small desktop browser window.</p>
 <ol>
-  <li><strong>Focus trigger:</strong> Announces the trigger label and state</li>
-  <li><strong>Open | Expand:</strong> Opens a fullscreen modal; focus is trapped within the bib content</li>
-  <li><strong>Navigate bib content:</strong> Swipe or Tab through focusable elements</li>
-  <li><strong>Close:</strong> Activate a close button in the bib content, such as the one <code>auro-bibtemplate</code> provides, or use the scrub gesture (two-finger zigzag) to dismiss</li>
+  <li><strong>Focus trigger:</strong> Announces the trigger label and state.</li>
+  <li><strong>Open | Expand:</strong> Opens a fullscreen modal; focus is trapped within the bib content.</li>
+  <li><strong>Navigate bib content:</strong> Swipe or Tab through focusable elements.</li>
+  <li><strong>Close:</strong> Activate a close button in the bib content, such as the one <code>auro-bibtemplate</code> provides, or use the scrub gesture (two-finger zigzag) to dismiss.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverStates">Impact of state</auro-header>

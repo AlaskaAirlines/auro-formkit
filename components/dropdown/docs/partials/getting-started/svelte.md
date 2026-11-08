@@ -39,7 +39,7 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting in Svelte templates for attributes such as `disabled` and `chevron`.
+This turns on prop hints in Svelte templates for attributes such as `disabled` and `chevron`.
 
 <auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Listen for the `auroDropdown-toggled` event on the element:

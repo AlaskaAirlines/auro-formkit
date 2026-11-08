@@ -283,13 +283,13 @@ export class AuroDropdownBib extends LitElement {
   /**
    * Blocks touch-driven page scroll while a fullscreen modal dialog is open.
    *
-   * The showModal() function places the dialog in the browser's **top layer**,
-   * which is a separate rendering layer above the normal DOM. On mobile, the
-   * compositor processes visual-viewport panning before top-layer touch
-   * handling. This means the entire viewport, including the top-layer dialog,
-   * can be panned by a touch gesture, causing the page behind the dialog to
-   * scroll into view. To prevent this, we add a touchmove listener that cancels
-   * the event if the touch started outside the dialog or any scrollable child within it.
+   * The `showModal()` method puts the dialog in the browser's **top layer**,
+   * a separate rendering layer above the page. On mobile, the browser pans
+   * the visual viewport before it handles touches in the top layer, so a touch
+   * gesture can pan the whole viewport, dialog included, and scroll the page
+   * behind the dialog into view. To prevent this, adds a `touchmove` listener
+   * that cancels the gesture unless it started in a scrollable element, such as
+   * a scrolling list in the dialog.
    *
    * @private
    */
@@ -320,7 +320,7 @@ export class AuroDropdownBib extends LitElement {
   }
 
   /**
-   * Removes the touchmove listener added by _lockTouchScroll().
+   * Removes the `touchmove` listener that `_lockTouchScroll` added.
    * @private
    */
   _unlockTouchScroll() {
