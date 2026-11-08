@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Radio - Accessibility</auro-header>
+<auro-header level="1" id="overview">Radio: Accessibility</auro-header>
 <div class="contentWrapper">
   <div class="mainContent">
     <div class="scrollWrapper">

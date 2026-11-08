@@ -144,7 +144,7 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * ID for input node.
+       * Holds the ID of the inner `<input>` element, which its `<label>` points to.
        * @private
        */
       inputId: {
@@ -190,7 +190,7 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * Kept out of the API docs, because changing it can easily break accessibility.
+       * Sets the host's ARIA role, `radio`. Kept out of the API docs, because changing it can easily break accessibility.
        * @private
        */
       role: {
@@ -199,7 +199,7 @@ export class AuroRadio extends LitElement {
       },
 
       /**
-       * Whether or not the radio button has been touched by the user.
+       * Records whether someone has interacted with the radio button.
        * @private
        */
       touched: {

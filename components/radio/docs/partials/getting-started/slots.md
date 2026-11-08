@@ -5,7 +5,7 @@
 <auro-header level="4" id="slot-helpText">helpText</auro-header>
 <p>Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it.</p>
 <auro-header level="4" id="slot-optionalLabel">optionalLabel</auro-header>
-<p>Text shown after the legend when the group isn't <code>required</code>, such as "- optional". It replaces the default <em>"(optional)"</em> text.</p>
+<p>Text shown after the legend when the group isn't <code>required</code>, such as a translated "(optional)". It replaces the default <em>"(optional)"</em> text.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->

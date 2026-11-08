@@ -123,12 +123,12 @@ A group of radio buttons with a shared label that lets people choose exactly one
 
 ### Slots
 
-| Name          | Category | Required | Relevant when | Description                                                                                                           |
-| ------------- | -------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
-| helpText      | ui       |          |               | Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it. |
-| legend        | ui       | Yes      |               | Label for the group, such as "Seat preference". Screen readers announce it as the group's name.                       |
-| optionalLabel | ui       |          | `!required`   | Text shown after the legend when the group isn't `required`, such as "- optional". Defaults to "(optional)".          |
-| default       |          |          |               | The `auro-radio` elements in the group.                                                                               |
+| Name          | Category | Required | Relevant when | Description                                                                                                               |
+| ------------- | -------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| helpText      | ui       |          |               | Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it.     |
+| legend        | ui       | Yes      |               | Label for the group, such as "Seat preference". Screen readers announce it as the group's name.                           |
+| optionalLabel | ui       |          | `!required`   | Text shown after the legend when the group isn't `required`, such as a translated "(optional)". Defaults to "(optional)". |
+| default       |          |          |               | The `auro-radio` elements in the group.                                                                                   |
 
 ### CSS shadow parts
 

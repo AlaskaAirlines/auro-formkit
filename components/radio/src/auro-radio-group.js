@@ -54,7 +54,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * @csspart radio-group - The `<fieldset>` element, with `role="radiogroup"`, that wraps the legend and the radio buttons.
  * @csspart helpText - The help text element below the group, which shows the help text or the error message.
  * @slot {HTMLSlotElement} legend - Label for the group, such as "Seat preference". Screen readers announce it as the group's name. {@requiredWhen always} {@category ui}
- * @slot {HTMLSlotElement} optionalLabel - Text shown after the legend when the group isn't `required`, such as "- optional". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
+ * @slot {HTMLSlotElement} optionalLabel - Text shown after the legend when the group isn't `required`, such as a translated "(optional)". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
  * @slot {HTMLSlotElement} helpText - Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it. {@category ui}
  * @slot default - The `auro-radio` elements in the group.
  * @event auroFormElement-validated - Fires each time the group runs validation, with the result in `event.detail.validity` and `event.detail.message`.
@@ -164,7 +164,7 @@ export class AuroRadioGroup extends LitElement {
       },
 
       /**
-       * Indicates whether the legend slot is set or not.
+       * Records whether the `legend` slot has content.
        * @private
        */
       hasLegend: {
@@ -258,7 +258,7 @@ export class AuroRadioGroup extends LitElement {
       },
 
       /**
-       * Indicates whether the radio group is in a dirty state (has been interacted with).
+       * Records whether someone has interacted with the group.
        * @private
        */
       touched: {
