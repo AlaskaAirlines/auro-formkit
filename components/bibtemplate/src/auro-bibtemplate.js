@@ -140,7 +140,7 @@ export class AuroBibtemplate extends LitElement {
   }
 
   /**
-   * Called on `touchmove`. Stops the page behind the bib from scrolling when the touch is on the bibtemplate's own layout, such as its padding, instead of on slotted content.
+   * Called when a `touchmove` event reaches the element. Stops the page behind the bib from scrolling when the touch is on the bibtemplate's own layout, such as its padding, instead of on slotted content.
    * @param {Event} event - The `touchmove` event.
    * @returns {void}
    */
