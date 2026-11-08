@@ -13,7 +13,7 @@
   <li><strong>Role:</strong> The role for the element type, such as <em>"text field"</em> or <em>"pop-up button"</em></li>
   <li><strong>Required state:</strong> <em>"required"</em> if the element has the <code>required</code> attribute</li>
   <li><strong>Value:</strong> The current value if one is set</li>
-  <li><strong>Help text:</strong> Additional description from the <code>helpText</code> slot</li>
+  <li><strong>Help text:</strong> The <code>helpText</code> slot content, for elements that link it to their input, such as <code>auro-input</code>. Some elements, such as <code>auro-select</code> and <code>auro-combobox</code>, don't currently link it, so VoiceOver doesn't read it on focus.</li>
 </ol>
 
 <auro-header level="3" id="voiceOverValidation">Validation errors</auro-header>

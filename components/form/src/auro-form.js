@@ -48,7 +48,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - Named Auro form elements, such as `auro-input` and `auro-select`, plus the submit and reset buttons the form controls. Fields can be nested in other elements, such as a `div` or `fieldset`. {@requiredWhen always} {@category ui}
  *
- * @event input - Fires when a child form element receives user input.
+ * @event input - Bubbles up from a child form element when it receives user input; the form doesn't fire `input` itself. `auro-counter-group` doesn't currently bubble its `input` event, so listen for `change` to catch every field.
  * @event change - Fires when a child form element's value changes, and when the form rebuilds its state, such as after its content changes or a reset.
  * @event reset - Fires after the form resets. The event's `detail.previousValue` holds the form's values from just before the reset.
  * @event submit - Fires when the form is submitted and no enabled field is invalid or required but empty. The event's `detail.value` holds the form's current values.
