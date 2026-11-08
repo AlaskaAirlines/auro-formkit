@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Counter - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Counter: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-counter&gt;</code> component. It covers announcements and gestures for interacting with standalone counters, counter groups, and dropdown counter groups.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>

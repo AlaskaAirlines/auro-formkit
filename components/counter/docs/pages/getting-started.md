@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Counter - Getting started</auro-header>
+<auro-header level="1" id="overview">Counter: Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
@@ -89,7 +89,7 @@
         <auro-header level="3" id="decrement">decrement()</auro-header>
         <p>Decreases the counter's value by 1, or by the number you pass. Does nothing when the counter is disabled or already at its minimum.</p>
         <auro-header level="3" id="reset">reset()</auro-header>
-        <p>Resets the counter or counter group, clearing each counter to its <code>min</code> value and clearing validation state, the same clear-on-reset behavior used by the other Auro form elements. <code>&lt;auro-form&gt;</code> also calls it when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
+        <p>Sets the counter, or every counter in a counter group, back to its <code>min</code> value and clears its validation state. A counter with the <code>error</code> attribute stays invalid. <code>&lt;auro-form&gt;</code> also calls <code>reset()</code> when a form is reset. Increment the counters below, then select <strong>Reset</strong>.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->

@@ -406,7 +406,7 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Sets the value back to `min` and clears the counter's validation state, as other Auro form elements do when reset.
+   * Sets the value back to `min` and clears the counter's validation state. A counter with the `error` attribute stays invalid.
    * @returns {void}
    */
   reset() {

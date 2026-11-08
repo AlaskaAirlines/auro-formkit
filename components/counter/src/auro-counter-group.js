@@ -744,6 +744,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Resets every counter to its `min` value and clears the group's validation state.
+   * The group stays invalid while any counter has the `error` attribute.
    * `value` and `total` update as each counter finishes resetting.
    * @returns {void}
    */
