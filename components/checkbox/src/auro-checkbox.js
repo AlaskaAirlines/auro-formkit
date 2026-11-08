@@ -59,6 +59,10 @@ export class AuroCheckbox extends LitElement {
     this._initializeDefaults();
   }
 
+  /**
+   * Sets the initial property values. Called from the constructor.
+   * @internal
+   */
   _initializeDefaults() {
     this.appearance = 'default';
     this.checked = false;
