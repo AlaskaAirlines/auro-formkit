@@ -40,7 +40,7 @@
 </tbody>
 </table>
 </li>
-<li><strong>Additional description:</strong> <code>helpText</code> slot content if present (after a brief pause)</li>
+<li><strong>Additional description:</strong> The error message while the combobox is invalid (after a brief pause). VoiceOver doesn't currently read the <code>helpText</code> slot content, because the input doesn't reference it.</li>
 </ol>
 <auro-header level="3" id="voiceOverNavigateAnnouncement">Navigating options</auro-header>
 <p>Announces each option <em>"[option label], [<em>"selected"</em> if <code>selected</code>], [<em>"dimmed"</em> if <code>disabled</code>]"</em> as you move.</p>

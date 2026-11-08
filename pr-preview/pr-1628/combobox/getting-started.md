@@ -352,9 +352,9 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="2" id="slots">Slots</auro-header>
 <p>The following slots are available on the <code>&lt;auro-combobox&gt;</code> element.</p>
 <auro-header level="3" id="slot-default">(default)</auro-header>
-<p>The <code>&lt;auro-menu&gt;</code> that holds the <code>&lt;auro-menuoption&gt;</code> elements the user chooses from. Required.</p>
+<p>The <code>&lt;auro-menu&gt;</code> that holds the <code>&lt;auro-menuoption&gt;</code> elements the user chooses from. Every combobox needs one.</p>
 <auro-header level="3" id="slot-label">label</auro-header>
-<p>Text for the combobox label. Required, because it gives the input its accessible name.</p>
+<p>Text for the combobox label. Every combobox needs a label, because it gives the input its accessible name.</p>
 <auro-header level="3" id="slot-helpText">helpText</auro-header>
 <p>Help text shown below the combobox. When validation fails, the error message replaces it.</p>
 <auro-header level="3" id="slot-optionalLabel">optionalLabel</auro-header>
@@ -371,9 +371,9 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 </section>
 <section>
 <auro-header level="2" id="stateManagement">State management</auro-header>
-<p>The following properties hold the combobox's current state. Read them with JavaScript. You can also set <code>value</code> and <code>typedValue</code>.</p>
+<p>The following properties hold the combobox's current state. Read them with JavaScript, and set <code>value</code> or <code>typedValue</code> to change them.</p>
 <auro-header level="3" id="inputValue">inputValue</auro-header>
-<p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types. Read-only.</p>
+<p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types, and it's read-only.</p>
 <auro-header level="3" id="optionSelected">optionSelected</auro-header>
 <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected.</p>
 <auro-header level="3" id="typedValue">typedValue</auro-header>

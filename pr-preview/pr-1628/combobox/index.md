@@ -131,7 +131,7 @@
 <li><strong><code>nomatch</code></strong>: The option is shown only when no other options match the typed value, such as "No results found".</li>
 </ul>
 <div class="note">
-<strong>Note:</strong> Filtering can be disabled entirely by setting the <code>noFilter</code> attribute on the combobox. When <code>noFilter</code> is set, all options remain visible regardless of the typed value. Match highlighting still applies. This is useful when menu options are dynamically generated through an API call as the user types into the input, since the server is already returning only relevant results.
+<strong>Note:</strong> Set <code>noFilter</code> on the combobox to turn off filtering. Every option then stays visible whatever the user types, and matching text is still highlighted. Use it when your code replaces the options as the user types, such as with results from a server that already returns only matching options.
 </div>
 <auro-header level="3" id="presetValue">Preset the value</auro-header>
 <p>To show a value when the component first renders, preset its <code>value</code>.</p>

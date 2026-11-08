@@ -28,7 +28,7 @@ Each menu option exposes the following ARIA attributes:
 | `aria-posinset` | `{index}` | The 1-based position of the option within the set. |
 
 <auro-header level="3" id="helpTextAndErrors">Help text and errors</auro-header>
-- Help text is associated with the component so screen readers can announce contextual guidance.
+- The input doesn't currently reference the `helpText` slot content with `aria-describedby`, so screen readers don't read the help text when the input gets focus. While the combobox is invalid, they read the error message instead.
 - When validation fails, the error message is rendered with `role="alert"` and `aria-live="assertive"` so screen readers announce it immediately.
 
 <auro-header level="2" id="activeDescendant">Active descendant</auro-header>
