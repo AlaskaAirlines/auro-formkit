@@ -690,6 +690,7 @@ export class AuroDropdown extends AuroElement {
       /**
        * Sets the trigger's position in the keyboard tab order (the trigger's `tabindex`).
        * Applies only when the `trigger` slot content isn't focusable.
+       * @default 0
        * @category a11y
        */
       tabIndex: {
