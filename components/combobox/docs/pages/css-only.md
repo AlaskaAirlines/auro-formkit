@@ -104,7 +104,7 @@
 
 <auro-header level="3">Filter vs. suggestion behavior</auro-header>
 
-<p><code>auro-combobox</code> exposes a <code>behavior</code> attribute (<code>filter</code> or <code>suggestion</code>) that controls whether the user must select a menu option or may submit a freeform typed value. Native <code>&lt;datalist&gt;</code> always behaves like suggestion mode. There's no way to require the user to choose from the list without writing custom JavaScript to compare the input value against the option set.</p>
+<p><code>auro-combobox</code> exposes a <code>behavior</code> attribute (<code>filter</code> or <code>suggestion</code>) that controls whether the user must select a menu option or may submit a freeform typed value. Native <code>&lt;datalist&gt;</code> always behaves like suggestion mode, so requiring the user to choose from the list takes custom JavaScript that compares the input value against the option set.</p>
 
 <auro-header level="3">Custom filtering and matching</auro-header>
 
@@ -140,7 +140,7 @@
 
 <auro-header level="3">Coordinated value and option-selected state</auro-header>
 
-<p><code>auro-combobox</code> exposes both <code>value</code> (the selected option's value) and <code>optionSelected</code> (a reference to the chosen <code>auro-menuoption</code> element), and fires <code>input</code> and <code>inputValue</code> events with structured detail. With native HTML, you only get the input's string value. There's no way to know which datalist option the user picked, because the browser doesn't report it.</p>
+<p><code>auro-combobox</code> exposes both <code>value</code> (the selected option's value, or the typed text when no option is chosen) and <code>optionSelected</code> (a reference to the chosen <code>auro-menuoption</code> element), and fires <code>input</code> and <code>inputValue</code> events with structured detail. With native HTML, you only get the input's string value, because the browser doesn't report which datalist option the user picked.</p>
 
 <auro-header level="3">Form integration events</auro-header>
 

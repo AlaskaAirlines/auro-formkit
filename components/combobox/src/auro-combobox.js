@@ -386,7 +386,8 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the overall style of the combobox. The `emphasized` layout also shows larger menu options.
+       * Sets the overall style of the combobox. Use `emphasized` for a large, prominent combobox on light backgrounds,
+       * and `snowflake` only on dark backgrounds with `appearance="inverse"`. The `emphasized` layout also shows larger menu options.
        * @type {'classic' | 'emphasized' | 'snowflake'}
        * @default 'classic'
        * @category ui
@@ -398,8 +399,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the shape of the trigger. In the `snowflake` layout, the menu options use the same shape
-       * unless the `<auro-menu>` sets its own `shape`.
+       * Sets the shape of the trigger. Use `classic` with the `classic` layout, `pill`, `pill-left`, or `pill-right` with the
+       * `emphasized` layout, and `snowflake` with the `snowflake` layout. In the `snowflake` layout, the menu options use the
+       * same shape unless the `<auro-menu>` sets its own `shape`.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
        * @category ui
