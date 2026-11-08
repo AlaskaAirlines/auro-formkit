@@ -56,9 +56,9 @@
       </section>
       <section>
         <auro-header level="2" id="stateManagement">State management</auro-header>
-        <p>The following properties hold the combobox's current state. Read them with JavaScript. You can also set <code>value</code> and <code>typedValue</code>.</p>
+        <p>The following properties hold the combobox's current state. Read them with JavaScript, and set <code>value</code> or <code>typedValue</code> to change them.</p>
         <auro-header level="3" id="inputValue">inputValue</auro-header>
-        <p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types. Read-only.</p>
+        <p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types, and it's read-only.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
         <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected.</p>
         <auro-header level="3" id="typedValue">typedValue</auro-header>

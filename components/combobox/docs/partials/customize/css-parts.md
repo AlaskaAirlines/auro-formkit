@@ -11,6 +11,7 @@
     <tr><td><code>dropdownTrigger</code></td><td>Doesn't currently style anything, because the dropdown inside the combobox doesn't render a <code>trigger</code> part.</td></tr>
     <tr><td><code>dropdownChevron</code></td><td>Doesn't currently style anything, because the combobox doesn't show a chevron.</td></tr>
     <tr><td><code>dropdownSize</code></td><td>The element that sets the bib's size. Only <code>height</code>, <code>width</code>, <code>max-height</code>, and <code>max-width</code> apply.</td></tr>
+    <tr><td><code>dropdownBibTemplate</code></td><td>The container inside the bib that holds the options and, in the fullscreen bib, the headline, close button, and input.</td></tr>
     <tr><td><code>helpText</code></td><td>The help text and error message below the combobox.</td></tr>
   </tbody>
 </table>

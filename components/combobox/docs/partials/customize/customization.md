@@ -47,7 +47,7 @@
   <p>Set <code>disabled</code> to turn off the entire component. A disabled combobox is shown in a disabled style, can't receive focus, and doesn't respond to the keyboard or pointer.</p>
   <p>When a disabled combobox is inside an <code>auro-form</code>, the form leaves its value out of the form's value and validation.</p>
   <p class="note">
-    <strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
+    <strong>Note:</strong> A combobox that's both <code>disabled</code> and invalid, such as one with <code>error</code> set, still shows its error border and error message. It can't be focused or edited, and an <code>auro-form</code> leaves it out of validation.
   </p>
   <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
@@ -187,7 +187,7 @@
 &lt;/auro-menu&gt;
         </code>
       </pre>
-        <p>If neither slot is provided, the bib hides while loading and reopens when the <code>loading</code> attribute is removed, as long as focus is still in the combobox.</p>
+        <p>If neither slot has content when the menu first renders, a closed bib stays closed while the menu is loading, then opens when the <code>loading</code> attribute is removed, as long as focus is still in the combobox.</p>
       </p>
     </li>
     <li>When the API response is received, replace the <code>auro-menuoption</code> elements inside the menu with the new results and remove the <code>loading</code> attribute.</li>

@@ -1,9 +1,9 @@
 <auro-header level="2" id="slots">Slots</auro-header>
 <p>The following slots are available on the <code>&lt;auro-combobox&gt;</code> element.</p>
 <auro-header level="3" id="slot-default">(default)</auro-header>
-<p>The <code>&lt;auro-menu&gt;</code> that holds the <code>&lt;auro-menuoption&gt;</code> elements the user chooses from. Required.</p>
+<p>The <code>&lt;auro-menu&gt;</code> that holds the <code>&lt;auro-menuoption&gt;</code> elements the user chooses from. Every combobox needs one.</p>
 <auro-header level="3" id="slot-label">label</auro-header>
-<p>Text for the combobox label. Required, because it gives the input its accessible name.</p>
+<p>Text for the combobox label. Every combobox needs a label, because it gives the input its accessible name.</p>
 <auro-header level="3" id="slot-helpText">helpText</auro-header>
 <p>Help text shown below the combobox. When validation fails, the error message replaces it.</p>
 <auro-header level="3" id="slot-optionalLabel">optionalLabel</auro-header>

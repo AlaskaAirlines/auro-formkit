@@ -207,9 +207,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Wraps setTimeout and records the timer id so disconnectedCallback
-   * can cancel any outstanding callbacks. The id is removed from the set
-   * once the callback fires so the set doesn't grow unbounded.
+   * Wraps `setTimeout` and records the timer ID so `disconnectedCallback`
+   * can cancel any outstanding callbacks. The ID is removed from the set
+   * once the callback fires, so the set doesn't keep growing.
    * @param {Function} fn - The callback to run.
    * @param {number} ms - The delay in milliseconds.
    * @returns {number} The timer id.
@@ -267,7 +267,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Array of the options shown in the menu: every option that isn't hidden,
+       * Holds the options shown in the menu: every option that isn't hidden,
        * such as by filtering on the typed text, plus `persistent` options.
        * @private
        * @type {HTMLElement[]}
@@ -324,7 +324,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * ID for the dropdown.
+       * Holds the dropdown's ID, which the trigger input uses for `aria-controls`.
        * @private
        */
       dropdownId: {
@@ -334,7 +334,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Whether or not the dropdown is open.
+       * Records whether the bib is open.
        * @private
        */
       dropdownOpen: {
@@ -683,7 +683,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the currently active option.
+       * Holds the active (highlighted) option.
        * @private
        * @type {HTMLElement}
        */
@@ -860,7 +860,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Syncs the values and states of this component, the input, and the menu, including this.optionSelected and this.menu.optionSelected.
+   * Sets the menu's `matchWord` to the input text, then updates the input text and `displayValue` content from the selected option's label, or from `value` when no option is selected.
    * @private
    * @returns {void}
    */
@@ -940,7 +940,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Writes nextValue to the trigger input and the bib input when their current
+   * Writes `nextValue` to the trigger input and the bib input when their current
    * value differs, then re-asserts imask after Lit's update flushes.
    * @param {string} nextValue - The value to write to both inputs.
    * @returns {Promise<void>} The promise that resolves after both inputs flush and imask
@@ -993,10 +993,10 @@ export class AuroCombobox extends AuroElement {
    * @param {boolean} [options.preferComboboxValue=false] - If true,
    *   matches the selected option against `this.value` first. If false,
    *   matches against `this.input.value` first. Matching `this.value` first is needed on mount and re-mount
-   *   because under `persistInput` the consumer's typedValue prop can drift
+   *   because under `persistInput` the consumer's `typedValue` prop can drift
    *   from the framework value (Svelte `{#key}` re-mount after a swap, or
    *   SPA preselect after route change) and the old input-first match would
-   *   then pick the stale text. Only handleSlotChange passes this; typing
+   *   then pick the stale text. Only `handleSlotChange` passes this; typing
    *   and clearing paths keep the input-first match so user clears aren't
    *   undone.
    * @returns {void}
@@ -1602,20 +1602,20 @@ export class AuroCombobox extends AuroElement {
 
   /**
    * Flags genuine clear-button activations on an auro-input so the SPA-preselect
-   * guard in handleInputValueChange doesn't swallow them.
+   * guard in `handleInputValueChange` doesn't swallow them.
    *
-   * The auro-input clear button fires an `isProgrammatic` input event (via
-   * notifyValueChanged) that is indistinguishable in shape from the
-   * SPA-preselect echo that guard bails on (isProgrammatic + set value + empty
-   * input). Without this one-shot flag, clicking clear would leave
-   * this.value/optionSelected stale (AB#1634257).
+   * The auro-input clear button fires an `isProgrammatic` input event (through
+   * `notifyValueChanged`) that has the same shape as the SPA-preselect echo
+   * that guard bails on (`isProgrammatic`, a set value, and an empty input).
+   * Without this one-shot flag, clicking clear would leave `value` and
+   * `optionSelected` stale (AB#1634257).
    *
-   * Delegated on the shadow root so it works regardless of when .clearBtn
-   * renders (it only exists after a value is set), and covers both real clicks
-   * and programmatic clearBtn.click() (which no focusin precedes). Registered in
-   * the CAPTURE phase so the flag is set BEFORE the button's own @click
-   * (handleClickClear) fires its synchronous input event, which is when
-   * handleInputValueChange reads the flag.
+   * Delegated on the shadow root so it works whenever `.clearBtn` renders
+   * (it only exists after a value is set), and covers both real clicks and
+   * programmatic `clearBtn.click()` calls, which no `focusin` precedes.
+   * Registered in the capture phase so the flag is set before the button's own
+   * `@click` handler (`handleClickClear`) fires its synchronous input event,
+   * which is when `handleInputValueChange` reads the flag.
    * @private
    * @param {Element} inputEl - The auro-input whose clear button to track.
    * @returns {void}
@@ -1676,7 +1676,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Handles changes to the input value and the updates that follow from them.
+   * Called when the text in the trigger input or the fullscreen bib input changes.
+   * Keeps both inputs and `value` in sync, clears the combobox when the input is emptied,
+   * validates when focus is outside the combobox unless `noValidate` is set, and fires `inputValue`.
    * @private
    * @param {Event} event - The input event triggered by the input element.
    * @returns {void}
@@ -1786,9 +1788,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Handles input value changes originating from the trigger input.
-   * Refreshes menu options and filtering, delegates to handleInputValueChange
-   * for value synchronization, and manages fullscreen bib focus.
+   * Called when the text in the trigger input changes.
+   * Refreshes the menu's options and filtering, passes the change to `handleInputValueChange`,
+   * and keeps focus in the fullscreen bib input while that bib is open.
    * @private
    * @param {Event} event - The input event from the trigger input element.
    * @returns {void}
