@@ -24,6 +24,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * <auro-helptext error>Enter a valid email address.</auro-helptext>
  * ```
  *
+ * @summary Help text or an error message shown below an Auro form element, with error and dark-background styles.
+ *
  * @slot default - The help text or error message to show. The element stays hidden while this slot has no text.
  */
 export class AuroHelpText extends LitElement {
