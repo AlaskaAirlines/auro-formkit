@@ -35,7 +35,7 @@ The following sections are editable by making changes to the following files:
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Combobox Use Cases
+## Combobox use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -50,7 +50,7 @@ Use `<auro-combobox>` when users need to:
   * Quantity: The user types a quantity to choose an option within a range, such as 2–34.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

@@ -34,14 +34,14 @@ The following sections are editable by making changes to the following files:
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Select Use Cases
+## Select use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 See description.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

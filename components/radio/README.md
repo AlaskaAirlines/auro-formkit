@@ -23,7 +23,7 @@ The following sections are editable by making changes to the following files:
 <code>&lt;auro-radio&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that shows a small circle, which fills in when selected. Only one <code>&lt;auro-radio&gt;</code> in an <code>&lt;auro-radio-group&gt;</code> can be selected at a time.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Radio Use Cases
+## Radio use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -34,7 +34,7 @@ Always place `<auro-radio>` elements inside an `<auro-radio-group>` element. The
 **Note**: Use `<auro-radio>` only as a set of two or more `<auro-radio>` elements within an `<auro-radio-group>` element.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

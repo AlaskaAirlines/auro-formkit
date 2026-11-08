@@ -24,14 +24,14 @@ The following sections are editable by making changes to the following files:
 <p>It finds every named Auro form element in its content, tracks each one's value and validity, and gives you the combined values as one object through its <code>value</code> property and its <code>submit</code> event. It also turns its submit and reset buttons on and off to match the form's state.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Form Use Cases
+## Form use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 Use `<auro-form>` when you build a form from Auro form elements and want their values, validity, and submit and reset buttons handled together.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

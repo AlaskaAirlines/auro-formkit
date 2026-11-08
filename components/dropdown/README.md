@@ -25,7 +25,7 @@ Use <code>auro-dropdown</code> to show interactive content, such as a list of op
 <p class="note"><strong>Note:</strong> If the content isn't interactive, such as a tooltip, [auro-popover](http://auro.alaskaair.com/components/auro/popover) may better serve your needs.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Dropdown Use Cases
+## Dropdown use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -36,7 +36,7 @@ Use `auro-dropdown` when people need to:
 * get interactive help
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

@@ -23,7 +23,7 @@ The following sections are editable by making changes to the following files:
 <code>&lt;auro-checkbox&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that lets people select one or more options from a short list of choices.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Checkbox Use Cases
+## Checkbox use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -33,7 +33,7 @@ Use the <code>&lt;auro-checkbox&gt;</code> element when people need to:
 * Select one or more options
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

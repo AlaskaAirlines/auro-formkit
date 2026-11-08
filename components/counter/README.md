@@ -23,7 +23,7 @@ The following sections are editable by making changes to the following files:
 <code>auro-counter</code> lets people choose a number with minus and plus buttons, such as how many passengers are traveling. Use it inside <code>auro-counter-group</code> to collect several related counts, such as adults, children, and lap infants on a flight.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Counter Use Cases
+## Counter use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -33,7 +33,7 @@ Use `auro-counter` when people need to:
 * Pick a quantity, such as the number of passengers
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

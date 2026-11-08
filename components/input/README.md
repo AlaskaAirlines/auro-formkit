@@ -23,7 +23,7 @@ The following sections are editable by making changes to the following files:
 <p><code>&lt;auro-input&gt;</code> is a single-line text field for entering a value, such as a name, email address, password, phone number, card number, or date. Set <code>type</code> to <code>text</code>, <code>password</code>, <code>email</code>, <code>number</code>, <code>tel</code>, <code>credit-card</code>, or <code>date</code> to get the matching formatting and validation, and use the <code>label</code> and <code>helpText</code> slots to name the field and explain what to enter.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Input Use Cases
+## Input use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -34,7 +34,7 @@ The following sections are editable by making changes to the following files:
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->

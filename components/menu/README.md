@@ -25,14 +25,14 @@ The following sections are editable by making changes to the following files:
 <p>Use <code>&lt;auro-menu&gt;</code> as the options list of a selection control, such as a dropdown. Don't use it for site navigation menus, which need different ARIA roles. The menu doesn't show or hide itself: the component that wraps it, such as <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, handles that.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Menu Use Cases
+## Menu use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 The <code>&lt;auro-menu&gt;</code> element isn't intended for stand-alone use. It serves as the options list within <auro-hyperlink href="https://auro.alaskaair.com/components/auro/select" target="_blank">auro-select</auro-hyperlink> and <auro-hyperlink href="https://auro.alaskaair.com/components/auro/combobox" target="_blank">auro-combobox</auro-hyperlink>. Refer to those components for use cases and implementation guidance.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
