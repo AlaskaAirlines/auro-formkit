@@ -73,6 +73,11 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @event auroDropdown-idAdded - Notifies that the dropdown has an ID you can use to reference its bib, such as in `aria-controls`. The detail's `id` is the dropdown's own `id`, generated when not set, and the bib's ID is that value followed by `-floater-bib`.
  */
 export class AuroDropdown extends AuroElement {
+
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...AuroElement.shadowRootOptions,
