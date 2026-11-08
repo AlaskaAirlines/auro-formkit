@@ -59,6 +59,8 @@ export class AuroMenuOption extends AuroElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
+
+    /** @internal */
     this.iconTag = versioning.generateTag('auro-formkit-menuoption-icon', iconVersion, AuroIcon);
 
     this.selected = false;

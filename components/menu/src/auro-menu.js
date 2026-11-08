@@ -143,6 +143,10 @@ export class AuroMenu extends AuroElement {
   // (not the constructor body) so the CEM analyzer keeps their `@type` unions
   // instead of inferring `string` from a constructor-literal assignment.
   // See AlaskaAirlines/discussions#653.
+  /**
+   * Sets the default `shape` and `size` values. Called from the constructor.
+   * @internal
+   */
   initializeArchitectureDefaults() {
     this.shape = "box";
     this.size = "sm";
