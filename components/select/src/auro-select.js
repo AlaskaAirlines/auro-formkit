@@ -202,6 +202,7 @@ export class AuroSelect extends AuroElement {
 
       /**
        * Deprecated: Use `placement` instead.
+       * Moves the bib to whichever side of the trigger has the most space.
        * The bib already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
        * @deprecated Use `placement` instead.
        * @category ui
@@ -531,7 +532,7 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Whether focus has moved into the select since it was created or last reset.
+       * Records whether focus has moved into the select since it was created or last reset.
        * @private
        */
       touched: {
@@ -819,7 +820,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Updates the displayed value in an Auro dropdown component based on optionSelected.
+   * Updates the value and `displayValue` content shown in the trigger to match `optionSelected`.
    * @private
    * @returns {void}
    */
@@ -904,7 +905,7 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Sets aria-setsize and aria-posinset on each menu option so screen readers
+   * Sets `aria-setsize` and `aria-posinset` on each menu option so screen readers
    * can announce position even when the listbox context is broken by
    * shadow DOM boundaries.
    * @private
