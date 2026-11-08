@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Datepicker - Getting started</auro-header>
+<auro-header level="1" id="overview">Datepicker: Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">

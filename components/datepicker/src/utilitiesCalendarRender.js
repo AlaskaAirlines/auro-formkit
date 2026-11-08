@@ -12,8 +12,8 @@ export class UtilitiesCalendarRender {
 
   /**
    * Sets `centralDate` to the first day of the date's month, when the date is valid.
-   * @param {Object} elem - The element to set the centralDate on.
-   * @param {String} date - The date to set the centralDate to.
+   * @param {Object} elem - The element to set `centralDate` on.
+   * @param {string|Date|number} date - The date whose month to show: an ISO date string, a `Date` object, or a timestamp in milliseconds.
    * @private
    */
   updateCentralDate(elem, date) {
@@ -139,12 +139,12 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Renders one auro-calendar-month HTML for the given month/date combination.
+   * Renders an `auro-formkit-calendar-month` element for one month.
    * @private
    * @param {Object} elem - The auro-calendar element.
    * @param {Number} month - The month the calendar displays.
    * @param {Number} year - The year the calendar displays.
-   * @returns {Object} The auro-calendar-month HTML.
+   * @returns {Object} The `auro-formkit-calendar-month` template.
    */
   renderCalendar(elem, month, year) {
     return html`

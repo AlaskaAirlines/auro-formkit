@@ -26,8 +26,8 @@ const getMonthNamesFromLocale = (locale) => {
  * Gets the localized names of the days of the week, starting from Sunday, in the given style.
  * Uses UTC dates to avoid DST-related day drift across timezones.
  * @private
- * @param {String} locale - The BCP 47 language tag for localization, such as "en-US".
- * @param {String} weekday - The style of the weekday name: 'narrow', 'short', or 'long'.
+ * @param {String} locale - The BCP 47 language tag for localization, such as `en-US`.
+ * @param {String} weekday - The style of the weekday name: `narrow`, `short`, or `long`.
  * @returns {Array} An array of seven localized weekday names, starting from Sunday.
  */
 const getWeekdayNames = (locale, weekday) => {
@@ -160,10 +160,10 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   }
 
   /**
-   * Renders a day-of-week column header that shows the short day name and gives screen readers the full name with `aria-label`.
+   * Renders a day-of-week column header that shows the narrow day name, such as "S" for Sunday in `en-US`, and gives screen readers the full name with `aria-label`.
    * @private
-   * @param {String} dayOfWeek - The short day name.
-   * @param {Number} index - The index in the dayNamesOfTheWeek array.
+   * @param {String} dayOfWeek - The narrow day name, such as "S".
+   * @param {Number} index - The column's index in `dayNamesOfTheWeek`, from 0 for Sunday.
    * @returns {Object} The header HTML.
    */
   renderDayOfWeek(dayOfWeek, index) {
@@ -186,9 +186,9 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   }
 
   /**
-   * Overrides the base class handler to prevent setting `this.hoveredDate`
-   * as a reactive property. Instead, just dispatches the event upward so
-   * the calendar can handle range preview imperatively.
+   * Called when a cell fires `date-is-hovered`. Fires `hovered-date-changed` with the date
+   * instead of setting the base class's reactive `hoveredDate`, so the calendar can update
+   * the range preview without re-rendering.
    * @private
    * @param {CustomEvent} event - The date-is-hovered event from a cell.
    * @returns {void}
@@ -200,8 +200,8 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   }
 
   /**
-   * Dispatches a bubbling event when the mouse leaves the date grid body
-   * so the parent calendar can clear the range hover preview.
+   * Called when the pointer leaves the month's date grid. Fires a bubbling
+   * `calendar-month-mouseleave` event so the calendar can clear the range preview.
    * @private
    * @returns {void}
    */

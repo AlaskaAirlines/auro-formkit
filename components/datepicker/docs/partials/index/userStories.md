@@ -12,7 +12,7 @@
     Click the input or press <kbd>Enter</kbd> / <kbd>Space</kbd> to open the calendar
     <div class="note">
       <p>
-        The calendar opens to the month of <code>calendarFocusDate</code> or the selected date. With neither set, it first opens to the current month. The active date is chosen in this order:
+        The calendar opens to the month of <code>calendarFocusDate</code> or the selected date. With neither set, it opens to the month of <code>minDate</code> when that's set, and otherwise to the month of <code>centralDate</code>, which defaults to the current month. The active date is chosen in this order:
       </p>
       <ol>
         <li>The selected date, if it's within the <code>minDate</code> to <code>maxDate</code> range.</li>

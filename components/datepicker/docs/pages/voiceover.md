@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Datepicker - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Datepicker: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-datepicker&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>
@@ -80,7 +80,7 @@
   <li><strong>Focus:</strong> Tab to the datepicker input.</li>
   <li><strong>Type a date:</strong> Enter a date value directly, or press Enter/Space to open the calendar.</li>
   <li><strong>Calendar opens:</strong> Focus moves to the calendar grid wrapper. The initial active cell is marked imperatively, and the <code>aria-live</code> region announces its full localized label so VoiceOver reads the active date. Navigate dates with VoiceOver gestures (swipe) or arrow keys.</li>
-  <li><strong>Select a date:</strong> Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and populates the input. The calendar remains open; close it by pressing Escape or activating the Done button.</li>
+  <li><strong>Select a date:</strong> Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and appears in the input. The calendar remains open; close it by pressing Escape or activating the Done button.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverSmallVPAnnouncements">Small viewport workflow</auro-header>
@@ -92,7 +92,7 @@
   </li>
   <li><strong>Navigate dates:</strong> Swipe through calendar cells or use arrow keys.</li>
   <li>
-    <strong>Select a date:</strong> The selected date is announced via a live region and populates the input. The fullscreen modal remains open so additional dates can be reviewed.
+    <strong>Select a date:</strong> The selected date is announced via a live region and appears in the input. The fullscreen modal remains open so additional dates can be reviewed.
     <p>~OR~</p>
     <strong>Close:</strong> Activate the close button, press Escape, or use the VoiceOver scrub gesture to close the fullscreen modal dialog.
   </li>

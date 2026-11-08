@@ -31,7 +31,8 @@ export class CalendarUtilities {
   }
 
   /**
-   * Sends an event requesting the dropdown bib be closed.
+   * Called when someone selects the fullscreen calendar's close button or the Done button.
+   * Fires `auroCalendar-dismissRequest` so the datepicker closes the calendar.
    * @private
    * @returns {void}
    */
@@ -107,7 +108,8 @@ export class CalendarUtilities {
   }
 
   /**
-   * Handles the change of the centralDate property.
+   * Called when the calendar's `centralDate` changes. Updates the previous and next month buttons
+   * and fires `auroCalendar-centralDateChanged` with the new date.
    * @param {Object} elem - The auro-calendar element.
    * @private
    * @returns {void}

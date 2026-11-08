@@ -45,7 +45,7 @@ export class AuroDatepickerUtilities {
   }
 
   /**
-   * Compares two dates to see if they match.
+   * Checks whether two dates are the same moment in time.
    * @private
    * @param {Object} date1 - The first date to compare.
    * @param {Object} date2 - The second date to compare.

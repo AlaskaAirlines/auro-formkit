@@ -212,7 +212,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Handles user click events and calls datepicker to update the value(s).
+   * Called when someone clicks the cell's button, or presses Enter or Space while it's the active cell.
+   * Selects the cell's date unless the cell is turned off or the date is a blackout date, and fires
+   * `calendar-cell-activate` so the calendar makes the cell the active cell.
    * @private
    * @returns {void}
    */
@@ -232,9 +234,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Handles user hover events and dispatches a custom event.
-   * Does NOT set any reactive properties; the range preview is handled
-   * imperatively by the calendar component to avoid O(N) re-renders.
+   * Called when the pointer moves over the cell's button. Fires `date-is-hovered` with the cell's date.
+   * Doesn't set any reactive properties, because the calendar updates the range preview
+   * directly to avoid re-rendering every cell.
    * @private
    * @returns {void}
    */
@@ -245,10 +247,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Handles focus events on the cell button.
-   * Dispatches a lightweight event for the calendar to handle screen reader
-   * announcements and range preview updates without triggering
-   * any Lit lifecycle updates.
+   * Called when the cell's button gets focus. Fires `calendar-cell-focused` so the calendar can
+   * announce the date to screen readers and update the range preview without re-rendering the cell.
    * @private
    * @returns {void}
    */
@@ -261,12 +261,12 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is outside the valid min/max range.
-   * Out-of-range cells are not focusable and are hidden from screen readers.
+   * Checks whether the cell's date is earlier than `min` or later than `max`.
+   * Out-of-range cells aren't focusable and are hidden from screen readers.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} min - The minimum date value.
-   * @param {Number} max - The maximum date value.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} min - The earliest date people can choose, as a Unix timestamp in seconds.
+   * @param {Number} max - The latest date people can choose, as a Unix timestamp in seconds.
    * @returns {Boolean} True if the date is out of range; false otherwise.
    */
   isOutOfRange(day, min, max) {
@@ -317,16 +317,15 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is disabled based on min/max range or the
-   * legacy disabledDays timestamp list.  Sets the `disabled` attribute on the
-   * host when the date falls outside the allowed range or appears in
-   * disabledDays. Note: blackout dates are handled separately by `isBlackout()`.
+   * Checks whether the cell's date is turned off because it's outside `min` and `max` or in the
+   * deprecated `disabledDays`, and sets the host's `disabled` attribute to match. Despite its name,
+   * it returns true for a turned-off date. Blackout dates are handled separately by `isBlackout()`.
    * @private
-   * @param {Object} day - An object containing the dateFrom and day of month values.
-   * @param {Number} min - The minimum date value.
-   * @param {Number} max - The maximum date value.
-   * @param {Array} disabledDays - An array of disabled dates.
-   * @returns {Boolean} True if the date is disabled; false otherwise.
+   * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
+   * @param {Number} min - The earliest date people can choose, as a Unix timestamp in seconds.
+   * @param {Number} max - The latest date people can choose, as a Unix timestamp in seconds.
+   * @param {Array} disabledDays - The deprecated array of dates people can't select, as Unix timestamps in seconds.
+   * @returns {Boolean} True if the date is turned off; false otherwise.
    */
   isEnabled(day, min, max, disabledDays) {
     this.removeAttribute('disabled');
@@ -341,9 +340,9 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Generates a unique cell ID in the format cell-YYYY-MM-DD.
+   * Generates a unique cell ID in the format `cell-YYYY-MM-DD`.
    * @private
-   * @returns {String} The unique cell ID.
+   * @returns {String} The unique cell ID, or an empty string when the cell has no date.
    */
   getCellId() {
     if (!this.day || !this.day.date) return '';
@@ -355,10 +354,10 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Generates a localized aria-label for the cell button using Intl.DateTimeFormat.
-   * Includes range position and blackout status.
+   * Generates the cell's localized `aria-label` with `Intl.DateTimeFormat`.
+   * Adds the date slot and popover content, the range position, and the blackout label.
    * @private
-   * @returns {String} The aria-label string.
+   * @returns {String} The `aria-label` text, or an empty string when the cell has no date.
    */
   getAriaLabel() {
     if (!this.day || this.day.date === undefined) return '';
@@ -531,10 +530,10 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Determines the title of the auro-calendar-cell.
+   * Formats a date as a full date in the cell's `locale`, such as "Monday, April 21, 2025" for `en-US`.
    * @private
-   * @param {Number} date - The date of the auro-calendar-cell.
-   * @returns {String} The title of the auro-calendar-cell in the user's locale.
+   * @param {Number} date - The date, as a Unix timestamp in seconds.
+   * @returns {String} The formatted date, or an empty string when `date` is undefined.
    */
   getTitle(date) {
     if (date === undefined) {
@@ -581,7 +580,7 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Remove existing cell slot content and clone any current slot content from the root `auro-datepicker` which matches this cells date.
+   * Removes the cell's copied slot content, then copies in the `date_YYYY_MM_DD` and `popover_YYYY_MM_DD` content for the cell's date from `auro-datepicker`.
    * @private
    * @returns {void}
    */
@@ -743,8 +742,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Sets host-level ARIA so each cell exposes its date, selection state,
-   * and blackout status to assistive tech browsing the month grid.
+   * Sets ARIA attributes on the cell so screen reader users browsing the month grid hear its date,
+   * whether it's selected, and whether it's a blackout date. Removes them for a date outside `min` and `max`.
    * @private
    * @returns {void}
    */

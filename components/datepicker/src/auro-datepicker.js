@@ -1003,7 +1003,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Checks whether the `displayValue` slot has content to render.
+   * Called when the `displayValue` slot's content changes. Records whether the slot has content to show.
    * @private
    * @returns {void}
    */
@@ -2102,7 +2102,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handles the transfer of content between slots in the component.
+   * Called when a slot the datepicker passes to the calendar changes, such as `bib.fullscreen.headline`.
+   * Copies the slot's content into the calendar.
    *
    * @private
    * @method handleSlotToSlot
@@ -2115,7 +2116,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handles click events on the datepicker.
+   * Called when someone clicks the datepicker. Stops a click on the inert trigger from closing the open calendar,
+   * and in the `snowflake` layout, moves focus to the start date input when the click isn't on an input or the calendar and no input has focus.
    * @param {PointerEvent} event - The pointer event object.
    * @private
    * @returns {void}
@@ -2485,7 +2487,7 @@ export class AuroDatePicker extends AuroElement {
   // ------------------------------------
 
   /**
-   * Handles click on the clear button.
+   * Called when someone selects the clear button. Clears the chosen dates and moves focus to the start date input.
    * @private
    * @param {MouseEvent} event - The mouse event from the clear button click.
    * @returns {void}

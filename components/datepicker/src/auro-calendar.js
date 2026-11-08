@@ -489,9 +489,10 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Renders all of the auro-calendar-months HTML.
+   * Renders the calendar's `auro-formkit-calendar-month` elements, one for each month shown.
+   * Renders nothing until `visible` is set.
    * @private
-   * @returns {Object} The auro-calendar-months HTML.
+   * @returns {Object|undefined} The months' template, or undefined when `visible` isn't set.
    */
   renderAllCalendars() {
     let renderedHtml = undefined;
@@ -705,7 +706,8 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Shows the activeCell ring when the grid gains focus.
+   * Called when focus moves into the calendar grid. Shows the focus ring on the active cell
+   * when the grid itself gets focus, not a cell inside it.
    * @private
    * @param {FocusEvent} [event] - The focusin event.
    * @returns {void}
@@ -734,7 +736,8 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Hides the activeCell ring when the grid loses focus.
+   * Called when the calendar grid or an element in it loses focus. Removes the focus ring from
+   * every cell, and clears the range preview while the range doesn't have both dates.
    * @private
    * @returns {void}
    */
@@ -825,15 +828,17 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Computes the initial active date from data properties alone, without the DOM.
    * Priority:
-   *   1. Selected date (dateFrom) if within range
-   *   2. Today's date if not disabled (in-range and not blackout)
-   *   3. First future non-disabled date (scans day-by-day from today up to 1 year)
-   *   4. First previous non-disabled date (scans day-by-day from today up to 1 year)
-   *   5. First enabled date in finite [min, max] range
-   *   5b. First enabled date scanning forward from finite min (unbounded max)
-   *   5c. First enabled date scanning backward from finite max (unbounded min)
-   *   6. First in-range date (even if blackout) so focus can land somewhere
-   *   7. Undefined: no valid target.
+   *   1. The selected date (`dateFrom`), if it's within range.
+   *   2. When `centralDate` is in a different month than today, the first enabled date in that month, or else its first in-range date.
+   *   3. Today's date, if it's enabled (in range and not a blackout date).
+   *   4. The first enabled date in the visible months, or else their first in-range date.
+   *   5. The first enabled date after today, scanning day by day for up to a year.
+   *   6. The first enabled date before today, scanning day by day for up to a year.
+   *   7. The first enabled date in a finite [min, max] range.
+   *   7b. The first enabled date scanning forward from a finite min (unbounded max).
+   *   7c. The first enabled date scanning backward from a finite max (unbounded min).
+   *   8. An in-range date, even if it's a blackout date, so focus can land somewhere: min when it's finite, or else today.
+   *   9. Undefined: no valid target.
    *
    * @private
    * @param {Object} [options] - The optional settings.
@@ -1081,9 +1086,9 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Handles arrow key navigation on the calendar grid wrapper.
-   * Focus stays on the grid wrapper; only the visual active-cell indicator
-   * changes. The live region announces the new active cell.
+   * Called when a key is pressed while the calendar grid has focus. The arrow keys move the
+   * active cell, into another month when needed, and Enter or Space selects the active date
+   * unless it's a blackout date. Focus stays on the grid, and the live region announces the new active cell.
    * @private
    * @param {KeyboardEvent} event - The keyboard event.
    * @returns {void}
@@ -1215,7 +1220,9 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Handles cross-month boundary navigation events from month components.
+   * Called when the calendar receives a `calendar-month-boundary` event. Moves the active cell
+   * across a month boundary for the arrow key in `event.detail.key`. Nothing in the datepicker
+   * currently fires this event.
    * @private
    * @param {CustomEvent} event - The boundary event with direction and source date info.
    * @returns {void}
@@ -1356,7 +1363,8 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Handles cell activation events from month components.
+   * Called when a cell fires `calendar-cell-activate` after someone selects it. Makes that cell
+   * the active cell without moving focus to the grid.
    * @private
    * @param {CustomEvent} event - The activation event with target date.
    * @returns {void}
@@ -1374,9 +1382,8 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Handles focus events from calendar cells.
-   * Updates the live region with a screen reader announcement and triggers
-   * the imperative range preview if applicable.
+   * Called when a cell's button gets focus, and after the arrow keys move the active cell.
+   * Announces the date to screen readers through the live region and updates the range preview.
    * @private
    * @param {CustomEvent} event - The calendar-cell-focused event.
    * @returns {void}
@@ -1594,8 +1601,8 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Overrides the base class handler to prevent setting `this.hoveredDate`
-   * as a reactive property. Instead, handles the range preview imperatively.
+   * Called when a month fires `hovered-date-changed`. Updates the range preview directly
+   * instead of setting the base class's reactive `hoveredDate`, so the cells don't re-render.
    * @private
    * @param {CustomEvent} event - The hovered-date-changed event from a month.
    * @returns {void}
