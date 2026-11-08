@@ -29,22 +29,22 @@ The following sections are editable by making changes to the following files:
 It's a monorepo that contains these components:
 
 - `auro-checkbox`
-    - `auro-checkbox-group`
+  - `auro-checkbox-group`
 - `auro-combobox`
 - `auro-counter`
-    - `auro-counter-group`
+  - `auro-counter-group`
 - `auro-datepicker`
 - `auro-dropdown`
 - `auro-form`
 - `auro-input`
 - `auro-menu`
-    - `auro-menuoption`
+  - `auro-menuoption`
 - `auro-radio`
-    - `auro-radio-group`
+  - `auro-radio-group`
 - `auro-select`
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Use Cases
+## Use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -86,7 +86,7 @@ It's a monorepo that contains these components:
 - Set rules with attributes, such as `required` and `pattern`, instead of writing custom JavaScript
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/kitInstall.md) -->
 <!-- The below content is automatically added from ./docs/partials/kitInstall.md -->
