@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Menu - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Menu: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-menu&gt;</code> component. It covers announcements and interactions for menu navigation and option selection.</p>
 <div class="note"><strong>Note:</strong> In the standard integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), keyboard focus stays on the parent trigger or input and <strong>doesn't</strong> move into the menu. The parent captures keys and drives the menu, and the active option is announced via <code>aria-activedescendant</code> on the trigger rather than by moving DOM focus between options. The focus-on-the-menu behavior described alongside the standalone case below only applies when an author makes <code>&lt;auro-menu&gt;</code> itself focusable (for example, <code>tabindex="0"</code>).</p>
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>

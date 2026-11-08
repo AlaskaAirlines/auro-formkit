@@ -88,10 +88,10 @@ AuroInput.register('[custom]-input');</code></pre>
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/defaultRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/defaultRegistration.md -->
-<p>Once installed, the component can be used in your project by importing the component's registered module:</p>
+<p>After you install the package, import the component's registered module:</p>
 
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-input';</code></pre>
-<p>This import registers the <code>&lt;auro-input&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This import registers the <code>&lt;auro-input&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-input&gt;
   &lt;span slot="label"&gt;Enter your name&lt;/span&gt;
@@ -108,7 +108,7 @@ AuroInput.register('[custom]-input');</code></pre>
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"&gt;&lt;/script&gt;</code></pre>
-<p>This script registers the <code>&lt;auro-input&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This script registers the <code>&lt;auro-input&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-input&gt;
   &lt;span slot="label"&gt;Enter your name&lt;/span&gt;

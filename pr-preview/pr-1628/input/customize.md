@@ -321,7 +321,7 @@
 <div data-locale="de-DE">
 <auro-input type="date">
 <span slot="ariaLabel.clear">Datum löschen</span>
-<span slot="label">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+<span slot="label">Abreisedatum (geerbt aus <code>data-locale="de-DE"</code>)</span>
 <span slot="helpText">Hilfetext</span>
 <span slot="optionalLabel">(freiwillig)</span>
 </auro-input>
@@ -361,7 +361,7 @@
 &lt;div data-locale="de-DE"&gt;
   &lt;auro-input type="date"&gt;
     &lt;span slot="ariaLabel.clear"&gt;Datum löschen&lt;/span&gt;
-    &lt;span slot="label"&gt;Abreisedatum (geerbt aus `data-locale="de-DE"`)&lt;/span&gt;
+    &lt;span slot="label"&gt;Abreisedatum (geerbt aus &lt;code&gt;data-locale="de-DE"&lt;/code&gt;)&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-input&gt;
@@ -377,7 +377,7 @@
 <!-- The below content is automatically added from ./../apiExamples/optional-label.html -->
 <auro-input placeholder="John Doe">
 <span slot="label">Full name</span>
-<span slot="optionalLabel"> - custom optional text</span>
+<span slot="optionalLabel"> (not required)</span>
 <span slot="helpText">Please enter your full name.</span>
 </auro-input>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -388,7 +388,7 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/optional-label.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-input placeholder="John Doe"&gt;
   &lt;span slot="label"&gt;Full name&lt;/span&gt;
-  &lt;span slot="optionalLabel"&gt; - custom optional text&lt;/span&gt;
+  &lt;span slot="optionalLabel"&gt; (not required)&lt;/span&gt;
   &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -529,7 +529,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity.html) -->
 <!-- The below content is automatically added from ../apiExamples/set-custom-validity.html -->
-<auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required).">
+<auro-input required minlength="3" setCustomValidity="Please enter your full name, with at least 3 characters.">
 <span slot="label">Full name</span>
 <span slot="helpText">Please enter your full name.</span>
 </auro-input>
@@ -539,7 +539,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required)."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input required minlength="3" setCustomValidity="Please enter your full name, with at least 3 characters."&gt;
   &lt;span slot="label"&gt;Full name&lt;/span&gt;
   &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
@@ -945,7 +945,7 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="noValidate">noValidate</auro-header>
+<auro-header level="3" id="noValidate">No validation</auro-header>
 <p>When a field is <code>required</code> but shouldn't be validated when it loses focus, use the <code>noValidate</code> attribute. Validation still runs when code sets the value or when <code>validateOnInput</code> is set.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/no-validate.html) -->
