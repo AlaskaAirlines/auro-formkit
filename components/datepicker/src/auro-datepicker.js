@@ -310,7 +310,6 @@ export class AuroDatePicker extends AuroElement {
       /**
        * Deprecated: Use `placement` instead.
        * Places the calendar dropdown on whichever side of the input has the most space. The dropdown already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
-       * @default false
        * @deprecated Use `placement` instead.
        * @category ui
        */
