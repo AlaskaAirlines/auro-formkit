@@ -42,6 +42,7 @@ import headerVersion from './headerVersion.js';
  *   <p>Bib content</p>
  * </auro-bibtemplate>
  * ```
+ * @summary A layout for dropdown bib content that adds a headline, close button, and footer when the bib is fullscreen.
  * @customElement auro-bibtemplate
  *
  * @slot default - Main content of the bib, such as a menu or calendar. {@requiredWhen always} {@category ui}
@@ -163,8 +164,7 @@ export class AuroBibtemplate extends LitElement {
   }
 
   /**
-   * Focuses the close button inside the bibtemplate's shadow DOM.
-   * Used by parent components to set initial focus when the fullscreen dialog opens.
+   * Moves keyboard focus to the close button. Parent components such as `auro-select` call it when the fullscreen layout opens, so focus starts on the close button. Does nothing when `isFullscreen` isn't set.
    * @returns {void}
    */
   focusCloseButton() {
