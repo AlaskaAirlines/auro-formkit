@@ -16,7 +16,7 @@
 <auro-header level="4" id="radioGroup">Radio group</auro-header>
 <p>The group element coordinates shared behavior across all child radio buttons, including validation (for example, <code>required</code>), error state display, and the <code>disabled</code> attribute, which turns off all options at once.</p>
 <auro-header level="4" id="radioButton">Radio button</auro-header>
-<p>Each radio button renders a visual indicator (filled circle) and a label. A radio button may be in one of the following states:</p>
+<p>Each radio button shows a circle, which fills in when selected, and a label. A radio button may be in one of the following states:</p>
 <ul>
   <li>
     <code>checked</code>: The radio button is selected and its value becomes the group's value.

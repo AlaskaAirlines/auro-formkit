@@ -3,9 +3,9 @@
 <auro-header level="4" id="slot-legend">legend</auro-header>
 <p>Label for the group, such as "Seat preference". The group shows it in a native <code>&lt;legend&gt;</code> element, and screen readers announce it as the group's name.</p>
 <auro-header level="4" id="slot-helpText">helpText</auro-header>
-<p>The <code>helpText</code> slot shows help text below the radio group. While the group shows an error, the error message replaces it.</p>
+<p>Help text shown below the group, such as "Choose one". While the group shows an error, the error message replaces it.</p>
 <auro-header level="4" id="slot-optionalLabel">optionalLabel</auro-header>
-<p>The <code>optionalLabel</code> slot replaces the default <em>"(optional)"</em> text that appears next to the legend when the group isn't <code>required</code>.</p>
+<p>Text shown after the legend when the group isn't <code>required</code>, such as "- optional". It replaces the default <em>"(optional)"</em> text.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -29,7 +29,7 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="4" id="slot-content">content</auro-header>
-<p>Named slot for additional content rendered below the radio button label. Use this for supplementary information or descriptions associated with a radio option.</p>
+<p>Extra content shown below the label, such as a short description of the option.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/content-slot.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->

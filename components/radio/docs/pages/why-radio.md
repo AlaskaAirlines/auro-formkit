@@ -11,7 +11,7 @@
 <ul>
   <li><strong>Proper ARIA semantics</strong>: Each radio carries <code>role="radio"</code>, <code>aria-checked</code>, <code>aria-required</code>, and <code>aria-disabled</code>.</li>
   <li><strong>Roving tabindex</strong>: Only the selected radio (or the first enabled radio if none is selected) has <code>tabindex="0"</code>. Arrow keys move between radios within the group, matching the expected WAI-ARIA radio group pattern.</li>
-  <li><strong>Group labeling</strong>: <code>auro-radio-group</code> provides a <code>legend</code> slot that is automatically associated as the group's accessible label.</li>
+  <li><strong>Group labeling</strong>: <code>auro-radio-group</code> provides a <code>legend</code> slot, and screen readers announce its text as the group's name.</li>
   <li><strong>Keyboard interaction</strong>: Arrow keys move between options, and Space selects the focused radio.</li>
 </ul>
 
