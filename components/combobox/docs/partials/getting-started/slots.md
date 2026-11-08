@@ -9,7 +9,7 @@
 <auro-header level="3" id="slot-optionalLabel">optionalLabel</auro-header>
 <p>Text shown next to the label when the combobox isn't <code>required</code>. Defaults to "(optional)".</p>
 <auro-header level="3" id="slot-displayValue">displayValue</auro-header>
-<p>Custom HTML content shown in place of the selected value when the combobox doesn't have focus. Only works with the <code>snowflake</code> and <code>emphasized</code> layouts.</p>
+<p>Custom HTML content shown in place of the selected value when the combobox doesn't have focus.</p>
 <auro-header level="3" id="slot-ariaLabel-input-clear">ariaLabel.input.clear</auro-header>
 <p>Text screen readers announce for the clear button, such as "Clear selection". The combobox has no default text, so without it the clear button has no accessible name.</p>
 <auro-header level="3" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>

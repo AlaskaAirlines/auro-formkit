@@ -33,9 +33,9 @@
 <p><code>auro-combobox</code> filters options as the user types, with full control:</p>
 
 <ul>
-  <li><code>noFilter</code> disables filtering to show all options regardless of input</li>
-  <li>The matching text in each option is highlighted automatically</li>
-  <li><code>persistInput</code> keeps the filter text visible after selection</li>
+  <li><code>noFilter</code> disables filtering to show all options regardless of input.</li>
+  <li>The matching text in each option is highlighted automatically.</li>
+  <li><code>persistInput</code> keeps the filter text visible after selection.</li>
 </ul>
 
 <auro-header level="2" id="responsiveLayout">Responsive layout</auro-header>
@@ -45,9 +45,9 @@
 <p><code>auro-combobox</code> adapts to the viewport:</p>
 
 <ul>
-  <li><strong>Desktop</strong>: Suggestions appear as a positioned dropdown using Floating UI, with configurable placement, offset, flip, and shift behavior</li>
-  <li><strong>Mobile</strong>: Suggestions open in a fullscreen dialog via <code>showModal()</code>, with a configurable breakpoint (<code>fullscreenBreakpoint</code>)</li>
-  <li><strong>Width matching</strong>: The dropdown can match the input width or size independently</li>
+  <li><strong>Desktop</strong>: Suggestions appear as a positioned dropdown using Floating UI, with configurable placement, offset, flip, and shift behavior.</li>
+  <li><strong>Mobile</strong>: Suggestions open in a fullscreen dialog via <code>showModal()</code>, with a configurable breakpoint (<code>fullscreenBreakpoint</code>).</li>
+  <li><strong>Width matching</strong>: The dropdown can match the input width or size independently.</li>
 </ul>
 
 <auro-header level="2" id="validation">Validation</auro-header>

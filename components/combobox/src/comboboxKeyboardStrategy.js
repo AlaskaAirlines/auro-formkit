@@ -120,6 +120,9 @@ function selectAndExitBackward(component) {
   return true;
 }
 
+/**
+ * Holds the combobox's keyboard handlers, one function for each key it handles: `ArrowDown`, `ArrowUp`, `Home`, `End`, `Enter`, `Escape`, and `Tab`.
+ */
 export const comboboxKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
     // If the clear button has focus, let the browser handle ArrowDown normally.

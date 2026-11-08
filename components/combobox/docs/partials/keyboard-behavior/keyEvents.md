@@ -15,7 +15,7 @@
     <tr>
       <td rowspan="2">ArrowDown</td>
       <td rowspan="2">-</td>
-      <td>Collapsed, list options have been populated</td>
+      <td>Collapsed, the input has text, and list options have been populated</td>
       <td>
         Trigger input element, <strong>NOT</strong> the trigger input clear button
       </td>
@@ -36,7 +36,7 @@
     <tr>
       <td rowspan="2">ArrowUp</td>
       <td rowspan="2">-</td>
-      <td>Collapsed, list options have been populated</td>
+      <td>Collapsed, the input has text, and list options have been populated</td>
       <td>
         Trigger input element, <strong>NOT</strong> the trigger input clear button
       </td>
@@ -71,7 +71,7 @@
     <tr>
       <td rowspan="4">Enter</td>
       <td rowspan="4">-</td>
-      <td>Collapsed, list options have been populated</td>
+      <td>Collapsed, the input has text, and list options have been populated</td>
       <td>
         Trigger input, <strong>NOT</strong> the input clear button
       </td>

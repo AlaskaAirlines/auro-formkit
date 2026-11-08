@@ -1,10 +1,10 @@
-<auro-header level="1" id="overview">Combobox - VoiceOver behavior</auro-header>
+<auro-header level="1" id="overview">Combobox: VoiceOver behavior</auro-header>
 <p>This page documents the VoiceOver experience when using the <code>&lt;auro-combobox&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive announcements</auro-header>
 
 <auro-header level="3" id="voiceOverFocusAnnouncement">Focus</auro-header>
-<p>When focus is given to the component trigger the following is announced:</p>
+<p>When the component trigger gets focus, VoiceOver announces the following:</p>
 <ol>
   <li><strong>Label:</strong> <code>label</code> slot content</li>
   <li><strong>Current value:</strong> [current value or <em>"no selection"</em>]</li>
@@ -36,7 +36,7 @@
           <td><em>"dimmed"</em></td>
         </tr>
         <tr>
-          <td>autocomplete</td>
+          <td>Autocomplete</td>
           <td><em>"has auto complete"</em></td>
         </tr>
       </tbody>
@@ -76,7 +76,7 @@
   </li>
   <li><strong>Navigate options</strong></li>
   <li>
-    <strong>Select an option:</strong> Collapses the list, announces the <strong>expanded</strong> state change.
+    <strong>Select an option:</strong> Collapses the list and announces the <strong>expanded</strong> state change, then the selected value, such as <em>"Apples, selected"</em>.
     <p>~OR~</p>
     <strong>Close | Collapse without selecting an option:</strong> Collapses the list, announces the <strong>expanded</strong> state change.
   </li>
@@ -87,14 +87,14 @@
 <ol>
   <li><strong>Focus</strong></li>
   <li>
-    <strong>Open | Expand:</strong> Focus moves to the input inside the fullscreen modal dialog, and VoiceOver announces the active option <em>"[option label], [<em>'selected'</em> if <code>selected</code>]"</em>.
+    <strong>Open | Expand:</strong> Focus moves to the input inside the fullscreen modal dialog, and VoiceOver announces the active option, its selected state, and its position, such as <em>"Apples, not selected, 1 of 5"</em>.
     <div class="note">
       <strong>Note:</strong> <code>disabled</code> options can't be <strong>active</strong>, so this announcement never includes that state.
     </div>
   </li>
   <li><strong>Navigate options</strong></li>
   <li>
-    <strong>Select option:</strong> Closes the fullscreen modal dialog, announces the <strong>expanded</strong> state change.
+    <strong>Select option:</strong> Closes the fullscreen modal dialog and announces the <strong>expanded</strong> state change, then the selected value, such as <em>"Apples, selected"</em>.
     <p>~OR~</p>
     <strong>Close | Collapse without selecting an option:</strong> Closes the fullscreen modal dialog, announces the <strong>expanded</strong> state change.
   </li>

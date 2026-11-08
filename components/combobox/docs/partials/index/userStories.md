@@ -1,10 +1,10 @@
 <auro-header level="3" id="select">Select an option from the list</auro-header>
 <ol>
   <li>
-    Move focus to the <code>auro-combobox</code> element
+    Move focus to the <code>auro-combobox</code> element.
   </li>
   <li>
-    Begin typing into the input
+    Begin typing into the input.
     <div class="note">
       <p>
         The bib doesn't open until the user types at least one character into the input. Clicking or tapping the trigger alone doesn't open the bib. Once the input has a value, the user may click or tap the trigger to open or close the bib.
@@ -21,7 +21,7 @@
     </div>
   </li>
   <li>
-    Choose an option
+    Choose an option.
     <div class="note">
       <p>
         The user may move through the list of options to make their choice. An option becomes active through pointer hover, keyboard navigation (such as the arrow keys), or screen reader gestures that emulate keyboard navigation.
@@ -29,7 +29,7 @@
     </div>
   </li>
   <li>
-    Select the option
+    Select the option.
     <div class="note">
       <p>
         Selecting an option deselects any previously selected option. The user can select the active option with a click, a tap, or the keyboard, such as <code>Enter</code> or <code>Tab</code> while focus is within the component.
@@ -60,24 +60,24 @@
 <p>If a preset value matches an option marked <code>disabled</code> or <code>static</code>, the selection is rejected: <code>value</code> and <code>optionSelected</code> are cleared to <code>undefined</code>. A value that matches a <code>hidden</code> option is still applied.</p>
 <p>If a preset value doesn't match any option, the component value is preserved and displayed in the input, but no menu option is marked as selected. In suggestion mode, this value is treated as valid freeform input. In filter mode, the value fails validation with <code>valueMissing</code>, whether or not the component is <code>required</code>.</p>
 <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
-<p>The component supports the use of <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> configuration through HTML attributes.</p>
+<p>Set <code>autocomplete="off"</code> to turn off the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> suggestions for the input. Only <code>autocomplete="off"</code> is currently supported.</p>
 <auro-header level="3" id="clearValue">Clear the value</auro-header>
 <p>When the input has a value, a clear button appears inside the input. Clicking or tapping the clear button resets the component to its initial empty state.</p>
 <ol>
-  <li>The input value is cleared</li>
-  <li>The selected option is deselected</li>
-  <li>The component value is reset to <code>undefined</code></li>
-  <li>The bib is closed if it was open</li>
+  <li>The input value is cleared.</li>
+  <li>The selected option is deselected.</li>
+  <li>The component value is reset to <code>undefined</code>.</li>
+  <li>The bib is closed if it was open.</li>
 </ol>
 <div class="note">
   <strong>Note:</strong> If the component is <code>required</code>, clearing the value and moving focus away from the component triggers validation and shows the error state.
 </div>
 <auro-header level="3" id="skipSelection">Close the list of options without making a selection</auro-header>
 <ol>
-  <li>Move focus to the <code>auro-combobox</code> element</li>
-  <li>Begin typing into the input to open the bib</li>
-  <li>Navigate the list of options but don't make a selection</li>
-  <li>Collapse the bib
+  <li>Move focus to the <code>auro-combobox</code> element.</li>
+  <li>Begin typing into the input to open the bib.</li>
+  <li>Navigate the list of options but don't make a selection.</li>
+  <li>Collapse the bib.
     <div class="note">
       <p>The user may collapse the bib without making any selection, such as by clicking or tapping outside of the component or pressing the <code>Escape</code> key.</p>
     </div>
@@ -86,8 +86,8 @@
 <auro-header level="3" id="swapValues">Swap values between two comboboxes</auro-header>
 <p>Two combobox instances can have their values swapped programmatically. This is a common pattern in travel search forms where the user needs to reverse origin and destination.</p>
 <ol>
-  <li>Select a value in one or both comboboxes</li>
-  <li>Click the swap button between them
+  <li>Select a value in one or both comboboxes.</li>
+  <li>Click the swap button between them.
     <div class="note">
       <p>The values of the two comboboxes are exchanged. Each combobox updates its input and selected option to reflect the other's previous value.</p>
     </div>

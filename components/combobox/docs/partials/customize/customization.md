@@ -88,19 +88,19 @@
   </ul>
   <p>When using filter mode and the component is marked <code>required</code>:</p>
   <ol>
-    <li>Move focus to the <code>auro-combobox</code> element</li>
-    <li>Begin typing into the input to open the bib</li>
-    <li>Navigate the list of options</li>
+    <li>Move focus to the <code>auro-combobox</code> element.</li>
+    <li>Begin typing into the input to open the bib.</li>
+    <li>Navigate the list of options.</li>
     <li>
-      Collapse the bib without making a selection
+      Collapse the bib without making a selection.
       <p class="note">
         <p>The component shows the validation error. To clear the error, continue with the following steps.</p>
       </p>
     </li>
-    <li>Activate the trigger</li>
-    <li>Navigate the list of options marking any option as active</li>
+    <li>Activate the trigger.</li>
+    <li>Navigate the list of options, marking any option as active.</li>
     <li>
-      Select the active option
+      Select the active option.
       <p class="note">
         <p>The validation error clears.</p>
       </p>
@@ -132,11 +132,11 @@
   <p>The combobox provides several properties to customize the error messages displayed for different validation states.</p>
   <ul>
     <li><strong><code>setCustomValidity</code></strong>: Replaces the message for every validation error, except the filter-mode message from <code>setCustomValidityValueMissingFilter</code>. When <code>setCustomValidityValueMissingFilter</code> isn't set, it's also used for that message.</li>
-    <li><strong><code>setCustomValidityCustomError</code></strong>: Displayed when the <code>error</code> attribute is set on the component, putting it into a <code>customError</code> validity state. If not defined, the value of the <code>error</code> attribute is used as the message.</li>
-    <li><strong><code>setCustomValidityValueMissing</code></strong>: Displayed when the component is <code>required</code> and the user leaves it empty (<code>valueMissing</code> validity state).</li>
-    <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Displayed when <code>behavior="filter"</code> and the user types into the input but doesn't select a menu option. This is a more specific <code>valueMissing</code> state that tells the user to choose from the available options, not just type a value.</li>
+    <li><strong><code>setCustomValidityCustomError</code></strong>: Sets the message shown while the <code>error</code> attribute is set, which puts the component in the <code>customError</code> validity state. When it isn't set, the <code>error</code> attribute's value is the message.</li>
+    <li><strong><code>setCustomValidityValueMissing</code></strong>: Sets the message shown when the component is <code>required</code> and the user leaves it empty (the <code>valueMissing</code> validity state).</li>
+    <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types into the input but doesn't choose a menu option. Set it as an attribute: setting only the property doesn't currently change the message.</li>
   </ul>
-  <p>When <code>setCustomValidity</code> isn't set, the component shows the state-specific message, or the browser's default message if there isn't one. Default messages come from the browser and are already localized to the browser's language.</p>
+  <p>When <code>setCustomValidity</code> isn't set, the component shows the state-specific message, or the browser's default message if there isn't one. Default messages come from the browser and are already localized to the browser's language. In filter mode, the browser has no message for typed text that doesn't match an option, so set <code>setCustomValidityValueMissingFilter</code> or <code>setCustomValidity</code> to show one.</p>
   <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity-message.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -161,7 +161,7 @@
     </code>
   </pre>
   <p class="note">
-    <strong>Note:</strong> The <code>displayValue</code> slot only works with the <code>snowflake</code> and <code>emphasized</code> layouts. By default, the display value masks both the input and label. Set the <code>dvInputOnly</code> attribute on the combobox to only mask the input, leaving the label visible.
+    <strong>Note:</strong> By default, the display value masks both the input and label. Set the <code>dvInputOnly</code> attribute on the combobox to only mask the input, leaving the label visible.
   </p>
   <div class="exampleWrapper--ondark">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/display-value.html) -->
@@ -175,7 +175,7 @@
   <auro-header level="3" id="dynamicMenu">Dynamically generated menu options</auro-header>
   <p>The combobox supports dynamically populating menu options based on what the user types. Use it for API-driven scenarios such as airport search, address lookup, or any case where the full set of options isn't known ahead of time.</p>
   <ol>
-    <li>Listen for the <code>inputValue</code> event on the combobox to receive the current typed value</li>
+    <li>Listen for the <code>inputValue</code> event on the combobox to receive the current typed value.</li>
     <li>Set the <code>loading</code> attribute on the <code>auro-menu</code> while the API request is in progress. This keeps the bib open and displays a loading indicator if one is defined. To display a loading indicator, the menu must contain slotted content for <code>loadingText</code>, <code>loadingIcon</code>, or both:
       <pre class="language-html">
         <code class="language-html">
@@ -190,7 +190,7 @@
         <p>If neither slot is provided, the bib hides while loading and reopens when the <code>loading</code> attribute is removed, as long as focus is still in the combobox.</p>
       </p>
     </li>
-    <li>When the API response is received, replace the <code>auro-menuoption</code> elements inside the menu with the new results and remove the <code>loading</code> attribute</li>
+    <li>When the API response is received, replace the <code>auro-menuoption</code> elements inside the menu with the new results and remove the <code>loading</code> attribute.</li>
   </ol>
   <p class="note">
     <strong>Note:</strong> When using dynamically generated options, set the <code>noFilter</code> attribute on the combobox so the component doesn't apply its own client-side filtering on top of the server-provided results.

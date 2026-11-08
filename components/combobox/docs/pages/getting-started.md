@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Combobox - Getting started</auro-header>
+<auro-header level="1" id="overview">Combobox: Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
@@ -93,7 +93,7 @@
         <auro-header level="3" id="hideBib">hideBib()</auro-header>
         <p>Hides the bib if it's open.</p>
         <auro-header level="3" id="showBib">showBib()</auro-header>
-        <p>Shows the bib when the input has a value and there are options, a loading state, or a <code>nomatch</code> option to show.</p>
+        <p>Shows the bib when the input has a value and there are options or a <code>nomatch</code> option to show. Doesn't currently open the bib for a loading menu that has no options yet.</p>
       </section>
     </div>
   </div>

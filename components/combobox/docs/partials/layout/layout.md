@@ -1,13 +1,13 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>trigger:</strong> shows the component label, "(optional)" text when the combobox isn't <code>required</code>, the current value, and the state of the component (such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, <code>invalid</code>). The trigger includes a text input that allows the user to type and filter the available options.
+    <strong>Trigger:</strong> Shows the component label, "(optional)" text when the combobox isn't <code>required</code>, the current value, and the state of the component, such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, and <code>invalid</code>. The trigger includes a text input that allows the user to type and filter the available options.
   </li>
   <li>
-    <strong>options list:</strong> a list of options the user can select, rendered in an element that expands and collapses when the user interacts with the trigger. The list is filtered based on user input.
+    <strong>Options list:</strong> Lists the options the user can choose from, in a bib that opens as the user types in the trigger. Typing narrows the list to matching options.
   </li>
   <li>
-    <strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
+    <strong>Help text:</strong> Shows text below the trigger that explains how to use the field. When validation fails, an error message replaces it.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>

@@ -120,7 +120,7 @@
 
 <auro-header level="3">Touched-state tracking</auro-header>
 
-<p><code>auro-combobox</code> tracks a <code>touched</code> state so validation errors only appear after the user has interacted with the field. Native inputs have no built-in touched concept, so you must implement focus/blur tracking yourself to avoid showing errors on initial render.</p>
+<p><code>auro-combobox</code> waits to show validation errors until the user has interacted with the field or it has a value. Native inputs have no built-in touched concept, so you must implement focus/blur tracking yourself to avoid showing errors on initial render.</p>
 
 <auro-header level="3">Keyboard navigation and ARIA</auro-header>
 
@@ -148,7 +148,7 @@
 
 <auro-header level="3">Reset behavior</auro-header>
 
-<p><code>auro-combobox</code> provides a <code>reset()</code> method that clears the input, menu selection, validation state, and touched flag in one call, and a <code>clear()</code> method that clears only the value, input, and menu selection. With native HTML, you must clear the input value and separately reset any custom validation state you're tracking.</p>
+<p><code>auro-combobox</code> provides a <code>reset()</code> method that clears the value, input, menu selection, and validation state in one call, and a <code>clear()</code> method that clears only the value, input, and menu selection. With native HTML, you must clear the input value and separately reset any custom validation state you're tracking.</p>
 
 <auro-header level="3">Layouts, shapes, and sizes</auro-header>
 

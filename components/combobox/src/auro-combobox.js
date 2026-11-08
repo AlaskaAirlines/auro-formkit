@@ -109,7 +109,7 @@ function getOptionLabel(option) {
  * @slot bib.fullscreen.headline - Headline shown above the options in the fullscreen bib, such as "Choose a destination". {@requiredWhen always} {@category ui}
  * @slot label - Label that names the combobox. Screen readers announce it as the name of the input and of the fullscreen dialog. {@requiredWhen always} {@category ui}
  * @slot helpText - Help text shown below the combobox. An error message replaces it while the combobox is invalid. {@category ui}
- * @slot displayValue - Content shown in the input in place of the selected option's text while the combobox doesn't have focus, such as an icon. Put it inside each `<auro-menuoption>` with `slot="displayValue"`, and the combobox copies the selected option's content here. Works only with the `snowflake` and `emphasized` layouts. {@category ui}
+ * @slot displayValue - Content shown in the input in place of the selected option's text while the combobox doesn't have focus, such as an icon. Put it inside each `<auro-menuoption>` with `slot="displayValue"`, and the combobox copies the selected option's content here. {@category ui}
  * @csspart helpText - The help text or error message shown below the combobox.
  * @event auroCombobox-valueSet - Deprecated: Use the `input` event instead, which also includes the new value. Fires whenever `value` changes.
  * @event input - Fires whenever `value` changes, with the new `value` and `optionSelected` in `event.detail`.
@@ -544,7 +544,6 @@ export class AuroCombobox extends AuroElement {
       /**
        * Makes the combobox invalid when it's left empty, and removes the "(optional)" text after the label.
        * Use `setCustomValidityValueMissing` to set the error message.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       required: {
@@ -555,7 +554,6 @@ export class AuroCombobox extends AuroElement {
       /**
        * Sets one error message for every kind of validation error. When set, it replaces the messages from `error`
        * and every other `setCustomValidity*` property, except `setCustomValidityValueMissingFilter`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -565,7 +563,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the `error` value.
-       * @relevantWhen !noValidate
+       * @relevantWhen error
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -575,7 +573,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Sets the error message shown when a `required` combobox is left empty.
-       * @relevantWhen !noValidate
+       * @relevantWhen required
        * @category behavior
        */
       setCustomValidityValueMissing: {
@@ -586,7 +584,7 @@ export class AuroCombobox extends AuroElement {
       /**
        * Sets the error message shown in `filter` mode when the typed text doesn't match a chosen option.
        * Set it as an attribute: setting only the property doesn't currently change the message.
-       * @relevantWhen !noValidate
+       * @relevantWhen behavior === 'filter'
        * @category behavior
        */
       setCustomValidityValueMissingFilter: {
@@ -1074,8 +1072,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Opens the bib when the input has text and there's something to show: matching options, a `nomatch` option, or a loading menu.
+   * Opens the bib when the input has text and there's something to show: options or a `nomatch` option.
    * When the menu is loading without `loadingText` or `loadingIcon` content, the bib opens once loading ends, if focus is still in the combobox.
+   * Doesn't currently open the bib for a loading menu that has no options yet.
    * @returns {void}
    */
   showBib() {

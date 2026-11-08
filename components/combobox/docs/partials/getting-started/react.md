@@ -13,7 +13,7 @@ AuroMenuOption.register('[custom]-menuoption');
 ```
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for `<auro-combobox>` in JSX, add the following declaration to a `.d.ts` file in your project:
+The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for `<auro-combobox>` in JSX, add the following declaration to a `.d.ts` file in your project:
 
 ```js
 import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';

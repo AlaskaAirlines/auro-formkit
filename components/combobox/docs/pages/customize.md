@@ -1,4 +1,4 @@
-<auro-header level="1" id="overview">Combobox - Customize</auro-header>
+<auro-header level="1" id="overview">Combobox: Customize</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
@@ -60,7 +60,7 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="displayValue">Custom display value</auro-header>
-        <p>The <code>displayValue</code> slot shows custom HTML content in place of the selected option's text when the combobox doesn't have focus. Only the <code>snowflake</code> and <code>emphasized</code> layouts support it.</p>
+        <p>The <code>displayValue</code> slot shows custom HTML content in place of the selected option's text when the combobox doesn't have focus.</p>
         <div class="exampleWrapper--ondark">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/display-value.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -282,9 +282,9 @@
         <p>The combobox provides several properties to customize the error messages displayed for different validation states:</p>
         <ul>
           <li><strong><code>setCustomValidity</code></strong>: Replaces the message for every validation error, except the filter-mode message from <code>setCustomValidityValueMissingFilter</code>.</li>
-          <li><strong><code>setCustomValidityCustomError</code></strong>: Displayed when the <code>error</code> attribute is set on the component.</li>
-          <li><strong><code>setCustomValidityValueMissing</code></strong>: Displayed when the component is <code>required</code> and the user leaves it empty.</li>
-          <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Displayed when <code>behavior="filter"</code> and the user hasn't chosen a menu option.</li>
+          <li><strong><code>setCustomValidityCustomError</code></strong>: Sets the message shown while the <code>error</code> attribute is set.</li>
+          <li><strong><code>setCustomValidityValueMissing</code></strong>: Sets the message shown when the component is <code>required</code> and the user leaves it empty.</li>
+          <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types text without choosing a menu option.</li>
         </ul>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity-message.html) -->
