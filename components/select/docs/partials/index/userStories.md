@@ -52,7 +52,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
   </auro-accordion>
   <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
-  <p>Set the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> attribute to give the browser an autofill hint, such as <code>country-name</code>.</p>
+  <p>Set the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete"><code>autocomplete</code></auro-hyperlink> attribute to give the browser an autofill hint, such as <code>country-name</code>.</p>
   <auro-header level="3" id="skipSelection">Close the list of options without making a selection</auro-header>
   <ol>
     <li>Move focus to the <code>&lt;auro-select&gt;</code> element.</li>
