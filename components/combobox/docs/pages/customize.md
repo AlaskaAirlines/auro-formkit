@@ -121,7 +121,7 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="breakpoint">Fullscreen breakpoint</auro-header>
-        <p>The <code>fullscreenBreakpoint</code> attribute sets the screen size at which the bib switches to fullscreen mode on mobile. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
+        <p>The <code>fullscreenBreakpoint</code> attribute sets the screen size at which the bib switches to fullscreen mode. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
         <p>When the screen is the selected breakpoint's size or smaller, the bib opens in fullscreen mode. Set the value to <code>disabled</code> to keep the bib from ever opening in fullscreen mode.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
@@ -284,7 +284,7 @@
           <li><strong><code>setCustomValidity</code></strong>: Replaces the message for every validation error, except the filter-mode message from <code>setCustomValidityValueMissingFilter</code>.</li>
           <li><strong><code>setCustomValidityCustomError</code></strong>: Sets the message shown while the <code>error</code> attribute is set.</li>
           <li><strong><code>setCustomValidityValueMissing</code></strong>: Sets the message shown when the component is <code>required</code> and the user leaves it empty.</li>
-          <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types text without choosing a menu option.</li>
+          <li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types text without choosing a menu option. Set it as an attribute: setting only the property doesn't currently change the message.</li>
         </ul>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity-message.html) -->

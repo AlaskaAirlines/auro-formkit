@@ -11,7 +11,7 @@
 <auro-header level="3" id="slot-displayValue">displayValue</auro-header>
 <p>Custom HTML content shown in place of the selected value when the combobox doesn't have focus.</p>
 <auro-header level="3" id="slot-ariaLabel-input-clear">ariaLabel.input.clear</auro-header>
-<p>Text screen readers announce for the clear button, such as "Clear selection". The combobox has no default text, so without it the clear button has no accessible name.</p>
+<p>Text screen readers announce for the clear button, such as "Clear selection". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead.</p>
 <auro-header level="3" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
 <p>Text screen readers announce for the close button in the fullscreen bib, such as "Close airport list". Defaults to "Close".</p>
 <auro-header level="3" id="slot-bib-fullscreen-headline">bib.fullscreen.headline</auro-header>

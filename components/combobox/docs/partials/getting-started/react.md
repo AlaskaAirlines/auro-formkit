@@ -1,4 +1,4 @@
-React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in JSX without any wrapper library.
+React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so the combobox works directly in JSX without any wrapper library. The examples below register it under a custom tag name, such as <code>&lt;custom-combobox&gt;</code>, and use that tag.
 
 <auro-header level="3" id="reactImport">Import the component</auro-header>
 Import and register the components at the top level of your application (for example, in your root `main.tsx` or `App.tsx`):
@@ -13,7 +13,7 @@ AuroMenuOption.register('[custom]-menuoption');
 ```
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for `<auro-combobox>` in JSX, add the following declaration to a `.d.ts` file in your project:
+The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for the combobox in JSX, add the following declaration to a `.d.ts` file in your project, replacing `[custom]` with the prefix you registered:
 
 ```js
 import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';

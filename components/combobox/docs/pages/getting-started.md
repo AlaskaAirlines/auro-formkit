@@ -60,7 +60,7 @@
         <auro-header level="3" id="inputValue">inputValue</auro-header>
         <p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types, and it's read-only.</p>
         <auro-header level="3" id="optionSelected">optionSelected</auro-header>
-        <p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected.</p>
+        <p>Gets the selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> when no option is selected.</p>
         <auro-header level="3" id="typedValue">typedValue</auro-header>
         <p>Sets the text shown in the input, such as a search the user started earlier. It doesn't update as the user types, so read <code>inputValue</code> to get the current text.</p>
         <auro-header level="3" id="validity">validity</auro-header>

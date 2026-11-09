@@ -93,6 +93,7 @@ function getOptionLabel(option) {
  *   <span slot="bib.fullscreen.headline">Choose a destination</span>
  *   <span slot="label">Destination</span>
  *   <span slot="ariaLabel.input.clear">Clear destination</span>
+ *   <span slot="ariaLabel.bib.close">Close destination list</span>
  *   <auro-menu>
  *     <auro-menuoption value="SEA">Seattle</auro-menuoption>
  *     <auro-menuoption value="LAX">Los Angeles</auro-menuoption>
@@ -651,7 +652,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Sets or gets the combobox's value: the chosen option's `value`, or the text in the input when no option is chosen.
-       * A value that matches a `disabled` or `static` option is rejected, which clears `value` and `optionSelected` to `undefined`.
+       * A value that matches only `disabled` or `static` options is rejected, which clears `value` and `optionSelected` to `undefined`.
        * A value that matches a `hidden` option, such as one filtered out by typing, still selects it.
        * @category behavior
        */
@@ -1252,6 +1253,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the clear button in the trigger input, after two animation frames.
+   * Focuses the input first, because the clear button can't take focus while focus is on the page body,
+   * such as after a click selection closes the bib.
    * @private
    */
   setClearBtnFocus() {
@@ -1271,6 +1275,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the native `<input>` in the trigger after two animation frames, so focus lands
+   * after the input finishes rendering. Does nothing when the trigger has no native `<input>` yet.
    * @private
    */
   setTriggerInputFocus() {
@@ -1285,6 +1291,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the input people type in: the native `<input>` in the fullscreen bib while that bib is open,
+   * or the trigger input otherwise.
+   * In the fullscreen bib, it first copies the trigger's text into the bib's input, then puts the cursor at the end of the text.
    * @private
    */
   setInputFocus() {

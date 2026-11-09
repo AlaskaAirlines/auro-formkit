@@ -1,4 +1,4 @@
-Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so the combobox works directly in Svelte templates without any wrapper or configuration. The examples below register it under a custom tag name, such as <code>&lt;custom-combobox&gt;</code>, and use that tag.
 
 <auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
@@ -15,7 +15,7 @@ Import and register the components in the `<script>` block:
 ```
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-combobox>` directly in your Svelte template. Bind properties with standard Svelte attribute syntax:
+Use the combobox directly in your Svelte template, under the tag name you registered. Bind properties with standard Svelte attribute syntax:
 
 ```html
 <script lang="ts">
@@ -48,7 +48,7 @@ Use `<auro-combobox>` directly in your Svelte template. Bind properties with sta
 ```
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-combobox>` props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`):
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for the combobox's props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`), replacing `[custom]` with the prefix you registered:
 
 ```js
 import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';

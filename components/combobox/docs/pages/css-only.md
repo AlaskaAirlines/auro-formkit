@@ -34,7 +34,7 @@
   color: var(--ds-basic-color-texticon-default, #2a2a2a);
   background-color: var(--ds-basic-color-surface-default, #ffffff);
   border: 1px solid var(--ds-basic-color-border-bold, #585e67);
-  border-radius: var(--ds-border-radius, 4px);
+  border-radius: var(--ds-border-radius, 0.375rem);
   box-sizing: border-box;
 }
 
@@ -212,7 +212,7 @@
     <tr>
       <td>Screen reader option announcements</td>
       <td>Browser-dependent</td>
-      <td>Live-region announcements</td>
+      <td>Live region and <code>aria-activedescendant</code></td>
     </tr>
     <tr>
       <td>Mobile fullscreen mode</td>
