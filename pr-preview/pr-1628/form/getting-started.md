@@ -142,7 +142,7 @@ Import and register the components at the top level of your application, such as
 &#10;AuroForm.register('[custom]-form');</code></pre>
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroForm` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for `<auro-form>` in JSX, add the following declaration to a `.d.ts` file in your project:
+The component ships with TypeScript type definitions for the `AuroForm` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for your custom-named element, such as `<custom-form>`, in JSX, add the following declaration to a `.d.ts` file in your project:
 
 <pre class="language-js"><code class="language-js">import type { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 &#10;declare global {
@@ -215,7 +215,7 @@ Use `<auro-form>` directly in your Svelte template:
 &lt;/custom-form&gt;</code></pre>
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-form>` props in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for your custom-named element, such as `<custom-form>`, in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
 
 <pre class="language-js"><code class="language-js">import type { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 &#10;declare namespace svelteHTML {
@@ -224,7 +224,7 @@ Svelte doesn't automatically know about custom element attributes. To get autoco
   }
 }</code></pre>
 
-This adds autocomplete and type checking for `<auro-form>` properties, such as `value` and `validity`, in Svelte templates.
+This adds autocomplete and type checking for `<custom-form>` in Svelte templates.
 
 <auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Listen for the `submit` and `reset` events on the element:
@@ -305,7 +305,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-select required name="departureAirport">
 <span slot="label">From</span>
 <span slot="bib.fullscreen.headline">Choose a departure city</span>
-<span slot="ariaLabel.bib.close">Close</span>
+<span slot="ariaLabel.bib.close">Close popup</span>
 <auro-menu>
 <auro-menuoption value="SEA">Seattle (SEA)</auro-menuoption>
 <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
@@ -318,7 +318,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <span slot="label">To</span>
 <span slot="bib.fullscreen.headline">Search destinations</span>
 <span slot="ariaLabel.input.clear">Clear destination</span>
-<span slot="ariaLabel.bib.close">Close</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="HNL">Honolulu (HNL)</auro-menuoption>
 <auro-menuoption value="OGG">Maui (OGG)</auro-menuoption>
@@ -340,22 +340,28 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <span slot="bib.fullscreen.fromLabel">Departure</span>
 <span slot="bib.fullscreen.toLabel">Return</span>
 <span slot="bib.fullscreen.headline">Choose travel dates</span>
-<span slot="ariaLabel.bib.close">Close</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
 </auro-datepicker>
 <auro-counter-group isDropdown max="9" name="travelers">
 <div slot="label">Travelers</div>
 <span slot="bib.fullscreen.headline">Travelers</span>
-<span slot="ariaLabel.bib.close">Close</span>
+<span slot="ariaLabel.bib.close">Close popup</span>
 <auro-counter name="adults" min="1" max="9" value="1">
                   Adults
+<span slot="ariaLabel.minus">Remove adult</span>
+<span slot="ariaLabel.plus">Add adult</span>
 <span slot="description">Age 18+</span>
 </auro-counter>
 <auro-counter name="children" min="0" max="8" value="0">
                   Children
+<span slot="ariaLabel.minus">Remove child</span>
+<span slot="ariaLabel.plus">Add child</span>
 <span slot="description">Age 2–17</span>
 </auro-counter>
 <auro-counter name="infants" min="0" max="4" value="0">
                   Lap infants
+<span slot="ariaLabel.minus">Remove lap infant</span>
+<span slot="ariaLabel.plus">Add lap infant</span>
 <span slot="description">Under 2</span>
 </auro-counter>
 </auro-counter-group>
@@ -479,7 +485,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
       &lt;auro-select required name="departureAirport"&gt;
         &lt;span slot="label"&gt;From&lt;/span&gt;
         &lt;span slot="bib.fullscreen.headline"&gt;Choose a departure city&lt;/span&gt;
-        &lt;span slot="ariaLabel.bib.close"&gt;Close&lt;/span&gt;
+        &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
         &lt;auro-menu&gt;
           &lt;auro-menuoption value="SEA"&gt;Seattle (SEA)&lt;/auro-menuoption&gt;
           &lt;auro-menuoption value="PDX"&gt;Portland (PDX)&lt;/auro-menuoption&gt;
@@ -492,7 +498,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
         &lt;span slot="label"&gt;To&lt;/span&gt;
         &lt;span slot="bib.fullscreen.headline"&gt;Search destinations&lt;/span&gt;
         &lt;span slot="ariaLabel.input.clear"&gt;Clear destination&lt;/span&gt;
-        &lt;span slot="ariaLabel.bib.close"&gt;Close&lt;/span&gt;
+        &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
         &lt;auro-menu&gt;
           &lt;auro-menuoption value="HNL"&gt;Honolulu (HNL)&lt;/auro-menuoption&gt;
           &lt;auro-menuoption value="OGG"&gt;Maui (OGG)&lt;/auro-menuoption&gt;
@@ -514,22 +520,28 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
         &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
         &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
         &lt;span slot="bib.fullscreen.headline"&gt;Choose travel dates&lt;/span&gt;
-        &lt;span slot="ariaLabel.bib.close"&gt;Close&lt;/span&gt;
+        &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
       &lt;/auro-datepicker&gt;
 &#10;      &lt;auro-counter-group isDropdown max="9" name="travelers"&gt;
         &lt;div slot="label"&gt;Travelers&lt;/div&gt;
         &lt;span slot="bib.fullscreen.headline"&gt;Travelers&lt;/span&gt;
-        &lt;span slot="ariaLabel.bib.close"&gt;Close&lt;/span&gt;
+        &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
         &lt;auro-counter name="adults" min="1" max="9" value="1"&gt;
           Adults
+          &lt;span slot="ariaLabel.minus"&gt;Remove adult&lt;/span&gt;
+          &lt;span slot="ariaLabel.plus"&gt;Add adult&lt;/span&gt;
           &lt;span slot="description"&gt;Age 18+&lt;/span&gt;
         &lt;/auro-counter&gt;
         &lt;auro-counter name="children" min="0" max="8" value="0"&gt;
           Children
+          &lt;span slot="ariaLabel.minus"&gt;Remove child&lt;/span&gt;
+          &lt;span slot="ariaLabel.plus"&gt;Add child&lt;/span&gt;
           &lt;span slot="description"&gt;Age 2–17&lt;/span&gt;
         &lt;/auro-counter&gt;
         &lt;auro-counter name="infants" min="0" max="4" value="0"&gt;
           Lap infants
+          &lt;span slot="ariaLabel.minus"&gt;Remove lap infant&lt;/span&gt;
+          &lt;span slot="ariaLabel.plus"&gt;Add lap infant&lt;/span&gt;
           &lt;span slot="description"&gt;Under 2&lt;/span&gt;
         &lt;/auro-counter&gt;
       &lt;/auro-counter-group&gt;

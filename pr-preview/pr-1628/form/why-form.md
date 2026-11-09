@@ -14,7 +14,7 @@
 </ul>
 <p>The form also picks up form elements added later, through <code>slotchange</code> events and a <code>MutationObserver</code>.</p>
 <auro-header level="2" id="validationOrchestration">Validation orchestration</auro-header>
-<p>Native forms validate each input independently, with no built-in way to check "are all required fields valid?" without querying each element manually.</p>
+<p>Native forms check validity with <code>checkValidity()</code>, but only for native inputs and custom elements that opt in to form association, which Auro form elements don't.</p>
 <p><code>auro-form</code> provides:</p>
 <ul>
 <li>A single <code>validity</code> getter that returns <code>valid</code>, <code>invalid</code>, or <code>null</code> based on the combined state of all enabled child form elements</li>
@@ -23,7 +23,7 @@
 <li>Listening for <code>auroFormElement-validated</code> events from child components to stay in sync</li>
 </ul>
 <auro-header level="2" id="centralizedState">Centralized state</auro-header>
-<p>Native forms have no concept of "has the user touched anything?" or "what are all the current values?"</p>
+<p>Native forms can't tell you whether the user has changed anything, and <code>FormData</code> collects only native inputs and custom elements that opt in to form association.</p>
 <p><code>auro-form</code> tracks:</p>
 <ul>
 <li><strong><code>value</code></strong>: A key-value object of all enabled form element values, keyed by element <code>name</code></li>

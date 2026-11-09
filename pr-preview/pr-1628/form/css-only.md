@@ -57,7 +57,7 @@
 <auro-header level="3">Child element registration</auro-header>
 <p><code>auro-form</code> automatically discovers and registers its named Auro form-element children (<code>auro-input</code>, <code>auro-select</code>, <code>auro-datepicker</code>, <code>auro-combobox</code>, <code>auro-checkbox-group</code>, <code>auro-radio-group</code>, <code>auro-counter-group</code>) on slot change and via a <code>MutationObserver</code>, so it tracks fields you add or remove later without extra code. A native <code>&lt;form&gt;</code> only exposes built-in form-associated elements through <code>form.elements</code>, so custom elements need their own registration logic.</p>
 <auro-header level="3">Aggregated value snapshot</auro-header>
-<p><code>auro-form</code> exposes a <code>value</code> getter that returns a single key-value object of every named, enabled child's current value, including array values from range datepickers and checkbox groups. With a native <code>&lt;form&gt;</code>, you must either use <code>FormData</code> (which doesn't understand custom elements) or query each control individually and assemble the values yourself.</p>
+<p><code>auro-form</code> exposes a <code>value</code> getter that returns a single key-value object of every named, enabled child's current value, including array values from range datepickers and checkbox groups. With a native <code>&lt;form&gt;</code>, you must either use <code>FormData</code>, which leaves out custom elements that don't opt in to form association, including Auro form elements, or query each control individually and assemble the values yourself.</p>
 <auro-header level="3">Aggregated validity state</auro-header>
 <p><code>auro-form</code> exposes a single <code>validity</code> getter that returns <code>invalid</code> when any enabled child has failed validation or is required but empty, <code>valid</code> otherwise, and <code>null</code> while the form is in its initial state. Native forms expose <code>form.checkValidity()</code> and <code>form.reportValidity()</code>, but those only consider built-in form-associated elements and don't include custom elements such as <code>auro-input</code> or <code>auro-datepicker</code>.</p>
 <auro-header level="3">Initial-state tracking</auro-header>
@@ -104,7 +104,7 @@
 <tr>
 <td>Aggregated validity state</td>
 <td>Built-ins only via <code>checkValidity()</code></td>
-<td>Single <code>validity</code> getter across all children</td>
+<td>Single <code>validity</code> getter across enabled children</td>
 </tr>
 <tr>
 <td>Initial-state tracking</td>
