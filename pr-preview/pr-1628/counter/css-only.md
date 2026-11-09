@@ -77,7 +77,7 @@
   &lt;/div&gt;
 &lt;/fieldset&gt;</code></pre>
 <auro-header level="2">What you lose without auro-counter</auro-header>
-<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-counter</code>, the following functionality built into the <code>auro-counter</code> and <code>auro-counter-group</code> web components is <strong>not available</strong> when using plain HTML:</p>
+<p>While the CSS above approximates the <strong>visual styling</strong> of <code>auro-counter</code>, the following functionality built into the <code>auro-counter</code> and <code>auro-counter-group</code> web components is <strong>not available</strong> when using plain HTML:</p>
 <auro-header level="3">Increment and decrement button wiring</auro-header>
 <p><code>auro-counter</code> exposes <code>increment()</code> and <code>decrement()</code> methods and handles all click wiring between its buttons and the displayed value. With native HTML, the <code>&lt;button&gt;</code> controls have no built-in link to the <code>&lt;input type="number"&gt;</code>, so you write JavaScript click handlers that read the input, apply the step, clamp to <code>min</code>/<code>max</code>, and write the new value back.</p>
 <auro-header level="3">Automatic min/max button disabling</auro-header>

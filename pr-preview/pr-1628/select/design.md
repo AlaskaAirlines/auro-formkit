@@ -84,6 +84,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-select appearance="inverse">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Select example</span>
 <auro-menu>
@@ -102,6 +103,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select appearance="inverse"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Select example&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -201,6 +203,7 @@
 </auro-menu>
 </auro-select>
 <auro-select layout="emphasized" shape="pill" size="xl" value="flights" style="display:inline-block;">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Select example</span>
 <span slot="label">Select example</span>
 <auro-menu nocheckmark>
@@ -227,6 +230,7 @@
 </auro-menu>
 </auro-select>
 <auro-select layout="emphasized" shape="pill" size="xl" value="flights" required style="display:inline-block;">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Select example</span>
 <span slot="label">Select example</span>
 <span slot="helpText">No display value in the menu options</span>
@@ -284,6 +288,7 @@
     &lt;/auro-menu&gt;
   &lt;/auro-select&gt;
 &#10;  &lt;auro-select layout="emphasized" shape="pill" size="xl" value="flights" style="display:inline-block;"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Select example&lt;/span&gt;
     &lt;span slot="label"&gt;Select example&lt;/span&gt;
     &lt;auro-menu nocheckmark&gt;
@@ -310,6 +315,7 @@
     &lt;/auro-menu&gt;
   &lt;/auro-select&gt;
 &#10;  &lt;auro-select layout="emphasized" shape="pill" size="xl" value="flights" required style="display:inline-block;"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Select example&lt;/span&gt;
     &lt;span slot="label"&gt;Select example&lt;/span&gt;
     &lt;span slot="helpText"&gt;No display value in the menu options&lt;/span&gt;

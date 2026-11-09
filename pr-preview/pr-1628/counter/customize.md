@@ -307,7 +307,7 @@
 <span slot="ariaLabel.bib.close">Close popup</span>
 <div slot="bib.fullscreen.headline">Passengers</div>
 <span slot="label">Passengers</span>
-<span slot="helpText">Bottom-end placement with a 20px offset and noFlip</span>
+<span slot="helpText">Bottom-end placement with a 20px <code>offset</code> and <code>noFlip</code></span>
 <auro-counter>
               Adults
 <span slot="ariaLabel.minus">Remove adult</span>
@@ -387,7 +387,7 @@
     &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
     &lt;div slot="bib.fullscreen.headline"&gt;Passengers&lt;/div&gt;
     &lt;span slot="label"&gt;Passengers&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Bottom-end placement with a 20px offset and noFlip&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Bottom-end placement with a 20px &lt;code&gt;offset&lt;/code&gt; and &lt;code&gt;noFlip&lt;/code&gt;&lt;/span&gt;
     &lt;auro-counter&gt;
       Adults
       &lt;span slot="ariaLabel.minus"&gt;Remove adult&lt;/span&gt;

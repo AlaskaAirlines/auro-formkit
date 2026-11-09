@@ -43,7 +43,7 @@
 <li><strong>Additional description:</strong> Not currently announced. The <code>helpText</code> slot content isn't tied to the trigger, so it isn't read on focus.</li>
 </ol>
 <auro-header level="3" id="voiceOverNavigateAnnouncement">Navigating options</auro-header>
-<p>Announces each option <em>"[option label], [<em>"selected"</em> if <code>selected</code>], [<em>"dimmed"</em> if <code>disabled</code>]"</em> as you move.</p>
+<p>Announces each option <em>"[option label], [<em>"selected"</em> if <code>selected</code>, otherwise <em>"not selected"</em>], [<em>"dimmed"</em> if <code>disabled</code>]"</em> as you move.</p>
 <p>Use a three-finger swipe to scroll the option list.</p>
 <auro-header level="3" id="voiceOverCloseGesture">Close gesture</auro-header>
 <p>The component may be <strong>closed</strong> | <strong>collapsed</strong> using a gesture.</p>
@@ -63,7 +63,7 @@
 <ol>
 <li><strong>Focus</strong></li>
 <li>
-<strong>Open | Expand:</strong> When the component is <strong>opened</strong> | <strong>expanded</strong>, VoiceOver announces the active option <em>"[option label], ['selected' if <code>selected</code>]"</em>.
+<strong>Open | Expand:</strong> When the component is <strong>opened</strong> | <strong>expanded</strong>, VoiceOver announces the active option <em>"[option label], ['selected' if <code>selected</code>, otherwise 'not selected']"</em>.
 <div class="note">
 <strong>Note:</strong> <code>disabled</code> options can't be <strong>active</strong>, so this announcement never includes that state.
 </div>
@@ -80,7 +80,7 @@
 <ol>
 <li><strong>Focus</strong></li>
 <li>
-<strong>Open | Expand:</strong> Focus moves to the fullscreen modal dialog's <strong>Close</strong> button, and VoiceOver announces the active option <em>"[option label], [<em>'selected'</em> if <code>selected</code>]"</em>.
+<strong>Open | Expand:</strong> Focus moves to the fullscreen modal dialog's <strong>Close</strong> button, and VoiceOver announces the active option <em>"[option label], [<em>'selected'</em> if <code>selected</code>, otherwise <em>'not selected'</em>]"</em>.
 <div class="note">
 <strong>Note:</strong> <code>disabled</code> options can't be <strong>active</strong>, so this announcement never includes that state.
 </div>
@@ -115,7 +115,7 @@
 <ol>
 <li><strong>Focus</strong></li>
 <li><strong>Open | Expand</strong></li>
-<li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
+<li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or <em>"not selected"</em>.</li>
 <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection, and VoiceOver announces <em>"selected"</em> or <em>"not selected"</em>.</li>
 <li><strong>Close | Collapse:</strong> Collapses the list and announces the expanded state change.</li>
 </ol>
@@ -124,7 +124,7 @@
 <ol>
 <li><strong>Focus</strong></li>
 <li><strong>Open | Expand</strong></li>
-<li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
+<li><strong>Navigate options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or <em>"not selected"</em>.</li>
 <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection, and VoiceOver announces <em>"selected"</em> or <em>"not selected"</em>.</li>
 <li><strong>Close | Collapse:</strong> Collapses the list and announces the expanded state change.</li>
 </ol>

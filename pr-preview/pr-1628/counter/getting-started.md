@@ -244,7 +244,7 @@ Import and register the components in the `<script>` block:
 &lt;/script&gt;</code></pre>
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-counter-group>` directly in your Svelte template:
+Use the elements you registered, such as `<custom-counter-group>`, directly in your Svelte template:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
@@ -473,7 +473,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="4" id="slot-bib-fullscreen-footer">bib.fullscreen.footer</auro-header>
 <p>Content shown at the bottom of the fullscreen dropdown, such as Reset and Save buttons. Applies only when <code>isDropdown</code> is set.</p>
 <auro-header level="4" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
-<p>Text screen readers announce for the close button in the fullscreen dropdown, such as "Close passenger selector". Defaults to "Close". Applies only when <code>isDropdown</code> is set.</p>
+<p>Text screen readers announce for the close button in the fullscreen dropdown, such as "Close passenger selector". Defaults to "Close", so set it whenever <code>isDropdown</code> is set.</p>
 <auro-header level="3" id="slotsCounter">auro-counter</auro-header>
 <p>The following slots are available on the <code>&lt;auro-counter&gt;</code> element.</p>
 <auro-header level="4" id="slot-default-counter">(default)</auro-header>

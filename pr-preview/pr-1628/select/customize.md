@@ -86,6 +86,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance.html -->
 <auro-select appearance="inverse" placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Inverse appearance</span>
 <auro-menu>
@@ -104,6 +105,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select appearance="inverse" placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Inverse appearance&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -124,6 +126,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/display-value.html) -->
 <!-- The below content is automatically added from ./../apiExamples/display-value.html -->
 <auro-select forceDisplayValue>
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Travel type</span>
 <span slot="label">Travel type</span>
 <auro-menu>
@@ -148,6 +151,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/display-value.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/display-value.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select forceDisplayValue&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Travel type&lt;/span&gt;
   &lt;span slot="label"&gt;Travel type&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -213,6 +217,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-checkmark.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-checkmark.html -->
 <auro-select nocheckmark placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -231,6 +236,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-checkmark.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-checkmark.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select nocheckmark placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;auro-menu&gt;
@@ -250,6 +256,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fluid.html) -->
 <!-- The below content is automatically added from ./../apiExamples/fluid.html -->
 <auro-select fluid placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -268,6 +275,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fluid.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/fluid.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select fluid placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -287,6 +295,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/flex-menu-width.html) -->
 <!-- The below content is automatically added from ./../apiExamples/flex-menu-width.html -->
 <auro-select flexMenuWidth id="flexMenuWidthExample" placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -304,6 +313,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/flex-menu-width.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/flex-menu-width.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select flexMenuWidth id="flexMenuWidthExample" placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -322,6 +332,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-width.html) -->
 <!-- The below content is automatically added from ./../apiExamples/match-width.html -->
 <auro-select layout="emphasized" shape="pill" size="xl" matchWidth placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -340,6 +351,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-width.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/match-width.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select layout="emphasized" shape="pill" size="xl" matchWidth placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -359,6 +371,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/placement.html) -->
 <!-- The below content is automatically added from ./../apiExamples/placement.html -->
 <auro-select placement="top-start" placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -377,6 +390,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/placement.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/placement.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select placement="top-start" placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -396,6 +410,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-flip.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-flip.html -->
 <auro-select noFlip placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -414,6 +429,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-flip.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-flip.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select noFlip placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -433,6 +449,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/offset.html) -->
 <!-- The below content is automatically added from ./../apiExamples/offset.html -->
 <auro-select offset="16" placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -451,6 +468,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/offset.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/offset.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select offset="16" placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -471,6 +489,7 @@
 <!-- The below content is automatically added from ./../apiExamples/shift.html -->
 <div style="display: flex; justify-content: flex-end;">
 <auro-select layout="emphasized" shape="pill" size="xl" shift placeholder="Sort by" style="display: inline-block;">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -491,6 +510,7 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/shift.html -->
 <pre class="language-html"><code class="language-html">&lt;div style="display: flex; justify-content: flex-end;"&gt;
   &lt;auro-select layout="emphasized" shape="pill" size="xl" shift placeholder="Sort by" style="display: inline-block;"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;auro-menu&gt;
@@ -511,6 +531,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/large-fullscreen-headline.html) -->
 <!-- The below content is automatically added from ./../apiExamples/large-fullscreen-headline.html -->
 <auro-select largeFullscreenHeadline fullscreenBreakpoint="lg">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="label">Select example</span>
 <span slot="bib.fullscreen.headline">Large headline</span>
 <auro-menu>
@@ -529,6 +550,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/large-fullscreen-headline.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/large-fullscreen-headline.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select largeFullscreenHeadline fullscreenBreakpoint="lg"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="label"&gt;Select example&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Large headline&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -549,6 +571,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
 <!-- The below content is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 <auro-select fullscreenBreakpoint="lg">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="label">Select example</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <auro-menu>
@@ -567,6 +590,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fullscreen-breakpoint.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select fullscreenBreakpoint="lg"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="label"&gt;Select example&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -694,6 +718,7 @@
           }
 </style>
 <auro-select class="css-parts-demo">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">CSS parts example</span>
 <span slot="label">CSS parts example</span>
 <span slot="helpText">This select has custom styles applied through CSS shadow parts.</span>
@@ -721,6 +746,7 @@
   }
 &lt;/style&gt;
 &lt;auro-select class="css-parts-demo"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;CSS parts example&lt;/span&gt;
   &lt;span slot="label"&gt;CSS parts example&lt;/span&gt;
   &lt;span slot="helpText"&gt;This select has custom styles applied through CSS shadow parts.&lt;/span&gt;
@@ -742,6 +768,7 @@
 <!-- The below content is automatically added from ./../apiExamples/autocomplete.html -->
 <form>
 <auro-select autocomplete="country-name">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="label">Select your country</span>
 <span slot="bib.fullscreen.headline">Select your country</span>
 <auro-menu>
@@ -766,6 +793,7 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/autocomplete.html -->
 <pre class="language-html"><code class="language-html">&lt;form&gt;
   &lt;auro-select autocomplete="country-name"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
     &lt;span slot="label"&gt;Select your country&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Select your country&lt;/span&gt;
     &lt;auro-menu&gt;
@@ -864,6 +892,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
 <auro-select disabled placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -882,6 +911,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select disabled placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -911,6 +941,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled-options.html) -->
 <!-- The below content is automatically added from ./../apiExamples/disabled-options.html -->
 <auro-select placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -929,6 +960,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled-options.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled-options.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -948,6 +980,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/with-submenus.html) -->
 <!-- The below content is automatically added from ./../apiExamples/with-submenus.html -->
 <auro-select placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -990,6 +1023,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/with-submenus.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/with-submenus.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1053,6 +1087,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
 <!-- The below content is automatically added from ./../apiExamples/required.html -->
 <auro-select required placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -1071,6 +1106,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/required.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/required.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select required placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1092,6 +1128,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/error.html -->
 <auro-select error="Custom error message" placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -1110,6 +1147,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select error="Custom error message" placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1135,6 +1173,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-validity.html -->
 <auro-select required setCustomValidityValueMissing="Please select a sort preference." placeholder="Sort by...">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="label">Sort preference</span>
 <span slot="bib.fullscreen.headline">Sort preference</span>
 <auro-menu>
@@ -1153,6 +1192,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-validity.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/custom-validity.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select required setCustomValidityValueMissing="Please select a sort preference." placeholder="Sort by..."&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="label"&gt;Sort preference&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Sort preference&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1172,6 +1212,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-validate.html -->
 <auro-select required noValidate placeholder="Placeholder text">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="label">Label</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <auro-menu>
@@ -1190,6 +1231,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-validate.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-validate.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select required noValidate placeholder="Placeholder text"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1209,6 +1251,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/placeholder.html) -->
 <!-- The below content is automatically added from ./../apiExamples/placeholder.html -->
 <auro-select placeholder="Please select your preferred option">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Label</span>
 <auro-menu>
@@ -1227,6 +1270,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/placeholder.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/placeholder.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select placeholder="Please select your preferred option"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1247,6 +1291,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
 <!-- The below content is automatically added from ./../apiExamples/loading.html -->
 <auro-select id="loadingSelectCategory">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Select category</span>
 <span slot="label">Category</span>
 <auro-menu>
@@ -1256,6 +1301,7 @@
 </auro-menu>
 </auro-select>
 <auro-select id="loadingSelectItem" disabled>
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Select item</span>
 <span slot="label">Item</span>
 <auro-menu id="loadingSelectItemMenu">
@@ -1270,6 +1316,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/loading.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select id="loadingSelectCategory"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Select category&lt;/span&gt;
   &lt;span slot="label"&gt;Category&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1279,6 +1326,7 @@
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;
 &lt;auro-select id="loadingSelectItem" disabled&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Select item&lt;/span&gt;
   &lt;span slot="label"&gt;Item&lt;/span&gt;
   &lt;auro-menu id="loadingSelectItemMenu"&gt;

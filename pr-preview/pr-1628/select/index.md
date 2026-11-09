@@ -121,6 +121,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multi-select.html) -->
 <!-- The below content is automatically added from ./../apiExamples/multi-select.html -->
 <auro-select multiselect placeholder="Select one or more options">
+<span slot="ariaLabel.bib.close">Close popup</span>
 <span slot="bib.fullscreen.headline">Bib headline</span>
 <span slot="label">Multi-select example</span>
 <auro-menu>
@@ -136,6 +137,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multi-select.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/multi-select.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-select multiselect placeholder="Select one or more options"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib headline&lt;/span&gt;
   &lt;span slot="label"&gt;Multi-select example&lt;/span&gt;
   &lt;auro-menu&gt;
