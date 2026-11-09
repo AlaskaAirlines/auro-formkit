@@ -137,7 +137,7 @@
       <td>Expanded, with <code>multiSelect</code></td>
       <td>Trigger element</td>
       <td>
-        Selects or deselects the <code>active</code> option. The bib stays open so you can select more options.
+        Selects or deselects the <code>active</code> option. The bib stays open for more selections.
       </td>
     </tr>
     <tr>

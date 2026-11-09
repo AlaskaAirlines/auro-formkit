@@ -565,7 +565,7 @@ export class AuroSelect extends AuroElement {
 
       /**
        * Sets the selected option by its value, such as `price`. In `multiSelect` mode, it's a JSON array string, such as `["stops","price"]`.
-       * A value that matches no option, or matches a `disabled` or `static` option, clears both `value` and `optionSelected`; `hidden` options can still be selected by value.
+       * A value that matches no option, or matches only `disabled` or `static` options, clears both `value` and `optionSelected`; `hidden` options can still be selected by value.
        * @category behavior
        */
       value: {
@@ -1392,7 +1392,7 @@ export class AuroSelect extends AuroElement {
 
   /**
    * Selects the menu option whose value matches, as setting `value` does.
-   * A value that matches no option, or matches a `disabled` or `static` option, clears `value` and `optionSelected`; `hidden` options can still be selected.
+   * A value that matches no option, or matches only `disabled` or `static` options, clears `value` and `optionSelected`; `hidden` options can still be selected.
    * @param {string} value - The option value to select, such as `price`.
    */
   setMenuValue(value) {
