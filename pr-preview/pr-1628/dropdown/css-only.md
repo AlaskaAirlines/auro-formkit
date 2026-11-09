@@ -95,7 +95,7 @@
 <auro-header level="3">Keyboard handling</auro-header>
 <p><code>auro-dropdown</code> opens and closes the bib with <code>Enter</code> and <code>Space</code> on the trigger, closes it with <code>Escape</code>, and coordinates <code>Tab</code> behavior with the bib contents. Set <code>disableKeyboardHandling</code> to handle the trigger keys yourself. Native <code>&lt;details&gt;</code> only toggles on <code>Enter</code>/<code>Space</code> on the <code>&lt;summary&gt;</code> and offers no panel-internal keyboard model.</p>
 <auro-header level="3">ARIA wiring</auro-header>
-<p><code>auro-dropdown</code> sets a role on the trigger with <code>a11yRole</code>, manages <code>aria-expanded</code> and <code>aria-controls</code> for roles other than the default <code>button</code>, such as <code>combobox</code>, and emits an <code>auroDropdown-idAdded</code> event so consumers can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but doesn't expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
+<p><code>auro-dropdown</code> sets a role on the trigger with <code>a11yRole</code>, manages <code>aria-expanded</code> and <code>aria-controls</code> for roles other than the default <code>button</code>, such as <code>combobox</code>, and emits an <code>auroDropdown-idAdded</code> event so you can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but doesn't expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
 <auro-header level="3">Chevron indicator</auro-header>
 <p><code>auro-dropdown</code> supports a <code>chevron</code> attribute that renders a collapsed/expanded indicator with the correct rotation and design-token color. With native HTML you must author the indicator yourself: the example above uses a background-image SVG and a <code>[open]</code> selector to rotate it.</p>
 <auro-header level="3">Error and help-text presentation</auro-header>
@@ -167,7 +167,7 @@
 <tr>
 <td>Focus into bib on open</td>
 <td>Manual JS</td>
-<td><code>focus()</code> / <code>focusShow</code></td>
+<td>Automatic; <code>focus()</code> also moves focus into an open bib</td>
 </tr>
 <tr>
 <td>Click-outside / focus-loss dismiss</td>
