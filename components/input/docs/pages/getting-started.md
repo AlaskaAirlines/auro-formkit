@@ -101,8 +101,8 @@
         <p>Converts a <code>Date</code> instance to a string in the given date format, such as <code>15/01/2024</code> for <code>dd/mm/yyyy</code>. Returns <code>undefined</code> when <code>valueObject</code> isn't a valid <code>Date</code> or <code>format</code> is empty.</p>
         <p>Use it when an API needs the date in a specific format, whatever format the user typed it in.</p>
         <ul>
-          <li><strong>valueObject</strong>: The <code>Date</code> to format, such as <code>input.valueObject</code>.</li>
-          <li><strong>format</strong>: The display format, such as <code>mm/dd/yyyy</code>.</li>
+          <li><strong><code>valueObject</code></strong>: The <code>Date</code> to format, such as <code>input.valueObject</code>.</li>
+          <li><strong><code>format</code></strong>: The display format, such as <code>mm/dd/yyyy</code>.</li>
         </ul>
         <pre class="language-js"><code class="language-js">AuroInputUtil.toFormattedValue(auroInput.valueObject, 'dd/mm/yyyy'); // returns '15/01/2024' for an ISO value of '2024-01-15'</code></pre>
       </section>
