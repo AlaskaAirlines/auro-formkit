@@ -119,7 +119,7 @@
 
 <auro-header level="3">Password show/hide toggle</auro-header>
 
-<p><code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide button, named with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only hides the value, so you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
+<p>In the <code>classic</code> layout, <code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide button, named with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only hides the value, so you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
 
 <auro-header level="3">Clear button</auro-header>
 

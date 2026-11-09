@@ -203,8 +203,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets the field's size. The `classic` shape is the same height at every size, and the
-       * emphasized layouts support only `xl`.
+       * Sets the field's height. The `classic` and `snowflake` shapes are the same height at every size,
+       * and the emphasized layouts support only `xl`.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'lg'
        * @category ui
