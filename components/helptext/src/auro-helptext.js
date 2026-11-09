@@ -119,7 +119,7 @@ export class AuroHelpText extends LitElement {
   }
 
   /**
-   * Called when the slot's content changes and after each update. Checks whether the slot has text, so the element shows only when it does.
+   * Called when nodes are added to or removed from the slot, and after each update. Checks whether the slot has text, so the element shows only when it does.
    * @param {Event} [event] - The `slotchange` event, when called from one.
    * @returns {void}
    */
