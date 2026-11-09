@@ -215,8 +215,7 @@ export class AuroRadioGroup extends LitElement {
 
       /**
        * Requires a selection in the group and hides the "(optional)" text after the legend.
-       * When nothing is selected, the group shows an error after focus leaves it.
-       * @relevantWhen !noValidate
+       * Unless `noValidate` is set, the group shows an error when focus leaves it with nothing selected.
        * @category behavior
        */
       required: {
@@ -227,7 +226,6 @@ export class AuroRadioGroup extends LitElement {
       /**
        * Sets one error message for every kind of error, such as "Choose an option".
        * It replaces the `error` text and the `setCustomValidityValueMissing` and `setCustomValidityCustomError` messages.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -238,7 +236,7 @@ export class AuroRadioGroup extends LitElement {
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the attribute's own text.
        * `setCustomValidity` takes priority when both are set.
-       * @relevantWhen !noValidate
+       * @relevantWhen error
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -249,7 +247,7 @@ export class AuroRadioGroup extends LitElement {
       /**
        * Sets the error message shown when the group is `required` and nothing is selected, such as "Select an option".
        * The group has no default message, so set this or `setCustomValidity` to show one. `setCustomValidity` takes priority when both are set.
-       * @relevantWhen !noValidate
+       * @relevantWhen required
        * @category behavior
        */
       setCustomValidityValueMissing: {
