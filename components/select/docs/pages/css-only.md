@@ -4,7 +4,7 @@
 
 <auro-header level="2">Styling a native select</auro-header>
 
-<p>The native select can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. Only the closed chrome of <code>&lt;select&gt;</code> can be styled. The dropdown panel that opens when the user activates the control is browser-controlled and largely can't be styled. The pattern below replicates the border, padding, caret, and focus-state colors used by <code>auro-select</code> in its collapsed state.</p>
+<p>Reset and restyle the native select with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. Only the closed chrome of <code>&lt;select&gt;</code> can be styled. The dropdown panel that opens when the user activates the control is browser-controlled and largely can't be styled. The pattern below replicates the border, padding, caret, and focus-state colors used by <code>auro-select</code> in its collapsed state.</p>
 
 <pre><code>/* Color tokens */
 @import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
