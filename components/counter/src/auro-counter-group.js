@@ -417,9 +417,8 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Dynamically disables increment/decrement buttons on a counter based on group value.
-   * This method checks the total aggregated value against the group's min and max properties.
-   * If the total value is at or below the minimum, the counter's decrement button is disabled; if at or above the maximum, the increment button is disabled.
+   * Turns a counter's minus and plus buttons on or off based on the group's total.
+   * The minus button turns off when the total is at or below `min`; otherwise, the plus button turns off when the total is at or above `max`.
    *
    * @param {HTMLElement} counter - The counter element to potentially disable.
    * @private
