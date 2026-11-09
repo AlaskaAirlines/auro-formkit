@@ -4,7 +4,7 @@
 
 <auro-header level="2">Styling a native form</auro-header>
 
-<p>Lay out the native form with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below gives fields and actions consistent spacing.</p>
+<p>Lay out the native form with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below gives fields and actions consistent spacing.</p>
 
 <pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 
