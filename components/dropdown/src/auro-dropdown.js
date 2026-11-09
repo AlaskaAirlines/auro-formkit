@@ -398,7 +398,7 @@ export class AuroDropdown extends AuroElement {
       /**
        * Removes the trigger's border, background, and shadow.
        * Applies only when `shape` and `size` are both set.
-       * @relevantWhen shape !== undefined && size !== undefined
+       * @relevantWhen shape !== undefined
        * @category ui
        */
       simple: {

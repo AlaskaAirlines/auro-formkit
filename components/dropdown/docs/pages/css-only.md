@@ -135,7 +135,7 @@
 
 <auro-header level="3">ARIA wiring</auro-header>
 
-<p><code>auro-dropdown</code> sets a role on the trigger with <code>a11yRole</code>, manages <code>aria-expanded</code> and <code>aria-controls</code> for roles other than the default <code>button</code>, such as <code>combobox</code>, and emits an <code>auroDropdown-idAdded</code> event so consumers can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but doesn't expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
+<p><code>auro-dropdown</code> sets a role on the trigger with <code>a11yRole</code>, manages <code>aria-expanded</code> and <code>aria-controls</code> for roles other than the default <code>button</code>, such as <code>combobox</code>, and emits an <code>auroDropdown-idAdded</code> event so you can wire <code>aria-controls</code> to the generated bib ID. Native <code>&lt;details&gt;</code> exposes a disclosure role with <code>open</code> state but doesn't expose a generated panel ID, and any custom role (for example, <code>combobox</code> or <code>menu</code>) must be added and kept in sync by hand.</p>
 
 <auro-header level="3">Chevron indicator</auro-header>
 
@@ -217,7 +217,7 @@
     <tr>
       <td>Focus into bib on open</td>
       <td>Manual JS</td>
-      <td><code>focus()</code> / <code>focusShow</code></td>
+      <td>Automatic; <code>focus()</code> also moves focus into an open bib</td>
     </tr>
     <tr>
       <td>Click-outside / focus-loss dismiss</td>
