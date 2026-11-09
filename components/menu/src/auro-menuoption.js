@@ -34,10 +34,12 @@ let menuOptionIdCounter = 0;
  * - **Custom actions**: Set `event` to have the menu fire a named event instead of selecting the option.
  * - **Unchanged text**: Set `persistent` to keep the option's text as written when the menu highlights matching text.
  *
- * @example
+ * **Example**
+ * ```html
  * <auro-menu>
  *   <auro-menuoption value="stops">Stops</auro-menuoption>
  * </auro-menu>
+ * ```
  *
  * @summary One option in a menu, which can be disabled, shown as a row that can't be selected, or set to fire a custom event.
  * @customElement auro-menuoption
@@ -136,7 +138,7 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * Sets the value that identifies this option, such as `stops`. The menu's `value` becomes this value when the option is selected.
+       * Sets the value that identifies this option, such as `stops`. The menu's `value` becomes this value when the option is selected, or includes it in multi-select mode.
        * @requiredWhen always
        * @category behavior
        */
@@ -276,7 +278,7 @@ export class AuroMenuOption extends AuroElement {
 
   /**
    * Deprecated: Remove calls to it; it has no effect.
-   * Does nothing. It updated the option when the menu changed, before the menu took back control of its options' state. It will be removed in a future major release.
+   * It updated the option when the menu changed, before the menu took back control of its options' state. It will be removed in a future major release.
    *
    * @deprecated Has no effect. Remove calls to it.
    */
@@ -313,7 +315,7 @@ export class AuroMenuOption extends AuroElement {
 
   /**
    * Deprecated: Remove calls to it; it has no effect.
-   * Does nothing. It connected the option to the menu, before the menu took back control of its options' state. It will be removed in a future major release.
+   * It connected the option to the menu, before the menu took back control of its options' state. It will be removed in a future major release.
    *
    * @deprecated Has no effect. Remove calls to it.
    */

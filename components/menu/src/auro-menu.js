@@ -44,11 +44,13 @@ let menuInstanceIdCounter = 0;
  * - **Grouped options**: Nest an `auro-menu` inside another to indent a group of options, while the outer menu keeps track of the selection.
  * - **Disabled menu**: Set `disabled` to turn off every option without changing each option's own `disabled` setting.
  *
- * @example
+ * **Example**
+ * ```html
  * <auro-menu>
  *   <auro-menuoption value="stops">Stops</auro-menuoption>
  *   <auro-menuoption value="price">Price</auro-menuoption>
  * </auro-menu>
+ * ```
  *
  * @summary A list of options with single or multiple selection, match highlighting, a loading state, and grouped options.
  * @customElement auro-menu
@@ -167,7 +169,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Sets the corner shape of every option in the menu. `box` (the default) and `snowflake` have square corners, and `pill` has fully rounded ends. An option's own `shape` overrides it.
+       * Sets the corner shape of every option in the menu. `box` and `snowflake` have square corners, and `pill` has fully rounded ends. An option's own `shape` overrides it.
        * @type {'box' | 'pill' | 'snowflake'}
        * @default 'box'
        * @category ui
@@ -191,7 +193,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Turns off the whole menu. Every option is shown in a muted style and can't be highlighted or selected with the mouse or keyboard, but each option's own `disabled` setting stays unchanged.
+       * Turns off the whole menu. Every option is shown in a muted style and can't be highlighted or selected with the mouse or keyboard, but each option's own `disabled` setting stays unchanged. A selected option in a nested menu doesn't currently switch to the muted style unless the nested menu is also disabled.
        * @category ui
        */
       disabled: {
