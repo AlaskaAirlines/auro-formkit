@@ -180,6 +180,7 @@
 <span slot="bib.fullscreen.headline">Left combobox header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -201,6 +202,7 @@
 <span slot="bib.fullscreen.headline">Right combobox header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -236,6 +238,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Left combobox header&lt;/span&gt;
     &lt;span slot="label"&gt;Name&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -257,6 +260,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Right combobox header&lt;/span&gt;
     &lt;span slot="label"&gt;Name&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;

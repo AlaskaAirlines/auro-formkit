@@ -48,6 +48,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Default appearance</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -67,6 +68,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Default appearance&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -85,6 +87,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Inverse appearance</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -104,6 +107,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Inverse appearance&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -124,6 +128,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
                 Apples
@@ -158,6 +163,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;
       Apples
@@ -193,6 +199,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -212,6 +219,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Name&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;auro-menu&gt;
         &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
         &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -239,6 +247,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">Bib placed below the trigger at its end edge, 20px away, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -253,6 +262,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">Bib placed below the trigger at its end edge, 20px away, and flips when there isn't room</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -267,6 +277,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">Bib placed to the right of the trigger, 20px away, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -281,6 +292,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">Bib placed below the trigger at its start edge, 20px away, shifts to stay in view, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -303,6 +315,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;span slot="helpText"&gt;Bib placed below the trigger at its end edge, 20px away, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
@@ -317,6 +330,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;span slot="helpText"&gt;Bib placed below the trigger at its end edge, 20px away, and flips when there isn't room&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
@@ -331,6 +345,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;span slot="helpText"&gt;Bib placed to the right of the trigger, 20px away, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
@@ -345,6 +360,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
     &lt;span slot="helpText"&gt;Bib placed below the trigger at its start edge, 20px away, shifts to stay in view, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
@@ -367,6 +383,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">The bib stays below the trigger, even without room</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -387,6 +404,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;span slot="helpText"&gt;The bib stays below the trigger, even without room&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
@@ -451,7 +469,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="breakpoint">Fullscreen breakpoint</auro-header>
-<p>The <code>fullscreenBreakpoint</code> attribute sets the screen size at which the bib switches to fullscreen mode on mobile. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
+<p>The <code>fullscreenBreakpoint</code> attribute sets the screen size at which the bib switches to fullscreen mode. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
 <p>When the screen is the selected breakpoint's size or smaller, the bib opens in fullscreen mode. Set the value to <code>disabled</code> to keep the bib from ever opening in fullscreen mode.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
@@ -460,6 +478,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -479,6 +498,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -607,6 +627,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">CSS parts example</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <span slot="helpText">This combobox has custom styles applied with CSS shadow parts.</span>
 <auro-menu>
 <auro-menuoption value="one">Option one</auro-menuoption>
@@ -632,6 +653,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;CSS parts example&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;span slot="helpText"&gt;This combobox has custom styles applied with CSS shadow parts.&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="one"&gt;Option one&lt;/auro-menuoption&gt;
@@ -735,6 +757,7 @@
 <span slot="bib.fullscreen.headline">Credit card</span>
 <span slot="label">Credit card number</span>
 <span slot="ariaLabel.input.clear">Clear credit card number</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="4500000000000000" id="option-cc-0">
 <auro-icon category="payment" customcolor name="cc-visa"></auro-icon>
@@ -769,6 +792,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Credit card&lt;/span&gt;
   &lt;span slot="label"&gt;Credit card number&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear credit card number&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="4500000000000000" id="option-cc-0"&gt;
       &lt;auro-icon category="payment" customcolor name="cc-visa"&gt;&lt;/auro-icon&gt;
@@ -804,6 +828,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="1" id="option-0">1</auro-menuoption>
 <auro-menuoption value="2" id="option-1">2</auro-menuoption>
@@ -823,6 +848,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="1" id="option-0"&gt;1&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="2" id="option-1"&gt;2&lt;/auro-menuoption&gt;
@@ -843,6 +869,7 @@
 <span slot="bib.fullscreen.headline">Combobox without filtering</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -862,6 +889,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Combobox without filtering&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -886,6 +914,7 @@
 <span slot="bib.fullscreen.headline">Persistent input</span>
 <span slot="label">Persistent input</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
                 Apples
@@ -923,6 +952,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Persistent input&lt;/span&gt;
   &lt;span slot="label"&gt;Persistent input&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;
       Apples
@@ -957,6 +987,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -976,6 +1007,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1003,6 +1035,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1" disabled>Oranges</auro-menuoption>
@@ -1022,6 +1055,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1" disabled&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1042,6 +1076,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -1062,6 +1097,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1083,6 +1119,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -1103,6 +1140,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1121,7 +1159,7 @@
 <li><strong><code>setCustomValidity</code></strong>: Replaces the message for every validation error, except the filter-mode message from <code>setCustomValidityValueMissingFilter</code>.</li>
 <li><strong><code>setCustomValidityCustomError</code></strong>: Sets the message shown while the <code>error</code> attribute is set.</li>
 <li><strong><code>setCustomValidityValueMissing</code></strong>: Sets the message shown when the component is <code>required</code> and the user leaves it empty.</li>
-<li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types text without choosing a menu option.</li>
+<li><strong><code>setCustomValidityValueMissingFilter</code></strong>: Sets the message shown when <code>behavior="filter"</code> and the user types text without choosing a menu option. Set it as an attribute: setting only the property doesn't currently change the message.</li>
 </ul>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity-message.html) -->
@@ -1130,6 +1168,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -1150,6 +1189,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1171,6 +1211,7 @@
 <span slot="bib.fullscreen.headline">Combobox without validation</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -1191,6 +1232,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Combobox without validation&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -1220,6 +1262,7 @@
 <span slot="bib.fullscreen.headline">Dynamic combobox header</span>
 <span slot="label">First</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <!--
               The auro-combobox element requires an empty auro-menu element
               due to the requirements of auro-dropdown and auro-input
@@ -1236,6 +1279,7 @@
 <span slot="bib.fullscreen.headline">Dynamic combobox header</span>
 <span slot="label">Second</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <!--
               The auro-combobox element requires an empty auro-menu element
               due to the requirements of auro-dropdown and auro-input
@@ -1266,6 +1310,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic combobox header&lt;/span&gt;
   &lt;span slot="label"&gt;First&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;!--
     The auro-combobox element requires an empty auro-menu element
     due to the requirements of auro-dropdown and auro-input
@@ -1282,6 +1327,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Dynamic combobox header&lt;/span&gt;
   &lt;span slot="label"&gt;Second&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;!--
     The auro-combobox element requires an empty auro-menu element
     due to the requirements of auro-dropdown and auro-input
@@ -1307,6 +1353,7 @@
 <span slot="bib.fullscreen.headline">Loading combobox header</span>
 <span slot="label">Please select a preference</span>
 <span slot="ariaLabel.input.clear">Clear preference</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu id="loadingExampleComboboxMenu">
 <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span>
 </auro-menu>
@@ -1321,6 +1368,7 @@
   &lt;span slot="bib.fullscreen.headline"&gt;Loading combobox header&lt;/span&gt;
   &lt;span slot="label"&gt;Please select a preference&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear preference&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu id="loadingExampleComboboxMenu"&gt;
     &lt;auro-loader slot="loadingIcon" orbit xs&gt;&lt;/auro-loader&gt;&lt;span slot="loadingText"&gt;Loading...&lt;/span&gt;
   &lt;/auro-menu&gt;

@@ -152,7 +152,7 @@ This creates a new custom element, `<custom-combobox>`, that behaves exactly lik
 <div class="accordion-content">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
-React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in JSX without any wrapper library.
+React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so the combobox works directly in JSX without any wrapper library. The examples below register it under a custom tag name, such as <code>&lt;custom-combobox&gt;</code>, and use that tag.
 
 <auro-header level="3" id="reactImport">Import the component</auro-header>
 Import and register the components at the top level of your application (for example, in your root `main.tsx` or `App.tsx`):
@@ -164,7 +164,7 @@ AuroMenu.register('[custom]-menu');
 AuroMenuOption.register('[custom]-menuoption');</code></pre>
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for `<auro-combobox>` in JSX, add the following declaration to a `.d.ts` file in your project:
+The component ships with TypeScript type definitions for the `AuroCombobox` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for the combobox in JSX, add the following declaration to a `.d.ts` file in your project, replacing `[custom]` with the prefix you registered:
 
 <pre class="language-js"><code class="language-js">import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
 import type { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
@@ -230,7 +230,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <div class="accordion-content">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
-Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so the combobox works directly in Svelte templates without any wrapper or configuration. The examples below register it under a custom tag name, such as <code>&lt;custom-combobox&gt;</code>, and use that tag.
 
 <auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
@@ -244,7 +244,7 @@ Import and register the components in the `<script>` block:
 &lt;/script&gt;</code></pre>
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-combobox>` directly in your Svelte template. Bind properties with standard Svelte attribute syntax:
+Use the combobox directly in your Svelte template, under the tag name you registered. Bind properties with standard Svelte attribute syntax:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
@@ -272,7 +272,7 @@ Use `<auro-combobox>` directly in your Svelte template. Bind properties with sta
 &lt;/custom-combobox&gt;</code></pre>
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-combobox>` props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`):
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for the combobox's props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`), replacing `[custom]` with the prefix you registered:
 
 <pre class="language-js"><code class="language-js">import type { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
 import type { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
@@ -362,7 +362,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="3" id="slot-displayValue">displayValue</auro-header>
 <p>Custom HTML content shown in place of the selected value when the combobox doesn't have focus.</p>
 <auro-header level="3" id="slot-ariaLabel-input-clear">ariaLabel.input.clear</auro-header>
-<p>Text screen readers announce for the clear button, such as "Clear selection". The combobox has no default text, so without it the clear button has no accessible name.</p>
+<p>Text screen readers announce for the clear button, such as "Clear selection". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead.</p>
 <auro-header level="3" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
 <p>Text screen readers announce for the close button in the fullscreen bib, such as "Close airport list". Defaults to "Close".</p>
 <auro-header level="3" id="slot-bib-fullscreen-headline">bib.fullscreen.headline</auro-header>
@@ -375,7 +375,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="3" id="inputValue">inputValue</auro-header>
 <p>Gets the text currently in the input, whether or not it matches a menu option. It changes as the user types, and it's read-only.</p>
 <auro-header level="3" id="optionSelected">optionSelected</auro-header>
-<p>Returns the currently selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> if no option is selected.</p>
+<p>Gets the selected <code>&lt;auro-menuoption&gt;</code> element, or <code>undefined</code> when no option is selected.</p>
 <auro-header level="3" id="typedValue">typedValue</auro-header>
 <p>Sets the text shown in the input, such as a search the user started earlier. It doesn't update as the user types, so read <code>inputValue</code> to get the current text.</p>
 <auro-header level="3" id="validity">validity</auro-header>
@@ -401,6 +401,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
+<span slot="ariaLabel.bib.close">Close combobox</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -422,6 +423,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
   &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
