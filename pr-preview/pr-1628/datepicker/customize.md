@@ -271,7 +271,7 @@
 <p>The component supports localization of the date format, the calendar's month and weekday names, and most visible strings and screen reader announcements. A few strings don't currently have a slot or attribute, such as the calendar's Done button and the word "selected" in date selection announcements, so they're always in English.</p>
 <auro-header level="4" id="localizationTrigger">Trigger</auro-header>
 <auro-header level="5" id="localizationTriggerVisibleStrings">Visible strings</auro-header>
-<p>The visible strings rendered in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. Most of them are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<p>The labels, help text, and headline in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. Each one has a named slot, so pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute to supply its translation.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker&gt;
@@ -413,7 +413,7 @@
     &lt;/auro-datepicker&gt;
 + &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<p>If <code>format</code> is set alongside <code>locale</code>, <code>format</code> always wins.</p>
+<p>If <code>format</code> is set alongside <code>locale</code>, <code>format</code> wins. When <code>locale</code> changes later, <code>format</code> changes with it only if it still matches the previous locale's format.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale-formatted.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale-formatted.html -->
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker

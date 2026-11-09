@@ -37,7 +37,7 @@
 <li>Custom error messages for each validity state (<code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityCustomError</code>)</li>
 <li>Validation runs when focus leaves the datepicker, when the end date of a range changes, and when <code>blackoutDates</code> changes</li>
 <li>Dispatches <code>auroFormElement-validated</code> events so parent forms can react</li>
-<li>Displays errors inline via the help text slot</li>
+<li>Shows the error message below the datepicker, in place of the help text</li>
 </ul>
 <auro-header level="2" id="responsiveLayout">Responsive layout</auro-header>
 <p>Native date inputs render a small, browser-controlled popup that can't be styled or repositioned.</p>

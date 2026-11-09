@@ -37,5 +37,5 @@ Use the <code>&lt;auro-checkbox&gt;</code> element when people need to:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For getting started instructions, visit the [auro-checkbox getting started page](https://auro.alaskaair.com/components/auro/checkbox/getting-started).
+For getting started instructions, visit the [`auro-checkbox` getting started page](https://auro.alaskaair.com/components/auro/checkbox/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

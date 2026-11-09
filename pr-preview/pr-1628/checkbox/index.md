@@ -23,10 +23,10 @@
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -36,10 +36,10 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -61,7 +61,7 @@
             Toggle the checkbox
 <div class="note">
 <p>
-                Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Multiple checkboxes can be checked simultaneously.
+                Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Each checkbox toggles independently of the others.
 </p>
 </div>
 </li>
@@ -79,10 +79,10 @@
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -92,10 +92,10 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

@@ -148,6 +148,7 @@
 <auro-combobox required name="destination">
 <span slot="label">To</span>
 <span slot="bib.fullscreen.headline">Search destinations</span>
+<span slot="ariaLabel.input.clear">Clear destination</span>
 <span slot="ariaLabel.bib.close">Close</span>
 <auro-menu>
 <auro-menuoption value="HNL">Honolulu (HNL)</auro-menuoption>
@@ -321,6 +322,7 @@
 &#10;      &lt;auro-combobox required name="destination"&gt;
         &lt;span slot="label"&gt;To&lt;/span&gt;
         &lt;span slot="bib.fullscreen.headline"&gt;Search destinations&lt;/span&gt;
+        &lt;span slot="ariaLabel.input.clear"&gt;Clear destination&lt;/span&gt;
         &lt;span slot="ariaLabel.bib.close"&gt;Close&lt;/span&gt;
         &lt;auro-menu&gt;
           &lt;auro-menuoption value="HNL"&gt;Honolulu (HNL)&lt;/auro-menuoption&gt;

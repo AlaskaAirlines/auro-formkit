@@ -113,7 +113,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-          #customTokensCounter {
+          #customTokensCounter auro-counter {
             --ds-auro-counter-control-background-color: #e8d5f5;
             --ds-auro-counter-control-border-color: #7b2d8e;
             --ds-auro-counter-icon-color: #7b2d8e;
@@ -142,7 +142,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/custom-tokens.html -->
 <pre class="language-html"><code class="language-html">&lt;style&gt;
-  #customTokensCounter {
+  #customTokensCounter auro-counter {
     --ds-auro-counter-control-background-color: #e8d5f5;
     --ds-auro-counter-control-border-color: #7b2d8e;
     --ds-auro-counter-icon-color: #7b2d8e;

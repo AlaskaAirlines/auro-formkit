@@ -160,7 +160,10 @@ Auro components emit native `CustomEvent`s. Use a `ref` to attach event listener
     const el = groupRef.current;
     if (!el) return;
 &#10;    const handleInput = () =&gt; {
-      console.log('Selected values:', (el as any).value);
+      const selected = Array.from(el.querySelectorAll&lt;HTMLElement &amp; { checked: boolean; value: string }&gt;('custom-checkbox'))
+        .filter((checkbox) =&gt; checkbox.checked)
+        .map((checkbox) =&gt; checkbox.value);
+&#10;      console.log('Selected values:', selected);
     };
 &#10;    el.addEventListener('input', handleInput);
     return () =&gt; el.removeEventListener('input', handleInput);
@@ -234,7 +237,10 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   let values = $state&lt;string[]&gt;([]);
 &#10;  function handleInput(e: Event) {
-    values = (e.currentTarget as HTMLElement &amp; { value: string[] }).value;
+    const group = e.currentTarget as HTMLElement;
+&#10;    values = Array.from(group.querySelectorAll&lt;HTMLElement &amp; { checked: boolean; value: string }&gt;('custom-checkbox'))
+      .filter((checkbox) =&gt; checkbox.checked)
+      .map((checkbox) =&gt; checkbox.value);
   }
 &lt;/script&gt;
 &lt;custom-checkbox-group oninput={handleInput}&gt;
@@ -291,10 +297,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
 <span slot="optionalLabel" style="font-size: small; color: grey"> - optional</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic" id="checkbox-optional1">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic" id="checkbox-optional2" checked>Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic" id="checkbox-optional3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic" id="checkbox-optional4">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -305,25 +311,25 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
   &lt;span slot="optionalLabel" style="font-size: small; color: grey"&gt; - optional&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic" id="checkbox-optional1"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic" id="checkbox-optional2" checked&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic" id="checkbox-optional3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic" id="checkbox-optional4"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="slotsCheckbox">auro-checkbox</auro-header>
-<auro-header level="3" id="slot-default-checkbox">(default)</auro-header>
+<auro-header level="4" id="slot-default-checkbox">(default)</auro-header>
 <p>Label text for the checkbox, such as "Window seat". It's shown next to the box, and screen readers announce it as the checkbox's name.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -333,10 +339,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -360,10 +366,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <br/><br/>
 <auro-checkbox-group id="resetStateExample" required setCustomValidityValueMissing="Please select an option">
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="resetState" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="resetState" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="resetState" id="checkbox-basic3">Checkbox option</auro-checkbox>
-<auro-checkbox value="value4" name="resetState" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="resetState" id="checkbox-reset1">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="resetState" id="checkbox-reset2">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="resetState" id="checkbox-reset3">Checkbox option</auro-checkbox>
+<auro-checkbox value="value4" name="resetState" id="checkbox-reset4">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -375,10 +381,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 &lt;br/&gt;&lt;br/&gt;
 &#10;&lt;auro-checkbox-group id="resetStateExample" required setCustomValidityValueMissing="Please select an option"&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="resetState" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="resetState" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="resetState" id="checkbox-basic3"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="resetState" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="resetState" id="checkbox-reset1"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="resetState" id="checkbox-reset2"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="resetState" id="checkbox-reset3"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="resetState" id="checkbox-reset4"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->

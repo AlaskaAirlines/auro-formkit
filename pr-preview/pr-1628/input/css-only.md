@@ -81,7 +81,7 @@
 <auro-header level="3">Credit-card formatting and detection</auro-header>
 <p><code>auro-input</code> with <code>type="credit-card"</code> auto-detects Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits, applies the correct digit grouping, such as 4-4-4-4 for Visa or 4-6-5 for Amex, and shows the matching card brand icon when the <code>icon</code> attribute is set. None of this is available natively.</p>
 <auro-header level="3">Password show/hide toggle</auro-header>
-<p><code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide button, named with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only hides the value, so you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
+<p>In the <code>classic</code> layout, <code>auro-input</code> with <code>type="password"</code> includes an accessible show/hide button, named with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots. A native password input only hides the value, so you must build the toggle button, swap the <code>type</code> attribute, and manage its accessible name yourself.</p>
 <auro-header level="3">Clear button</auro-header>
 <p><code>auro-input</code> renders an accessible clear button when the field has a value, named with the <code>ariaLabel.clear</code> slot. Native inputs don't provide a clear control beyond the browser's built-in (and inconsistently styled) <code>type="search"</code> affordance.</p>
 <auro-header level="3">Custom validation messages</auro-header>

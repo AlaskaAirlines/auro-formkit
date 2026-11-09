@@ -25,7 +25,7 @@
 <li>An aggregate <code>total</code> computed from all child counters</li>
 <li>Group-level <code>min</code> and <code>max</code> constraints applied across all children</li>
 <li>A <code>value</code> object with named entries, such as <code>{ adults: 2, children: 1 }</code></li>
-<li>Dynamic button disabling: when the group total reaches max, all increment buttons disable; when it reaches min, all decrement buttons disable</li>
+<li>Dynamic button disabling: when the group total reaches <code>max</code>, all increment buttons disable; when it reaches <code>min</code>, all decrement buttons disable</li>
 <li>Group-level validation that aggregates individual counter errors</li>
 <li>Optional dropdown presentation with <code>isDropdown</code> for compact UI</li>
 </ul>

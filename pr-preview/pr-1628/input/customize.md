@@ -42,7 +42,7 @@
 <section>
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="activeLabel">Active label</auro-header>
-<p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position. This applies to the classic/default layout only; the emphasized and snowflake layouts always render the label inside the field and are unaffected.</p>
+<p>Use the <code>activeLabel</code> attribute to make the label stay fixed in the active position. This applies only to the default <code>classic</code> layout; the emphasized and snowflake layouts always render the label inside the field and are unaffected.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/active-label.html) -->
 <!-- The below content is automatically added from ../apiExamples/active-label.html -->
@@ -145,7 +145,7 @@
 </auro-input>
 <auro-header level="4">Display value slot content with <code>dvInputOnly</code></auro-header>
 <auro-input dvInputOnly value="Hello World">
-<span slot="label">With dvInputOnly</span>
+<span slot="label">With <code>dvInputOnly</code></span>
 <span slot="displayValue">✨ Custom display ✨</span>
 </auro-input>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -161,7 +161,7 @@
 &lt;/auro-input&gt;
 &lt;auro-header level="4"&gt;Display value slot content with &lt;code&gt;dvInputOnly&lt;/code&gt;&lt;/auro-header&gt;
 &lt;auro-input dvInputOnly value="Hello World"&gt;
-  &lt;span slot="label"&gt;With dvInputOnly&lt;/span&gt;
+  &lt;span slot="label"&gt;With &lt;code&gt;dvInputOnly&lt;/code&gt;&lt;/span&gt;
   &lt;span slot="displayValue"&gt;✨ Custom display ✨&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

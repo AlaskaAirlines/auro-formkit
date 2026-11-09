@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td>Roving tabindex</td>
-<td>Manual implementation</td>
+<td>Built-in (shared <code>name</code>)</td>
 <td>Built-in</td>
 </tr>
 <tr>

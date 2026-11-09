@@ -239,7 +239,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
-<span slot="helpText">bottom-end bib with 20px offset and noFlip</span>
+<span slot="helpText">Bib placed below the trigger at its end edge, 20px away, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -253,7 +253,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
-<span slot="helpText">bottom-end bib with 20px offset and flip</span>
+<span slot="helpText">Bib placed below the trigger at its end edge, 20px away, and flips when there isn't room</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -267,7 +267,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
-<span slot="helpText">right bib with 20px offset and noFlip</span>
+<span slot="helpText">Bib placed to the right of the trigger, 20px away, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -281,7 +281,7 @@
 <span slot="bib.fullscreen.headline">Bib header</span>
 <span slot="label">Label</span>
 <span slot="ariaLabel.input.clear">Clear selection</span>
-<span slot="helpText">bottom-start bib with 20px offset, noFlip, and shift</span>
+<span slot="helpText">Bib placed below the trigger at its start edge, 20px away, shifts to stay in view, and doesn't flip</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -303,7 +303,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
-    &lt;span slot="helpText"&gt;bottom-end bib with 20px offset and noFlip&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Bib placed below the trigger at its end edge, 20px away, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -317,7 +317,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
-    &lt;span slot="helpText"&gt;bottom-end bib with 20px offset and flip&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Bib placed below the trigger at its end edge, 20px away, and flips when there isn't room&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -331,7 +331,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
-    &lt;span slot="helpText"&gt;right bib with 20px offset and noFlip&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Bib placed to the right of the trigger, 20px away, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -345,7 +345,7 @@
     &lt;span slot="bib.fullscreen.headline"&gt;Bib header&lt;/span&gt;
     &lt;span slot="label"&gt;Label&lt;/span&gt;
     &lt;span slot="ariaLabel.input.clear"&gt;Clear selection&lt;/span&gt;
-    &lt;span slot="helpText"&gt;bottom-start bib with 20px offset, noFlip, and shift&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Bib placed below the trigger at its start edge, 20px away, shifts to stay in view, and doesn't flip&lt;/span&gt;
     &lt;auro-menu&gt;
       &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
       &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -840,7 +840,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-filter.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-filter.html -->
 <auro-combobox noFilter>
-<span slot="bib.fullscreen.headline">noFilter combobox header</span>
+<span slot="bib.fullscreen.headline">Combobox without filtering</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
 <auro-menu>
@@ -859,7 +859,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-filter.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-filter.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-combobox noFilter&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;noFilter combobox header&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Combobox without filtering&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
   &lt;auro-menu&gt;
@@ -1168,7 +1168,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-validate.html -->
 <auro-combobox required noValidate>
-<span slot="bib.fullscreen.headline">noValidate combobox header</span>
+<span slot="bib.fullscreen.headline">Combobox without validation</span>
 <span slot="label">Name</span>
 <span slot="ariaLabel.input.clear">Clear name</span>
 <auro-menu>
@@ -1188,7 +1188,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-validate.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-validate.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-combobox required noValidate&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;noValidate combobox header&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Combobox without validation&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;span slot="ariaLabel.input.clear"&gt;Clear name&lt;/span&gt;
   &lt;auro-menu&gt;

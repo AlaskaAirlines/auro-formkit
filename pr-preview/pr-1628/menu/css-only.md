@@ -57,10 +57,10 @@
 <p><code>auro-menu</code> tracks the active option internally (via an <code>active</code> CSS class on the current <code>auro-menuoption</code>) rather than moving DOM focus between options. In typical integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), focus remains on the parent trigger/input and <code>aria-activedescendant</code> points at the active option; if you make <code>&lt;auro-menu&gt;</code> focusable (for example, <code>tabindex="0"</code>), the same active-option model applies while focus is on the menu host. With plain HTML, you must pick one focus model, either roving <code>tabindex="0"</code>/<code>tabindex="-1"</code> or <code>aria-activedescendant</code> on the container, and wire up the DOM writes yourself on every key event.</p>
 <auro-header level="3">Arrow-key navigation</auro-header>
 <p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model: you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
-<auro-header level="3">matchWord highlighting</auro-header>
+<auro-header level="3"><code>matchWord</code> highlighting</auro-header>
 <p><code>auro-menu</code> supports a <code>matchword</code> attribute (the <code>matchWord</code> property) that highlights matched substrings within option labels. <code>auro-combobox</code> uses it to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
 <auro-header level="3">Type-ahead navigation</auro-header>
-<p>Type-ahead, which moves the active option to whichever entry starts with the letters the user typed, <strong>isn't</strong> handled by <code>auro-menu</code> itself. It's provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
+<p>Type-ahead, which moves the active option to an option that starts with the letters someone types, <strong>isn't</strong> handled by <code>auro-menu</code> itself. <code>auro-select</code> provides it: it captures typed characters on its trigger and calls the menu's <code>updateActiveOption()</code> method. <code>auro-combobox</code> doesn't use type-ahead, because typing goes into its input. A plain-HTML listbox has no such wiring and would need a bespoke <code>keydown</code> handler that tracks a rolling character buffer and resolves it against the option list.</p>
 <auro-header level="3">Nested submenu support</auro-header>
 <p><code>auro-menu</code> detects nested <code>auro-menu</code> elements, applies the correct <code>role="group"</code>, and computes indentation per level. The root menu treats all descendant options as a single flat list, so selecting an option inside a nested menu updates the root menu's <code>value</code> and <code>optionSelected</code>. The root always owns the selection state. With plain HTML, you must apply nested ARIA roles and indentation manually.</p>
 <auro-header level="3">Selection state coordination</auro-header>
@@ -114,7 +114,7 @@
 <tr>
 <td>Type-ahead navigation</td>
 <td>Not supported</td>
-<td>Provided by parent <code>auro-select</code> / <code>auro-combobox</code></td>
+<td>Provided by parent <code>auro-select</code></td>
 </tr>
 <tr>
 <td>Nested submenus</td>

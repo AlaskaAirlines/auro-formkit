@@ -12,7 +12,7 @@ The `<auro-checkbox-group>` element uses a `<fieldset>` with a `<legend>` intern
 
 | Attribute | Value | Description |
 |---|---|---|
-| `role` | `group` (implicit via `fieldset`) | Groups related checkboxes together. There's no ARIA `checkboxgroup` role, so the group uses the `<fieldset>`'s implicit `group` role as-is. |
+| `role` | `group` (implicit via `fieldset`) | Groups related checkboxes together. ARIA has no `checkboxgroup` role, so the group uses the `<fieldset>`'s implicit `group` role as-is. |
 | `aria-invalid` | `true` | Present only while the group is in an invalid state. The attribute is **omitted entirely** when the group is valid. It's never set to `false`. |
 | `aria-describedby` | id reference | Points at the `id` of the group's help-text/error element, so screen readers can associate the message with the group on demand rather than relying only on the one-time live-region announcement. |
 
@@ -30,7 +30,7 @@ Each `<auro-checkbox>` host element carries the checkbox semantics itself. The n
 <auro-header level="4" id="invalidStatePlacement">Why the invalid state appears twice</auro-header>
 While the group is invalid, `aria-invalid` is set on both the `<fieldset>` and every individual `<auro-checkbox>`. This is intentional: some screen reader and browser combinations announce a container's invalid state only when focus first enters the group, so mirroring the state onto each checkbox keeps it conveyed as focus moves through the options.
 
-The `checkbox` role is in `aria-invalid`'s supported-role list in every ARIA version, so the per-checkbox placement is unambiguous. The group-level placement is worth one note: `aria-invalid` is a global attribute in ARIA 1.1, applicable to any role including `group`, but ARIA 1.2 deprecates that global use in favor of a supported-role list that doesn't include `group`. Keeping it on the `<fieldset>` is a deliberate choice: it isn't a *prohibited* attribute for `group`, current axe-core resolves it as global and reports no violation, and it gives the group a real invalid signal that would otherwise be lost. An automated axe assertion in the component's test suite covers this, so a future change in tooling surfaces here rather than in a consumer's audit.
+The `checkbox` role is in `aria-invalid`'s supported-role list in every ARIA version, so the per-checkbox placement is unambiguous. The group-level placement is worth one note: `aria-invalid` is a global attribute in ARIA 1.1, applicable to any role including `group`, but ARIA 1.2 deprecates that global use in favor of a supported-role list that doesn't include `group`. Keeping it on the `<fieldset>` is a deliberate choice: it isn't a *prohibited* attribute for `group`, current axe-core resolves it as global and reports no violation, and it gives the group a real invalid signal that would otherwise be lost. An automated axe assertion in the component's test suite covers this, so a future change in tooling shows up here rather than in your own accessibility audit.
 
 <auro-header level="4" id="attributePlacementNote">Attribute placement</auro-header>
 `aria-invalid` is applied to the internal `<fieldset>`, not to the `<auro-checkbox-group>` host element. Don't write CSS selectors or test assertions against `auro-checkbox-group[aria-invalid]`; target the `part="checkbox-group"` fieldset or read the `validity` property instead.
