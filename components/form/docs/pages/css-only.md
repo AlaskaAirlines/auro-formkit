@@ -78,7 +78,7 @@
 
 <auro-header level="3">Aggregated value snapshot</auro-header>
 
-<p><code>auro-form</code> exposes a <code>value</code> getter that returns a single key-value object of every named, enabled child's current value, including array values from range datepickers and checkbox groups. With a native <code>&lt;form&gt;</code>, you must either use <code>FormData</code> (which doesn't understand custom elements) or query each control individually and assemble the values yourself.</p>
+<p><code>auro-form</code> exposes a <code>value</code> getter that returns a single key-value object of every named, enabled child's current value, including array values from range datepickers and checkbox groups. With a native <code>&lt;form&gt;</code>, you must either use <code>FormData</code>, which leaves out custom elements that don't opt in to form association, including Auro form elements, or query each control individually and assemble the values yourself.</p>
 
 <auro-header level="3">Aggregated validity state</auro-header>
 
@@ -145,7 +145,7 @@
     <tr>
       <td>Aggregated validity state</td>
       <td>Built-ins only via <code>checkValidity()</code></td>
-      <td>Single <code>validity</code> getter across all children</td>
+      <td>Single <code>validity</code> getter across enabled children</td>
     </tr>
     <tr>
       <td>Initial-state tracking</td>

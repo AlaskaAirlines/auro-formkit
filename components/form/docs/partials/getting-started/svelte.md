@@ -27,7 +27,7 @@ Use `<auro-form>` directly in your Svelte template:
 ```
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-form>` props in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for your custom-named element, such as `<custom-form>`, in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
 
 ```js
 import type { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
@@ -39,7 +39,7 @@ declare namespace svelteHTML {
 }
 ```
 
-This adds autocomplete and type checking for `<auro-form>` properties, such as `value` and `validity`, in Svelte templates.
+This adds autocomplete and type checking for `<custom-form>` in Svelte templates.
 
 <auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Listen for the `submit` and `reset` events on the element:

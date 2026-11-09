@@ -223,8 +223,9 @@ export class AuroForm extends LitElement {
    * https://www.w3.org/TR/2011/WD-html5-20110113/association-of-controls-and-forms.html).
    *
    * Implementation note: this reads only the attribute on purpose. Every Auro
-   * form element in `formElementTags` declares `disabled` with `reflect: true`,
-   * so the attribute and property stay in sync. Reading the attribute also
+   * form element in `formElementTags` except `auro-counter-group`, which has no
+   * `disabled` property, declares `disabled` with `reflect: true`, so the
+   * attribute and property stay in sync. Reading the attribute also
    * lets the MutationObserver in `connectedCallback` (which is filtered to
    * `['disabled', 'name']`) be the single source of truth for re-renders.
    * If a future form-element type ships without attribute reflection, expand

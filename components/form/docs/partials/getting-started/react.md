@@ -10,7 +10,7 @@ AuroForm.register('[custom]-form');
 ```
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroForm` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for `<auro-form>` in JSX, add the following declaration to a `.d.ts` file in your project:
+The component ships with TypeScript type definitions for the `AuroForm` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for your custom-named element, such as `<custom-form>`, in JSX, add the following declaration to a `.d.ts` file in your project:
 
 ```js
 import type { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
