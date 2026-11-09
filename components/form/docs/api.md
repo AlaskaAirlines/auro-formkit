@@ -6,7 +6,7 @@ Collects the values and validity of the Auro form elements inside it, and handle
 - **Collects values**: The form always gathers the value of every named, enabled Auro form element inside it, such as `auro-input` or `auro-select`, into one object in `value`.
 - **Tracks validity and changes**: The form always reports whether its fields pass validation in `validity`, and whether any field has changed from its starting value in `isInitialState`.
 - **Manages submit and reset buttons**: The form always turns on a `button` or `auro-button` with `type="submit"` only while no enabled field is invalid or required but empty, and one with `type="reset"` only when the form has changed or holds a value.
-- **Submits on Enter**: Pressing Enter in a named, enabled form element always runs `submit()`.
+- **Submits on Enter**: Pressing Enter in a named, enabled form element runs `submit()`, except on the clear button in `auro-input` or `auro-combobox`.
 - **Skips disabled fields**: The form always leaves fields with the `disabled` attribute out of `value`, validation, and the `submit` event.
 
 **Example**
