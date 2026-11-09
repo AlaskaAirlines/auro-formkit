@@ -1385,7 +1385,6 @@ export class AuroDropdown extends AuroElement {
    *
    * @private
    * @method handleDefaultSlot
-   * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.
    */
   handleDefaultSlot() {
 
@@ -1398,7 +1397,7 @@ export class AuroDropdown extends AuroElement {
    * Renders the markup that every layout shares: the trigger, the help text, and the bib.
    * @private
    * @param {Object} helpTextClasses - The classes to apply to the help text container.
-   * @returns {html} - The template for the shared markup.
+   * @returns {import('lit').TemplateResult} The template for the shared markup.
    */
   renderBasicHtml(helpTextClasses) {
     return html`
@@ -1460,7 +1459,7 @@ export class AuroDropdown extends AuroElement {
   /**
    * Renders the classic layout.
    * @private
-   * @returns {html} - The template for the classic layout.
+   * @returns {import('lit').TemplateResult} The template for the classic layout.
    */
   renderLayoutClassic() {
     // TODO: check with Doug why this was never used?
@@ -1476,7 +1475,7 @@ export class AuroDropdown extends AuroElement {
   /**
    * Renders the snowflake layout, which indents the help text on both sides.
    * @private
-   * @returns {html} - The template for the snowflake layout.
+   * @returns {import('lit').TemplateResult} The template for the snowflake layout.
    */
   renderLayoutSnowflake() {
     const helpTextClasses = {
@@ -1493,7 +1492,7 @@ export class AuroDropdown extends AuroElement {
   /**
    * Renders the emphasized layout, which indents the help text on the rounded sides of a `pill` shape.
    * @private
-   * @returns {html} - The template for the emphasized layout.
+   * @returns {import('lit').TemplateResult} The template for the emphasized layout.
    */
   renderLayoutEmphasized() {
     const helpTextClasses = {
@@ -1511,7 +1510,7 @@ export class AuroDropdown extends AuroElement {
    * Renders the layout that `layout` sets, or the classic layout when it isn't set or isn't recognized.
    * @private
    * @param {string} [ForcedLayout] - The layout to render instead of `layout`, such as `emphasized`.
-   * @returns {HTMLCollection} - The template for the layout.
+   * @returns {import('lit').TemplateResult} The template for the layout.
    */
   renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;

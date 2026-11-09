@@ -55,7 +55,7 @@
 <p>For example, a mobile phone or a very small desktop browser window.</p>
 <ol>
   <li><strong>Focus trigger:</strong> Announces the trigger label and state.</li>
-  <li><strong>Open | Expand:</strong> Opens a fullscreen modal and keeps focus in the bib content.</li>
+  <li><strong>Open | Expand:</strong> Opens the bib as a fullscreen modal when the screen is at or below the <code>fullscreenBreakpoint</code> width, and keeps focus in the bib content.</li>
   <li><strong>Navigate bib content:</strong> Swipe or Tab through focusable elements.</li>
   <li><strong>Close:</strong> Activate a close button in the bib content, such as the one <code>auro-bibtemplate</code> provides, or use the scrub gesture (two-finger zigzag) to dismiss.</li>
 </ol>

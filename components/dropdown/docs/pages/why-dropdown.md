@@ -11,7 +11,7 @@
 <ul>
   <li><strong>Focus trapping:</strong> In desktop modal mode, Tab and Shift+Tab cycle within the dropdown content. The rest of the page becomes inert. The implementation handles focus across shadow DOM boundaries.</li>
   <li><strong>Native dialog semantics:</strong> On screens at or below the <code>fullscreenBreakpoint</code> you set, the dropdown opens via <code>showModal()</code>, which provides browser-native focus trapping and background inert behavior.</li>
-  <li><strong>ARIA attributes:</strong> The trigger has a configurable <code>role</code> (default: <code>button</code>), and with other roles, such as <code>combobox</code>, it also carries <code>aria-expanded</code> and <code>aria-controls</code>. The dropdown bib can have an accessible dialog label.</li>
+  <li><strong>ARIA attributes:</strong> The trigger has a configurable <code>role</code> (default: <code>button</code>), and with other roles, such as <code>combobox</code>, it also carries <code>aria-expanded</code> and <code>aria-controls</code>. Components that wrap the dropdown, such as <code>auro-select</code>, <code>auro-combobox</code>, and <code>auro-datepicker</code>, give the bib's dialog an accessible name from their own label.</li>
   <li><strong>Focus routing:</strong> The <code>focus()</code> method moves focus to the first focusable element in the open bib, or to the trigger when the bib is closed.</li>
   <li><strong>Escape to close:</strong> Pressing <code>Escape</code> closes the open bib.</li>
 </ul>
