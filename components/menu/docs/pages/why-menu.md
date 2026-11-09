@@ -12,7 +12,7 @@
   <li><strong>Keyboard navigation:</strong> Arrow Up/Down move the active option; Enter selects it; Tab selects and moves focus out of the menu.</li>
   <li><strong>Active option tracking:</strong> The menu tracks the highlighted option, so parent components, such as <code>auro-select</code> and <code>auro-combobox</code>, can point <code>aria-activedescendant</code> at it.</li>
   <li><strong>Multi-select semantics:</strong> When <code>multiSelect</code> is on, the menu sets <code>aria-multiselectable</code>.</li>
-  <li><strong>Loading state:</strong> The menu sets <code>aria-busy</code> while loading, and the <code>loadingIcon</code> and <code>loadingText</code> slots let you customize the loading indicator.</li>
+  <li><strong>Loading state:</strong> The menu sets <code>aria-busy</code> while loading, and shows the content of the <code>loadingIcon</code> and <code>loadingText</code> slots in place of the options.</li>
 </ul>
 
 <auro-header level="2" id="richOptionContent">Rich option content</auro-header>
@@ -61,8 +61,8 @@
 <p><code>auro-menu</code> provides:</p>
 
 <ul>
-  <li>A <code>loading</code> attribute that displays a loading indicator</li>
-  <li><code>loadingIcon</code> and <code>loadingText</code> slots for custom loading UI</li>
+  <li>A <code>loading</code> attribute that replaces the options with a loading placeholder</li>
+  <li><code>loadingIcon</code> and <code>loadingText</code> slots for the icon and text the placeholder shows</li>
   <li><code>auroMenu-loadingChange</code> event when the loading state changes</li>
 </ul>
 

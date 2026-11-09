@@ -119,7 +119,7 @@
 
 <auro-header level="3">Loading state</auro-header>
 
-<p><code>auro-menu</code> renders a built-in loading placeholder via <code>loadingIcon</code> and <code>loadingText</code> slots, sets <code>aria-busy</code>, and emits <code>auroMenu-loadingChange</code> when the loading attribute toggles. With plain HTML, you must render a placeholder, manage <code>aria-busy</code>, and signal loading transitions yourself.</p>
+<p><code>auro-menu</code> renders a built-in loading placeholder via <code>loadingIcon</code> and <code>loadingText</code> slots, sets <code>aria-busy</code>, and emits <code>auroMenu-loadingChange</code> when the <code>loading</code> attribute toggles. With plain HTML, you must render a placeholder, manage <code>aria-busy</code>, and signal loading transitions yourself.</p>
 
 <auro-header level="3">Shape and size variants</auro-header>
 

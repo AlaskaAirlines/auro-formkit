@@ -100,7 +100,7 @@
       </section>
       <section>
         <auro-header level="2" id="events">Events</auro-header>
-        <p>The <code>&lt;auro-menu&gt;</code> element dispatches custom events that consumers can subscribe to via <code>addEventListener</code>. The example below listens for the selection, active-option, options, reset, and failure events and logs each one.</p>
+        <p>Listen for these custom events from <code>&lt;auro-menu&gt;</code> with <code>addEventListener</code>. The example below listens for the selection, active-option, options, reset, and failure events and logs each one.</p>
         <auro-header level="3" id="eventList">Event list</auro-header>
         <ul>
           <li><code>auroMenu-selectedOption</code>: the selection changed, including when an option is deselected or the selection is cleared. In single-select mode, it also fires when the already-selected option is chosen again.</li>
