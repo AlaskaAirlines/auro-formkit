@@ -318,7 +318,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Does not currently change any message. To set the error message for an invalid email address,
        * use `setCustomValidityForType`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       customValidityTypeEmail: {
@@ -587,7 +586,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Makes the input invalid when it's left empty, and removes the " (optional)" text after the label.
        * Use `setCustomValidityValueMissing` to set the error message.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       required: {
@@ -598,7 +596,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets one error message for every kind of validation error. When set, it replaces the messages from
        * `error` and every other `setCustomValidity*` property.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -609,7 +606,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets the error message for `validity="badInput"`. Does not currently change any message,
        * because the input never reports `badInput`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityBadInput: {
@@ -619,7 +615,6 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the `error` value.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -630,7 +625,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets the error message shown when the value doesn't fit its `type`, such as a badly formed email address,
        * an incomplete card number, or an incomplete date. When not set, `email`, `credit-card`, and most `date` inputs use a built-in message.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityForType: {
@@ -641,7 +635,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets the error message shown when the value doesn't match `pattern`, or when a date isn't a real calendar date.
        * For `pattern`, it does not currently work when set only as a property, so set the attribute instead.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityPatternMismatch: {
@@ -651,7 +644,6 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Sets the error message shown when the value is above `max`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityRangeOverflow: {
@@ -661,7 +653,6 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Sets the error message shown when the value is below `min`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityRangeUnderflow: {
@@ -672,7 +663,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets the error message shown when the value is longer than `maxlength`.
        * Does not currently work when set only as a property, so set the attribute instead.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityTooLong: {
@@ -683,7 +673,6 @@ export default class BaseInput extends AuroElement {
       /**
        * Sets the error message shown when the value is shorter than `minlength`.
        * Does not currently work when set only as a property, so set the attribute instead.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityTooShort: {
@@ -693,7 +682,6 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Sets the error message shown when a `required` input is left empty.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityValueMissing: {

@@ -23,7 +23,7 @@
   color: var(--ds-basic-color-texticon-default, #2a2a2a);
   background-color: var(--ds-basic-color-surface-default, #ffffff);
   border: 1px solid var(--ds-basic-color-border-bold, #585e67);
-  border-radius: var(--ds-border-radius, 4px);
+  border-radius: var(--ds-border-radius, 0.375rem);
   outline: none;
 }
 
@@ -189,12 +189,12 @@
     <tr>
       <td>Credit-card detection and formatting</td>
       <td>Not supported</td>
-      <td>Auto-detect with icon</td>
+      <td>Auto-detect, with an optional icon</td>
     </tr>
     <tr>
       <td>Password show/hide toggle</td>
       <td>Not supported</td>
-      <td>Built-in</td>
+      <td>Built-in in the <code>classic</code> layout</td>
     </tr>
     <tr>
       <td>Clear button</td>
@@ -214,7 +214,7 @@
     <tr>
       <td>Floating label</td>
       <td>Manual</td>
-      <td>Automatic</td>
+      <td>Automatic in the <code>classic</code> layout</td>
     </tr>
     <tr>
       <td>Display value slot</td>

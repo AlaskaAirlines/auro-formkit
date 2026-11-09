@@ -4,7 +4,7 @@ const watchedItems = new Set();
 /**
  * Sets an element's `lang` to the page's language.
  * @private
- * @param {object} item - An element from `watchedItems`.
+ * @param {object} item - The element to update.
  * @param {string} lang - The page's current language.
  */
 function setLang(item, lang) {
