@@ -4,7 +4,7 @@
 
 <auro-header level="2">Styling a native date input</auro-header>
 
-<p>The native date input can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the size, border, and focus-state colors used by <code>auro-datepicker</code>. Note that the browser-controlled calendar UI rendered by <code>&lt;input type="date"&gt;</code> can't be styled; only the input chrome (the field itself) responds to CSS.</p>
+<p>Reset and restyle the native date input with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the size, border, and focus-state colors used by <code>auro-datepicker</code>. Note that the browser-controlled calendar UI rendered by <code>&lt;input type="date"&gt;</code> can't be styled; only the input chrome (the field itself) responds to CSS.</p>
 
 <pre><code>/* Color tokens */
 @import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
@@ -81,7 +81,7 @@
 
 <auro-header level="3">Blackout dates</auro-header>
 
-<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a contiguous range, but they can't express "these specific dates within the range are not selectable." <code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings that are visually styled as unavailable, announced to screen readers with a customizable label, focusable but not selectable, and validated on typed input to surface a <code>customError</code> validity state.</p>
+<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a contiguous range, but they can't express "these specific dates within the range are not selectable." <code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings that are visually styled as unavailable, announced to screen readers with a customizable label, reachable with the arrow keys but not selectable, and validated on typed input to surface a <code>customError</code> validity state.</p>
 
 <auro-header level="3">Custom validation</auro-header>
 
@@ -162,7 +162,7 @@
     <tr>
       <td>Localization</td>
       <td>Browser locale only</td>
-      <td>Fully configurable labels and names</td>
+      <td>Most labels and names, except the Done button and the word "selected"</td>
     </tr>
     <tr>
       <td>Dark background support</td>

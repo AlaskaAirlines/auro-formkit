@@ -34,7 +34,7 @@
   <li>Arrow-key navigation between date cells with automatic cross-month boundary handling.</li>
   <li>Date range highlighting when <code>range</code> is set.</li>
   <li>Disabled dates outside the <code>minDate</code>/<code>maxDate</code> bounds.</li>
-  <li>Blackout dates that are focusable but not selectable.</li>
+  <li>Blackout dates that keyboard users can reach with the arrow keys but can't select.</li>
   <li>Custom cell content via the <code>date_YYYY_MM_DD</code> slot.</li>
   <li>Cell popovers via the <code>popover_YYYY_MM_DD</code> slot.</li>
 </ul>

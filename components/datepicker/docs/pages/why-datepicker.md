@@ -40,7 +40,7 @@
 <ul>
   <li>Visually styled as unavailable</li>
   <li>Announced as unavailable (with a customizable label, such as "sold out") to screen readers</li>
-  <li>Focusable but not selectable via click or keyboard</li>
+  <li>Reachable with the arrow keys, but not selectable by click or keyboard</li>
   <li>Validated on typed input: entering a blackout date triggers a <code>customError</code> validity state</li>
 </ul>
 
@@ -158,7 +158,7 @@
     <tr>
       <td>Localization</td>
       <td>Browser locale only</td>
-      <td>Fully configurable labels and names</td>
+      <td>Most labels and names, except the Done button and the word "selected"</td>
     </tr>
     <tr>
       <td>Theming</td>

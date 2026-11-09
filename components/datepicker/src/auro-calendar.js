@@ -1565,7 +1565,7 @@ export class AuroCalendar extends RangeDatepicker {
    *
    * The cell's `applyCommittedRangeClasses` reuses the same
    * `isInRange`/`isDepartDate`/`isReturnDate` helpers `renderCellButton`
-   * uses, so we don't parse dateFrom/dateTo here; the helpers already
+   * uses, so this method doesn't parse `dateFrom` or `dateTo`; the helpers already
    * normalize their inputs (midnight-truncation, string→int) internally.
    * @private
    * @returns {void}
@@ -1618,7 +1618,7 @@ export class AuroCalendar extends RangeDatepicker {
    * Walks the flat tree (rendered, slot-aware) outward from the active
    * cell's button and calls `scrollBy` on every vertically-scrollable
    * ancestor by whatever delta still separates the cell from that
-   * ancestor's viewport. Native `scrollIntoView` is not used because the
+   * ancestor's viewport. Native `scrollIntoView` isn't used because the
    * cell sits inside multiple nested scroll containers (the dropdown bib's
    * `<dialog>`, the bibtemplate's `#bodyContainer`) and the algorithm only
    * scrolls one of them on its own, leaving the cell short of the
@@ -1628,7 +1628,7 @@ export class AuroCalendar extends RangeDatepicker {
    * value) so each `scrollBy` resolves synchronously and the next
    * iteration's `getBoundingClientRect` reads post-scroll positions
    * accurately. This also satisfies `prefers-reduced-motion` users: the
-   * scroll containers do not set CSS `scroll-behavior: smooth`, so `auto`
+   * scroll containers don't set CSS `scroll-behavior: smooth`, so `auto`
    * is effectively instant.
    *
    * The active cell is looked up from the cache populated by
@@ -1843,16 +1843,15 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Debounced version of announceSelection for focus navigation.
-   * Uses the assertive live region with a 150ms debounce so only the
-   * final cell after rapid arrow-key traversal is announced. We
-   * originally tried aria-live="polite" here, but VoiceOver treats
-   * polite as "wait until idle", which never happens during active
-   * keyboard navigation, so the announcements were silently dropped.
+   * Announces a date to screen readers after a 150 ms pause, so only the
+   * last cell reached with the arrow keys is announced.
+   * Uses the assertive live region, because VoiceOver waits for the page to
+   * be idle before it reads a polite one, which never happens during
+   * arrow-key navigation, so polite announcements were dropped.
    *
    * This is a documented deviation from WCAG 2.1 SC 4.1.3, which
    * prefers `polite` for status messages. See the "Documented
-   * Deviation" section in components/datepicker/docs/pages/accessibility.md.
+   * deviation" section in `components/datepicker/docs/pages/accessibility.md`.
    * @private
    * @param {String} dateStr - The localized date string to announce.
    * @returns {void}

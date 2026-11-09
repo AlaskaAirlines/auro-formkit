@@ -847,7 +847,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Indicates whether the datepicker is in a dirty state (has been interacted with).
+       * Marks the datepicker as used once it gets focus, so validation can report a missing required date. `reset()` clears it.
        * @private
        */
       touched: {
@@ -1796,7 +1796,7 @@ export class AuroDatePicker extends AuroElement {
    * Per-class dedup set used by `_warnInvalidLocale`. Static so the dedup
    * spans every datepicker instance on the page; lives on the class (not
    * at module scope) so it stays an encapsulated implementation detail of
-   * this component and does not interfere with WCA's class-JSDoc
+   * this component and doesn't interfere with WCA's class-JSDoc
    * attachment.
    * @private
    */
@@ -1804,7 +1804,7 @@ export class AuroDatePicker extends AuroElement {
 
   /**
    * Logs a one-time `console.debug` when an unsupported locale falls back to
-   * en-US. Deduped by the offending tag so noisy re-renders that resurface
+   * `en-US`. Deduped by the offending tag so noisy re-renders that resurface
    * the same bad value stay quiet, but each new bad value still signals so
    * consumers can spot the typo or missing tag.
    * @private
