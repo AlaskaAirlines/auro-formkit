@@ -81,13 +81,13 @@
 
 <p><code>auro-menu</code> handles <code>ArrowUp</code>, <code>ArrowDown</code>, <code>Enter</code>, and <code>Tab</code> to move the highlight and commit selections. Native <code>&lt;ul&gt;</code> elements have no built-in keyboard model: you must wire up <code>keydown</code> listeners, track the highlighted index, and prevent default browser scrolling on the arrow keys yourself.</p>
 
-<auro-header level="3">matchWord highlighting</auro-header>
+<auro-header level="3"><code>matchWord</code> highlighting</auro-header>
 
 <p><code>auro-menu</code> supports a <code>matchword</code> attribute (the <code>matchWord</code> property) that highlights matched substrings within option labels. <code>auro-combobox</code> uses it to visually mark the user's typed input inside each filtered option. Plain HTML provides no equivalent; you must walk each option and wrap matched substrings yourself.</p>
 
 <auro-header level="3">Type-ahead navigation</auro-header>
 
-<p>Type-ahead, which moves the active option to whichever entry starts with the letters the user typed, <strong>isn't</strong> handled by <code>auro-menu</code> itself. It's provided by the parent selection component (<code>auro-select</code>, <code>auro-combobox</code>) which captures printable characters on its trigger and calls back into the menu. A plain-HTML listbox has no such wiring and would need a bespoke keydown handler that tracks a rolling character buffer and resolves it against the option list.</p>
+<p>Type-ahead, which moves the active option to an option that starts with the letters someone types, <strong>isn't</strong> handled by <code>auro-menu</code> itself. <code>auro-select</code> provides it: it captures typed characters on its trigger and calls the menu's <code>updateActiveOption()</code> method. <code>auro-combobox</code> doesn't use type-ahead, because typing goes into its input. A plain-HTML listbox has no such wiring and would need a bespoke <code>keydown</code> handler that tracks a rolling character buffer and resolves it against the option list.</p>
 
 <auro-header level="3">Nested submenu support</auro-header>
 
@@ -163,7 +163,7 @@
     <tr>
       <td>Type-ahead navigation</td>
       <td>Not supported</td>
-      <td>Provided by parent <code>auro-select</code> / <code>auro-combobox</code></td>
+      <td>Provided by parent <code>auro-select</code></td>
     </tr>
     <tr>
       <td>Nested submenus</td>
