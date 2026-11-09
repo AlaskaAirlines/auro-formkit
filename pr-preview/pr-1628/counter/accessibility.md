@@ -23,7 +23,7 @@
 </section>
 <section>
 <auro-header level="2" id="disabledState">Disabled state</auro-header>
-<p>When a counter is disabled, the <code>aria-disabled</code> attribute is set, the counter leaves the keyboard tab order, and the increment and decrement buttons can't be used. Screen readers announce the disabled state to the user.</p>
+<p>A disabled counter sets <code>aria-disabled="true"</code> on its spinbutton, leaves the keyboard tab order, and turns off its minus and plus buttons. Screen readers announce that the counter is disabled.</p>
 </section>
 <section>
 <auro-header level="2" id="dropdownA11y">Dropdown accessibility</auro-header>

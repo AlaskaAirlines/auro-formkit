@@ -116,11 +116,17 @@
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
           #customTokenRadioGroup {
+            --ds-auro-radio-group-label-color: purple;
+          }
+
+          #customTokenRadioGroup auro-radio {
             --ds-auro-radio-btn-border-color: purple;
+            --ds-auro-radio-label-color: purple;
+          }
+
+          #customTokenRadioGroup auro-radio[checked] {
             --ds-auro-radio-btn-fill-color: lavender;
             --ds-auro-radio-btn-inset-color: purple;
-            --ds-auro-radio-label-color: purple;
-            --ds-auro-radio-group-label-color: purple;
           }
 </style>
 <auro-radio-group id="customTokenRadioGroup">
@@ -137,11 +143,15 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/custom-tokens.html -->
 <pre class="language-html"><code class="language-html">&lt;style&gt;
   #customTokenRadioGroup {
+    --ds-auro-radio-group-label-color: purple;
+  }
+&#10;  #customTokenRadioGroup auro-radio {
     --ds-auro-radio-btn-border-color: purple;
+    --ds-auro-radio-label-color: purple;
+  }
+&#10;  #customTokenRadioGroup auro-radio[checked] {
     --ds-auro-radio-btn-fill-color: lavender;
     --ds-auro-radio-btn-inset-color: purple;
-    --ds-auro-radio-label-color: purple;
-    --ds-auro-radio-group-label-color: purple;
   }
 &lt;/style&gt;
 &lt;auro-radio-group id="customTokenRadioGroup"&gt;

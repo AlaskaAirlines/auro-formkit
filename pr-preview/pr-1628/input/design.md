@@ -130,7 +130,7 @@
 </auro-input>
 <auro-input dvInputOnly id="alpha" value="lax" layout="emphasized" shape="pill" size="xl" placeholder="Departure" style="width: 249px;" appearance="inverse" required>
 <span slot="ariaLabel.clear">Clear value</span>
-<label slot="label">Pill w. display value</label>
+<label slot="label">Pill with display value</label>
 <span slot="helpText">Example help text</span>
 <span slot="displayValue">
 <div>
@@ -163,7 +163,7 @@
 &lt;/auro-input&gt;
 &lt;auro-input dvInputOnly id="alpha" value="lax" layout="emphasized" shape="pill" size="xl" placeholder="Departure" style="width: 249px;" appearance="inverse" required&gt;
   &lt;span slot="ariaLabel.clear"&gt;Clear value&lt;/span&gt;
-  &lt;label slot="label"&gt;Pill w. display value&lt;/label&gt;
+  &lt;label slot="label"&gt;Pill with display value&lt;/label&gt;
   &lt;span slot="helpText"&gt;Example help text&lt;/span&gt;
   &lt;span slot="displayValue"&gt;
     &lt;div&gt;

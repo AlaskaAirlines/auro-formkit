@@ -37,5 +37,5 @@ Use the <code>&lt;auro-datepicker&gt;</code> element when people need to:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-datepicker Getting Started page](https://auro.alaskaair.com/components/auro/datepicker/getting-started).
+For getting started instructions, visit the [`auro-datepicker` getting started page](https://auro.alaskaair.com/components/auro/datepicker/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

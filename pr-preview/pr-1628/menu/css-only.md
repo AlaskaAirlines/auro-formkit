@@ -76,7 +76,7 @@
 <auro-header level="3">Select-by-value and reset</auro-header>
 <p><code>auro-menu</code> exposes a <code>value</code> attribute that drives selection programmatically (accepting a JSON-stringified array in multi-select mode) and a single <code>reset()</code> method that clears the selection and the active option. With plain HTML, you must walk the list to find a matching option, set its state, and write your own reset routine.</p>
 <auro-header level="3">Loading state</auro-header>
-<p><code>auro-menu</code> renders a built-in loading placeholder via <code>loadingIcon</code> and <code>loadingText</code> slots, sets <code>aria-busy</code>, and emits <code>auroMenu-loadingChange</code> when the loading attribute toggles. With plain HTML, you must render a placeholder, manage <code>aria-busy</code>, and signal loading transitions yourself.</p>
+<p><code>auro-menu</code> renders a built-in loading placeholder via <code>loadingIcon</code> and <code>loadingText</code> slots, sets <code>aria-busy</code>, and emits <code>auroMenu-loadingChange</code> when the <code>loading</code> attribute toggles. With plain HTML, you must render a placeholder, manage <code>aria-busy</code>, and signal loading transitions yourself.</p>
 <auro-header level="3">Shape and size variants</auro-header>
 <p><code>auro-menu</code> supports <code>shape</code> (<code>box</code>, <code>pill</code>, <code>snowflake</code>) and <code>size</code> (<code>xs</code>–<code>xl</code>) variants that adjust spacing and corner radii consistently across the menu and its options. A CSS-only listbox must reauthor each variant by hand.</p>
 <auro-header level="3">Multi-brand theming</auro-header>

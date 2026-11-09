@@ -86,7 +86,7 @@
             Begin typing into the input.
 <div class="note">
 <p>
-                The bib doesn't open until the user types at least one character into the input. Clicking or tapping the trigger alone doesn't open the bib. Once the input has a value, the user may click or tap the trigger to open or close the bib.
+                The bib doesn't open until the user types at least one character into the input. Clicking or tapping the trigger alone doesn't open the bib. Once the input has a value, the user may click or tap the trigger to open the bib.
 </p>
 <p>
                 In desktop view, the list of options renders in a dropdown-style bib that appears below the trigger. The bib may render above the trigger if there isn't enough space in the viewport below the trigger.

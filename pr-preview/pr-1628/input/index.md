@@ -31,7 +31,7 @@
             Move focus to the <code>&lt;auro-input&gt;</code> element
 <div class="note">
 <p>
-                The label animates from the placeholder position to the active position above the input area. If the <code>activeLabel</code> attribute is set, the label remains fixed in the active position at all times.
+                In the <code>classic</code> layout, the label animates from the placeholder position to the active position above the input area. If the <code>activeLabel</code> attribute is set, the label stays in the active position at all times. The emphasized and snowflake layouts always show the label inside the field.
 </p>
 </div>
 </li>

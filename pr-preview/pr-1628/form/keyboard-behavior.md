@@ -30,7 +30,7 @@
 </tbody>
 </table>
 <div class="note">
-<p><strong>Note:</strong> Enter doesn't submit the form from a disabled form element, a <code>&lt;textarea&gt;</code> element, or an element with a <code>textarea</code> attribute, so those elements keep their normal Enter behavior, such as starting a new line.</p>
+<p><strong>Note:</strong> Enter doesn't submit the form from a disabled form element, a <code>&lt;textarea&gt;</code> element, or an element with a <code>textarea</code> attribute, so those elements keep their normal Enter behavior, such as starting a new line. Enter also doesn't submit the form while focus is on the clear button in an <code>auro-input</code> or <code>auro-combobox</code>, so Enter clears the field instead.</p>
 </div>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>

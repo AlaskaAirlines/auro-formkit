@@ -319,7 +319,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-radio-group>
 <span slot="legend">Form label goes here</span>
 <auro-radio id="basicGroupRadio1" label="Sample text" name="radioDemo" value="option1"></auro-radio>
-<auro-radio id="basicGroupRadio2" label="This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines." name="radioDemo" value="option2"></auro-radio>
+<auro-radio id="basicGroupRadio2" name="radioDemo" value="option2">This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines.</auro-radio>
 <auro-radio id="basicGroupRadio3" label="Sample text" name="radioDemo" value="option3"></auro-radio>
 </auro-radio-group>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -331,7 +331,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <pre class="language-html"><code class="language-html">&lt;auro-radio-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
   &lt;auro-radio id="basicGroupRadio1" label="Sample text" name="radioDemo" value="option1"&gt;&lt;/auro-radio&gt;
-  &lt;auro-radio id="basicGroupRadio2" label="This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines." name="radioDemo" value="option2"&gt;&lt;/auro-radio&gt;
+  &lt;auro-radio id="basicGroupRadio2" name="radioDemo" value="option2"&gt;This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines. This text is long enough to wrap onto multiple lines.&lt;/auro-radio&gt;
   &lt;auro-radio id="basicGroupRadio3" label="Sample text" name="radioDemo" value="option3"&gt;&lt;/auro-radio&gt;
 &lt;/auro-radio-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

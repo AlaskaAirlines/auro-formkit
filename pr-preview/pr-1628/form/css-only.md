@@ -1,7 +1,7 @@
 <auro-header level="1">CSS only with native form</auro-header>
 <p>When you can't use the <code>&lt;auro-form&gt;</code> web component, lay out a native HTML <code>&lt;form&gt;</code> element with the Auro Design System tokens instead. <code>auro-form</code> has no styles of its own and doesn't lay out its children, so the CSS below is a suggested starting point, not a copy of <code>auro-form</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.form</code> class. The native <code>&lt;form&gt;</code> element provides the structural container and browser-native constraint validation, but it doesn't provide the cross-field coordination that <code>auro-form</code> adds.</p>
 <auro-header level="2">Styling a native form</auro-header>
-<p>Lay out the native form with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below gives fields and actions consistent spacing.</p>
+<p>Lay out the native form with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below gives fields and actions consistent spacing.</p>
 <pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
 &#10;.form {
   display: flex;

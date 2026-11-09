@@ -1,7 +1,7 @@
 <auro-header level="1">CSS only with native date input</auro-header>
 <p>For situations where the <code>&lt;auro-datepicker&gt;</code> web component can't be used, a native HTML <code>&lt;input type="date"&gt;</code> element can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-datepicker</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.datepicker</code> class, so the styling must be authored manually using Auro design tokens.</p>
 <auro-header level="2">Styling a native date input</auro-header>
-<p>The native date input can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the size, border, and focus-state colors used by <code>auro-datepicker</code>. Note that the browser-controlled calendar UI rendered by <code>&lt;input type="date"&gt;</code> can't be styled; only the input chrome (the field itself) responds to CSS.</p>
+<p>Reset and restyle the native date input with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the size, border, and focus-state colors used by <code>auro-datepicker</code>. Note that the browser-controlled calendar UI rendered by <code>&lt;input type="date"&gt;</code> can't be styled; only the input chrome (the field itself) responds to CSS.</p>
 <pre><code>/* Color tokens */
 @import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
 /* Size, border-radius, and typography tokens */
@@ -58,7 +58,7 @@
 <auro-header level="3">Date range selection</auro-header>
 <p>HTML has no native concept of a date range picker. Building one from two <code>&lt;input type="date"&gt;</code> elements requires custom logic for coordinating values, enforcing start-before-end ordering, and providing a unified visual experience. <code>auro-datepicker</code> handles this with a single <code>range</code> attribute, providing two coordinated input fields, visual range highlighting across the calendar grid, customizable ARIA labels for range positions, and automatic value coordination between the start and end dates.</p>
 <auro-header level="3">Blackout dates</auro-header>
-<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a contiguous range, but they can't express "these specific dates within the range are not selectable." <code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings that are visually styled as unavailable, announced to screen readers with a customizable label, focusable but not selectable, and validated on typed input to surface a <code>customError</code> validity state.</p>
+<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a contiguous range, but they can't express "these specific dates within the range are not selectable." <code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings that are visually styled as unavailable, announced to screen readers with a customizable label, reachable with the arrow keys but not selectable, and validated on typed input to surface a <code>customError</code> validity state.</p>
 <auro-header level="3">Custom validation</auro-header>
 <p>Native date validation is limited to <code>required</code>, <code>min</code>, and <code>max</code>, and error messages are browser-controlled. <code>auro-datepicker</code> integrates with the Auro form validation system, exposing per-constraint setters (<code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityCustomError</code>), running validation when focus leaves the datepicker, when the end date of a range changes, and when <code>blackoutDates</code> changes, dispatching <code>auroFormElement-validated</code> events, and displaying errors inline via the help text slot.</p>
 <auro-header level="3">Responsive layout</auro-header>
@@ -127,7 +127,7 @@
 <tr>
 <td>Localization</td>
 <td>Browser locale only</td>
-<td>Fully configurable labels and names</td>
+<td>Most labels and names, except the Done button and the word "selected"</td>
 </tr>
 <tr>
 <td>Dark background support</td>

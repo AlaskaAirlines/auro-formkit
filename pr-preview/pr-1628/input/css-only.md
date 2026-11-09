@@ -1,7 +1,7 @@
 <auro-header level="1">CSS only with native input</auro-header>
 <p>When you can't use the <code>&lt;auro-input&gt;</code> web component, style a native HTML <code>&lt;input&gt;</code> element with the Auro Design System tokens to approximate how <code>auro-input</code> looks. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.input</code> or <code>.form-*</code> class, so you write the styles yourself with Auro design tokens.</p>
 <auro-header level="2">Styling a native input</auro-header>
-<p>Reset and restyle the native input with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
+<p>Reset and restyle the native input with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. The pattern below replicates the border, focus ring, padding, label, and helper text used by <code>auro-input</code>.</p>
 <pre><code>/* Color tokens */
 @import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
 /* Size, border-radius, and typography tokens */
@@ -89,9 +89,9 @@
 <auro-header level="3">Format types</auro-header>
 <p><code>auro-input</code> has dedicated <code>type</code> values for <code>credit-card</code>, <code>tel</code>, and <code>date</code>, each applying the correct mask and validation. For dates, the <code>format</code> attribute sets the order of the parts, such as <code>mm/dd/yyyy</code>, <code>yyyy/mm/dd</code>, or <code>mm/yy</code>. With native HTML, you're limited to the standard input types and must implement format-specific behavior by hand.</p>
 <auro-header level="3">Floating and dynamic labels</auro-header>
-<p><code>auro-input</code> floats the label above the field when it has focus or a value, and automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
+<p>In the <code>classic</code> layout, <code>auro-input</code> floats the label above the field when it has focus or a value. In every layout, it automatically associates slotted label content with the underlying input. With native HTML you must wire up <code>for</code>/<code>id</code> attributes and author the floating-label animation yourself.</p>
 <auro-header level="3">Display value slot</auro-header>
-<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input doesn't have focus. It's useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
+<p><code>auro-input</code> supports a <code>displayValue</code> slot that renders custom HTML in place of the raw value when the input has a value and doesn't have focus. It's useful for masked account numbers or formatted currency. Native inputs always show the raw value and have no equivalent.</p>
 <auro-header level="3">Layout and shape variants</auro-header>
 <p><code>auro-input</code> supports the <code>classic</code>, <code>emphasized</code>, and <code>snowflake</code> layouts, as well as <code>shape</code> variants (<code>box</code>, <code>pill</code>, <code>pill-left</code>, and <code>pill-right</code>). It also has a bordered default and a borderless <code>simple</code> mode. With native HTML you must author each variant's CSS yourself.</p>
 <auro-header level="3">Icons and accents</auro-header>

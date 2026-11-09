@@ -35,5 +35,5 @@ Use `<auro-form>` when you build a form from Auro form elements and want their v
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-form Getting Started page](https://auro.alaskaair.com/components/auro/form/getting-started).
+For getting started instructions, visit the [`auro-form` getting started page](https://auro.alaskaair.com/components/auro/form/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->
