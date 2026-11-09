@@ -47,11 +47,11 @@
   <li>The full localized date, for example <em>"Thursday, May 14, 2026"</em></li>
   <li>Date slot content when present, such as a price</li>
   <li>Range position when in range mode, such as <em>", range start"</em>, <em>", in range"</em>, or <em>", before range"</em></li>
-  <li><em>", unavailable"</em> for blackout dates (dates within the min/max range that are explicitly disabled)</li>
+  <li><em>", unavailable"</em> for blackout dates, the dates listed in <code>blackoutDates</code></li>
   <li><em>"current date"</em> for today's date (via <code>aria-current="date"</code>)</li>
   <li>Selection state: <em>"selected"</em> or not (via <code>aria-selected</code>)</li>
 </ul>
-<p>Out-of-range cells (outside min/max bounds) use the native <code>disabled</code> attribute on their button and drop <code>role</code>/<code>aria-label</code> on the host, so arrow-key navigation skips them and VoiceOver doesn't browse into them.</p>
+<p>Out-of-range cells (outside the <code>minDate</code> to <code>maxDate</code> range) use the native <code>disabled</code> attribute on their button and drop <code>role</code>/<code>aria-label</code> on the host, so arrow-key navigation skips them and VoiceOver doesn't browse into them.</p>
 
 <auro-header level="3" id="voiceOverDateSelection">Date selection</auro-header>
 <p>When a date is selected, an <code>aria-live="assertive"</code> region announces the selected date, for example <em>"Thursday, May 14, 2026, selected"</em>. For range datepickers, both the start and end selections are announced.</p>

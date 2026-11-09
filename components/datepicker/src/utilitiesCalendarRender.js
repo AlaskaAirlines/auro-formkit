@@ -45,7 +45,7 @@ export class UtilitiesCalendarRender {
    * Determines how many months to render based on the defined calendar range.
    * @param {Object} elem - The auro-calendar element.
    * @private
-   * @returns {Number} The number of months from calendarStartDate through calendarEndDate.
+   * @returns {Number|undefined} The number of months from `calendarStartDate` through `calendarEndDate`, or undefined when either isn't set.
    */
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {

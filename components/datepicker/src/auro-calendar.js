@@ -33,6 +33,7 @@ import buttonVersion from './buttonVersion.js';
  * @event auroCalendar-centralDateChanged - Notifies that the month shown has changed. Doesn't bubble; `event.detail.date` is the new `centralDate`.
  * @event auroCalendar-dismissRequest - Notifies that someone selected the close or Done button, so the datepicker closes the dropdown.
  * @event narrow-changedProperties - Notifies once, after the calendar first renders, with `event.detail.value` set to `false`. The calendar doesn't currently track whether the screen is narrow, so the event doesn't fire again.
+ * @internal
  */
 export class AuroCalendar extends RangeDatepicker {
   constructor() {
@@ -198,7 +199,7 @@ export class AuroCalendar extends RangeDatepicker {
     return {
 
       /**
-       * Doesn't currently do anything. The calendar reads its last month from the `calendarEndDate` attribute, which the datepicker sets.
+       * Doesn't currently do anything. The calendar takes its last month from `calendarEndDate` or `maxDate` on `auro-datepicker` instead.
        */
       calendarEndMonth: {
         type: String,
@@ -207,7 +208,7 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
-       * Doesn't currently do anything. The calendar reads its first month from the `calendarStartDate` attribute, which the datepicker sets.
+       * Doesn't currently do anything. The calendar takes its first month from `calendarStartDate` or `minDate` on `auro-datepicker` instead.
        */
       calendarStartMonth: {
         type: String,
@@ -216,7 +217,7 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
-       * Sets the date whose month the calendar shows, as an ISO date string such as `2025-04-01`. The fullscreen calendar instead starts at `calendarStartDate`, `minDate`, or the current month.
+       * Sets the date whose month the calendar shows, as an ISO date string such as `2025-04-01`. The fullscreen calendar instead starts at `calendarStartDate` on `auro-datepicker`, or else at `minDate` or the current month.
        */
       centralDate: {
         type: String,
@@ -580,7 +581,7 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
-   * Scrolls the fullscreen calendar to the month of a date. Doesn't currently scroll inside `auro-datepicker`, which doesn't pass the screen width the calendar checks.
+   * Scrolls the calendar to the month of a date when the window is narrower than the calendar's mobile breakpoint. Doesn't currently scroll inside `auro-datepicker`, which doesn't set that breakpoint.
    * @param {String} date - The date to scroll into view, such as `2025-04-21`.
    * @returns {void}
    */
@@ -591,7 +592,7 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Gets all rendered month components.
    * @private
-   * @returns {Array} The auro-formkit-calendar-month elements.
+   * @returns {Array} The `auro-formkit-calendar-month` elements.
    */
   getMonthComponents() {
     return Array.from(this.shadowRoot.querySelectorAll('auro-formkit-calendar-month'));
@@ -641,7 +642,7 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Gets all focusable cells across all rendered months.
    * @private
-   * @returns {Array} The auro-formkit-calendar-cell elements.
+   * @returns {Array} The `auro-formkit-calendar-cell` elements.
    */
   getAllFocusableCells() {
     const months = this.getMonthComponents();
@@ -1521,7 +1522,7 @@ export class AuroCalendar extends RangeDatepicker {
    * @private
    * @param {Object} [options] - The optional settings.
    * @param {boolean} [options.force=false] - If true, clears classes even
-   *   when both dateFrom and dateTo are set. Month nav handlers use it to
+   *   when both `dateFrom` and `dateTo` are set. Month nav handlers use it to
    *   strip the imperative-only `lastHoveredDate` before the re-render.
    *   The other two classes (`inRange`, `rangeDepartDate`) are classMap-
    *   managed and get stripped as a side effect here; because classMap

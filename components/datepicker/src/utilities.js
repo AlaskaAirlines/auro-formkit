@@ -36,7 +36,7 @@ export class AuroDatepickerUtilities {
    * Creates an SVG element from an icon's markup.
    * @private
    * @param {Object} icon - The icon object containing the SVG.
-   * @returns {Object}
+   * @returns {Object} The SVG element.
    */
   generateIconHtml(icon) {
     this.dom = new DOMParser().parseFromString(icon.svg, 'text/html');

@@ -12,7 +12,7 @@ Import and register the component in the <code>&lt;script&gt;</code> block:
 ```
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-datepicker>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+Use the tag name you registered directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
 
 ```html
 <script lang="ts">
@@ -31,7 +31,7 @@ Use `<auro-datepicker>` directly in your Svelte template. Properties can be boun
 ```
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for <code>&lt;auro-datepicker&gt;</code> props in templates, add the following to a <code>.d.ts</code> file in your project (for example, <code>src/auro-elements.d.ts</code>):
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for the props of the tag name you registered, add the following to a <code>.d.ts</code> file in your project (for example, <code>src/auro-elements.d.ts</code>):
 
 ```js
 import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';

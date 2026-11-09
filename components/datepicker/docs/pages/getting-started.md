@@ -30,6 +30,7 @@
       <auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">valueEnd</auro-anchorlink>
       <auro-anchorlink fluid href="#values" class="level2 body-xs">values</auro-anchorlink>
       <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
+      <auro-anchorlink fluid href="#clear" class="level2 body-xs">clear()</auro-anchorlink>
       <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
       <auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
       <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
@@ -75,6 +76,8 @@
       <section>
         <auro-header level="2" id="publicFunctions">Functions</auro-header>
         <p>The following public methods are available on the <code>&lt;auro-datepicker&gt;</code> element.</p>
+        <auro-header level="3" id="clear">clear()</auro-header>
+        <p>Clears the chosen dates. Unlike <code>reset()</code>, the datepicker still counts as used, so the next validation can report a missing date.</p>
         <auro-header level="3" id="focus">focus()</auro-header>
         <p>Moves keyboard focus to the start date input. Pass <code>endDate</code> to focus the end date input of a range.</p>
         <auro-header level="3" id="hideBib">hideBib()</auro-header>

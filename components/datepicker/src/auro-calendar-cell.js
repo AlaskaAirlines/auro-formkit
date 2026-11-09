@@ -24,6 +24,7 @@ import { isBlackoutTimestamp } from './blackoutUtils.js';
  * @event date-is-hovered - Notifies that the pointer moved over this cell's date.
  * @event calendar-cell-focused - Notifies that this cell's button has received focus.
  * @csspart dateSlot - The container under the day number that holds the date's `date_YYYY_MM_DD` slot content, shown only when that slot has content.
+ * @internal
  */
 export class AuroCalendarCell extends LitElement {
   constructor() {
@@ -469,12 +470,12 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks whether the cell's date is between dateFrom and dateTo.
+   * Checks whether the cell's date is between `dateFrom` and `dateTo`.
    * @private
    * @param {Object} day - The day this cell shows: an object with `date`, a Unix timestamp in seconds, and `title`, the day of the month.
    * @param {Number} dateFrom - The start date, as a Unix timestamp in seconds.
    * @param {Number} dateTo - The end date, as a Unix timestamp in seconds.
-   * @returns {Boolean} True if the datepicker is a range and the cell's date is after dateFrom and before dateTo; false otherwise.
+   * @returns {Boolean} True if the datepicker is a range and the cell's date is after `dateFrom` and, when `dateTo` is set, before `dateTo`; false otherwise.
    */
   isInRange(day, dateFrom, dateTo) {
 

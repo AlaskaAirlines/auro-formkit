@@ -10,7 +10,7 @@ AuroDatePicker.register('[custom]-datepicker');
 ```
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
+The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for the tag name you registered in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
 
 ```js
 import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';

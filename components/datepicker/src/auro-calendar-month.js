@@ -48,6 +48,7 @@ const getWeekdayNames = (locale, weekday) => {
  * One month of the datepicker's calendar: a localized heading and a grid of day cells people can select.
  * @event hovered-date-changed - Notifies that the date currently hovered within the month grid has changed.
  * @event calendar-month-mouseleave - Notifies that the pointer left the month's date grid, so the calendar can clear the range preview.
+ * @internal
  */
 export class AuroCalendarMonth extends RangeDatepickerCalendar {
   static get styles() {
@@ -173,7 +174,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
 
   /**
    * Gets the cells in this month that keyboard users can reach: enabled and blackout dates, but not dates before the earliest or after the latest date people can choose.
-   * @returns {Array} The auro-formkit-calendar-cell elements.
+   * @returns {Array} The `auro-formkit-calendar-cell` elements.
    */
   getFocusableCells() {
     const cells = Array.from(this.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));

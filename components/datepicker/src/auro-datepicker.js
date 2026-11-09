@@ -770,7 +770,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Makes a date required. When it's empty, validation fails with `valueMissing`, and in a range, both dates are required. When not set, each input's label shows "(optional)".
-       * @relevantWhen !noValidate
        * @category behavior
        */
       required: {
@@ -780,7 +779,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Sets one error message for every kind of validation error except a blackout date, in place of the built-in messages and the other `setCustomValidity` messages. For a blackout date, use `setCustomValidityCustomError`.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidity: {
@@ -790,7 +788,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Sets the error message shown when `validity` is `customError`, in place of the `error` text. It also replaces the "Selected date is unavailable" message shown when someone types a blackout date.
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityCustomError: {
@@ -800,7 +797,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Sets the error message shown when the date is later than `maxDate` (`rangeOverflow`).
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityRangeOverflow: {
@@ -810,7 +806,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Sets the error message shown when the date is earlier than `minDate` (`rangeUnderflow`).
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityRangeUnderflow: {
@@ -820,7 +815,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Sets the error message shown when `required` is set and no date is chosen (`valueMissing`).
-       * @relevantWhen !noValidate
        * @category behavior
        */
       setCustomValidityValueMissing: {
@@ -1038,9 +1032,10 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Creates a random string of lowercase letters and digits, used as each date input's `id`.
    * @private
-   * @param {Number} length - The number of characters in the returned random string.
-   * @returns {string}
+   * @param {Number} length - The maximum number of characters in the returned string. The string is often shorter.
+   * @returns {string} The random string.
    */
   generateRandomString(length) {
     return Math.random().toString(36).substring(2, length + 2);
@@ -1697,6 +1692,8 @@ export class AuroDatePicker extends AuroElement {
 
   /**
    * Clears the chosen dates. Unlike `reset()`, the datepicker still counts as used, so the next validation can report a missing date.
+   * @internal
+   * @returns {void}
    */
   resetInputs() {
     this.inputList.forEach((input) => {
@@ -1714,7 +1711,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Clears the chosen dates, like `resetInputs()`.
+   * Clears the chosen dates. Unlike `reset()`, the datepicker still counts as used, so the next validation can report a missing date.
    * @returns {void}
    */
   clear() {
