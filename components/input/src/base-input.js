@@ -29,7 +29,7 @@ export default class BaseInput extends AuroElement {
   // The initial-load focus theft was caused by the static `autofocus`
   // attribute on the bib input (now conditional), not by delegatesFocus.
   /**
-   * Lit's options for creating the shadow root.
+   * Gets the options Lit uses to create the shadow root.
    * @internal
    */
   static get shadowRootOptions() {

@@ -496,7 +496,7 @@ export class AuroInput extends BaseInput {
 
   /**
    * Gets the `pattern` for the inner `<input>` element. For credit card numbers,
-   * builds a length check from `minLength` and `maxLength` instead.
+   * builds a length check from `minLength` and `maxLength` instead, unless `noValidate` is set.
    * @private
    * @returns {string}
    */
