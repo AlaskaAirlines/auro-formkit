@@ -34,9 +34,9 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | `role="grid"` | Calendar table | Identifies each month's days as a grid. The month heading above the grid is visible text that screen readers can reach, but it isn't linked to the grid as its name. The live region described below announces month changes. |
 | `role="rowgroup"` | Body group | Groups the week rows. |
 | `role="row"` | Week row | Groups each week of date cells. |
-| `role="columnheader"` | Day-of-week header | Each weekday cell in the header row exposes the abbreviated day name as visible text and the full localized day name via `aria-label`, for example `aria-label="Sunday"`. |
+| `role="columnheader"` | Day-of-week header | Each weekday cell in the header row shows the narrow day name, such as "S" in `en-US`, and gives screen readers the full localized day name with `aria-label`, for example `aria-label="Sunday"`. |
 | `role="gridcell"` | In-range date cell | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and an `aria-label` on the host with the full localized date string. |
-| Out-of-range date cell | Cells outside the valid min/max range | The button uses the native `disabled` attribute (spec-compliant way to express "not actionable" on a `<button>`) and is filtered out of keyboard navigation. The host cell drops its `role` and `aria-label` so screen readers don't browse into it. No `aria-hidden` or `role="presentation"` is applied. |
+| Out-of-range date cell | Cells outside the `minDate` to `maxDate` range | The button uses the native `disabled` attribute (spec-compliant way to express "not actionable" on a `<button>`) and is filtered out of keyboard navigation. The host cell drops its `role` and `aria-label` so screen readers don't browse into it. No `aria-hidden` or `role="presentation"` is applied. |
 | `aria-disabled="true"` | Blackout date cell | Cells for the dates in `blackoutDates`. Unlike out-of-range cells, blackout cells **remain reachable** with the arrow keys, so screen reader users can discover them. The cell's label adds the `blackoutLabel` text, ", unavailable" by default, to say the date can't be selected. |
 | `aria-selected` | Date cell host | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
 | Accessible name | Date cell host | Provided via `aria-label` on the cell host element, kept in sync as the date and selection change, with the button's inner content marked `aria-hidden="true"` so screen readers don't double-announce. Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus any date slot content, such as a price, any popover slot content, the range position label, such as "range start", and availability status (", unavailable" for blackout dates). |
@@ -73,7 +73,7 @@ WCAG 2.1 SC 4.1.3 (Status Messages) generally recommends `aria-live="polite"` fo
 - **Interruption mitigation**: The calendar waits 150 ms after the last arrow key before it announces, so screen readers hear only the final cell after a burst of arrow keys. Rapid navigation produces one announcement per pause, not one per keystroke, which minimizes the interruption cost of `assertive`.
 - **Scope**: The same live region is reused for date selection and month-change announcements, all of which are user-initiated and expected. It's never used for background/system-generated updates.
 
-Consumers auditing against APG or WCAG 4.1.3 should treat this as an intentional, documented trade-off between spec-preferred politeness and reliable VoiceOver support.
+If you audit against APG or WCAG 4.1.3, treat this as an intentional, documented trade-off between spec-preferred politeness and reliable VoiceOver support.
 
 <auro-header level="2" id="accessibleLabels">Accessible labels</auro-header>
 - The `fromLabel` slot content is used as the accessible name for the first date input. It's also forwarded to the dropdown bib as the dialog's accessible name (`aria-labelledby`).

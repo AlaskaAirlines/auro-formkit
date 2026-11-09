@@ -892,7 +892,7 @@
 <!-- The below content is automatically added from ./../apiExamples/validity.html -->
 <auro-datepicker required setCustomValidityValueMissing="Please select a departure date.">
 <span slot="ariaLabel.bib.close">Close calendar</span>
-<span slot="bib.fullscreen.headline">validity example</span>
+<span slot="bib.fullscreen.headline">Custom validation example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -905,7 +905,7 @@
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker required setCustomValidityValueMissing="Please select a departure date."&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;validity example&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Custom validation example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>

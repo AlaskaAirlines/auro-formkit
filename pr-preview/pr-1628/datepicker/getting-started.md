@@ -30,6 +30,7 @@
 <auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">valueEnd</auro-anchorlink>
 <auro-anchorlink fluid href="#values" class="level2 body-xs">values</auro-anchorlink>
 <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
+<auro-anchorlink fluid href="#clear" class="level2 body-xs">clear()</auro-anchorlink>
 <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
 <auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
 <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
@@ -147,7 +148,7 @@ Import and register the component at the top level of your application (for exam
 &#10;AuroDatePicker.register('[custom]-datepicker');</code></pre>
 
 <auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
+The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for the tag name you registered in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
 
 <pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
 &#10;declare global {
@@ -210,7 +211,7 @@ Import and register the component in the <code>&lt;script&gt;</code> block:
 &lt;/script&gt;</code></pre>
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-datepicker>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+Use the tag name you registered directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
@@ -225,7 +226,7 @@ Use `<auro-datepicker>` directly in your Svelte template. Properties can be boun
 &lt;/custom-datepicker&gt;</code></pre>
 
 <auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
-Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for <code>&lt;auro-datepicker&gt;</code> props in templates, add the following to a <code>.d.ts</code> file in your project (for example, <code>src/auro-elements.d.ts</code>):
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for the props of the tag name you registered, add the following to a <code>.d.ts</code> file in your project (for example, <code>src/auro-elements.d.ts</code>):
 
 <pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
 &#10;declare namespace svelteHTML {
@@ -344,6 +345,8 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <section>
 <auro-header level="2" id="publicFunctions">Functions</auro-header>
 <p>The following public methods are available on the <code>&lt;auro-datepicker&gt;</code> element.</p>
+<auro-header level="3" id="clear">clear()</auro-header>
+<p>Clears the chosen dates. Unlike <code>reset()</code>, the datepicker still counts as used, so the next validation can report a missing date.</p>
 <auro-header level="3" id="focus">focus()</auro-header>
 <p>Moves keyboard focus to the start date input. Pass <code>endDate</code> to focus the end date input of a range.</p>
 <auro-header level="3" id="hideBib">hideBib()</auro-header>
