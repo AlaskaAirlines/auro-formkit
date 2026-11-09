@@ -55,7 +55,7 @@ let menuInstanceIdCounter = 0;
  *
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Fires when an option becomes the active (highlighted) option, through the arrow keys, hover, or `updateActiveOption()`. The option is in `detail`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Fires right after the menu fires the event named in an option's `event` attribute. The option is in `detail.option`.
- * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Fires when `loading` changes.
+ * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Fires when `loading` changes, and once when the menu first renders.
  * @event {CustomEvent<{ options: Array<HTMLElement> }>} auroMenu-optionsChange - Fires when the set of options in the menu changes.
  * @event {CustomEvent<any>} auroMenu-selectValueFailure - Fires when a value doesn't match any option that can be selected, or when someone chooses an option with no `value` in multi-select mode.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Fires when `reset()` clears the menu.

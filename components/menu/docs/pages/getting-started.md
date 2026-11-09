@@ -108,7 +108,7 @@
           <li><code>auroMenu-optionsChange</code>: the set of available options was updated, such as after a slot change.</li>
           <li><code>auroMenu-selectValueReset</code>: the menu's <code>value</code> was reset with <code>reset()</code>.</li>
           <li><code>auroMenu-selectValueFailure</code>: a value selection (through <code>selectByValue()</code>, the <code>value</code> attribute, or setting the <code>value</code> property) found no matching selectable option. This includes values that match an option marked <code>disabled</code> or <code>static</code>, which are never selectable. It also fires in multi-select mode when someone chooses an option with no <code>value</code>.</li>
-          <li><code>auroMenu-loadingChange</code>: the <code>loading</code> attribute changed.</li>
+          <li><code>auroMenu-loadingChange</code>: the <code>loading</code> attribute changed. It also fires once when the menu first renders.</li>
           <li><code>auroMenu-customEventFired</code>: the menu fired the event named in an option's <code>event</code> attribute. See <a href="#eventAttribute">Option event attribute</a>.</li>
         </ul>
         <div class="exampleWrapper">
