@@ -103,18 +103,13 @@ export class AuroCalendar extends RangeDatepicker {
      */
     this.calendarRangeMonths = null;
 
-    /**
-     * @deprecated Use `auro-datepicker.blackoutDates` (an array of
-     * `YYYY-MM-DD` ISO strings) instead. This legacy array of Unix
-     * timestamps is still honored for backward compatibility but emits a
-     * one-time `console.debug` the first time a non-empty value is observed.
-     * Support will be removed in a future major release.
-     * @private
-     */
     // Initialize the backing field directly so the constructor's default
     // empty array doesn't trigger the deprecation warning. Assignments from
     // consumers still route through the setter below.
     /**
+     * Deprecated: Use `blackoutDates` on `auro-datepicker` instead.
+     * Holds the dates set with the deprecated `disabledDays`, as Unix timestamps in seconds. The calendar still honors them, and the first non-empty value logs a one-time console message.
+     * @deprecated Use `blackoutDates` on `auro-datepicker` instead.
      * @private
      * @type {number[]}
      */
@@ -291,7 +286,7 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
-       * Mobile breakpoint for responsive design.
+       * Sets the window width, in pixels, below which `scrollMonthIntoView()` scrolls to a month. The datepicker doesn't currently set it.
        * @private
        */
       mobileBreakpoint: {

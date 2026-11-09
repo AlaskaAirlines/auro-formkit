@@ -6,6 +6,11 @@ import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/da
  */
 export class CalendarUtilities {
   constructor() {
+
+    /**
+     * The date helpers these methods use.
+     * @private
+     */
     this.util = new AuroDatepickerUtilities();
   }
 
