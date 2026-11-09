@@ -85,7 +85,7 @@
 
 <auro-header level="3">Custom validation</auro-header>
 
-<p>Native date validation is limited to <code>required</code>, <code>min</code>, and <code>max</code>, and error messages are browser-controlled. <code>auro-datepicker</code> integrates with the Auro form validation system, exposing per-constraint setters (<code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityCustomError</code>), running validation when focus leaves the datepicker, when the end date of a range changes, and when <code>blackoutDates</code> changes, dispatching <code>auroFormElement-validated</code> events, and displaying errors inline via the help text slot.</p>
+<p>Native date validation is limited to <code>required</code>, <code>min</code>, and <code>max</code>, and error messages are browser-controlled. <code>auro-datepicker</code> integrates with the Auro form validation system, exposing per-constraint setters (<code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityCustomError</code>), running validation when focus leaves the datepicker, when the end date of a range changes, and when <code>blackoutDates</code> changes, dispatching <code>auroFormElement-validated</code> events, and showing the error message below the datepicker in place of the help text.</p>
 
 <auro-header level="3">Responsive layout</auro-header>
 
