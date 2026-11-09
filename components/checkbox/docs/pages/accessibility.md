@@ -15,7 +15,7 @@ The `<auro-checkbox-group>` element uses a `<fieldset>` with a `<legend>` intern
 
 | Attribute | Value | Description |
 |---|---|---|
-| `role` | `group` (implicit via `fieldset`) | Groups related checkboxes together. There's no ARIA `checkboxgroup` role, so the group uses the `<fieldset>`'s implicit `group` role as-is. |
+| `role` | `group` (implicit via `fieldset`) | Groups related checkboxes together. ARIA has no `checkboxgroup` role, so the group uses the `<fieldset>`'s implicit `group` role as-is. |
 | `aria-invalid` | `true` | Present only while the group is in an invalid state. The attribute is **omitted entirely** when the group is valid. It's never set to `false`. |
 | `aria-describedby` | id reference | Points at the `id` of the group's help-text/error element, so screen readers can associate the message with the group on demand rather than relying only on the one-time live-region announcement. |
 
