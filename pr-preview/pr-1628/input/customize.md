@@ -314,7 +314,7 @@
 <p class="body-sm"><strong>en-US with explicit <code>format="yyyy.mm.dd"</code></strong></p>
 <auro-input type="date" locale="en-US" format="yyyy.mm.dd">
 <span slot="ariaLabel.clear">Clear date</span>
-<span slot="label">en-US with yyyy.mm.dd format</span>
+<span slot="label">en-US with <code>yyyy.mm.dd</code> format</span>
 <span slot="helpText">Help text</span>
 </auro-input>
 <p class="body-sm"><strong>Inherited de-DE (via <code>data-locale</code>)</strong></p>
@@ -354,7 +354,7 @@
 &#10;&lt;p class="body-sm"&gt;&lt;strong&gt;en-US with explicit &lt;code&gt;format="yyyy.mm.dd"&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
   &lt;span slot="ariaLabel.clear"&gt;Clear date&lt;/span&gt;
-  &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
+  &lt;span slot="label"&gt;en-US with &lt;code&gt;yyyy.mm.dd&lt;/code&gt; format&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help text&lt;/span&gt;
 &lt;/auro-input&gt;
 &#10;&lt;p class="body-sm"&gt;&lt;strong&gt;Inherited de-DE (via &lt;code&gt;data-locale&lt;/code&gt;)&lt;/strong&gt;&lt;/p&gt;
@@ -972,7 +972,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/pattern.html) -->
 <!-- The below content is automatically added from ../apiExamples/pattern.html -->
-<auro-input pattern="[a-z]{1,15}" spellcheck="false" setCustomValidityPatternMismatch="Use only lowercase letters, with no spaces.">
+<auro-input pattern="[a-z]{1,15}" spellcheck="false" setCustomValidityPatternMismatch="Use 1 to 15 lowercase letters, with no spaces.">
 <span slot="label">Username</span>
 <span slot="helpText">Please enter a username.</span>
 </auro-input>
@@ -982,7 +982,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/pattern.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/pattern.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input pattern="[a-z]{1,15}" spellcheck="false" setCustomValidityPatternMismatch="Use only lowercase letters, with no spaces."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-input pattern="[a-z]{1,15}" spellcheck="false" setCustomValidityPatternMismatch="Use 1 to 15 lowercase letters, with no spaces."&gt;
   &lt;span slot="label"&gt;Username&lt;/span&gt;
   &lt;span slot="helpText"&gt;Please enter a username.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>

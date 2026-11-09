@@ -78,7 +78,7 @@
 <tr>
 <td>Credit card detection</td>
 <td>No</td>
-<td>Auto-detect with icon and formatting</td>
+<td>Auto-detect and formatting, with an optional icon</td>
 </tr>
 <tr>
 <td>Custom validation messages</td>
@@ -93,7 +93,7 @@
 <tr>
 <td>Password show/hide</td>
 <td>No</td>
-<td>Built-in toggle</td>
+<td>Built-in toggle in the <code>classic</code> layout</td>
 </tr>
 <tr>
 <td>Display value masking</td>

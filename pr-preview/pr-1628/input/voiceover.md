@@ -53,7 +53,7 @@
 <li>Tab skips the element, because the inner <code>&lt;input&gt;</code> element is disabled.</li>
 <li>The user can't interact with it: they can't enter text, and the clear button isn't shown.</li>
 </ul>
-<p>Key distinction from <code>aria-hidden</code>: A disabled element is <em>reachable but not operable</em>. If you want VoiceOver to skip it entirely, you would need <code>aria-hidden="true"</code> or <code>tabindex="-1"</code>, but that's generally not recommended for disabled controls, because users benefit from knowing the field exists and why it may be unavailable.</p>
+<p>Key distinction from <code>aria-hidden</code>: A disabled element is <em>reachable but not operable</em>. Tab skips it, but VoiceOver can still move to it and read it. If you want VoiceOver to skip it entirely, you would need <code>aria-hidden="true"</code>, but that's generally not recommended for disabled controls, because users benefit from knowing the field exists and why it may be unavailable.</p>
 <p>This is consistent across NVDA and JAWS as well, though the announcement wording differs. For example, NVDA says <em>"unavailable"</em>.</p>
 <auro-header level="3" id="voiceOverStateInvalid">Invalid</auro-header>
 <p>When an <code>&lt;auro-input&gt;</code> is invalid the following occurs:</p>
