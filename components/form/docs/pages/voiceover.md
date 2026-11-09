@@ -21,7 +21,7 @@
 <ul>
   <li>The invalid element shows its error state.</li>
   <li>The help text region updates to show the validation error message.</li>
-  <li>VoiceOver announces the error through the element's accessible description when it receives focus.</li>
+  <li>For elements that link their help text, such as <code>auro-input</code>, VoiceOver reads the error as the element's description when it receives focus. For other elements, such as <code>auro-select</code> and <code>auro-combobox</code>, VoiceOver doesn't currently read the error on focus. It announces their error only when it appears, through the help text region's <code>role="alert"</code>.</li>
 </ul>
 
 <auro-header level="2" id="voiceOverWorkflow">Submission workflow</auro-header>
@@ -29,7 +29,7 @@
   <li><strong>Navigate form elements:</strong> Tab through each form element; VoiceOver announces labels, roles, and states.</li>
   <li><strong>Enter values:</strong> Interact with each element to provide input.</li>
   <li><strong>Submit:</strong> Focus the submit button and activate it, or press <code>Enter</code> while focus is on a named, enabled form element.</li>
-  <li><strong>Validation feedback:</strong> If validation fails, each invalid element shows its error. <code>auro-form</code> doesn't move focus, so VoiceOver announces the error when the user moves to the invalid element.</li>
+  <li><strong>Validation feedback:</strong> If validation fails, each invalid element shows its error. <code>auro-form</code> doesn't move focus, so VoiceOver reads the error when the user moves to an invalid element that links its help text, such as <code>auro-input</code>.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverReset">Reset workflow</auro-header>
