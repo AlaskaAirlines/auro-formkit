@@ -102,7 +102,7 @@ A text field with a list of options that narrows as people type, so they can cho
 | label                   | ui       | Yes      |               | Label that names the combobox. Screen readers announce it as the name of the input and of the fullscreen dialog.                                                                                                                                         |
 | optionalLabel           | ui       |          | `!required`   | Text shown after the label when `required` isn't set, such as a translated "(optional)". Defaults to "(optional)".                                                                                                                                       |
 | ariaLabel.bib.close     | a11y     | Yes      |               | Text screen readers announce for the close button in the fullscreen bib, such as "Close destination list". Defaults to "Close".                                                                                                                          |
-| ariaLabel.input.clear   | a11y     |          |               | Text screen readers announce for the clear button, such as "Clear destination". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead.   |
+| ariaLabel.input.clear   | a11y     | Yes      |               | Text screen readers announce for the clear button, such as "Clear destination". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead.   |
 
 ### CSS shadow parts
 

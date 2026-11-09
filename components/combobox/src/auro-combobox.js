@@ -104,7 +104,7 @@ function getOptionLabel(option) {
  *
  * @slot - The `<auro-menu>` that holds the options. {@requiredWhen always} {@category ui}
  * @slot {HTMLSlotElement} optionalLabel - Text shown after the label when `required` isn't set, such as a translated "(optional)". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
- * @slot ariaLabel.input.clear - Text screen readers announce for the clear button, such as "Clear destination". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead. {@category a11y}
+ * @slot ariaLabel.input.clear - Text screen readers announce for the clear button, such as "Clear destination". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead. {@requiredWhen always} {@category a11y}
  * @slot ariaLabel.bib.close - Text screen readers announce for the close button in the fullscreen bib, such as "Close destination list". Defaults to "Close". {@requiredWhen always} {@category a11y}
  * @slot bib.fullscreen.headline - Headline shown above the options in the fullscreen bib, such as "Choose a destination". {@requiredWhen always} {@category ui}
  * @slot label - Label that names the combobox. Screen readers announce it as the name of the input and of the fullscreen dialog. {@requiredWhen always} {@category ui}
