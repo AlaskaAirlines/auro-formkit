@@ -74,7 +74,7 @@
 <p><code>auro-counter</code> is built with the Auro Design System:</p>
 
 <ul>
-  <li>Consistent visual language with clearly labeled +/- buttons</li>
+  <li>Consistent visual language with minus and plus buttons</li>
   <li>Light and dark theme support (<code>appearance</code>)</li>
   <li>CSS <code>::part()</code> selectors (<code>counterControl</code>, <code>controlPlus</code>, <code>controlMinus</code>, <code>helpText</code>)</li>
   <li>Design token integration for sizing and spacing</li>

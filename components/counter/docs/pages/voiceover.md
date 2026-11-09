@@ -6,7 +6,7 @@
 <auro-header level="3" id="voiceOverFocusAnnouncement">Focus</auro-header>
 <p>When focus moves to a counter's spinbutton, VoiceOver announces:</p>
 <ol>
-  <li><strong>Label:</strong> The counter label text (from the default slot)</li>
+  <li><strong>Label:</strong> The counter's label from the default slot, plus any text in the <code>description</code> slot</li>
   <li><strong>Role:</strong> <em>"incrementable"</em> or <em>"stepper"</em> (spinbutton)</li>
   <li><strong>Current value:</strong> The current numeric value</li>
   <li><strong>Range:</strong> <em>"from [min] to [max]"</em>, using <code>min</code> and <code>max</code> or their defaults of 0 and 9</li>
@@ -69,7 +69,7 @@
 <ol>
   <li><strong>Focus trigger:</strong> Announces the label and current summary value</li>
   <li><strong>Open | Expand:</strong> Opens a fullscreen modal dialog; focus moves to the close button</li>
-  <li><strong>Navigate counters:</strong> Swipe or Tab through individual counter controls</li>
+  <li><strong>Navigate counters:</strong> Swipe through each counter's controls, or Tab through the counters</li>
   <li><strong>Close:</strong> Activate the close button or use the scrub gesture (two-finger zigzag) to dismiss</li>
 </ol>
 

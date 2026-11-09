@@ -13,7 +13,7 @@ Import and register the components in the `<script>` block:
 ```
 
 <auro-header level="3" id="svelteUsage">Basic usage</auro-header>
-Use `<auro-counter-group>` directly in your Svelte template:
+Use the elements you registered, such as `<custom-counter-group>`, directly in your Svelte template:
 
 ```html
 <script lang="ts">

@@ -312,7 +312,7 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Increases the value by 1, or by the given amount. Does nothing when the counter is disabled or already at its maximum, and doesn't cap a larger step at `max`.
+   * Increases the value by 1, or by the given amount. Does nothing while the plus button is off: when the counter is disabled, its value is at or above `max`, or its group's total has reached the group's `max`. It doesn't cap a larger step at `max`.
    * @method increment
    * @param {number} [value] - The amount to add. Defaults to 1.
    * @returns {void}
@@ -326,7 +326,7 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Decreases the value by 1, or by the given amount. Does nothing when the counter is disabled or already at its minimum, and doesn't stop a larger step at `min`.
+   * Decreases the value by 1, or by the given amount. Does nothing while the minus button is off: when the counter is disabled, its value is at or below `min`, or its group's total is at or below the group's `min`. It doesn't stop a larger step at `min`.
    * @method decrement
    * @param {number} [value] - The amount to subtract. Defaults to 1.
    * @returns {void}
@@ -408,7 +408,7 @@ export class AuroCounter extends LitElement {
 
   /**
    * Checks the counter's value against `min`, `max`, and the `error` attribute, and updates `validity`.
-   * @param {boolean} [force=false] - If true, validates even while the counter has focus. If false, skips validation while the counter has focus.
+   * @param {boolean} [force=false] - If true, checks `min` and `max` even while the counter has focus. If false, skips those checks while the counter has focus.
    */
   validate(force = false) {
     this.validation.validate(this, force);

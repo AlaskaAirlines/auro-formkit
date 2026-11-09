@@ -96,7 +96,7 @@
 
 <auro-header level="2">What you lose without auro-counter</auro-header>
 
-<p>While the CSS above replicates the <strong>visual styling</strong> of <code>auro-counter</code>, the following functionality built into the <code>auro-counter</code> and <code>auro-counter-group</code> web components is <strong>not available</strong> when using plain HTML:</p>
+<p>While the CSS above approximates the <strong>visual styling</strong> of <code>auro-counter</code>, the following functionality built into the <code>auro-counter</code> and <code>auro-counter-group</code> web components is <strong>not available</strong> when using plain HTML:</p>
 
 <auro-header level="3">Increment and decrement button wiring</auro-header>
 

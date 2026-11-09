@@ -252,7 +252,7 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Sets the shape of the dropdown. Defaults to `snowflake` when `layout="snowflake"`, and to `classic` otherwise. Applies only when `isDropdown` is set.
+       * Sets the shape of the dropdown's trigger. Use `classic` with the `classic` layout and `snowflake` with the `snowflake` layout; when not set, it matches the layout. Applies only when `isDropdown` is set.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @relevantWhen isDropdown
        * @category ui
@@ -265,7 +265,7 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Sets the size of the dropdown. Defaults to `lg` when `layout="snowflake"`, and to `xl` otherwise. Applies only when `isDropdown` is set.
+       * Sets the height of the dropdown's trigger, from `xs`, the shortest, to `xl`, the tallest. The `classic` and `snowflake` shapes have a fixed height, so `size` doesn't change them. Applies only when `isDropdown` is set.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @relevantWhen isDropdown
        * @category ui
@@ -435,9 +435,10 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Attaches input event listeners to all auro-counter elements within the component.
-   * This method selects all `auro-counter` and `[auro-counter]` elements and adds an `input` event listener to each.
-   * The listener calls `this.updateValue()` whenever the value of a counter changes.
+   * Sets up every `auro-counter` and `[auro-counter]` element in the group.
+   * For each counter, this method copies the group's `appearance` and `onDark` values,
+   * calls `updateValue()` on `input`, and calls `updateValidity()` on `auroFormElement-validated`.
+   * It then calls `updateValue()` and `updateValidity()` once to sync the group's total and validity.
    * @private
    */
   configureCounters() {
@@ -621,7 +622,7 @@ export class AuroCounterGroup extends AuroElement {
    * Called when the `bib.fullscreen.headline` or `bib.fullscreen.footer` slot changes.
    * Moves the slotted content into the bib template's header or footer.
    * @private
-   * @param {Event} event - `slotchange` event.
+   * @param {Event} event - The `slotchange` event.
    * @returns {void}
    */
   handleSlotChange(event) {
