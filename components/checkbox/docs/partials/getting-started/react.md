@@ -40,7 +40,11 @@ function MyCheckboxGroup() {
     if (!el) return;
 
     const handleInput = () => {
-      console.log('Selected values:', (el as any).value);
+      const selected = Array.from(el.querySelectorAll<HTMLElement & { checked: boolean; value: string }>('custom-checkbox'))
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.value);
+
+      console.log('Selected values:', selected);
     };
 
     el.addEventListener('input', handleInput);

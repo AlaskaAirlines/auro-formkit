@@ -53,7 +53,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * @slot helpText - Help text shown below the group, such as "Select all that apply". While the group shows an error, the error message replaces it. {@category ui}
  * @slot default - The `auro-checkbox` elements in the group. {@requiredWhen always} {@category ui}
  * @event auroFormElement-validated - Fires each time the group runs validation, with the result in `event.detail.validity` and `event.detail.message`.
- * @event input - Fires when a checkbox in the group is checked or unchecked, after the group's selected values update.
+ * @event input - Fires when a checkbox in the group is checked or unchecked, after the group's selected values update. It also fires once for each checkbox when the group loads with checkboxes that start out `checked`.
  */
 
 export class AuroCheckboxGroup extends LitElement {
@@ -223,7 +223,7 @@ export class AuroCheckboxGroup extends LitElement {
       /**
        * Sets the error message shown while the `error` attribute is set, in place of the attribute's own text.
        * `setCustomValidity` takes priority when both are set.
-       * @relevantWhen error
+       * @relevantWhen error !== undefined
        * @category behavior
        */
       setCustomValidityCustomError: {

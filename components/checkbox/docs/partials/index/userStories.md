@@ -12,7 +12,7 @@
     Toggle the checkbox
     <div class="note">
       <p>
-        Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Multiple checkboxes can be checked simultaneously.
+        Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Each checkbox toggles independently of the others.
       </p>
     </div>
   </li>

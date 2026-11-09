@@ -25,7 +25,7 @@
 
 <auro-header level="3" id="slotsCheckbox">auro-checkbox</auro-header>
 
-<auro-header level="3" id="slot-default-checkbox">(default)</auro-header>
+<auro-header level="4" id="slot-default-checkbox">(default)</auro-header>
 <p>Label text for the checkbox, such as "Window seat". It's shown next to the box, and screen readers announce it as the checkbox's name.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->

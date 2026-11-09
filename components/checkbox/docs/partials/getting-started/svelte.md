@@ -53,7 +53,11 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
   let values = $state<string[]>([]);
 
   function handleInput(e: Event) {
-    values = (e.currentTarget as HTMLElement & { value: string[] }).value;
+    const group = e.currentTarget as HTMLElement;
+
+    values = Array.from(group.querySelectorAll<HTMLElement & { checked: boolean; value: string }>('custom-checkbox'))
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.value);
   }
 </script>
 <custom-checkbox-group oninput={handleInput}>
