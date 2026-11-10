@@ -171,7 +171,7 @@
 <tr><td><code>checkbox-group</code></td><td>The <code>&lt;fieldset&gt;</code> element in the <code>&lt;auro-checkbox-group&gt;</code> shadow DOM that wraps the legend and the checkboxes. It also carries the group's <code>aria-invalid</code> state.</td></tr>
 <tr><td><code>helpText</code></td><td>The help text element below the <code>&lt;auro-checkbox-group&gt;</code>, which shows the help text or the error message.</td></tr>
 <tr><td><code>checkbox</code></td><td>The container that wraps the checkbox's box and its label.</td></tr>
-<tr><td><code>checkbox-input</code></td><td>The native <code>&lt;input type="checkbox"&gt;</code> element. It's visually hidden, so styles on this part don't change the visible box.</td></tr>
+<tr><td><code>checkbox-input</code></td><td>The native <code>&lt;input type="checkbox"&gt;</code> element. It's hidden with <code>display: none</code>, so styles on this part don't change the visible box.</td></tr>
 <tr><td><code>checkbox-label</code></td><td>The element that wraps the label text from the default slot.</td></tr>
 </tbody>
 </table>
@@ -331,7 +331,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="noValidate">No validation</auro-header>
-<p>Use the <code>noValidate</code> attribute to stop the group from validating automatically when focus leaves it or a checkbox changes. To validate the group yourself, call the <code>validate()</code> method.</p>
+<p>Use the <code>noValidate</code> attribute to stop the group from validating automatically when focus leaves it or a checkbox changes. To validate the group yourself, call <code>validate(true)</code>, which checks right away, even before anyone has interacted with the group.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-validate.html -->
