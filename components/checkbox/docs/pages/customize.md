@@ -127,7 +127,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="noValidate">No validation</auro-header>
-        <p>Use the <code>noValidate</code> attribute to stop the group from validating automatically when focus leaves it or a checkbox changes. To validate the group yourself, call the <code>validate()</code> method.</p>
+        <p>Use the <code>noValidate</code> attribute to stop the group from validating automatically when focus leaves it or a checkbox changes. To validate the group yourself, call <code>validate(true)</code>, which checks right away, even before anyone has interacted with the group.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

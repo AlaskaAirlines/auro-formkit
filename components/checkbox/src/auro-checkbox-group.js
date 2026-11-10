@@ -179,7 +179,7 @@ export class AuroCheckboxGroup extends LitElement {
 
       /**
        * Stops the group from validating automatically when focus leaves it or a checkbox changes.
-       * To validate the group yourself, call `validate()`. The `error` attribute still applies.
+       * To validate the group yourself, call `validate(true)`, which checks right away, even before anyone has interacted with the group. The `error` attribute still applies.
        * @category behavior
        */
       noValidate: {

@@ -39,7 +39,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @customElement auro-checkbox
  *
  * @csspart checkbox - The container that wraps the checkbox's box and its label.
- * @csspart checkbox-input - The native `<input type="checkbox">` element. It's visually hidden, so styles on this part don't change the visible box.
+ * @csspart checkbox-input - The native `<input type="checkbox">` element. It's hidden with `display: none`, so styles on this part don't change the visible box.
  * @csspart checkbox-label - The element that wraps the label text from the default slot.
  *
  * @slot default - Label text for the checkbox, such as "Window seat". Screen readers announce this text as the checkbox's name. {@requiredWhen always} {@category ui}
