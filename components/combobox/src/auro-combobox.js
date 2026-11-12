@@ -81,7 +81,7 @@ function getOptionLabel(option) {
  *
  * **Key capabilities**
  * - **Suggestion or filter**: Set `behavior="filter"` to require choosing an option from the menu; the default, `suggestion`, also accepts typed text.
- * - **Filtering as people type**: Typing always hides options whose text doesn't include the typed text, unless `noFilter` is set.
+ * - **Filtering as people type**: Typing hides options that don't match the typed text or their `suggest` keywords, unless `noFilter` is set; `persistent` options always stay visible.
  * - **Validation**: Set `required` to require a value, and `setCustomValidity` to change the error message.
  * - **Fullscreen on small screens**: Set `fullscreenBreakpoint` to choose the largest screen size at which the list opens as a fullscreen dialog.
  * - **Layouts**: Set `layout` to `classic`, `emphasized`, or `snowflake` to change the overall look.
@@ -1075,9 +1075,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Opens the bib when the input has text and there's something to show: options or a `nomatch` option.
+   * Opens the bib when the input has text and the menu has options to show, a `nomatch` option, or a `loading` attribute with a value, such as `loading="loading"`.
    * When the menu is loading without `loadingText` or `loadingIcon` content, the bib opens once loading ends, if focus is still in the combobox.
-   * Doesn't currently open the bib for a loading menu that has no options yet.
+   * Doesn't currently open the bib for a menu with no options to show, no `nomatch` option, and an empty `loading` attribute, such as the one the menu's `loading` property sets.
    * @returns {void}
    */
   showBib() {
