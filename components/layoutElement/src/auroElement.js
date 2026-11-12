@@ -5,9 +5,10 @@ import { LitElement } from "lit";
  *
  * It declares the `onDark` property and provides helpers that apply the
  * `layout-*` and `shape-*` classes for the current `layout`, `shape`, and `size`
- * to the subclass's `.wrapper` element. Each subclass declares its own `layout`,
- * `shape`, and `size` properties with its own values and defaults, and
- * implements `renderLayout()`, which `render()` calls.
+ * to the subclass's `.wrapper` element. Subclasses declare the `layout`,
+ * `shape`, and `size` properties they use, each with its own values and
+ * default. The base `render()` calls `renderLayout()`, which a subclass
+ * implements unless it overrides `render()`.
  *
  * **Key capabilities**
  * - **Layout and shape classes**: The base class updates the `.wrapper` element's `layout-*` and `shape-*` classes whenever `layout`, `shape`, or `size` changes, unless a subclass overrides `updated()` without calling `super.updated()`.
