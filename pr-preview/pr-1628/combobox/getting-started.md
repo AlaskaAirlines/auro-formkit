@@ -449,7 +449,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-header level="3" id="hideBib">hideBib()</auro-header>
 <p>Hides the bib if it's open.</p>
 <auro-header level="3" id="showBib">showBib()</auro-header>
-<p>Shows the bib when the input has a value and there are options or a <code>nomatch</code> option to show. Doesn't currently open the bib for a loading menu that has no options yet.</p>
+<p>Shows the bib when the input has a value and the menu has options to show, a <code>nomatch</code> option, or a <code>loading</code> attribute with a value, such as <code>loading="loading"</code>. When the menu is loading without <code>loadingText</code> or <code>loadingIcon</code> content, the bib opens once loading ends, if focus is still in the combobox. Doesn't currently open the bib for a menu with no options to show, no <code>nomatch</code> option, and an empty <code>loading</code> attribute, such as the one the menu's <code>loading</code> property sets.</p>
 </section>
 </div>
 </div>
