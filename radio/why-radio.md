@@ -1,13 +1,13 @@
 <auro-header level="1" id="overview">Why auro-radio?</auro-header>
-<p>The native <code>&lt;input type="radio"&gt;</code> provides basic mutual exclusion within a named group, but it cannot be styled consistently, has no built-in group validation or error messaging, and requires manual <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> wiring. <code>auro-radio</code> and <code>auro-radio-group</code> address these gaps.</p>
+<p>The native <code>&lt;input type="radio"&gt;</code> provides basic mutual exclusion within a named group, but it can't be styled consistently, has no built-in group validation or error messaging, and requires manual <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> wiring. <code>auro-radio</code> and <code>auro-radio-group</code> address these gaps.</p>
 <auro-header level="2" id="accessibility">Accessibility</auro-header>
 <p>Native radio buttons have basic accessibility, but managing a group with a legend, validation errors, and consistent keyboard behavior requires careful manual implementation.</p>
 <p><code>auro-radio</code> provides:</p>
 <ul>
-<li><strong>Proper ARIA semantics</strong> — Each radio carries <code>role="radio"</code>, <code>aria-checked</code>, <code>aria-required</code>, and <code>aria-disabled</code>.</li>
-<li><strong>Roving tabindex</strong> — Only the selected radio (or the first radio if none is selected) has <code>tabindex="0"</code>. Arrow keys move between radios within the group, matching the expected WAI-ARIA radio group pattern.</li>
-<li><strong>Group labeling</strong> — <code>auro-radio-group</code> provides a <code>legend</code> slot that is automatically associated as the group's accessible label.</li>
-<li><strong>Keyboard interaction</strong> — Arrow keys navigate between options, Space selects the focused radio.</li>
+<li><strong>Proper ARIA semantics</strong>: Each radio carries <code>role="radio"</code>, <code>aria-checked</code>, <code>aria-required</code>, and <code>aria-disabled</code>.</li>
+<li><strong>Roving tabindex</strong>: Only the selected radio (or the first enabled radio if none is selected) has <code>tabindex="0"</code>. Arrow keys move between radios within the group, matching the expected WAI-ARIA radio group pattern.</li>
+<li><strong>Group labeling</strong>: <code>auro-radio-group</code> provides a <code>legend</code> slot, and screen readers announce its text as the group's name.</li>
+<li><strong>Keyboard interaction</strong>: Arrow keys move between options, and Space selects the focused radio.</li>
 </ul>
 <auro-header level="2" id="groupManagement">Group management</auro-header>
 <p>Building a radio group with coordinated validation, error display, and state management from native inputs requires custom JavaScript and DOM structure.</p>
@@ -20,18 +20,18 @@
 <li><code>reset()</code> to clear selection and validation state across all children</li>
 </ul>
 <auro-header level="2" id="validation">Validation</auro-header>
-<p>Native radio groups support <code>required</code> via the HTML attribute, but the error message is browser-controlled and there is no standard way to display custom error text below the group.</p>
+<p>Native radio groups support <code>required</code> via the HTML attribute, but the error message is browser-controlled, and no standard way exists to display custom error text below the group.</p>
 <p><code>auro-radio-group</code> integrates with the Auro form validation system:</p>
 <ul>
-<li>Group-level <code>required</code> validation (at least one must be selected)</li>
+<li>Group-level <code>required</code> validation (one option must be selected)</li>
 <li>Custom error messages via <code>setCustomValidityCustomError</code> and <code>setCustomValidityValueMissing</code></li>
 <li><code>noValidate</code> to disable auto-validation on blur</li>
-<li><code>touched</code> tracking so errors appear only after user interaction</li>
+<li>Interaction tracking, so errors appear only after someone has interacted with the group</li>
 <li>Dispatches <code>auroFormElement-validated</code> events for parent form coordination</li>
-<li>Error display via the <code>helpText</code> slot</li>
+<li>Error messages shown below the group, in place of the <code>helpText</code> slot content</li>
 </ul>
 <auro-header level="2" id="themingAndVisualConsistency">Theming and visual consistency</auro-header>
-<p>Native radio buttons render differently across browsers and operating systems. Their appearance — the circle, the fill, the label spacing — cannot be reliably controlled with CSS alone.</p>
+<p>Native radio buttons render differently across browsers and operating systems. Their appearance, including the circle, the fill, and the label spacing, can't be reliably controlled with CSS alone.</p>
 <p><code>auro-radio</code> is built with the Auro Design System:</p>
 <ul>
 <li>Consistent visual language across all browsers and platforms</li>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td>Roving tabindex</td>
-<td>Manual implementation</td>
+<td>Built-in (shared <code>name</code>)</td>
 <td>Built-in</td>
 </tr>
 <tr>

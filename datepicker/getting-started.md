@@ -1,9 +1,9 @@
-<auro-header level="1" id="overview">Datepicker - Getting Started</auro-header>
+<auro-header level="1" id="overview">Datepicker: Getting started</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
 <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
 <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
@@ -11,7 +11,7 @@
 <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
 <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
 <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-<auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+<auro-anchorlink fluid href="#minimalConfig">Minimal configuration</auro-anchorlink>
 <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-fromLabel" class="level2 body-xs">fromLabel</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-toLabel" class="level2 body-xs">toLabel</auro-anchorlink>
@@ -24,12 +24,13 @@
 <auro-anchorlink fluid href="#slot-bib-fullscreen-toLabel" class="level2 body-xs">bib.fullscreen.toLabel</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-date" class="level2 body-xs">date_YYYY_MM_DD</auro-anchorlink>
 <auro-anchorlink fluid href="#slot-popover" class="level2 body-xs">popover_YYYY_MM_DD</auro-anchorlink>
-<auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
-<auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
-<auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
-<auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">ValueEnd</auro-anchorlink>
-<auro-anchorlink fluid href="#values" class="level2 body-xs">Values</auro-anchorlink>
+<auro-anchorlink fluid href="#stateManagement">State management</auro-anchorlink>
+<auro-anchorlink fluid href="#validity" class="level2 body-xs">validity</auro-anchorlink>
+<auro-anchorlink fluid href="#value" class="level2 body-xs">value</auro-anchorlink>
+<auro-anchorlink fluid href="#valueEnd" class="level2 body-xs">valueEnd</auro-anchorlink>
+<auro-anchorlink fluid href="#values" class="level2 body-xs">values</auro-anchorlink>
 <auro-anchorlink fluid href="#publicFunctions">Functions</auro-anchorlink>
+<auro-anchorlink fluid href="#clear" class="level2 body-xs">clear()</auro-anchorlink>
 <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
 <auro-anchorlink fluid href="#hideBib" class="level2 body-xs">hideBib()</auro-anchorlink>
 <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
@@ -45,12 +46,11 @@
 <auro-header level="2" id="setup">Setup</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion expanded class="section" id="recommendedAccordion">
-<span slot="trigger">Recommended Installation and Implementation</span>
+<span slot="trigger">Recommended installation and implementation</span>
 <div class="accordion-content">
 <auro-header level="3">Install</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
-
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
@@ -60,34 +60,33 @@
 <!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
 <p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
 <p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
-<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To use more than one version of the same component on a page, such as when two projects depend on different versions, register the class under a custom tag name to avoid conflicts.</p>
 <p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <pre class="language-js"><code class="language-js">// Import the class only
-import { AuroDatepicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-// Register with a custom name if desired
-AuroDatepicker.register('custom-datepicker');</code></pre>
+import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
+&#10;// Register with a custom name if desired
+AuroDatePicker.register('custom-datepicker');</code></pre>
 
-This will create a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
+This creates a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
 
 <pre class="language-html"><code class="language-html">&lt;custom-datepicker&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;custom-datepicker Example&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;custom-datepicker example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.dateLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/custom-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
 <auro-accordion class="section" id="autoAccordion">
-<span slot="trigger">Auto Installation and Implementation</span>
+<span slot="trigger">Auto installation and implementation</span>
 <div class="accordion-content">
 <p class="warning"><strong>Warning:</strong> Default registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <auro-header level="3">Install</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
-
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
@@ -96,18 +95,19 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-datepicker';</code></pre>
-<p>This import registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This import registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
 <auro-accordion class="section" id="cdnAccordion">
-<span slot="trigger">CDN Installation</span>
+<span slot="trigger">CDN installation</span>
 <div class="accordion-content">
 <p class="warning"><strong>Warning:</strong> CDN registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
@@ -115,11 +115,12 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-datepicker/+esm"&gt;&lt;/script&gt;</code></pre>
-<p>This script registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This script registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. Then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -140,19 +141,17 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 <!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
 React 19 includes <auro-hyperlink href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</auro-hyperlink>, so <code>&lt;auro-datepicker&gt;</code> works directly in JSX without any wrapper library.
 
-<auro-header level="3" id="reactImport">Import the Component</auro-header>
-Import and register the component at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+<auro-header level="3" id="reactImport">Import the component</auro-header>
+Import and register the component at the top level of your application (for example, in your root `main.tsx` or `App.tsx`):
 
 <pre class="language-js"><code class="language-js">import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-AuroDatePicker.register('[custom]-datepicker');</code></pre>
+&#10;AuroDatePicker.register('[custom]-datepicker');</code></pre>
 
-<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
-The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for <code>&lt;auro-datepicker&gt;</code> in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
+<auro-header level="3" id="reactTypeScript">TypeScript declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroDatePicker` class. However, React's JSX doesn't automatically map custom element tag names to their types. To get type checking for the tag name you registered in JSX, add the following declaration to a <code>.d.ts</code> file in your project:
 
 <pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-declare global {
+&#10;declare global {
   namespace JSX {
     interface IntrinsicElements {
       '[custom]-datepicker': React.HTMLAttributes&lt;AuroDatePicker&gt; &amp; Partial&lt;AuroDatePicker&gt;;
@@ -160,34 +159,32 @@ declare global {
   }
 }</code></pre>
 
-<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+<auro-header level="3" id="reactEvents">Event handling</auro-header>
 Auro components emit native <code>CustomEvent</code>s. Use a <code>ref</code> to attach event listeners in a <code>useEffect</code>:
 
 <pre class="language-js"><code class="language-js">import { useRef, useEffect } from 'react';
-​
-function MyDatePicker() {
+&#10;function MyDatePicker() {
   const datepickerRef = useRef&lt;HTMLElement&gt;(null);
-​
-  useEffect(() =&gt; {
+&#10;  useEffect(() =&gt; {
     const el = datepickerRef.current;
     if (!el) return;
-​
-    const handleInput = (event: Event) =&gt; {
+&#10;    const handleInput = (event: Event) =&gt; {
       console.log('Selected date:', (event as CustomEvent&lt;string&gt;).detail);
     };
-​
-    el.addEventListener('input', handleInput);
+&#10;    el.addEventListener('input', handleInput);
     return () =&gt; el.removeEventListener('input', handleInput);
   }, []);
-​
-  return (
+&#10;  return (
     &lt;custom-datepicker ref={datepickerRef}&gt;
       &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+      &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+      &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
+      &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
     &lt;/custom-datepicker&gt;
   );
 }</code></pre>
 
-<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="reactModuleResolution">Module resolution</auro-header>
 Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"</code> so TypeScript can resolve the component's package exports:
 
 <pre class="language-js"><code class="language-js">{
@@ -205,58 +202,59 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
 Svelte has <auro-hyperlink href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</auro-hyperlink>, so <code>&lt;auro-datepicker&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the component in the <code>&lt;script&gt;</code> block:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-  AuroDatePicker.register('[custom]-datepicker');
+&#10;  AuroDatePicker.register('[custom]-datepicker');
 &lt;/script&gt;</code></pre>
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
-Use `<auro-datepicker>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
+Use the tag name you registered directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   import { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-  AuroDatePicker.register('[custom]-datepicker');
-​
-  let datepickerValue = $state&lt;string&gt;('');
+&#10;  AuroDatePicker.register('[custom]-datepicker');
+&#10;  let datepickerValue = $state&lt;string&gt;('');
 &lt;/script&gt;
 &lt;custom-datepicker value={datepickerValue}&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/custom-datepicker&gt;</code></pre>
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for <code>&lt;auro-datepicker&gt;</code> props in templates, add the following to a <code>.d.ts</code> file in your project (e.g. <code>src/auro-elements.d.ts</code>):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for the props of the tag name you registered, add the following to a <code>.d.ts</code> file in your project (for example, <code>src/auro-elements.d.ts</code>):
 
 <pre class="language-js"><code class="language-js">import type { AuroDatePicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-declare namespace svelteHTML {
+&#10;declare namespace svelteHTML {
   interface IntrinsicElements {
     '[custom]-datepicker': Partial&lt;AuroDatePicker&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroDatePicker&gt;;
   }
 }</code></pre>
 
-This enables prop hinting for attributes like <code>value</code>, <code>range</code>, <code>disabled</code>, and others directly in Svelte templates.
+This enables prop hinting in Svelte templates for attributes, such as <code>value</code>, <code>range</code>, and <code>disabled</code>.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
 Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
   let value = $state('');
-​
-  function handleInput(e: Event) {
+&#10;  function handleInput(e: Event) {
     value = (e as CustomEvent&lt;string&gt;).detail;
   }
 &lt;/script&gt;
 &lt;custom-datepicker oninput={handleInput}&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/custom-datepicker&gt;
 &lt;p&gt;Selected: {value}&lt;/p&gt;</code></pre>
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"</code> so TypeScript can resolve the component's package exports:
 
 <pre class="language-js"><code class="language-js">{
@@ -273,27 +271,29 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <section>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
-<auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
+<auro-header level="3" id="minimalConfig">Minimal configuration</auro-header>
 <p>Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:</p>
 <ul>
-<li><strong>A label in the `fromLabel` slot</strong> — Provides an accessible label for the date input.</li>
-<li><strong>A `bib.fullscreen.headline` slot</strong> — Provides a headline for the fullscreen (mobile) calendar view.</li>
-<li><strong>A `bib.fullscreen.fromLabel` slot</strong> — Provides a label for the date input in the fullscreen view.</li>
+<li><strong>A label in the <code>fromLabel</code> slot</strong>: Provides an accessible label for the date input.</li>
+<li><strong>An <code>ariaLabel.bib.close</code> slot</strong>: Provides the accessible name of the close button in the fullscreen calendar, which has no default.</li>
+<li><strong>A <code>bib.fullscreen.headline</code> slot</strong>: Provides a headline for the fullscreen (mobile) calendar view.</li>
+<li><strong>A <code>bib.fullscreen.fromLabel</code> slot</strong>: Provides a label for the date input in the fullscreen view.</li>
 </ul>
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
-<p>When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:/<p>
+<p>When using the <code>range</code> attribute, also provide <code>toLabel</code> and <code>bib.fullscreen.toLabel</code>:</p>
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker range&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Dates&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select dates&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
-</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
@@ -302,40 +302,40 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <auro-header level="2" id="slots">Slots</auro-header>
 <p>The following slots are available on the <code>&lt;auro-datepicker&gt;</code> element.</p>
 <auro-header level="3" id="slot-fromLabel">fromLabel</auro-header>
-<p>Defines the label content for the first (or only) date input.</p>
+<p>Label for the start date input, or the only input, such as "Departure date". Also gives the calendar dialog its accessible name.</p>
 <auro-header level="3" id="slot-toLabel">toLabel</auro-header>
-<p>Defines the label content for the second date input when the <code>range</code> attribute is used.</p>
+<p>Label for the end date input when <code>range</code> is set, such as "Return date".</p>
 <auro-header level="3" id="slot-label">label</auro-header>
-<p>Defines the label content for the entire datepicker when <code>layout="snowflake"</code>.</p>
+<p>Label for the whole datepicker in the <code>snowflake</code> layout, such as "Travel dates".</p>
 <auro-header level="3" id="slot-helpText">helpText</auro-header>
-<p>Defines the content of the help text displayed below the datepicker.</p>
+<p>Help text shown below the datepicker. An error message replaces it while the datepicker is invalid.</p>
 <auro-header level="3" id="slot-ariaLabel-input-clear">ariaLabel.input.clear</auro-header>
-<p>Sets <code>aria-label</code> on the clear button.</p>
+<p>Text read by screen readers for the clear button, for example "Clear dates". Defaults to "Clear input field".</p>
 <auro-header level="3" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
-<p>Sets <code>aria-label</code> on the close button in the fullscreen bib.</p>
+<p>Text read by screen readers for the close button in the fullscreen calendar, for example "Close calendar". It has no default, so always provide it.</p>
 <auro-header level="3" id="slot-bib-fullscreen-headline">bib.fullscreen.headline</auro-header>
-<p>Defines the headline to display above the date labels in the fullscreen (mobile) layout.</p>
+<p>Headline shown at the top of the fullscreen (mobile) calendar, above the date labels.</p>
 <auro-header level="3" id="slot-bib-fullscreen-fromLabel">bib.fullscreen.fromLabel</auro-header>
-<p>Defines the content to display above the first date input in the fullscreen (mobile) layout.</p>
+<p>Label shown above the start date in the fullscreen (mobile) calendar.</p>
 <auro-header level="3" id="slot-bib-fullscreen-toLabel">bib.fullscreen.toLabel</auro-header>
-<p>Defines the content to display above the second date input in the fullscreen (mobile) layout when <code>range</code> is true.</p>
+<p>Label shown above the end date in the fullscreen (mobile) calendar when <code>range</code> is set.</p>
 <auro-header level="3" id="slot-date">date_YYYY_MM_DD</auro-header>
-<p>Defines the content to display in the <code>auro-calendar-cell</code> for the specified date. The date format in the slot name should match <code_YYYY>MM_DD</code> (e.g. <code>slot="date_2026_01_15"</code>). Colored using the success state token when the <code>highlight</code> attribute is applied.</p>
+<p>Content shown under the day number in the calendar for one date, such as a price. Replace <code>YYYY_MM_DD</code> with the date, for example <code>slot="date_2026_01_15"</code>. Add the <code>highlight</code> attribute to show the text in the success color.</p>
 <auro-header level="3" id="slot-popover">popover_YYYY_MM_DD</auro-header>
-<p>Defines the content to display in the <code>auro-calendar-cell</code> popover for the specified date. The date format in the slot name should match <code>YYYY_MM_DD</code> (e.g. <code>slot="popover_2026_01_15"</code>).</p>
+<p>Content shown in a popover when someone points to a date in the calendar or moves to it with the keyboard. Replace <code>YYYY_MM_DD</code> with the date, for example <code>slot="popover_2026_01_15"</code>.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
-<auro-header level="2" id="stateManagement">State Management</auro-header>
-<p>The following read-only properties reflect the current state of the component and can be accessed via JavaScript.</p>
+<auro-header level="2" id="stateManagement">State management</auro-header>
+<p>Use the following properties in JavaScript to read the datepicker's current state, and set <code>value</code> and <code>valueEnd</code> to change the chosen dates.</p>
 <auro-header level="3" id="validity">validity</auro-header>
-<p>Returns the current <code>validityState</code> of the component as a string. Possible values include <code>"valid"</code>, <code>"valueMissing"</code>, <code>"badInput"</code>, <code>"rangeOverflow"</code>, <code>"rangeUnderflow"</code>, and <code>"customError"</code>.</p>
+<p>Gets the datepicker's current validation state as a string: <code>valid</code>, <code>valueMissing</code>, <code>tooShort</code>, <code>tooLong</code>, <code>patternMismatch</code>, <code>rangeOverflow</code>, <code>rangeUnderflow</code>, or <code>customError</code>. It's <code>undefined</code> until the datepicker is validated.</p>
 <auro-header level="3" id="value">value</auro-header>
-<p>Gets or sets the selected date value as a string in <code>MM/DD/YYYY</code> format. When <code>range</code> is set, this represents the start date.</p>
+<p>Gets or sets the chosen date as an ISO date string, such as <code>2025-04-21</code>. When <code>range</code> is set, it's the start date.</p>
 <auro-header level="3" id="valueEnd">valueEnd</auro-header>
-<p>Gets or sets the end date value when <code>range</code> is set. Uses the same <code>MM/DD/YYYY</code> format.</p>
+<p>Gets or sets the end date when <code>range</code> is set, in the same ISO format as <code>value</code>.</p>
 <auro-header level="3" id="values">values</auro-header>
-<p>A convenience read-only property for use when <code>range</code> is implemented that returns both <code>value</code> and <code>valueEnd</code> as an array.</p>
+<p>Gets the chosen dates as an array, which is useful when <code>range</code> is set. It's read-only.</p>
 <ul>
 <li>When <code>range</code> is set and both dates are selected, returns <code>[value, valueEnd]</code>.</li>
 <li>When only <code>value</code> is set (range not complete or not enabled), returns <code>[value]</code>.</li>
@@ -345,19 +345,22 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <section>
 <auro-header level="2" id="publicFunctions">Functions</auro-header>
 <p>The following public methods are available on the <code>&lt;auro-datepicker&gt;</code> element.</p>
+<auro-header level="3" id="clear">clear()</auro-header>
+<p>Clears the chosen dates. Unlike <code>reset()</code>, the datepicker still counts as used, so the next validation can report a missing date.</p>
 <auro-header level="3" id="focus">focus()</auro-header>
-<p>Programmatically moves focus to the datepicker trigger input.</p>
+<p>Moves keyboard focus to the start date input. Pass <code>endDate</code> to focus the end date input of a range.</p>
 <auro-header level="3" id="hideBib">hideBib()</auro-header>
-<p>Programmatically hides the dropdown bib (calendar) if it is currently open.</p>
+<p>Closes the calendar if it's open.</p>
 <auro-header level="3" id="reset">reset()</auro-header>
-<p>Resets the component to its initial state, clearing the selected date(s) and validation state.</p>
+<p>Clears the chosen dates and the validation state.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
 <!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
 <auro-button id="resetStateBtn">Reset</auro-button>
 <br />
 <auro-datepicker id="resetStateExample" range minDate="2025-06-30" calendarStartDate="2025-06-30" calendarFocusDate="2025-06-30" value="2025-02-14" valueEnd="2025-04-05" setCustomValidityRangeUnderflow="The date you entered is too early.">
-<span slot="bib.fullscreen.headline">Reset Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Reset example</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
@@ -372,7 +375,8 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <pre class="language-html"><code class="language-html">&lt;auro-button id="resetStateBtn"&gt;Reset&lt;/auro-button&gt;
 &lt;br /&gt;
 &lt;auro-datepicker id="resetStateExample" range minDate="2025-06-30" calendarStartDate="2025-06-30" calendarFocusDate="2025-06-30" value="2025-02-14" valueEnd="2025-04-05" setCustomValidityRangeUnderflow="The date you entered is too early."&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Reset Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Reset example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
@@ -383,17 +387,16 @@ Ensure your <code>tsconfig.json</code> uses <code>"moduleResolution": "bundler"<
 <!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
 <pre class="language-js"><code class="language-js">export function resetStateExample() {
   const elem = document.querySelector('#resetStateExample');
-​
-  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
+&#10;  document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
     elem.reset();
   });
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="showBib">showBib()</auro-header>
-<p>Programmatically shows the dropdown bib (calendar) if it is not already open.</p>
+<p>Opens the calendar if it's closed.</p>
 <auro-header level="3" id="validate">validate()</auro-header>
-<p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+<p>Checks the chosen dates and updates <code>validity</code>. Pass <code>true</code> to validate even when the datepicker has focus or hasn't been used yet, so an empty required datepicker reports <code>valueMissing</code>.</p>
 </section>
 </div>
 </div>

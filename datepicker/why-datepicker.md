@@ -4,13 +4,13 @@
 <p>Native date inputs vary widely across browsers and platforms, with inconsistent screen reader announcements, keyboard behavior, and focus management.</p>
 <p><code>auro-datepicker</code> provides:</p>
 <ul>
-<li><strong>Full keyboard navigation</strong> — Arrow keys move between days, months, and years. Enter and Space select a date. Escape closes the calendar. DOM focus stays on the calendar grid wrapper while an imperatively-tracked active cell is announced through a debounced <code>aria-live</code> region, so screen readers stay in sync without duplicate announcements during rapid navigation.</li>
-<li><strong>Rich ARIA semantics</strong> — Every cell is labeled with its full date, day-of-week, and contextual state (e.g. "selected", "today", "unavailable", "range start", "in range"). Screen reader users hear meaningful announcements, not just numbers.</li>
-<li><strong>Live region announcements</strong> — Month changes are announced via <code>aria-live</code> so assistive technology users know the visible month has changed.</li>
-<li><strong>Reduced motion support</strong> — Scrolling and transitions respect <code>prefers-reduced-motion</code>.</li>
-<li><strong>Focus management</strong> — Opening the calendar moves focus to the calendar grid wrapper; the initial active date cell is marked imperatively and announced via the <code>aria-live</code> region. Closing returns focus to the trigger input. The fullscreen dialog uses <code>showModal()</code> for native inert-background behavior, while the desktop modal traps focus within the bib.</li>
+<li><strong>Full keyboard navigation</strong>: Arrow keys move between days and into the next or previous month at the edges. Enter and Space select a date. Escape closes the calendar. DOM focus stays on the calendar grid while a debounced <code>aria-live</code> region announces the active date, so screen readers stay in sync without duplicate announcements during rapid navigation.</li>
+<li><strong>Rich ARIA semantics</strong>: Each date is announced with its weekday and full date, any date or popover slot text, and its state, such as "unavailable", "range start", or "in range". Screen reader users hear meaningful announcements, not just numbers.</li>
+<li><strong>Live region announcements</strong>: Month changes are announced via <code>aria-live</code> so screen reader users know the visible month has changed.</li>
+<li><strong>Reduced motion</strong>: The calendar scrolls instantly and doesn't animate, so it doesn't add motion for people who set <code>prefers-reduced-motion</code>.</li>
+<li><strong>Focus management</strong>: Opening the calendar moves focus to the calendar grid, and the <code>aria-live</code> region announces the starting date. Closing returns focus to the trigger input. The fullscreen dialog uses <code>showModal()</code> for native inert-background behavior, while the desktop modal traps focus within the bib.</li>
 </ul>
-<p>By contrast, native <code>&lt;input type="date"&gt;</code> delegates all of this to the browser, and the result differs significantly between Chrome, Safari, and Firefox — often with no keyboard navigation of the calendar grid at all on some platforms.</p>
+<p>By contrast, native <code>&lt;input type="date"&gt;</code> delegates all of this to the browser, and the result differs significantly between Chrome, Safari, and Firefox, often with no keyboard navigation of the calendar grid at all on some platforms.</p>
 <auro-header level="2" id="dateRangeSelection">Date range selection</auro-header>
 <p>HTML has no native concept of a date range picker. Building one from two <code>&lt;input type="date"&gt;</code> elements requires custom logic for coordinating values, enforcing start-before-end ordering, and providing a unified visual experience.</p>
 <p><code>auro-datepicker</code> handles this with a single <code>range</code> attribute, providing:</p>
@@ -21,31 +21,31 @@
 <li>Automatic value coordination between departure and return dates</li>
 </ul>
 <auro-header level="2" id="blackoutDates">Blackout dates</auro-header>
-<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>minDate</code> and <code>maxDate</code> can restrict to a range, but they cannot express "these specific dates within the range are not selectable."</p>
+<p>Native date inputs have no mechanism to mark specific dates as unavailable. <code>min</code> and <code>max</code> can restrict to a range, but they can't express "these specific dates within the range are not selectable."</p>
 <p><code>auro-datepicker</code> supports a <code>blackoutDates</code> array of ISO date strings. Blacked-out dates are:</p>
 <ul>
 <li>Visually styled as unavailable</li>
-<li>Announced as unavailable (with a customizable label like "sold out") to screen readers</li>
-<li>Focusable but not selectable via click or keyboard</li>
-<li>Validated on typed input — entering a blackout date triggers a <code>customError</code> validity state</li>
+<li>Announced as unavailable (with a customizable label, such as "sold out") to screen readers</li>
+<li>Reachable with the arrow keys, but not selectable by click or keyboard</li>
+<li>Validated on typed input: entering a blackout date triggers a <code>customError</code> validity state</li>
 </ul>
 <auro-header level="2" id="validation">Validation</auro-header>
-<p>Native date validation is limited to <code>required</code>, <code>min</code>, and <code>max</code>. Error messages are browser-controlled and cannot be customized.</p>
+<p>Native date validation is limited to <code>required</code>, <code>min</code>, and <code>max</code>. Error messages are browser-controlled and can't be customized.</p>
 <p><code>auro-datepicker</code> integrates with the Auro form validation system:</p>
 <ul>
 <li>Supports <code>required</code>, <code>minDate</code>, <code>maxDate</code>, and blackout date constraints</li>
 <li>Custom error messages for each validity state (<code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityCustomError</code>)</li>
-<li>Validation runs on blur, on value change, and when constraints change (e.g. <code>blackoutDates</code> is updated)</li>
+<li>Validation runs when focus leaves the datepicker, when the end date of a range changes, and when <code>blackoutDates</code> changes</li>
 <li>Dispatches <code>auroFormElement-validated</code> events so parent forms can react</li>
-<li>Displays errors inline via the help text slot</li>
+<li>Shows the error message below the datepicker, in place of the help text</li>
 </ul>
 <auro-header level="2" id="responsiveLayout">Responsive layout</auro-header>
-<p>Native date inputs render a small, browser-controlled popup that cannot be styled or repositioned.</p>
+<p>Native date inputs render a small, browser-controlled popup that can't be styled or repositioned.</p>
 <p><code>auro-datepicker</code> adapts to viewport size:</p>
 <ul>
-<li><strong>Desktop</strong> — Calendar appears as a positioned dropdown bib, with optional modal behavior (<code>desktopModal</code>) that traps focus and makes background content inert</li>
-<li><strong>Mobile</strong> — Calendar opens as a fullscreen dialog via <code>showModal()</code>, with a configurable breakpoint (<code>fullscreenBreakpoint</code>). The virtual keyboard stays open during the transition so users can continue typing</li>
-<li><strong>Multi-month</strong> — Desktop viewports can display two months side-by-side for range selection</li>
+<li><strong>Desktop</strong>: The calendar opens in a dropdown positioned next to the input and always behaves as a modal, keeping focus inside the calendar and making the rest of the page inert until it closes</li>
+<li><strong>Mobile</strong>: The calendar opens as a fullscreen dialog via <code>showModal()</code>, with a configurable breakpoint (<code>fullscreenBreakpoint</code>)</li>
+<li><strong>Multi-month</strong>: Desktop viewports can display two months side-by-side for range selection</li>
 </ul>
 <auro-header level="2" id="localization">Localization</auro-header>
 <p>Native <code>&lt;input type="date"&gt;</code> follows the browser's locale for display format, but offers no control over month names, labels, or ARIA text.</p>
@@ -58,15 +58,15 @@
 <li>Configurable date display format</li>
 </ul>
 <auro-header level="2" id="customCellContent">Custom cell content</auro-header>
-<p>Native date inputs render a fixed grid of numbers. There is no way to add prices, icons, or supplementary information to individual dates.</p>
+<p>Native date inputs render a fixed grid of numbers. They can't show prices, icons, or supplementary information on individual dates.</p>
 <p><code>auro-datepicker</code> supports per-date slot content:</p>
 <ul>
-<li><strong>Date slots</strong> (<code>date_YYYY_MM_DD</code>) — Add custom HTML below the date number (e.g. flight prices, availability indicators)</li>
-<li><strong>Popover slots</strong> (<code>popover_YYYY_MM_DD</code>) — Add popover content that appears on hover or focus for a specific date</li>
-<li><strong>Reference dates</strong> — Display reference data alongside dates for decision-making</li>
+<li><strong>Date slots</strong> (<code>date_YYYY_MM_DD</code>): Add custom HTML below the date number, such as flight prices or availability indicators</li>
+<li><strong>Popover slots</strong> (<code>popover_YYYY_MM_DD</code>): Add popover content that appears on hover or focus for a specific date</li>
+<li><strong>Reference dates</strong> (<code>referenceDates</code>): Outline dates people may want to compare against while choosing</li>
 </ul>
 <auro-header level="2" id="designSystemIntegration">Design system integration</auro-header>
-<p>A native <code>&lt;input type="date"&gt;</code> cannot be styled to match a design system. Shadow DOM browser controls resist CSS customization, and the calendar popup is entirely outside author control.</p>
+<p>A native <code>&lt;input type="date"&gt;</code> can't be styled to match a design system. Shadow DOM browser controls resist CSS customization, and the calendar popup is entirely outside author control.</p>
 <p><code>auro-datepicker</code> is built with the Alaska Airlines Auro Design System:</p>
 <ul>
 <li>Consistent visual language with other Auro form components</li>
@@ -122,7 +122,7 @@
 <tr>
 <td>Localization</td>
 <td>Browser locale only</td>
-<td>Fully configurable labels and names</td>
+<td>Most labels and names, except the Done button and the word "selected"</td>
 </tr>
 <tr>
 <td>Theming</td>

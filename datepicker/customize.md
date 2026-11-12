@@ -1,61 +1,64 @@
-<auro-header level="1" id="overview">Datepicker - Customize</auro-header>
+<auro-header level="1" id="overview">Datepicker: Customize</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
-<auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
-<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
-<auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
-<auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
+<auro-anchorlink fluid href="#placement" class="level2 body-xs">Dropdown placement</auro-anchorlink>
+<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS shadow parts</auro-anchorlink>
+<auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen breakpoint</auro-anchorlink>
+<auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. dark background</auro-anchorlink>
 <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
-<auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
+<auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, size, and layout</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#calendarFocusDate" class="level2 body-xs">Calendar Focus Date</auro-anchorlink>
-<auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
-<auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
-<auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
-<auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
-<auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
-<auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
-<auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
+<auro-anchorlink fluid href="#calendarFocusDate" class="level2 body-xs">Calendar focus date</auro-anchorlink>
+<auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom validation</auro-anchorlink>
+<auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable component</auro-anchorlink>
+<auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force error state</auro-anchorlink>
+<auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input mode</auro-anchorlink>
+<auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/max date</auro-anchorlink>
+<auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No validation</auro-anchorlink>
+<auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require selection</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
 <div class="scrollWrapper">
 <section>
 <auro-header level="2" id="appearance">Appearance</auro-header>
-<auro-header level="3" id="placement">Bib Placement</auro-header>
-<p>The bib position can be customized with <code>placement</code>, <code>offset</code>, <code>flip</code>, <code>autoPlacement</code>, and <code>shift</code> attributes.</p>
+<auro-header level="3" id="placement">Dropdown placement</auro-header>
+<p>Set where the calendar dropdown opens with the <code>placement</code>, <code>offset</code>, <code>noFlip</code>, and <code>shift</code> attributes.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/floater-config.html) -->
 <!-- The below content is automatically added from ./../apiExamples/floater-config.html -->
 <div style="width: 400px">
 <auro-datepicker offset="20" placement="bottom-start" noFlip>
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">bottom-start with 20px offset and noFlip</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <br/>
 <auro-datepicker offset="20" placement="bottom-start">
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">bottom-start with 20px offset and flip</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <br/>
-<auro-datepicker offset="20" placement="right" autoPlacement noFlip>
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
-<span slot="fromLabel">right with 20px offset, noFlip and autoPlacement</span>
+<auro-datepicker offset="20" placement="right" noFlip>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
+<span slot="fromLabel">right with 20px offset and noFlip</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 </div>
 <div style="width: 600px; padding-top: 1em;">
-<p>Range bottom-start with 20px offset, noFlip and shift enabled</p>
+<p>Range with <code>placement="bottom-start"</code>, <code>offset="20"</code>, <code>noFlip</code>, and <code>shift</code></p>
 <auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="2025-07-08">
-<span slot="ariaLabel.bib.close">Close Calendar</span>
-<span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker range headline</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
@@ -71,28 +74,31 @@
 
 <pre class="language-html"><code class="language-html">&lt;div style="width: 400px"&gt;
   &lt;auro-datepicker offset="20" placement="bottom-start" noFlip&gt;
-    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;bottom-start with 20px offset and noFlip&lt;/span&gt;
     &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;/auro-datepicker&gt;
   &lt;br/&gt;
   &lt;auro-datepicker offset="20" placement="bottom-start"&gt;
-    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;bottom-start with 20px offset and flip&lt;/span&gt;
     &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;/auro-datepicker&gt;
   &lt;br/&gt;
-  &lt;auro-datepicker offset="20" placement="right" autoPlacement noFlip&gt;
-    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
-    &lt;span slot="fromLabel"&gt;right with 20px offset, noFlip and autoPlacement&lt;/span&gt;
+  &lt;auro-datepicker offset="20" placement="right" noFlip&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;right with 20px offset and noFlip&lt;/span&gt;
     &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;/auro-datepicker&gt;
 &lt;/div&gt;
-&lt;div style="width: 600px; padding-top: 1em;"&gt;
-  &lt;p&gt;Range bottom-start with 20px offset, noFlip and shift enabled&lt;/p&gt;
+&#10;&lt;div style="width: 600px; padding-top: 1em;"&gt;
+  &lt;p&gt;Range with &lt;code&gt;placement="bottom-start"&lt;/code&gt;, &lt;code&gt;offset="20"&lt;/code&gt;, &lt;code&gt;noFlip&lt;/code&gt;, and &lt;code&gt;shift&lt;/code&gt;&lt;/p&gt;
   &lt;auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="2025-07-08"&gt;
-    &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
-    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Range Headline&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datepicker range headline&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
     &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
     &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
@@ -105,8 +111,8 @@
 <section>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
-<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
-<p>CSS Shadow Parts allow you to style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-datepicker&gt;</code>.</p>
+<auro-header level="3" id="cssParts">CSS shadow parts</auro-header>
+<p>CSS shadow parts let you style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-datepicker&gt;</code>.</p>
 <table class="auro_table">
 <thead>
 <tr>
@@ -115,13 +121,17 @@
 </tr>
 </thead>
 <tbody>
-<tr><td><code>dropdown</code></td><td>The outer dropdown container.</td></tr>
-<tr><td><code>trigger</code></td><td>The trigger content container.</td></tr>
-<tr><td><code>input</code></td><td>The date input element(s).</td></tr>
-<tr><td><code>calendarWrapper</code></td><td>The calendar bib sizing container.</td></tr>
-<tr><td><code>calendar</code></td><td>The calendar element.</td></tr>
-<tr><td><code>helpTextSpan</code></td><td>The help text container wrapper.</td></tr>
-<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
+<tr><td><code>dropdown</code></td><td>The dropdown that holds the trigger, the calendar, and the help text.</td></tr>
+<tr><td><code>trigger</code></td><td>The <code>&lt;div&gt;</code> in the dropdown's trigger that holds the calendar icon, the inputs, and the clear button or error icon.</td></tr>
+<tr><td><code>wrapper</code></td><td>The container inside <code>trigger</code> that lays out the calendar icon, the inputs, and the clear button or error icon.</td></tr>
+<tr><td><code>mainLabel</code></td><td>The label for the whole datepicker, rendered only when <code>layout="snowflake"</code>.</td></tr>
+<tr><td><code>inputSection</code></td><td>The container that holds the date inputs.</td></tr>
+<tr><td><code>accentIcon</code></td><td>The calendar icon shown before the inputs in the <code>snowflake</code> layout. The <code>classic</code> layout hides it and shows the start date input's own calendar icon instead.</td></tr>
+<tr><td><code>input</code></td><td>Each date input: one, or two when <code>range</code> is set.</td></tr>
+<tr><td><code>calendarWrapper</code></td><td>The container in the dropdown that holds the calendar.</td></tr>
+<tr><td><code>calendar</code></td><td>The calendar in the dropdown, with the month grids, the previous and next month buttons, and the Done button.</td></tr>
+<tr><td><code>helpTextSpan</code></td><td>The <code>&lt;div&gt;</code> that holds the help text or error message.</td></tr>
+<tr><td><code>helpText</code></td><td>The <code>&lt;p&gt;</code> inside <code>helpTextSpan</code> that holds the help text or error message.</td></tr>
 </tbody>
 </table>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -140,9 +150,10 @@
   }
 </style>
 <auro-datepicker class="css-parts-demo">
-<span slot="fromLabel">CSS Parts Example</span>
-<span slot="helpText">This datepicker has custom styles applied via CSS Shadow Parts.</span>
-<span slot="bib.fullscreen.headline">Select Date</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="fromLabel">CSS parts example</span>
+<span slot="helpText">This datepicker has custom styles applied via CSS shadow parts.</span>
+<span slot="bib.fullscreen.headline">Select date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -164,23 +175,24 @@
   }
 &lt;/style&gt;
 &lt;auro-datepicker class="css-parts-demo"&gt;
-  &lt;span slot="fromLabel"&gt;CSS Parts Example&lt;/span&gt;
-  &lt;span slot="helpText"&gt;This datepicker has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;CSS parts example&lt;/span&gt;
+  &lt;span slot="helpText"&gt;This datepicker has custom styles applied via CSS shadow parts.&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 </section>
 <section>
-<auro-header level="3" id="breakpoint">Fullscreen Breakpoint</auro-header>
-<p>The <code>fullscreenBreakpoint</code> attribute defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
+<auro-header level="3" id="breakpoint">Fullscreen breakpoint</auro-header>
+<p>The <code>fullscreenBreakpoint</code> attribute sets the largest screen size at which the calendar opens fullscreen instead of in a dropdown. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
 <!-- The below content is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 <auro-datepicker fullscreenBreakpoint="lg">
-<span slot="ariaLabel.bib.close">Close Calendar</span>
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -192,8 +204,8 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker fullscreenBreakpoint="lg"&gt;
-  &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
@@ -201,14 +213,14 @@
 </auro-accordion>
 </section>
 <section>
-<auro-header level="3" id="background">Light vs. Dark Background</auro-header>
-<p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
+<auro-header level="3" id="background">Light vs. dark background</auro-header>
+<p>The <code>appearance</code> attribute sets the datepicker's colors for light or dark backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-datepicker>
-<span slot="ariaLabel.bib.close">Close Calendar</span>
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -220,8 +232,8 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
-  &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
@@ -231,8 +243,8 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-datepicker appearance="inverse">
-<span slot="ariaLabel.bib.close">Close Calendar</span>
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -244,8 +256,8 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker appearance="inverse"&gt;
-  &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
@@ -256,35 +268,37 @@
 <auro-header level="3" id="localization">Localization</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/localization.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/localization.md -->
-<p>The component supports complete localization, including visible strings, screen reader announcements, and locale-based date formatting.</p>
+<p>The component supports localization of the date format, the calendar's month and weekday names, and most visible strings and screen reader announcements. A few strings don't currently have a slot or attribute, such as the calendar's Done button and the word "selected" in date selection announcements, so they're always in English.</p>
 <auro-header level="4" id="localizationTrigger">Trigger</auro-header>
-<auro-header level="5" id="localizationTriggerVisibleStrings">Visible Strings</auro-header>
-<p>The visible strings rendered in the input, trigger, and fullscreen bib are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<auro-header level="5" id="localizationTriggerVisibleStrings">Visible strings</auro-header>
+<p>The labels, help text, and headline in the input, trigger, and fullscreen calendar aren't derived from <code>locale</code>. Each one has a named slot, so pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute to supply its translation.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
-
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker&gt;
 +   &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
 +   &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
 +   &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
 +   &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
 +   &lt;span slot="bib.fullscreen.fromLabel"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="4" id="localizationCalendar">Calendar</auro-header>
-<auro-header level="5" id="localizationCalendarVisibleStrings">Visible Strings</auro-header>
-<p>By default, the calendar weekday names rendered above the day grid and the month names rendered in the calendar header are derived from the active <code>locale</code> using the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so they update automatically when <code>locale</code> changes. Use the <code>monthNames</code> attribute to override the derived month names — for example, to supply a translation the browser does not produce or to support a locale the browser does not recognize.</p>
+<auro-header level="5" id="localizationCalendarVisibleStrings">Visible strings</auro-header>
+<p>By default, the calendar weekday names rendered above the day grid and the month names rendered in the calendar header are derived from the active <code>locale</code> using the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so they update automatically when <code>locale</code> changes. Use the <code>monthNames</code> attribute to override the derived month names, for example to supply a translation the browser doesn't produce or to support a locale the browser doesn't recognize.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings-diff.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings-diff.html -->
-
 <pre class="language-diff"><code class="language-diff">- &lt;auro-datepicker&gt;
 + &lt;auro-datepicker monthNames='["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]'&gt;
     &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
     &lt;span slot="helpText"&gt;Seleccione un rango de fechas&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(opcional)&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Cerrar calendario&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Seleccione una fecha&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Salida&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<p>The following live example sets <code>monthNames</code> imperatively on an <code>es-MX</code> picker:</p>
+<p>The following live example sets the <code>monthNames</code> attribute on an <code>es-MX</code> datepicker:</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-calendar-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-calendar-strings.html -->
@@ -302,6 +316,7 @@
   navLabelNextMonth="Ir al mes siguiente"
   calendarGridLabel="Días del mes del calendario"
   id="localizationExample">
+<span slot="ariaLabel.bib.close">Cerrar calendario</span>
 <span slot="fromLabel">Salida</span>
 <span slot="toLabel">Regreso</span>
 <span slot="helpText">Seleccione un rango de fechas</span>
@@ -331,6 +346,7 @@
   navLabelNextMonth="Ir al mes siguiente"
   calendarGridLabel="Días del mes del calendario"
   id="localizationExample"&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Cerrar calendario&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Regreso&lt;/span&gt;
   &lt;span slot="helpText"&gt;Seleccione un rango de fechas&lt;/span&gt;
@@ -342,11 +358,10 @@
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="5" id="localizationCalendarA11yStrings">Screen Reader Strings</auro-header>
-<p>Assistive-technology announcements — range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelEndPreview</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>) — are exposed as individual attributes so they can be translated independently of the visible UI. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
+<auro-header level="5" id="localizationCalendarA11yStrings">Screen reader strings</auro-header>
+<p>Screen reader announcements, including range descriptors (<code>rangeLabelStart</code>, <code>rangeLabelEnd</code>, <code>rangeLabelEndPreview</code>, <code>rangeLabelBeforeRange</code>, <code>rangeLabelInRange</code>, <code>rangeLabelAfterRange</code>), month navigation labels (<code>navLabelPrevMonth</code>, <code>navLabelNextMonth</code>), and the calendar grid label (<code>calendarGridLabel</code>), are exposed as individual attributes so they can be translated independently of the visible UI. These strings aren't derived from <code>locale</code>, so supply translated values for every language you support, including the <code>ariaLabel.bib.close</code> slot.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
-
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker
     locale="de-DE"
     range
@@ -364,42 +379,52 @@
     &lt;span slot="helpText"&gt;Wählen Sie einen Zeitraum&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
     &lt;span slot="optionalToLabel"&gt;(freiwillig)&lt;/span&gt;
++   &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Abreise&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.toLabel"&gt;Rückkehr&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="localizationDateFormatting">Date Formatting</auro-header>
-<p>The <code>locale</code> attribute drives the date format used by the input and the calendar. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <code>Intl</code> API, so <code>format</code> does not need to be set manually.</p>
+<auro-header level="4" id="localizationDateFormatting">Date formatting</auro-header>
+<p>The <code>locale</code> attribute drives the date format used by the input and the calendar. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <code>Intl</code> API, so you don't need to set <code>format</code> yourself.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale.html -->
-
 <pre class="language-diff"><code class="language-diff">- &lt;auro-datepicker&gt;
 + &lt;auro-datepicker locale="de-DE"&gt;
     &lt;span slot="fromLabel"&gt;Deutsches Datum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Deutsches Datum&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <p>If no <code>locale</code> attribute is present, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute; if none is found, it defaults to <code>en-US</code>.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale-inherited.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale-inherited.html -->
-
 <pre class="language-diff"><code class="language-diff">+ &lt;div data-locale="ja-JP"&gt;
     &lt;auro-datepicker&gt;
       &lt;span slot="fromLabel"&gt;継承された ja-JP 日付形式&lt;/span&gt;
       &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
       &lt;span slot="optionalFromLabel"&gt;（任意）&lt;/span&gt;
+      &lt;span slot="ariaLabel.bib.close"&gt;カレンダーを閉じる&lt;/span&gt;
+      &lt;span slot="bib.fullscreen.headline"&gt;日付を選択&lt;/span&gt;
+      &lt;span slot="bib.fullscreen.fromLabel"&gt;出発日&lt;/span&gt;
     &lt;/auro-datepicker&gt;
 + &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<p>If <code>format</code> is set alongside <code>locale</code>, <code>format</code> always wins.</p>
+<p>If <code>format</code> is set alongside <code>locale</code>, <code>format</code> wins. When <code>locale</code> changes later, <code>format</code> changes with it only if it still matches the previous locale's format.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale-formatted.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-locale-formatted.html -->
-
 <pre class="language-diff"><code class="language-diff">  &lt;auro-datepicker
 +   locale="de-DE"
 +   format="mm/dd/yyyy"&gt;
     &lt;span slot="fromLabel"&gt;Deutsches Datum mit mm/dd/yyyy-Format&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.headline"&gt;Datum auswählen&lt;/span&gt;
+    &lt;span slot="bib.fullscreen.fromLabel"&gt;Deutsches Datum&lt;/span&gt;
   &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <p>The following live example shows several locale configurations in action:</p>
@@ -420,6 +445,7 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
+<span slot="ariaLabel.bib.close">Kalender schließen</span>
 <span slot="fromLabel">Abreisedatum</span>
 <span slot="toLabel">Rückkehrdatum</span>
 <span slot="helpText">Hilfetext</span>
@@ -442,6 +468,7 @@
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数">
+<span slot="ariaLabel.bib.close">关闭日历</span>
 <span slot="fromLabel">出发日期</span>
 <span slot="toLabel">返回日期</span>
 <span slot="helpText">帮助文本</span>
@@ -463,7 +490,8 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
-<span slot="fromLabel">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+<span slot="ariaLabel.bib.close">Kalender schließen</span>
+<span slot="fromLabel">Abreisedatum (geerbt aus <code>data-locale="de-DE"</code>)</span>
 <span slot="toLabel">Rückkehrdatum</span>
 <span slot="helpText">Hilfetext</span>
 <span slot="optionalFromLabel">(freiwillig)</span>
@@ -486,6 +514,7 @@
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付">
+<span slot="ariaLabel.bib.close">カレンダーを閉じる</span>
 <span slot="fromLabel">出発日</span>
 <span slot="toLabel">帰国日</span>
 <span slot="helpText">ヘルプテキスト</span>
@@ -516,6 +545,7 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;Abreisedatum&lt;/span&gt;
     &lt;span slot="toLabel"&gt;Rückkehrdatum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
@@ -538,6 +568,7 @@
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;关闭日历&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;出发日期&lt;/span&gt;
     &lt;span slot="toLabel"&gt;返回日期&lt;/span&gt;
     &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
@@ -559,7 +590,8 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats"&gt;
-    &lt;span slot="fromLabel"&gt;Abreisedatum (geerbt aus `data-locale="de-DE"`)&lt;/span&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;Kalender schließen&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Abreisedatum (geerbt aus &lt;code&gt;data-locale="de-DE"&lt;/code&gt;)&lt;/span&gt;
     &lt;span slot="toLabel"&gt;Rückkehrdatum&lt;/span&gt;
     &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
     &lt;span slot="optionalFromLabel"&gt;(freiwillig)&lt;/span&gt;
@@ -582,6 +614,7 @@
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付"&gt;
+    &lt;span slot="ariaLabel.bib.close"&gt;カレンダーを閉じる&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;出発日&lt;/span&gt;
     &lt;span slot="toLabel"&gt;帰国日&lt;/span&gt;
     &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
@@ -595,30 +628,27 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
-<p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
+<auro-header level="3" id="layout">Shape, size, and layout</auro-header>
+<p>The <code>shape</code>, <code>size</code>, and <code>layout</code> attributes work together to set the datepicker's overall look.</p>
 <p>See the <auro-hyperlink href="design">Design page</auro-hyperlink> for a detailed breakdown.</p>
 </section>
 <section>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
-<p>The component may be restyled by changing the values of the following token(s) for the datepicker, dropdown, and input</p>
+<p>Restyle the datepicker by changing the values of the following tokens for the datepicker, dropdown, and input.</p>
 <auro-header level="4" id="cssTokensDatepicker">Datepicker</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../datepicker/src/styles/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../../datepicker/src/styles/tokens.scss -->
 
 <pre class="language-scss"><code class="language-scss">/* stylelint-disable color-function-notation */
-​
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-​
-:host(:not([ondark])),
+&#10;@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+&#10;:host(:not([ondark])),
 :host(:not([appearance="inverse"])) {
   // datepicker
   --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --ds-auro-datepicker-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
   --ds-auro-datepicker-outline-color: transparent;
-​
-  // calendar
+&#10;  // calendar
   --ds-auro-calendar-mobile-header-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-calendar-mobile-header-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
   --ds-auro-calendar-mobile-header-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
@@ -634,16 +664,14 @@
   --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }
-​
-:host([ondark]),
+&#10;:host([ondark]),
 :host([appearance="inverse"]) {
   // datepicker
   --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-datepicker-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-datepicker-outline-color: transparent;
-​
-  // calendar
+&#10;  // calendar
   --ds-auro-calendar-mobile-header-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-calendar-mobile-header-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
   --ds-auro-calendar-mobile-header-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
@@ -666,8 +694,7 @@
 
 <pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
-​
-:host(:not([ondark])),
+&#10;:host(:not([ondark])),
 :host(:not([appearance="inverse"])) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
   --ds-auro-dropdown-trigger-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
@@ -681,8 +708,7 @@
   --ds-auro-dropdownbib-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }
-​
-:host([ondark]),
+&#10;:host([ondark]),
 :host([appearance="inverse"]) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
@@ -698,7 +724,7 @@
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="4" id="cssTokensExample">Example</auro-header>
-<p>The following example demonstrates overriding all available datepicker, dropdown, input, and calendar tokens.</p>
+<p>The following example overrides a selection of datepicker, dropdown, input, and calendar tokens.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
@@ -738,9 +764,10 @@
   }
 </style>
 <auro-datepicker class="token-demo" range>
+<span slot="ariaLabel.bib.close">Close calendar</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
-<span slot="bib.fullscreen.headline">Select Dates</span>
+<span slot="bib.fullscreen.headline">Select dates</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
 <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
@@ -787,9 +814,10 @@
   }
 &lt;/style&gt;
 &lt;auro-datepicker class="token-demo" range&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Select Dates&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Select dates&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
@@ -800,10 +828,8 @@
 <!-- The below code snippet is automatically added from ./../../input/src/styles/tokens.scss -->
 
 <pre class="language-scss"><code class="language-scss">/* stylelint-disable custom-property-empty-line-before */
-​
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-​
-:host(:not([ondark])),
+&#10;@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+&#10;:host(:not([ondark])),
 :host(:not([appearance="inverse"])) {
   --ds-auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --ds-auro-input-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
@@ -812,11 +838,9 @@
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
-​
-  --ds-auro-input-outline-color: transparent;
+&#10;  --ds-auro-input-outline-color: transparent;
 }
-​
-:host([ondark]),
+&#10;:host([ondark]),
 :host([appearance="inverse"]) {
   --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
@@ -825,20 +849,20 @@
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
-​
-  --ds-auro-input-outline-color: transparent;
+&#10;  --ds-auro-input-outline-color: transparent;
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
-<auro-header level="3" id="calendarFocusDate">Calendar Focus Date</auro-header>
+<auro-header level="3" id="calendarFocusDate">Calendar focus date</auro-header>
 <p>Use the <code>calendarFocusDate</code> attribute to control which month the calendar first renders. When set alongside <code>value</code> and <code>valueEnd</code>, <code>calendarFocusDate</code> takes precedence for the visible month.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/calendar-focus-date.html) -->
 <!-- The below content is automatically added from ./../apiExamples/calendar-focus-date.html -->
 <auro-datepicker range value="2026-06-15" valueEnd="2026-06-22" calendarFocusDate="2026-12-01">
-<span slot="bib.fullscreen.headline">calendarFocusDate Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">calendarFocusDate example</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
@@ -852,7 +876,8 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/calendar-focus-date.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker range value="2026-06-15" valueEnd="2026-06-22" calendarFocusDate="2026-12-01"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;calendarFocusDate Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;calendarFocusDate example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
@@ -860,13 +885,14 @@
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="customValidation">Custom Validation</auro-header>
-<p>Use the <code>validity</code> attribute with a custom error message to provide specific feedback.</p>
+<auro-header level="3" id="customValidation">Custom validation</auro-header>
+<p>Use the <code>setCustomValidity</code> attributes, such as <code>setCustomValidityValueMissing</code>, to replace the built-in error messages with specific feedback.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/validity.html) -->
 <!-- The below content is automatically added from ./../apiExamples/validity.html -->
 <auro-datepicker required setCustomValidityValueMissing="Please select a departure date.">
-<span slot="bib.fullscreen.headline">validity Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Custom validation example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -878,18 +904,21 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/validity.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker required setCustomValidityValueMissing="Please select a departure date."&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;validity Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Custom validation example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="disableComponent">Disable Component</auro-header>
-<p>Use the <code>disabled</code> attribute to render the datepicker in a non-interactive state.</p>
+<auro-header level="3" id="disableComponent">Disable component</auro-header>
+<p>Use the <code>disabled</code> attribute to turn the datepicker off, so people can't type a date or open the calendar.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
 <auro-datepicker disabled>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Choose a date</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -901,21 +930,24 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker disabled&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="forceError">Force Error State</auro-header>
+<auro-header level="3" id="forceError">Force error state</auro-header>
 <p>Use the <code>error</code> attribute to force the component into an error state with a custom message.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/error.html -->
-<auro-button id="undefinedValueExampleBtnAddError">Set Error</auro-button>
-<auro-button id="undefinedValueExampleBtnRemoveError">Remove Error</auro-button>
+<auro-button id="undefinedValueExampleBtnAddError">Set error</auro-button>
+<auro-button id="undefinedValueExampleBtnRemoveError">Remove error</auro-button>
 <br />
 <auro-datepicker error="Custom error message" id="errorExample">
-<span slot="bib.fullscreen.headline">Error Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Error example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -926,23 +958,25 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-button id="undefinedValueExampleBtnAddError"&gt;Set Error&lt;/auro-button&gt;
-&lt;auro-button id="undefinedValueExampleBtnRemoveError"&gt;Remove Error&lt;/auro-button&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-button id="undefinedValueExampleBtnAddError"&gt;Set error&lt;/auro-button&gt;
+&lt;auro-button id="undefinedValueExampleBtnRemoveError"&gt;Remove error&lt;/auro-button&gt;
 &lt;br /&gt;
 &lt;auro-datepicker error="Custom error message" id="errorExample"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Error Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Error example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="inputMode">Input Mode</auro-header>
-<p>The <code>inputmode</code> attribute controls which virtual keyboard layout is presented on mobile devices.</p>
+<auro-header level="3" id="inputMode">Input mode</auro-header>
+<p>Use the <code>inputmode</code> attribute to choose which on-screen keyboard phones and tablets show, such as <code>numeric</code> for a number pad.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inputmode.html) -->
 <!-- The below content is automatically added from ./../apiExamples/inputmode.html -->
 <auro-datepicker inputmode="numeric">
-<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker headline</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -954,20 +988,22 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/inputmode.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker inputmode="numeric"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker headline&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="minMaxDate">Min/Max Date</auro-header>
+<auro-header level="3" id="minMaxDate">Min/max date</auro-header>
 <p>Use the <code>minDate</code> and <code>maxDate</code> attributes to constrain the selectable date range.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/min-date.html) -->
 <!-- The below content is automatically added from ./../apiExamples/min-date.html -->
 <auro-datepicker minDate="2028-03-25" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
-<span slot="bib.fullscreen.headline">minDate Example</span>
-<span slot="fromLabel">Choose a date - minDate</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">minDate example</span>
+<span slot="fromLabel">Choose a date on or after 03/25/2028</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -978,8 +1014,9 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/min-date.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker minDate="2028-03-25" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date."&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;minDate Example&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date - minDate&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;minDate example&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date on or after 03/25/2028&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -988,8 +1025,9 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/max-date.html) -->
 <!-- The below content is automatically added from ./../apiExamples/max-date.html -->
 <auro-datepicker maxDate="2023-03-25" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
-<span slot="bib.fullscreen.headline">maxDate Example</span>
-<span slot="fromLabel">Choose a date - maxDate</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">maxDate example</span>
+<span slot="fromLabel">Choose a date on or before 03/25/2023</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1000,19 +1038,21 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/max-date.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker maxDate="2023-03-25" setCustomValidityRangeOverflow="Selected date is later than maximum date."&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;maxDate Example&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date - maxDate&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;maxDate example&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date on or before 03/25/2023&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="noValidate">No Validation</auro-header>
-<p>Use the <code>noValidate</code> attribute to disable all validation on the component.</p>
+<auro-header level="3" id="noValidate">No validation</auro-header>
+<p>Use the <code>noValidate</code> attribute to turn off the automatic validation that runs when focus leaves the datepicker.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-validate.html -->
 <auro-datepicker required noValidate>
-<span slot="bib.fullscreen.headline">noValidate Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">noValidate example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
@@ -1024,25 +1064,28 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/no-validate.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker required noValidate&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;noValidate Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;noValidate example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="requireSelection">Require Selection</auro-header>
-<p>Use the <code>required</code> attribute to require a date selection before form submission.</p>
+<auro-header level="3" id="requireSelection">Require selection</auro-header>
+<p>Use the <code>required</code> attribute to make a date required. When a required datepicker is left empty, validation fails with <code>valueMissing</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
 <!-- The below content is automatically added from ./../apiExamples/required.html -->
 <auro-datepicker required>
-<span slot="bib.fullscreen.headline">Required Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Required example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <br />
 <auro-datepicker required range>
-<span slot="bib.fullscreen.headline">Required Example</span>
+<span slot="ariaLabel.bib.close">Close calendar</span>
+<span slot="bib.fullscreen.headline">Required example</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
@@ -1056,13 +1099,15 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/required.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker required&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Required Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Required example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;
 &lt;br /&gt;
 &lt;auro-datepicker required range&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Required Example&lt;/span&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Required example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;

@@ -1,20 +1,20 @@
-<auro-header level="1" id="overview">Counter & Counter Group - Keyboard Behavior</auro-header>
+<auro-header level="1" id="overview">Counter and counter group: Keyboard behavior</auro-header>
 <div class="contentWrapper">
 <div class="mainContent">
 <div class="scrollWrapper">
-<auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
+<auro-header level="2" id="tabBehavior">Tab behavior</auro-header>
 <auro-header level="3" id="tabBehaviorCounter">Counter</auro-header>
-<p>The counter component is itself a focusable element. There are no sub-parts that are separately focusable.</p>
-<auro-header level="3" id="tabBehaviorCounterGroup">Counter Group</auro-header>
-<p>When multiple counters are placed inside a counter group the component behaves as an auro-dropdown. The trigger element renders a counter group label and a summary of all counter labels and current values. The dropdown bib renders all counters inside of the group.</p>
+<p>The counter is a single tab stop. Its minus and plus buttons aren't in the tab order; use the Up Arrow and Down Arrow keys to change the value.</p>
+<auro-header level="3" id="tabBehaviorCounterGroup">Counter group</auro-header>
+<p>When a counter group has the <code>isDropdown</code> attribute, it behaves as an <code>auro-dropdown</code>. The trigger element renders the counter group label and a summary of each counter's current value and label. The dropdown bib renders all counters inside of the group.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/tabindex.md) -->
 <!-- The below content is automatically added from ./../../dropdown/docs/partials/tabindex.md -->
-<p>The trigger is a focusable element and participates in the standard tab order, responding to <code>Tab</code> and <code>Shift+Tab</code> key events per <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">native browser behavior</auro-hyperlink>, i.e., these keys step through the browser tabindex sequence.</p>
-<p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
-<p>When the bib is collapsed, the bib content is excluded from the tab sequence. When <strong>expanded</strong>, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition and is rendered as a popover.</p>
-<p>When the <code>desktopModal</code> attribute is set, focus is also trapped within the bib on desktop viewports. All sibling elements on the page are marked <code>inert</code>, preventing interaction with content outside the dropdown until it is closed.</p>
+<p>The trigger is a focusable element and participates in the standard tab order, responding to <code>Tab</code> and <code>Shift+Tab</code> key events per <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">native browser behavior</auro-hyperlink>: these keys move through the page's tab sequence.</p>
+<p>When the component is <code>disabled</code>, the trigger stays in the tab sequence but can't open the bib.</p>
+<p>While the bib is collapsed, its content isn't in the tab sequence. When the bib <strong>expands</strong>, focus moves to the first focusable element in it, and its focusable elements join the natural tab order. In fullscreen mode, focus stays in the bib, and <code>Tab</code> cycles through its focusable elements until the bib closes or the screen grows wider than the <code>fullscreenBreakpoint</code> width.</p>
+<p>When <code>desktopModal</code> is set, focus also stays in the bib when it isn't fullscreen. The dropdown makes the rest of the page <code>inert</code>, so people can't interact with content outside the dropdown until it closes.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="2" id="keyEvents">Key Events</auro-header>
+<auro-header level="2" id="keyEvents">Key events</auro-header>
 <auro-header level="3" id="keyEventsCounter">Counter</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counter.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents-counter.md -->
@@ -23,8 +23,8 @@
 <tr>
 <th>Key</th>
 <th>Modifier</th>
-<th>Current State</th>
-<th>Focus Element</th>
+<th>Current state</th>
+<th>Focus element</th>
 <th>Behavior</th>
 </tr>
 </thead>
@@ -34,37 +34,37 @@
 <td>-</td>
 <td>*</td>
 <td>
-            Trigger element.
+            Counter.
 </td>
-<td>Decrements the counter value by 1.</td>
+<td>Decreases the value by 1, unless the counter is disabled or at its minimum.</td>
 </tr>
 <tr>
 <td>ArrowUp</td>
 <td>-</td>
 <td>*</td>
 <td>
-            Trigger element.
+            Counter.
 </td>
-<td>Increments the counter value by 1.</td>
+<td>Increases the value by 1, unless the counter is disabled or at its maximum.</td>
 </tr>
 </tbody>
 </table>
 <!-- AURO-GENERATED-CONTENT:END -->
 <div class="note">
-<p><strong>Note:</strong> The following keyboard behavior is unsupported at this time:</p>
+<p><strong>Note:</strong> The counter doesn't currently support the following keys:</p>
 <ul>
-<li><strong>Home:</strong> sets the counter value to the defined minimum (default 0)</li>
-<li><strong>End:</strong> sets the counter value to the defined maximum (default 9)</li>
+<li><strong>Home:</strong> Sets the value to the minimum, <code>min</code> (0 by default).</li>
+<li><strong>End:</strong> Sets the value to the maximum, <code>max</code> (9 by default).</li>
 <li><strong>PageUp:</strong> (optional) Increases the value by a larger step than Up Arrow.</li>
 <li><strong>PageDown:</strong> (optional) Decreases the value by a larger step than Down Arrow.</li>
 </ul>
 </div>
-<auro-header level="3" id="keyEventsCounterGroup">Counter Group</auro-header>
+<auro-header level="3" id="keyEventsCounterGroup">Counter group</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counterGroup.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents-counterGroup.md -->
-<p>The counter group itself does not have any key event handlers other than those inherited from the dropdown component. However, when the counter group is <strong>expanded</strong> or <strong>opened</strong> the first counter in the bib receives <strong>focus</strong>. When the counter group is <strong>collapsed</strong> or <strong>closed</strong> by any method other than the <code>Tab</code> key (e.g., the <strong>Escape</strong> key), <strong>focus</strong> moves to the trigger element.</p>
+<p>The counter group adds two key handlers to the ones it inherits from the dropdown component. <strong>Escape</strong> closes the open bib without also closing a dialog or drawer the group sits in. In a bib that isn't fullscreen, <strong>Shift+Tab</strong> on the first counter closes the bib and moves focus to whatever comes before the group on the page. When the bib opens as a popover, focus doesn't currently move into it and stays on the trigger. When the bib opens fullscreen, focus moves to its close button. When <strong>Escape</strong> closes the bib, focus moves back to the trigger.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="4" id="keyEventsDropdown">Key Events inherited from Auro-Dropdown</auro-header>
+<auro-header level="4" id="keyEventsDropdown">Key events inherited from auro-dropdown</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/keyEvents.md) -->
 <!-- The below content is automatically added from ./../../dropdown/docs/partials/keyEvents.md -->
 <table>
@@ -72,8 +72,8 @@
 <tr>
 <th>Key</th>
 <th>Modifier</th>
-<th>Current State</th>
-<th>Focus Element</th>
+<th>Current state</th>
+<th>Focus element</th>
 <th>Behavior</th>
 </tr>
 </thead>
@@ -109,7 +109,7 @@
 <td>-</td>
 <td>Collapsed</td>
 <td>
-            Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger, except an <code>&lt;input&gt;</code>.
 </td>
 <td>Opens the bib.</td>
 </tr>
@@ -117,7 +117,7 @@
 <td>-</td>
 <td>Expanded</td>
 <td>
-            Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger, except an <code>&lt;input&gt;</code>.
 </td>
 <td>Closes the bib.</td>
 </tr>

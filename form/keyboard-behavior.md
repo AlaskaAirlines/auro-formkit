@@ -1,10 +1,10 @@
-<auro-header level="1" id="overview">Form - Keyboard Behavior</auro-header>
+<auro-header level="1" id="overview">Form: Keyboard behavior</auro-header>
 <div class="contentWrapper">
 <div class="mainContent">
 <div class="scrollWrapper">
-<auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
-<p>The <code>&lt;auro-form&gt;</code> component is a container element that does not participate in the <code>tabindex</code> sequence itself. The form elements it wraps (e.g., <code>&lt;auro-input&gt;</code>, <code>&lt;auro-select&gt;</code>, <code>&lt;auro-datepicker&gt;</code>) each participate independently in the browser's default <code>tabindex</code> sequence.</p>
-<auro-header level="2" id="keyEvents">Key Events</auro-header>
+<auro-header level="2" id="tabBehavior">Tab behavior</auro-header>
+<p>The <code>&lt;auro-form&gt;</code> component is a container that keyboard users don't tab to. Keyboard users reach each form element it wraps, such as <code>&lt;auro-input&gt;</code>, <code>&lt;auro-select&gt;</code>, and <code>&lt;auro-datepicker&gt;</code>, in the normal tab order.</p>
+<auro-header level="2" id="keyEvents">Key events</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
 <table>
@@ -12,8 +12,8 @@
 <tr>
 <th>Key</th>
 <th>Modifier</th>
-<th>Current State</th>
-<th>Focus Element</th>
+<th>Current state</th>
+<th>Focus element</th>
 <th>Behavior</th>
 </tr>
 </thead>
@@ -21,16 +21,16 @@
 <tr>
 <td>Enter</td>
 <td>-</td>
-<td>Focus on a form element (not a textarea)</td>
-<td>Any tracked form element (input, select, datepicker, etc.)</td>
+<td>Focus is on an enabled form element</td>
+<td>Any tracked form element, such as <code>auro-input</code>, <code>auro-select</code>, or <code>auro-datepicker</code></td>
 <td>
-              Prevents default behavior and calls <code>submit()</code> on the form. Validates all elements and dispatches the <code>submit</code> event if the form is valid.
+              Prevents the default behavior and calls <code>submit()</code> on the form, which validates every enabled form element and fires the <code>submit</code> event when none is invalid or required but empty.
 </td>
 </tr>
 </tbody>
 </table>
 <div class="note">
-<p><strong>Note:</strong> The <code>Enter</code> key handler is skipped for <code>&lt;textarea&gt;</code> elements and elements with a <code>textarea</code> attribute to allow normal newline entry.</p>
+<p><strong>Note:</strong> Enter doesn't submit the form from a disabled form element, a <code>&lt;textarea&gt;</code> element, or an element with a <code>textarea</code> attribute, so those elements keep their normal Enter behavior, such as starting a new line. Enter also doesn't submit the form while focus is on the clear button in an <code>auro-input</code> or <code>auro-combobox</code>, so Enter clears the field instead.</p>
 </div>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>

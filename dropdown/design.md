@@ -1,52 +1,52 @@
-<auro-header level="1" id="overview">Dropdown - Design</auro-header>
+<auro-header level="1" id="overview">Dropdown: Design</auro-header>
 <div class="contentWrapper">
 <div class="mainContent">
 <div class="scrollWrapper">
-<auro-header level="3" id="anatomy">Component Anatomy</auro-header>
+<auro-header level="3" id="anatomy">Component anatomy</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/design/layout.md) -->
 <!-- The below content is automatically added from ./../docs/partials/design/layout.md -->
 <p>The component consists of the following elements:</p>
 <ul>
 <li>
-<strong>trigger:</strong> shows the component label or content and will render to reflect state of the component (e.g. <code>focus</code>, <code>hover</code>, <code>disabled</code>).
+<strong>Trigger:</strong> Shows the component label or content, and changes to reflect the component's state, such as <code>focus</code>, <code>hover</code>, or <code>disabled</code>.
 </li>
 <li>
-<strong>bib:</strong> the expandable content area that is shown/hidden when the trigger is activated.
+<strong>Bib:</strong> Holds the dropdown's content, and opens and closes when someone activates the trigger.
 </li>
 <li>
-<strong>chevron:</strong> an optional icon indicating the expanded/collapsed state of the dropdown. Visible when the <code>chevron</code> attribute is set.
+<strong>Chevron:</strong> Points up while the bib is open and down while it's closed. It appears only when the <code>chevron</code> attribute is set.
 </li>
 <li>
-<strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance.
+<strong>Help text:</strong> Shows text below the trigger that helps people understand how to use the dropdown.
 </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>
-<p>The trigger is a focusable element and will visually respond to common UI states - <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
+<p>The trigger is a focusable element and visually responds to common UI states: <strong>Hover</strong> <em>(<code>:hover</code>)</em>, <strong>Focus</strong> <em>(<code>:focus-within</code>)</em>, and <strong>Disabled</strong> <em>(the <code>disabled</code> attribute)</em>. The <strong>Active</strong> <em>(<code>:active</code>)</em> state uses the same style as focus.</p>
 <auro-header level="4" id="bib">Bib</auro-header>
-<p>The bib is positioned relative to the trigger and may be configured to appear above or below. At smaller viewports the bib can switch to fullscreen mode based on the <code>fullscreenBreakpoint</code> setting.</p>
-<auro-header level="4" id="helpText">Help Text</auro-header>
-<p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers.</p>
+<p>The bib opens next to the trigger, on the side that <code>placement</code> sets. On screens at or below the <code>fullscreenBreakpoint</code> width, the bib fills the screen instead.</p>
+<auro-header level="4" id="helpText">Help text</auro-header>
+<p>Help text is optional. Consider how people, especially screen reader users, understand the full context of the dropdown without it.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="3" id="shapeSizeLayout">Shape | Size | Layout Support</auro-header>
-<p>The <code>auro-dropdown</code> component supports the <code>shape</code>, <code>size</code> and <code>layout</code> feature set. The component defaults to the <code>layout="classic"</code>, <code>shape="classic"</code> and <code>size="lg"</code>.</p>
-<auro-header level="4" id="classicLayout">Classic Layout</auro-header>
-<p>The <code>classic</code> layout is default for <code>auro-dropdown</code>. No customization is needed to achieve this look.</p>
+<auro-header level="3" id="shapeSizeLayout">Shape, size, and layout support</auro-header>
+<p>The <code>auro-dropdown</code> component supports the <code>shape</code>, <code>size</code>, and <code>layout</code> attributes. None of them has a default value, so set all three, such as <code>layout="classic" shape="classic" size="lg"</code>, to get the standard look.</p>
+<auro-header level="4" id="classicLayout">Classic layout</auro-header>
+<p>The <code>classic</code> layout is the standard look for <code>auro-dropdown</code>. Set <code>layout="classic"</code> to use it.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/classic/basic.html -->
-<auro-dropdown id="classic" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
+<auro-dropdown id="classic" layout="classic" shape="classic" size="lg" chevron>
 <div style="padding: var(--ds-size-150);">
-          Lorem ipsum solar
+          Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <br />
 <auro-button id="classicButton">
-            Dismiss Dropdown
+            Dismiss dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-          Help text
+          Times are local to each airport
 </span>
 <div slot="trigger">
-          Trigger
+          Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -55,24 +55,24 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/classic/basic.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/classic/basic.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="classic" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="classic" layout="classic" shape="classic" size="lg" chevron&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
     &lt;br /&gt;
     &lt;auro-button id="classicButton"&gt;
-      Dismiss Dropdown
+      Dismiss dropdown
     &lt;/auro-button&gt;
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
+    Times are local to each airport
   &lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="emphasizedLayout">Emphasized Layout</auro-header>
+<auro-header level="4" id="emphasizedLayout">Emphasized layout</auro-header>
 <p>The <code>emphasized</code> layout is only supported on dark backgrounds.</p>
 <p>The <code>emphasized</code> layout supports the following shapes:</p>
 <ul>
@@ -87,31 +87,31 @@
 <div class="exampleWrapper--ondark">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/emphasized/basic.html -->
-<auro-dropdown aria-label="custom label" shape="pill" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-        Lorem ipsum solar
+<auro-dropdown shape="pill" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
+        Round trip
 <div slot="trigger">
-          Trigger
+          Trip type
 </div>
 <span slot="helpText">
-          Help text - Lorem ipsum solar lorem ipsum solar
+          Choose round trip or one way
 </span>
 </auro-dropdown>
-<auro-dropdown aria-label="custom label" shape="pill-left" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-        Lorem ipsum solar
+<auro-dropdown shape="pill-left" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
+        Seattle (SEA)
 <div slot="trigger">
-          Trigger
+          From
 </div>
 <span slot="helpText">
-          Help text - Lorem ipsum solar lorem ipsum solar
+          Departure airport
 </span>
 </auro-dropdown>
-<auro-dropdown aria-label="custom label" shape="pill-right" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-        Lorem ipsum solar
+<auro-dropdown shape="pill-right" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
+        Anchorage (ANC)
 <div slot="trigger">
-          Trigger
+          To
 </div>
 <span slot="helpText">
-          Help text - Lorem ipsum solar lorem ipsum solar
+          Arrival airport
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -120,48 +120,48 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/emphasized/basic.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown aria-label="custom label" shape="pill" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown shape="pill" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
+  Round trip
   &lt;div slot="trigger"&gt;
-    Trigger
+    Trip type
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text - Lorem ipsum solar lorem ipsum solar
+    Choose round trip or one way
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;
-&lt;auro-dropdown aria-label="custom label" shape="pill-left" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
-  Lorem ipsum solar
+&#10;&lt;auro-dropdown shape="pill-left" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
+  Seattle (SEA)
   &lt;div slot="trigger"&gt;
-    Trigger
+    From
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text - Lorem ipsum solar lorem ipsum solar
+    Departure airport
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;
-&lt;auro-dropdown aria-label="custom label" shape="pill-right" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
-  Lorem ipsum solar
+&#10;&lt;auro-dropdown shape="pill-right" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse"&gt;
+  Anchorage (ANC)
   &lt;div slot="trigger"&gt;
-    Trigger
+    To
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text - Lorem ipsum solar lorem ipsum solar
+    Arrival airport
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="snowflakeLayout">Snowflake Layout</auro-header>
-<p>The <code>snowflake</code> layout is a unique, one off layout that does not follow the normal pattern. There is only one way to use snowflake as shown in the following example.</p>
-<p>The <code>snowflake</code> layout is only expected to be used on dark backgrounds, in conjunction with <code>appearance="inverse"</code>.</p>
+<auro-header level="4" id="snowflakeLayout">Snowflake layout</auro-header>
+<p>The <code>snowflake</code> layout is a unique, one-off layout that doesn't follow the normal pattern. Use it only as shown in the following example.</p>
+<p>Use the <code>snowflake</code> layout only on dark backgrounds, together with <code>appearance="inverse"</code>.</p>
 <div class="exampleWrapper--ondark">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/snowflake/basic.html -->
-<auro-dropdown aria-label="custom label" shape="snowflake" size="lg" layout="snowflake" style="width: 249px;" appearance="inverse">
-        Lorem ipsum solar
+<auro-dropdown shape="snowflake" size="lg" layout="snowflake" style="width: 249px;" appearance="inverse">
+        1 adult
 <div slot="trigger">
-          Trigger
+          Travelers
 </div>
 <span slot="helpText">
-          Help text - Lorem ipsum solar lorem ipsum solar
+          Include everyone on the trip, including children
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -170,13 +170,13 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/basic.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/snowflake/basic.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown aria-label="custom label" shape="snowflake" size="lg" layout="snowflake" style="width: 249px;" appearance="inverse"&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown shape="snowflake" size="lg" layout="snowflake" style="width: 249px;" appearance="inverse"&gt;
+  1 adult
   &lt;div slot="trigger"&gt;
-    Trigger
+    Travelers
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text - Lorem ipsum solar lorem ipsum solar
+    Include everyone on the trip, including children
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

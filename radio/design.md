@@ -1,42 +1,42 @@
-<auro-header level="1" id="overview">Radio - Design</auro-header>
+<auro-header level="1" id="overview">Radio: Design</auro-header>
 <div class="contentWrapper">
 <div class="mainContent">
 <div class="scrollWrapper">
-<auro-header level="3" id="anatomy">Component Anatomy</auro-header>
+<auro-header level="3" id="anatomy">Component anatomy</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
 <!-- The below content is automatically added from ./../docs/partials/layout/layout.md -->
 <p>The component consists of the following elements:</p>
 <ul>
 <li>
-<strong>radio group:</strong> a container element (<code>&lt;auro-radio-group&gt;</code>) that manages a collection of radio buttons, handles validation, and provides a shared legend and help text.
+<strong>Radio group:</strong> A container element (<code>&lt;auro-radio-group&gt;</code>) that manages a collection of radio buttons, handles validation, and provides a shared legend and help text.
 </li>
 <li>
-<strong>radio button:</strong> an individual selectable element (<code>&lt;auro-radio&gt;</code>) that can be toggled between selected and unselected states. Only one radio button in a group can be selected at a time.
+<strong>Radio button:</strong> An individual option (<code>&lt;auro-radio&gt;</code>) that becomes selected when someone chooses it. Only one radio button in a group can be selected at a time.
 </li>
 <li>
-<strong>legend:</strong> descriptive label rendered above the group of radio buttons, set via the <code>legend</code> slot on the group.
+<strong>Legend:</strong> The group's label, shown above the radio buttons and set with the group's <code>legend</code> slot.
 </li>
 <li>
-<strong>help text:</strong> descriptive text rendered below the group intended to help clarify the intended use of the component and any current validation error with instructions to resolve those errors.
+<strong>Help text:</strong> Text shown below the group that explains how to use it. While the group shows an error, the error message replaces it.
 </li>
 </ul>
-<auro-header level="4" id="radioGroup">Radio Group</auro-header>
-<p>The group element coordinates shared behavior across all child radio buttons, including validation (e.g. <code>required</code>), error state display, and the <code>disabled</code> attribute which disables all options at once.</p>
-<auro-header level="4" id="radioButton">Radio Button</auro-header>
-<p>Each radio button renders a visual indicator (filled circle) and a label. A radio button may be in one of the following states:</p>
+<auro-header level="4" id="radioGroup">Radio group</auro-header>
+<p>The group element coordinates shared behavior across all child radio buttons, including validation (for example, <code>required</code>), error state display, and the <code>disabled</code> attribute, which turns off all options at once.</p>
+<auro-header level="4" id="radioButton">Radio button</auro-header>
+<p>Each radio button shows a circle, which fills in when selected, and a label. A radio button may be in one of the following states:</p>
 <ul>
 <li>
-<code>checked</code> - The radio button is selected and its value becomes the group's value.
+<code>checked</code>: The radio button is selected and its value becomes the group's value.
 </li>
 <li>
-<code>disabled</code> - The radio button is not interactive and cannot be selected.
+<code>disabled</code>: The radio button can't be selected.
 </li>
 <li>
-<code>error</code> - Inherited from the parent group when validation fails.
+<code>error</code>: The radio button shows its error style. The group sets this when its validation fails.
 </li>
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="3" id="defaultLayout">Default Layout</auro-header>
+<auro-header level="3" id="defaultLayout">Default layout</auro-header>
 <p>The <code>auro-radio-group</code> renders radio buttons in a vertical list by default.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -61,9 +61,9 @@
 &lt;/auro-radio-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="horizontalLayout">Horizontal Layout</auro-header>
-<p>Use the <code>horizontal</code> attribute to render options on a single horizontal line.</p>
-<p><strong>Note:</strong> The <code>horizontal</code> attribute has a limit of 3 options. Beyond three, options will be listed vertically.</p>
+<auro-header level="3" id="horizontalLayout">Horizontal layout</auro-header>
+<p>Use the <code>horizontal</code> attribute to place the radio buttons side by side on one line.</p>
+<p><strong>Note:</strong> <code>horizontal</code> works for up to three radio buttons. Groups with four or more stay stacked vertically.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/horizontal.html) -->
 <!-- The below content is automatically added from ./../apiExamples/horizontal.html -->
@@ -88,8 +88,8 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="colors">Colors</auro-header>
-<auro-header level="4" id="defaultColor">Default Color</auro-header>
-<p>When the component is used on a light background.</p>
+<auro-header level="4" id="defaultColor">Default color</auro-header>
+<p>Use the default colors when the component sits on a light background.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
@@ -113,8 +113,8 @@
 &lt;/auro-radio-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="inverseColor">Inverse Color</auro-header>
-<p>When the component is used on a darker background, set <code>appearance="inverse"</code> to invert the component colors for proper contrast and visibility.</p>
+<auro-header level="4" id="inverseColor">Inverse color</auro-header>
+<p>When the component sits on a dark background, set <code>appearance="inverse"</code> to use colors made for dark backgrounds.</p>
 <div class="exampleWrapper--ondark">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-group.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-group.html -->

@@ -1,20 +1,22 @@
 <auro-header level="1">CSS only with native select</auro-header>
-<p>For situations where the <code>&lt;auro-select&gt;</code> web component cannot be used, a native HTML <code>&lt;select&gt;</code> element with <code>&lt;option&gt;</code> children can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-select</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> does not provide a prebuilt <code>.select</code> class, so the styling must be authored manually using Auro design tokens.</p>
+<p>For situations where the <code>&lt;auro-select&gt;</code> web component can't be used, a native HTML <code>&lt;select&gt;</code> element with <code>&lt;option&gt;</code> children can be styled with the Auro Design System tokens to approximate the visual appearance of <code>auro-select</code>. Unlike <auro-hyperlink href="https://auro.alaskaair.com/components/auro/hyperlink/css-only" target="_blank">auro-hyperlink</auro-hyperlink>, <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">Web Core Style Sheets</auro-hyperlink> doesn't provide a prebuilt <code>.select</code> class, so the styling must be authored manually using Auro design tokens.</p>
 <auro-header level="2">Styling a native select</auro-header>
-<p>The native select can be reset and restyled with the Auro design tokens published by <auro-hyperlink href="https://alaskaairlines.github.io/WebCoreStyleSheets/" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. Only the closed chrome of <code>&lt;select&gt;</code> can be styled — the dropdown panel that opens when the user activates the control is browser-controlled and is largely unstyleable. The pattern below replicates the border, padding, caret, and focus-state colors used by <code>auro-select</code> in its collapsed state.</p>
-<pre><code>@import "./node_modules/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
-​
-.select {
+<p>Reset and restyle the native select with the Auro design tokens published by <auro-hyperlink href="https://github.com/AlaskaAirlines/AuroDesignTokens" target="_blank">@aurodesignsystem/design-tokens</auro-hyperlink>. Only the closed chrome of <code>&lt;select&gt;</code> can be styled. The dropdown panel that opens when the user activates the control is browser-controlled and largely can't be styled. The pattern below replicates the border, padding, caret, and focus-state colors used by <code>auro-select</code> in its collapsed state.</p>
+<pre><code>/* Color tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska.css";
+/* Size, border-radius, and typography tokens */
+@import "./node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css";
+&#10;.select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 100%;
   min-height: var(--ds-size-600, 3rem);
   padding: var(--ds-size-100, 0.5rem) var(--ds-size-400, 2rem) var(--ds-size-100, 0.5rem) var(--ds-size-200, 1rem);
-  border: 1px solid var(--ds-color-border-ui-default, #6e767f);
-  border-radius: var(--ds-border-radius, 4px);
-  background-color: var(--ds-color-container-primary-default, #ffffff);
-  color: var(--ds-color-text-primary-default, #1d1d1d);
+  border: 1px solid var(--ds-basic-color-border-bold, #585e67);
+  border-radius: var(--ds-border-radius, 0.375rem);
+  background-color: var(--ds-basic-color-surface-default, #ffffff);
+  color: var(--ds-basic-color-texticon-default, #2a2a2a);
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
@@ -24,20 +26,17 @@
   background-position: right var(--ds-size-150, 0.75rem) center;
   background-size: var(--ds-size-200, 1rem);
 }
-​
-.select:focus-visible {
-  outline: 2px solid var(--ds-color-border-active-default, #01426a);
+&#10;.select:focus-visible {
+  outline: 2px solid var(--ds-basic-color-border-brand, #00274a);
   outline-offset: 2px;
-  border-color: var(--ds-color-border-active-default, #01426a);
+  border-color: var(--ds-basic-color-border-brand, #00274a);
 }
-​
-.select:disabled {
+&#10;.select:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
-​
-.select:invalid {
-  border-color: var(--ds-color-border-error-default, #d6371e);
+&#10;.select:invalid {
+  border-color: var(--ds-basic-color-status-error, #e31f26);
 }</code></pre>
 <auro-header level="3">Basic select</auro-header>
 <p>Apply the <code>.select</code> class to a native <code>&lt;select&gt;</code> element and pair it with a <code>&lt;label&gt;</code>:</p>
@@ -62,7 +61,7 @@
   &lt;/optgroup&gt;
 &lt;/select&gt;</code></pre>
 <auro-header level="3">Multiple select</auro-header>
-<p>Add the <code>multiple</code> attribute to allow more than one option to be selected. Note that the browser renders <code>multiple</code> selects as a scrollable list box rather than a dropdown, so the caret background image is not appropriate; consider a separate class for this variant:</p>
+<p>Add the <code>multiple</code> attribute to allow more than one option to be selected. The browser renders <code>multiple</code> selects as a scrollable list box rather than a dropdown, so the caret background image doesn't fit. Consider a separate class for this variant:</p>
 <pre><code>&lt;label for="preferences"&gt;Travel preferences&lt;/label&gt;
 &lt;select id="preferences" name="preferences" class="select" multiple size="4"&gt;
   &lt;option value="window"&gt;Window seat&lt;/option&gt;
@@ -73,13 +72,13 @@
 <auro-header level="2">What you lose without auro-select</auro-header>
 <p>While the CSS above replicates the <strong>visual styling</strong> of the closed <code>auro-select</code> trigger, the following functionality built into the <code>auro-select</code> web component is <strong>not available</strong> when using a plain HTML <code>&lt;select&gt;</code>:</p>
 <auro-header level="3">Stylable dropdown panel</auro-header>
-<p><code>auro-select</code> renders its dropdown panel (the "bib") as part of the component, so option spacing, borders, elevation, and selected-state styling all match the Auro design system. The dropdown panel that opens from a native <code>&lt;select&gt;</code> is rendered by the browser/operating system and cannot be styled — fonts, colors, padding, and the highlight color of the active option are all controlled by the user agent.</p>
+<p><code>auro-select</code> renders its dropdown panel (the "bib") as part of the component, so option spacing, borders, elevation, and selected-state styling all match the Auro design system. The dropdown panel that opens from a native <code>&lt;select&gt;</code> is rendered by the browser or operating system and can't be styled. Fonts, colors, padding, and the highlight color of the active option are all controlled by the user agent.</p>
 <auro-header level="3">Rich option content</auro-header>
-<p><code>auro-select</code> accepts <code>auro-menuoption</code> children whose default slot can contain any HTML — icons, two-line descriptions, badges, or custom markup. Native <code>&lt;option&gt;</code> elements only render plain text; any inline HTML inside an <code>&lt;option&gt;</code> is stripped by the browser.</p>
+<p><code>auro-select</code> accepts <code>auro-menuoption</code> children whose default slot can contain any HTML, such as icons, two-line descriptions, badges, or custom markup. Native <code>&lt;option&gt;</code> elements only render plain text; any inline HTML inside an <code>&lt;option&gt;</code> is stripped by the browser.</p>
 <auro-header level="3">Custom display value</auro-header>
 <p><code>auro-select</code> exposes a <code>displayValue</code> slot and a <code>forceDisplayValue</code> attribute so the collapsed trigger can show formatted content (markup, icons, a different string than the selected option's label). A native <code>&lt;select&gt;</code> always displays the plain text of the selected <code>&lt;option&gt;</code>.</p>
 <auro-header level="3">Custom validation messages</auro-header>
-<p><code>auro-select</code> exposes <code>setCustomValidity</code>, <code>setCustomValidityValueMissing</code>, <code>setCustomValidityCustomError</code>, and an <code>error</code> attribute for fully customizable error messages per validity state. A native <code>&lt;select&gt;</code> surfaces browser-controlled validation tooltips that can only be overridden via <code>setCustomValidity()</code> on the element and cannot be styled.</p>
+<p><code>auro-select</code> exposes <code>setCustomValidity</code>, <code>setCustomValidityValueMissing</code>, <code>setCustomValidityCustomError</code>, and an <code>error</code> attribute for fully customizable error messages per validity state. A native <code>&lt;select&gt;</code> surfaces browser-controlled validation tooltips that can only be overridden through <code>setCustomValidity()</code> on the element and can't be styled.</p>
 <auro-header level="3">Help text and error slots</auro-header>
 <p><code>auro-select</code> provides a <code>helpText</code> slot that renders below the trigger and automatically swaps to the active validation message when the field is invalid. With a native <code>&lt;select&gt;</code>, you must author the help-text markup, manage its visibility, and wire <code>aria-describedby</code> yourself.</p>
 <auro-header level="3">Multi-select with checkmarks</auro-header>
@@ -87,21 +86,21 @@
 <auro-header level="3">Type-ahead navigation</auro-header>
 <p><code>auro-select</code> implements its own keyboard strategy (see <code>selectKeyboardStrategy.js</code>) for type-ahead matching, arrow-key navigation, and focus management that is consistent across browsers. Native <code>&lt;select&gt;</code> type-ahead behavior varies by browser and operating system.</p>
 <auro-header level="3">Mobile fullscreen behavior</auro-header>
-<p><code>auro-select</code> automatically switches its dropdown to a fullscreen sheet on small viewports via the <code>fullscreenBreakpoint</code> attribute, with a configurable headline slot (<code>bib.fullscreen.headline</code>) and close-button label. A native <code>&lt;select&gt;</code> defers entirely to the operating system's native picker, which cannot be themed or labeled.</p>
+<p><code>auro-select</code> automatically switches its dropdown to a fullscreen sheet on small viewports via the <code>fullscreenBreakpoint</code> attribute, with a configurable headline slot (<code>bib.fullscreen.headline</code>) and close-button label. A native <code>&lt;select&gt;</code> defers entirely to the operating system's native picker, which can't be themed or labeled.</p>
 <auro-header level="3">Placement and layout control</auro-header>
-<p><code>auro-select</code> supports <code>placement</code>, <code>autoPlacement</code>, <code>noFlip</code>, <code>shift</code>, <code>offset</code>, <code>matchWidth</code>, and <code>flexMenuWidth</code> attributes to control where and how the dropdown opens. A native <code>&lt;select&gt;</code> opens wherever the browser decides, with no developer control.</p>
+<p><code>auro-select</code> supports <code>placement</code>, <code>noFlip</code>, <code>shift</code>, <code>offset</code>, <code>matchWidth</code>, and <code>flexMenuWidth</code> attributes to control where and how the dropdown opens. A native <code>&lt;select&gt;</code> opens wherever the browser decides, with no developer control.</p>
 <auro-header level="3">ARIA wiring</auro-header>
-<p><code>auro-select</code> manages the ARIA relationships between the trigger, label, help text, listbox, and active option automatically. With a native <code>&lt;select&gt;</code>, you must manage <code>id</code>/<code>for</code> association between label and select, and wire <code>aria-describedby</code> for any help or error text yourself.</p>
+<p><code>auro-select</code> manages the ARIA relationships between the trigger, label, listbox, and active option automatically, but doesn't currently tie help text to the trigger with <code>aria-describedby</code>. With a native <code>&lt;select&gt;</code>, you must manage <code>id</code>/<code>for</code> association between label and select, and wire <code>aria-describedby</code> for any help or error text yourself.</p>
 <auro-header level="3">Value sync and events</auro-header>
-<p><code>auro-select</code> exposes a single <code>value</code> property plus an <code>optionSelected</code> reference to the chosen option element, and dispatches <code>auroSelect-valueSet</code>, <code>input</code>, and <code>auroFormElement-validated</code> events for integration with <code>auro-form</code>. Native <code>&lt;select&gt;</code> fires <code>change</code> and <code>input</code> but does not emit the structured validation events the Auro form system expects.</p>
+<p><code>auro-select</code> exposes a single <code>value</code> property plus an <code>optionSelected</code> reference to the chosen option element, and dispatches <code>auroSelect-valueSet</code>, <code>input</code>, and <code>auroFormElement-validated</code> events for integration with <code>auro-form</code>. Native <code>&lt;select&gt;</code> fires <code>change</code> and <code>input</code> but doesn't emit the structured validation events the Auro form system expects.</p>
 <auro-header level="3">Touched-state tracking</auro-header>
-<p><code>auro-select</code> tracks a touched state so validation errors only appear after the user has interacted with the field. Native <code>&lt;select&gt;</code> has no built-in touched concept — you must implement focus/blur tracking yourself to avoid showing errors on initial render.</p>
+<p><code>auro-select</code> tracks whether the user has interacted with the field, so a required select doesn't show its missing-value error on initial render. Native <code>&lt;select&gt;</code> has no built-in touched concept, so you must implement focus and blur tracking yourself to avoid showing errors on initial render.</p>
 <auro-header level="3">Reset behavior</auro-header>
-<p><code>auro-select</code> provides a single <code>reset()</code> method that clears the value and resets validation state in one call. With a native <code>&lt;select&gt;</code>, you must clear the selection and separately clear any custom validation state you are tracking.</p>
+<p><code>auro-select</code> provides a single <code>reset()</code> method that clears the value and resets validation state in one call. With a native <code>&lt;select&gt;</code>, you must clear the selection and separately clear any custom validation state you're tracking.</p>
 <auro-header level="3">Layout and shape variants</auro-header>
 <p><code>auro-select</code> supports <code>layout</code> (<code>classic</code>, <code>emphasized</code>, <code>snowflake</code>) and <code>shape</code> (<code>classic</code>, <code>pill</code>, <code>pill-left</code>, <code>pill-right</code>, <code>snowflake</code>) attributes for design-system-aligned visual variants. A CSS-only select must reimplement each variant by hand.</p>
 <auro-header level="3">Multi-brand theming</auro-header>
-<p><code>auro-select</code> consumes Auro design tokens through its component logic, so it automatically picks up brand-specific theming when token packages are swapped. A CSS-only select is tied to whichever tokens were imported at author time and will not respond to runtime theme switching the way the web component does.</p>
+<p><code>auro-select</code> reads the Auro theme tokens through its own <code>--ds-auro-select-*</code> custom properties, so it picks up a brand's theme when that theme's token stylesheet is loaded. A CSS-only select picks up a theme only when your CSS uses the same tokens that theme defines.</p>
 <auro-header level="2">Summary</auro-header>
 <table>
 <thead>
@@ -165,7 +164,7 @@
 <tr>
 <td>Placement / layout control</td>
 <td>Not supported</td>
-<td><code>placement</code>, <code>autoPlacement</code>, <code>offset</code>, <code>matchWidth</code></td>
+<td><code>placement</code>, <code>offset</code>, <code>matchWidth</code></td>
 </tr>
 <tr>
 <td>Touched-state tracking</td>
@@ -194,10 +193,10 @@
 </tr>
 <tr>
 <td>Multi-brand theming</td>
-<td>Static (import-time tokens)</td>
-<td>Full (design tokens + component logic)</td>
+<td>Only the tokens your CSS uses</td>
+<td>Built in (<code>--ds-auro-select-*</code> tokens)</td>
 </tr>
 </tbody>
 </table>
 <auro-header level="2">Recommendation</auro-header>
-<p>Use <code>auro-select</code> whenever possible. Fall back to a CSS-styled native <code>&lt;select&gt;</code> only in environments where custom elements are not supported or when integrating with third-party systems that require plain HTML — and accept that the dropdown panel itself will remain unstyled, multi-select and rich option content will not be available, and validation, help text, and ARIA wiring must be reimplemented by hand.</p>
+<p>Use <code>auro-select</code> whenever possible. Fall back to a CSS-styled native <code>&lt;select&gt;</code> only in environments where custom elements aren't supported or when integrating with third-party systems that require plain HTML. In that case, the dropdown panel stays unstyled, multi-select and rich option content aren't available, and you must rebuild validation, help text, and ARIA wiring by hand.</p>

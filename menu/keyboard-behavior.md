@@ -1,26 +1,26 @@
-<auro-header level="1" id="overview">Menu - Keyboard Behavior</auro-header>
+<auro-header level="1" id="overview">Menu: Keyboard behavior</auro-header>
 <div class="contentWrapper">
 <div class="mainContent">
 <div class="scrollWrapper">
-<auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
-<p>The <code>&lt;auro-menu&gt;</code> component does not participate in the <code>tabindex</code> sequence directly. Keyboard navigation is managed by the parent component (e.g., <code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>) through their keyboard strategy classes.</p>
-<auro-header level="2" id="keyEvents">Key Events</auro-header>
+<auro-header level="2" id="tabBehavior">Tab behavior</auro-header>
+<p>The <code>&lt;auro-menu&gt;</code> component isn't in the tab order. The parent component, such as <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, handles keyboard navigation.</p>
+<auro-header level="2" id="keyEvents">Key events</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
 <div class="note">
-<p><strong>Note:</strong> <code>&lt;auro-menu&gt;</code> registers a <code>keydown</code> listener on its host. By default the menu is not focusable — no <code>tabindex</code> on the host, and menuoptions are <code>tabindex="-1"</code> — so the listener does not fire on its own. It fires whenever a <code>keydown</code> reaches the host, which happens in any of the following ways:</p>
+<p><strong>Note:</strong> <code>&lt;auro-menu&gt;</code> registers a <code>keydown</code> listener on its host. By default the menu isn't focusable: the host has no <code>tabindex</code>, and options have <code>tabindex="-1"</code>, so the listener doesn't fire on its own. It fires whenever a <code>keydown</code> reaches the host, which happens in any of the following ways:</p>
 <ul>
-<li>A wrapping component focuses something inside the menu subtree and the event bubbles up to the host. In the standard integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), keyboard behavior is primarily parent-managed rather than bubble-driven: focus stays on the parent's trigger/input, and the parent captures keys there and drives the menu directly via its public <code>navigateOptions()</code> / <code>updateActiveOption()</code> methods and the menu's internal <code>makeSelection()</code> routine (<code>@private</code>, not part of the public menu API).</li>
+<li>A wrapping component focuses something inside the menu and the event bubbles up to the host. In the standard integrations (<code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>), the parent handles the keys instead: focus stays on the parent's trigger or input, and the parent moves the active option with the menu's public <code>updateActiveOption()</code> method and tells the menu to select it.</li>
 <li>A wrapping component dispatches or reroutes a <code>KeyboardEvent</code> at the menu programmatically (for example, <code>menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))</code>).</li>
 <li>The author makes the host focusable (for example, by adding <code>tabindex="0"</code> to the <code>&lt;auro-menu&gt;</code> element) and focuses it. The host already has <code>role="listbox"</code>, so this yields a bare, focusable listbox that responds to the keys in the table below. For full combobox semantics use <code>&lt;auro-select&gt;</code> or <code>&lt;auro-combobox&gt;</code>, or replicate their <code>aria-activedescendant</code> wiring from a separate trigger.</li>
 </ul>
-<p>Keys not listed below (<code>Home</code>, <code>End</code>, <code>Escape</code>, type-ahead) are handled by the parent — see the <code>&lt;auro-select&gt;</code> and <code>&lt;auro-combobox&gt;</code> keyboard behavior docs. An "interactive option" is one that is not <code>disabled</code>, <code>hidden</code>, or <code>static</code> — these are always skipped during navigation and selection, along with <code>&lt;hr&gt;</code> dividers.</p>
+<p>The parent handles keys not listed below, such as <code>Home</code>, <code>End</code>, <code>Escape</code>, and type-ahead. See the <code>&lt;auro-select&gt;</code> and <code>&lt;auro-combobox&gt;</code> keyboard behavior docs. An "interactive option" is one that isn't <code>disabled</code>, <code>hidden</code>, or <code>static</code>, and isn't inside a disabled menu. Navigation and selection always skip options that aren't interactive, and <code>&lt;hr&gt;</code> dividers. When no option is active but one is selected in single-select mode, the arrow keys start from the selected option.</p>
 </div>
 <table>
 <thead>
 <tr>
 <th>Key</th>
-<th>Current State</th>
+<th>Current state</th>
 <th>Behavior</th>
 </tr>
 </thead>
@@ -44,7 +44,7 @@
 </tr>
 <tr>
 <td>Menu is in <code>loading</code> state</td>
-<td>The rendered loading placeholder is inert (marked <code>disabled</code>) and is not part of <code>items</code>, so it cannot become active.</td>
+<td>The loading placeholder can't become active. The menu doesn't currently block arrow keys while loading, so the options, which aren't shown, can still become active.</td>
 </tr>
 <tr>
 <td rowspan="4">ArrowUp</td>
@@ -64,8 +64,8 @@
 <td>No option becomes active.</td>
 </tr>
 <tr>
-<td rowspan="4">Enter</td>
-<td>Single-select, active option is not currently selected</td>
+<td rowspan="5">Enter</td>
+<td>Single-select, active option isn't currently selected</td>
 <td>The active option is selected. Any previous selection is cleared. <code>auroMenu-selectedOption</code> fires.</td>
 </tr>
 <tr>
@@ -77,13 +77,17 @@
 <td>The active option toggles selected. Other selections are preserved.</td>
 </tr>
 <tr>
+<td>Active option has an <code>event</code> attribute</td>
+<td>The menu fires the named event and <code>auroMenu-customEventFired</code> instead of selecting the option.</td>
+</tr>
+<tr>
 <td>Active option is disabled, hidden, or static</td>
-<td>Selection is a no-op.</td>
+<td>Nothing happens.</td>
 </tr>
 <tr>
 <td rowspan="2">Tab</td>
 <td>An option is active</td>
-<td>The active option is selected (same behavior as <code>Enter</code>).<div class="note"><strong>Note:</strong> <code>Tab</code> does not <code>preventDefault</code>, so focus continues to the next element in the tabindex sequence after selection.</div></td>
+<td>The active option is selected (same behavior as <code>Enter</code>).<div class="note"><strong>Note:</strong> <code>Tab</code> doesn't call <code>preventDefault()</code>, so focus moves to the next element in the tab order after the selection.</div></td>
 </tr>
 <tr>
 <td>No option is active</td>

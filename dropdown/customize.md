@@ -1,37 +1,37 @@
-<auro-header level="1" id="overview">Dropdown - Customize</auro-header>
+<auro-header level="1" id="overview">Dropdown: Customize</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
-<auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
+<auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. dark background</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
-<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
-<auro-anchorlink fluid href="#bibPosition" class="level2 body-xs">Bib Position</auro-anchorlink>
-<auro-anchorlink fluid href="#fullscreenBreakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
-<auro-anchorlink fluid href="#matchWidth" class="level2 body-xs">Match Width</auro-anchorlink>
+<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS shadow parts</auro-anchorlink>
+<auro-anchorlink fluid href="#bibPosition" class="level2 body-xs">Bib position</auro-anchorlink>
+<auro-anchorlink fluid href="#fullscreenBreakpoint" class="level2 body-xs">Fullscreen breakpoint</auro-anchorlink>
+<auro-anchorlink fluid href="#matchWidth" class="level2 body-xs">Match width</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#chevron" class="level2 body-xs">Chevron</auro-anchorlink>
-<auro-anchorlink fluid href="#desktopModal" class="level2 body-xs">Desktop Modal</auro-anchorlink>
+<auro-anchorlink fluid href="#desktopModal" class="level2 body-xs">Desktop modal</auro-anchorlink>
 <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
 <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
-<auro-anchorlink fluid href="#noToggle" class="level2 body-xs">No Toggle</auro-anchorlink>
+<auro-anchorlink fluid href="#noToggle" class="level2 body-xs">No toggle</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
 <div class="scrollWrapper">
 <section>
 <auro-header level="2" id="appearance">Appearance</auro-header>
-<auro-header level="3" id="background">Light vs. Dark Background</auro-header>
-<p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
+<auro-header level="3" id="background">Light vs. dark background</auro-header>
+<p>The <code>appearance</code> attribute sets the colors for the background the dropdown sits on. Use <code>inverse</code> on dark backgrounds and <code>default</code>, the default value, everywhere else.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-<auro-dropdown aria-label="custom label">
-          Lorem ipsum solar
+<auro-dropdown>
+          Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -40,10 +40,10 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown aria-label="custom label"&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown&gt;
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -51,10 +51,10 @@
 <div class="exampleWrapper--ondark" aria-hidden>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
-<auro-dropdown appearance="inverse" aria-label="custom label">
-          Lorem ipsum solar
+<auro-dropdown appearance="inverse">
+          Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -63,22 +63,21 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown appearance="inverse" aria-label="custom label"&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown appearance="inverse"&gt;
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
-<p>The component may be restyled by overriding the following CSS custom properties (design tokens).</p>
+<p>Restyle the component by overriding the following CSS custom properties (design tokens).</p>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../src/styles/tokens.scss -->
 <pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
-​
-:host(:not([ondark])),
+&#10;:host(:not([ondark])),
 :host(:not([appearance="inverse"])) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
   --ds-auro-dropdown-trigger-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
@@ -92,8 +91,7 @@
   --ds-auro-dropdownbib-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }
-​
-:host([ondark]),
+&#10;:host([ondark]),
 :host([appearance="inverse"]) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
@@ -126,13 +124,13 @@
             --ds-auro-dropdownbib-text-color: #5b1a6e;
           }
 </style>
-<auro-dropdown id="customTokensDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="Custom styled dropdown">
+<auro-dropdown id="customTokensDropdown" layout="classic" shape="classic" size="lg" chevron>
 <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 </div>
-<span slot="helpText">Help text</span>
+<span slot="helpText">Times are local to each airport</span>
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -156,18 +154,18 @@
     --ds-auro-dropdownbib-text-color: #5b1a6e;
   }
 &lt;/style&gt;
-&lt;auro-dropdown id="customTokensDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="Custom styled dropdown"&gt;
+&lt;auro-dropdown id="customTokensDropdown" layout="classic" shape="classic" size="lg" chevron&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;/div&gt;
-  &lt;span slot="helpText"&gt;Help text&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Times are local to each airport&lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
+<auro-header level="3" id="cssParts">CSS shadow parts</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
 <p>The following CSS shadow parts are available for styling:</p>
@@ -181,19 +179,23 @@
 <tbody>
 <tr>
 <td><code>chevron</code></td>
-<td>The collapsed/expanded state icon container.</td>
+<td>The container for the icon that shows whether the bib is open. Exists only when <code>chevron</code> is set.</td>
 </tr>
 <tr>
 <td><code>helpText</code></td>
-<td>The helpText content container.</td>
+<td>The help text container. Not currently rendered, so styles set on it have no effect; style the content in the <code>helpText</code> slot instead.</td>
 </tr>
 <tr>
 <td><code>size</code></td>
-<td>The size of the dropdown bib (height, width, maxHeight, maxWidth only).</td>
+<td>A hidden sizing element whose <code>width</code>, <code>height</code>, <code>max-width</code>, and <code>max-height</code> are copied to the bib. Applies only when <code>matchWidth</code> is set.</td>
 </tr>
 <tr>
 <td><code>trigger</code></td>
-<td>The trigger content container.</td>
+<td>The trigger content container. Not currently rendered, so styles set on it have no effect; use <code>wrapper</code> instead.</td>
+</tr>
+<tr>
+<td><code>wrapper</code></td>
+<td>The trigger wrapper element surrounding the trigger content and chevron.</td>
 </tr>
 </tbody>
 </table>
@@ -202,7 +204,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ./../apiExamples/css-parts.html -->
 <style>
-          #cssPartsDropdown::part(trigger) {
+          #cssPartsDropdown::part(wrapper) {
             border: 2px dashed #7b2d8e;
             border-radius: 8px;
             padding: var(--ds-size-100);
@@ -210,21 +212,17 @@
           #cssPartsDropdown::part(chevron) {
             color: #7b2d8e;
           }
-          #cssPartsDropdown::part(helpText) {
-            font-style: italic;
-            color: #5b1a6e;
-          }
           #cssPartsDropdown::part(size) {
             max-height: 200px;
           }
 </style>
-<auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="CSS parts styled dropdown">
+<auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth>
 <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 </div>
-<span slot="helpText">Styled with ::part selectors</span>
+<span slot="helpText">Times are local to each airport</span>
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -234,7 +232,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/css-parts.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/css-parts.html -->
 <pre class="language-html"><code class="language-html">&lt;style&gt;
-  #cssPartsDropdown::part(trigger) {
+  #cssPartsDropdown::part(wrapper) {
     border: 2px dashed #7b2d8e;
     border-radius: 8px;
     padding: var(--ds-size-100);
@@ -242,27 +240,23 @@
   #cssPartsDropdown::part(chevron) {
     color: #7b2d8e;
   }
-  #cssPartsDropdown::part(helpText) {
-    font-style: italic;
-    color: #5b1a6e;
-  }
   #cssPartsDropdown::part(size) {
     max-height: 200px;
   }
 &lt;/style&gt;
-&lt;auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="CSS parts styled dropdown"&gt;
+&lt;auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;/div&gt;
-  &lt;span slot="helpText"&gt;Styled with ::part selectors&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Times are local to each airport&lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="bibPosition">Bib Position</auro-header>
-<p>Customize bib position with <code>placement</code>, <code>offset</code>, <code>noFlip</code>, <code>autoPlacement</code>, and <code>shift</code> attributes.</p>
+<auro-header level="3" id="bibPosition">Bib position</auro-header>
+<p>Customize bib position with <code>placement</code>, <code>offset</code>, <code>noFlip</code>, and <code>shift</code> attributes.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/floater-config.html) -->
 <!-- The below content is automatically added from ./../apiExamples/floater-config.html -->
@@ -271,85 +265,85 @@
             max-height: 200px;
           }
 </style>
-<div aria-label="custom label">
+<div>
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
 <div>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Changes:</strong> You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Cancellations:</strong> If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Baggage:</strong> Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
 </p>
 </div>
 <div slot="trigger">
-              Trigger
+              Fare rules
 </div>
-<span slot="helpText">Trigger for bottom-end bib with 20px offset and noFlip</span>
+<span slot="helpText">Uses <code>placement="bottom-end"</code>, <code>offset="20"</code>, and <code>noFlip</code></span>
 </auro-dropdown>
 </div>
-<div aria-label="custom label">
+<div>
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
 <div>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Changes:</strong> You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Cancellations:</strong> If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Baggage:</strong> Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
 </p>
 </div>
 <div slot="trigger">
-              Trigger
+              Fare rules
 </div>
 <div slot="helpText">
-              Trigger for bottom-end bib with 20px offset and flip
+              Uses <code>placement="bottom-end"</code> and <code>offset="20"</code>, and flips when there isn't room
 </div>
 </auro-dropdown>
 </div>
-<div aria-label="custom label">
+<div>
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
 <div>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Changes:</strong> You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Cancellations:</strong> If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Baggage:</strong> Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
 </p>
 </div>
 <div slot="trigger">
-              Trigger
+              Fare rules
 </div>
 <div slot="helpText">
-              Trigger for right bib with 20px offset and noFlip
+              Uses <code>placement="right"</code>, <code>offset="20"</code>, and <code>noFlip</code>
 </div>
 </auro-dropdown>
 </div>
-<div aria-label="custom label">
-<auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
-<div width="500px">
+<div>
+<auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
+<div>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Changes:</strong> You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Cancellations:</strong> If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
 </p>
 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Baggage:</strong> Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
 </p>
 </div>
 <div slot="trigger">
-              Trigger
+              Fare rules
 </div>
 <div slot="helpText">
-              Trigger for bottom-start bib with 20px offset, shift and noFlip
+              Uses <code>placement="bottom-start"</code>, <code>offset="20"</code>, <code>shift</code>, and <code>noFlip</code>
 </div>
 </auro-dropdown>
 </div>
@@ -364,112 +358,112 @@
     max-height: 200px;
   }
 &lt;/style&gt;
-&lt;div aria-label="custom label"&gt;
+&lt;div&gt;
   &lt;auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip&gt;
     &lt;div&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Changes:&lt;/strong&gt; You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Cancellations:&lt;/strong&gt; If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Baggage:&lt;/strong&gt; Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
       &lt;/p&gt;
     &lt;/div&gt;
     &lt;div slot="trigger"&gt;
-      Trigger
+      Fare rules
     &lt;/div&gt;
-    &lt;span slot="helpText"&gt;Trigger for bottom-end bib with 20px offset and noFlip&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Uses &lt;code&gt;placement="bottom-end"&lt;/code&gt;, &lt;code&gt;offset="20"&lt;/code&gt;, and &lt;code&gt;noFlip&lt;/code&gt;&lt;/span&gt;
   &lt;/auro-dropdown&gt;
 &lt;/div&gt;
-&lt;div aria-label="custom label"&gt;
+&#10;&lt;div&gt;
   &lt;auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20"&gt;
     &lt;div&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Changes:&lt;/strong&gt; You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Cancellations:&lt;/strong&gt; If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Baggage:&lt;/strong&gt; Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
       &lt;/p&gt;
     &lt;/div&gt;
     &lt;div slot="trigger"&gt;
-      Trigger
+      Fare rules
     &lt;/div&gt;
     &lt;div slot="helpText"&gt;
-      Trigger for bottom-end bib with 20px offset and flip
+      Uses &lt;code&gt;placement="bottom-end"&lt;/code&gt; and &lt;code&gt;offset="20"&lt;/code&gt;, and flips when there isn't room
     &lt;/div&gt;
   &lt;/auro-dropdown&gt;
 &lt;/div&gt;
-&lt;div aria-label="custom label"&gt;
+&#10;&lt;div&gt;
   &lt;auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20"&gt;
     &lt;div&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Changes:&lt;/strong&gt; You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Cancellations:&lt;/strong&gt; If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Baggage:&lt;/strong&gt; Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
       &lt;/p&gt;
     &lt;/div&gt;
     &lt;div slot="trigger"&gt;
-      Trigger
+      Fare rules
     &lt;/div&gt;
     &lt;div slot="helpText"&gt;
-      Trigger for right bib with 20px offset and noFlip
+      Uses &lt;code&gt;placement="right"&lt;/code&gt;, &lt;code&gt;offset="20"&lt;/code&gt;, and &lt;code&gt;noFlip&lt;/code&gt;
     &lt;/div&gt;
   &lt;/auro-dropdown&gt;
 &lt;/div&gt;
-&lt;div aria-label="custom label"&gt;
-  &lt;auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20"&gt;
-    &lt;div width="500px"&gt;
+&#10;&lt;div&gt;
+  &lt;auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20"&gt;
+    &lt;div&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Changes:&lt;/strong&gt; You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Cancellations:&lt;/strong&gt; If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
       &lt;/p&gt;
       &lt;p&gt;
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        &lt;strong&gt;Baggage:&lt;/strong&gt; Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
       &lt;/p&gt;
     &lt;/div&gt;
     &lt;div slot="trigger"&gt;
-      Trigger
+      Fare rules
     &lt;/div&gt;
     &lt;div slot="helpText"&gt;
-      Trigger for bottom-start bib with 20px offset, shift and noFlip
+      Uses &lt;code&gt;placement="bottom-start"&lt;/code&gt;, &lt;code&gt;offset="20"&lt;/code&gt;, &lt;code&gt;shift&lt;/code&gt;, and &lt;code&gt;noFlip&lt;/code&gt;
     &lt;/div&gt;
   &lt;/auro-dropdown&gt;
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="fullscreenBreakpoint">Fullscreen Breakpoint</auro-header>
-<p>Customize the breakpoint at which the dropdown switches to fullscreen mode with <code>fullscreenBreakpoint</code>. The default value is <code>sm</code>.</p>
+<auro-header level="3" id="fullscreenBreakpoint">Fullscreen breakpoint</auro-header>
+<p>Set <code>fullscreenBreakpoint</code> to the screen width, such as <code>sm</code>, at or below which the open bib fills the screen. When it isn't set, or is set to <code>disabled</code>, the bib never goes fullscreen.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
 <!-- The below content is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 <auro-dropdown id="fullscreen" fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron>
 <div>
 <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Changes:</strong> You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
 </p>
 <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Cancellations:</strong> If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
 </p>
 <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<strong>Baggage:</strong> Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
 </p>
 </div>
 <auro-button id="fullscreenButton">
-            Dismiss Dropdown
+            Dismiss dropdown
 </auro-button>
 <div slot="trigger">
-            Trigger
+            Fare rules
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -481,42 +475,42 @@
 <pre class="language-html"><code class="language-html">&lt;auro-dropdown id="fullscreen" fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron&gt;
   &lt;div&gt;
     &lt;p&gt;
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      &lt;strong&gt;Changes:&lt;/strong&gt; You can change this ticket any time before departure. If your new flight costs more, you pay the difference in fare. If it costs less, the difference goes back to you as credit for a future trip.
     &lt;/p&gt;
     &lt;p&gt;
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      &lt;strong&gt;Cancellations:&lt;/strong&gt; If you cancel before departure, the full value of your ticket stays available as credit. Use the credit to book a new trip for yourself or someone else on your reservation.
     &lt;/p&gt;
     &lt;p&gt;
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      &lt;strong&gt;Baggage:&lt;/strong&gt; Carry-on bags must fit in the overhead bin or under the seat in front of you. Checked bag fees depend on your route, fare, and status, and are shown before you pay.
     &lt;/p&gt;
   &lt;/div&gt;
-  &lt;auro-button id="fullscreenButton"&gt;
-    Dismiss Dropdown
+&#10;  &lt;auro-button id="fullscreenButton"&gt;
+    Dismiss dropdown
   &lt;/auro-button&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Fare rules
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="matchWidth">Match Width</auro-header>
-<p>When the <code>matchWidth</code> attribute is applied, the width of the dropdown bib will match the width of the trigger element.</p>
+<auro-header level="3" id="matchWidth">Match width</auro-header>
+<p>Set <code>matchWidth</code> to make the bib the same width as the trigger.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-width.html) -->
 <!-- The below content is automatically added from ./../apiExamples/match-width.html -->
-<auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
+<auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth>
 <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <br />
 <auro-button id="matchWidthButton">
-              Dismiss Dropdown
+              Dismiss dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-            Help text
+            Times are local to each airport
 </span>
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -525,19 +519,19 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-width.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/match-width.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown id="matchWidthDropdownExample" layout="classic" shape="classic" size="lg" matchWidth&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
     &lt;br /&gt;
     &lt;auro-button id="matchWidthButton"&gt;
-      Dismiss Dropdown
+      Dismiss dropdown
     &lt;/auro-button&gt;
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
+    Times are local to each airport
   &lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -546,14 +540,14 @@
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
 <auro-header level="3" id="chevron">Chevron</auro-header>
-<p>Use the <code>chevron</code> attribute to add a chevron icon to the dropdown trigger indicating expand/collapse state.</p>
+<p>Use the <code>chevron</code> attribute to show a chevron on the trigger that points up while the bib is open and down while it's closed.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/chevron.html) -->
 <!-- The below content is automatically added from ./../apiExamples/chevron.html -->
-<auro-dropdown aria-label="custom label" chevron>
-          Lorem ipsum solar
+<auro-dropdown chevron>
+          Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -562,35 +556,31 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/chevron.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/chevron.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown aria-label="custom label" chevron&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown chevron&gt;
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="desktopModal">Desktop Modal</auro-header>
-<p>Use the <code>desktopModal</code> attribute to make the dropdown behave as a modal dialog on desktop viewports. When set, all sibling elements on the page are marked <code>inert</code> and focus is trapped within the bib content. In fullscreen mode, the native <code>&lt;dialog&gt;</code> <code>showModal()</code> API provides equivalent behavior automatically.</p>
+<auro-header level="3" id="desktopModal">Desktop modal</auro-header>
+<p>Set <code>desktopModal</code> to make the open bib act as a modal dialog when it isn't fullscreen. The rest of the page becomes <code>inert</code>, and keyboard focus stays in the bib until it closes. A fullscreen bib already behaves this way, because it opens with the <code>&lt;dialog&gt;</code> element's <code>showModal()</code> method.</p>
 <auro-header level="3" id="disabled">Disabled</auro-header>
-<p>Use the <code>disabled</code> attribute to disable interaction with the dropdown.</p>
+<p>Set <code>disabled</code> to turn the dropdown off. The trigger is shown in a muted style and can't open the bib.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
 <auro-dropdown
-          aria-label="custom label"
           disabled
           chevron
           layout="classic" shape="classic" size="lg">
-          Lorem ipsum solar
+          Choose a seat from the seat map.
 <div slot="trigger">
-            Trigger
+            Seat
 </div>
 <span slot="helpText">
-            Help text
-</span>
-<span slot="label">
-            Name
+            Seat selection opens after you choose a flight
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -599,20 +589,16 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-disabled.html -->
 <auro-dropdown
-          aria-label="custom label"
           disabled
           appearance="inverse"
           chevron
           layout="classic" shape="classic" size="lg">
-          Lorem ipsum solar
+          Choose a seat from the seat map.
 <div slot="trigger">
-            Trigger
+            Seat
 </div>
 <span slot="helpText">
-            Help text
-</span>
-<span slot="label">
-            Name
+            Seat selection opens after you choose a flight
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -622,64 +608,53 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/disabled.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-dropdown
-  aria-label="custom label"
   disabled
   chevron
   layout="classic" shape="classic" size="lg"&gt;
-  Lorem ipsum solar
+  Choose a seat from the seat map.
   &lt;div slot="trigger"&gt;
-    Trigger
+    Seat
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
-  &lt;/span&gt;
-  &lt;span slot="label"&gt;
-    Name
+    Seat selection opens after you choose a flight
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse-disabled.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse-disabled.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-dropdown
-  aria-label="custom label"
   disabled
   appearance="inverse"
   chevron
   layout="classic" shape="classic" size="lg"&gt;
-  Lorem ipsum solar
+  Choose a seat from the seat map.
   &lt;div slot="trigger"&gt;
-    Trigger
+    Seat
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
-  &lt;/span&gt;
-  &lt;span slot="label"&gt;
-    Name
+    Seat selection opens after you choose a flight
   &lt;/span&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="error">Error</auro-header>
-<p>Use the <code>error</code> attribute to apply a persistent error state styling on the dropdown.</p>
+<p>Set <code>error</code> to show the trigger in an error style. It doesn't show a message, so put one in the <code>helpText</code> slot.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/error.html -->
 <auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
 <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Choose a seat from the seat map.
 <br />
 <auro-button id="errorButton">
-              Dismiss Dropdown
+              Dismiss dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-            Help text
-</span>
-<span slot="label">
-            Element label (default text will be read by screen reader)
+            Select a seat to continue
 </span>
 <div slot="trigger">
-            Trigger
+            Seat
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -689,20 +664,17 @@
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-error.html -->
 <auro-dropdown id="inverseError" appearance="inverse" layout="classic" shape="classic" size="lg" error>
 <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Choose a seat from the seat map.
 <br />
 <auro-button id="inverseErrorButton">
-              Dismiss Dropdown
+              Dismiss dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-            Help text
-</span>
-<span slot="label">
-            Element label (default text will be read by screen reader)
+            Select a seat to continue
 </span>
 <div slot="trigger">
-            Trigger
+            Seat
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -713,20 +685,17 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample"&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Choose a seat from the seat map.
     &lt;br /&gt;
     &lt;auro-button id="errorButton"&gt;
-      Dismiss Dropdown
+      Dismiss dropdown
     &lt;/auro-button&gt;
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
-  &lt;/span&gt;
-  &lt;span slot="label"&gt;
-    Element label (default text will be read by screen reader)
+    Select a seat to continue
   &lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Seat
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -734,33 +703,30 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse-error.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-dropdown id="inverseError" appearance="inverse" layout="classic" shape="classic" size="lg" error&gt;
   &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
+    Choose a seat from the seat map.
     &lt;br /&gt;
     &lt;auro-button id="inverseErrorButton"&gt;
-      Dismiss Dropdown
+      Dismiss dropdown
     &lt;/auro-button&gt;
   &lt;/div&gt;
   &lt;span slot="helpText"&gt;
-    Help text
-  &lt;/span&gt;
-  &lt;span slot="label"&gt;
-    Element label (default text will be read by screen reader)
+    Select a seat to continue
   &lt;/span&gt;
   &lt;div slot="trigger"&gt;
-    Trigger
+    Seat
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="noToggle">No Toggle</auro-header>
-<p>Use the <code>noToggle</code> attribute so the trigger will only show the dropdown bib, not toggle it closed.</p>
+<auro-header level="3" id="noToggle">No toggle</auro-header>
+<p>Use the <code>noToggle</code> attribute so the trigger only opens the bib and doesn't close it. Pressing <code>Escape</code> or moving focus away still closes the bib.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-toggle.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-toggle.html -->
-<auro-dropdown aria-label="custom label" noToggle>
-          Lorem ipsum solar
+<auro-dropdown noToggle>
+          Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
 <div slot="trigger">
-            Trigger
+            Flight details
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -769,10 +735,10 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-toggle.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/no-toggle.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-dropdown aria-label="custom label" noToggle&gt;
-  Lorem ipsum solar
+<pre class="language-html"><code class="language-html">&lt;auro-dropdown noToggle&gt;
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   &lt;div slot="trigger"&gt;
-    Trigger
+    Flight details
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

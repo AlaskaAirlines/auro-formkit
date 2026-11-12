@@ -1,14 +1,14 @@
-<auro-header level="1" id="overview">Checkbox - Overview and UX Guide</auro-header>
+<auro-header level="1" id="overview">Checkbox: Overview and UX guide</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-<auro-anchorlink fluid href="#userStories">User Stories</auro-anchorlink>
-<auro-anchorlink fluid href="#selectOptions" class="level2 body-xs">Select Options</auro-anchorlink>
-<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
-<auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
+<auro-anchorlink fluid href="#userStories">User stories</auro-anchorlink>
+<auro-anchorlink fluid href="#selectOptions" class="level2 body-xs">Select options</auro-anchorlink>
+<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset value</auro-anchorlink>
+<auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip selection</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -16,17 +16,17 @@
 <auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-<code>&lt;auro-checkbox&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> for the purpose of allowing users to select one or more options of a limited number of choices.
+<code>&lt;auro-checkbox&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that lets people select one or more options from a short list of choices.
 <!-- AURO-GENERATED-CONTENT:END -->
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -36,15 +36,15 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <section>
-<auro-header level="2" id="userStories">User Stories</auro-header>
+<auro-header level="2" id="userStories">User stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
 <!-- The below content is automatically added from ./../docs/partials/index/userStories.md -->
 <auro-header level="3" id="selectOptions">Select one or more options</auro-header>
@@ -61,7 +61,7 @@
             Toggle the checkbox
 <div class="note">
 <p>
-                Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Multiple checkboxes can be checked simultaneously.
+                Press <kbd>Space</kbd> or click/tap to toggle the <code>checked</code> state. Each checkbox toggles independently of the others.
 </p>
 </div>
 </li>
@@ -69,7 +69,7 @@
             Move focus away from the checkbox group
 <div class="note">
 <p>
-                If the group is <code>required</code>, validation is triggered on blur. If no checkbox is checked the component renders the <code>valueMissing</code> error state.
+                When the group is <code>required</code> and no checkbox is checked, moving focus out of the group shows the <code>valueMissing</code> error state.
 </p>
 </div>
 </li>
@@ -79,10 +79,10 @@
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-checkbox-group>
 <span slot="legend">Form label goes here</span>
-<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-<auro-checkbox value="value2" name="basic" id="checkbox-basic2">Checkbox option</auro-checkbox>
-<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
-<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+<auro-checkbox value="value1" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic">Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
+<auro-checkbox value="value4" name="basic">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -92,10 +92,10 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;auro-checkbox value="value1" name="basic" id="checkbox-basic1"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value2" name="basic" id="checkbox-basic2"&gt;Checkbox option&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value3" name="basic" id="checkbox-basic3"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
-  &lt;auro-checkbox value="value4" name="basic" id="checkbox-basic4"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value1" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value2" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value3" name="basic"&gt;Checkbox option that has some extra text that should wrap when rendered in a narrow container&lt;/auro-checkbox&gt;
+  &lt;auro-checkbox value="value4" name="basic"&gt;Checkbox option&lt;/auro-checkbox&gt;
 &lt;/auro-checkbox-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -127,7 +127,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
-<p>The checkbox group does not force the user to make a selection. If no checkbox is checked and the group is not <code>required</code>, the user can move past the group without checking any option.</p>
+<p>The checkbox group doesn't force the user to make a selection. If no checkbox is checked and the group isn't <code>required</code>, the user can move past the group without checking any option.</p>
 <p>If the group is <code>required</code>, moving focus away without checking any option triggers validation and renders the <code>valueMissing</code> error state.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->

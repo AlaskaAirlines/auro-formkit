@@ -1,14 +1,14 @@
-<auro-header level="1" id="overview">Radio - Overview and UX Guide</auro-header>
+<auro-header level="1" id="overview">Radio: Overview and UX guide</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-<auro-anchorlink fluid href="#userStories">User Stories</auro-anchorlink>
-<auro-anchorlink fluid href="#selectOption" class="level2 body-xs">Select an Option</auro-anchorlink>
-<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
-<auro-anchorlink fluid href="#requiredSelection" class="level2 body-xs">Required Selection</auro-anchorlink>
+<auro-anchorlink fluid href="#userStories">User stories</auro-anchorlink>
+<auro-anchorlink fluid href="#selectOption" class="level2 body-xs">Select an option</auro-anchorlink>
+<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset value</auro-anchorlink>
+<auro-anchorlink fluid href="#requiredSelection" class="level2 body-xs">Required selection</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -16,7 +16,7 @@
 <auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-<code>&lt;auro-radio&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that is rendered as a small circle, which is filled or highlighted when selected. Only one <code>&lt;auro-radio&gt;</code> component in a given <code>&lt;auro-radio-group&gt;</code> can be selected at the same time.
+<code>&lt;auro-radio&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that shows a small circle, which fills in when selected. Only one <code>&lt;auro-radio&gt;</code> in an <code>&lt;auro-radio-group&gt;</code> can be selected at a time.
 <!-- AURO-GENERATED-CONTENT:END -->
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -42,10 +42,10 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <section>
-<auro-header level="2" id="userStories">User Stories</auro-header>
+<auro-header level="2" id="userStories">User stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
 <!-- The below content is automatically added from ./../docs/partials/index/userStories.md -->
-<auro-header level="3" id="selectOption">Select an Option</auro-header>
+<auro-header level="3" id="selectOption">Select an option</auro-header>
 <p>As a user, I want to select a single option from a predefined list so that I can indicate my preference or make a choice.</p>
 <ol>
 <li>The options are presented as a group of radio buttons with a descriptive legend.</li>
@@ -75,7 +75,7 @@
 &lt;/auro-radio-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="presetValue">Preset Value</auro-header>
+<auro-header level="3" id="presetValue">Preset value</auro-header>
 <p>As a user, I want to see a pre-selected option so that I can quickly accept a default or change it if needed.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/checked.html) -->
@@ -100,12 +100,12 @@
 &lt;/auro-radio-group&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="requiredSelection">Required Selection</auro-header>
+<auro-header level="3" id="requiredSelection">Required selection</auro-header>
 <p>As a user, I want to be informed when a selection is required so that I can complete the form correctly.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
 <!-- The below content is automatically added from ./../apiExamples/required.html -->
-<auro-radio-group required setCustomValidityValueMissing="value missing">
+<auro-radio-group required setCustomValidityValueMissing="Select an option">
 <span slot="legend">Form label goes here</span>
 <auro-radio id="requiredRadio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
 <auro-radio id="requiredRadio2" label="No" name="radioDemo" value="no"></auro-radio>
@@ -117,7 +117,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/required.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/required.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-radio-group required setCustomValidityValueMissing="value missing"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-radio-group required setCustomValidityValueMissing="Select an option"&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
   &lt;auro-radio id="requiredRadio1" label="Yes" name="radioDemo" value="yes"&gt;&lt;/auro-radio&gt;
   &lt;auro-radio id="requiredRadio2" label="No" name="radioDemo" value="no"&gt;&lt;/auro-radio&gt;

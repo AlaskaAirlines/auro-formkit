@@ -1,29 +1,29 @@
-<auro-header level="1" id="overview">Menu - Customize</auro-header>
+<auro-header level="1" id="overview">Menu: Customize</auro-header>
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
+<span slot="mobileToggleCollapsed">View more</span>
+<span slot="mobileToggleExpanded">View less</span>
 <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
-<auro-anchorlink fluid href="#restrictedWidth" class="level2 body-xs">Restricted Width</auro-anchorlink>
+<auro-anchorlink fluid href="#restrictedWidth" class="level2 body-xs">Restricted width</auro-anchorlink>
 <auro-anchorlink fluid href="#scroll" class="level2 body-xs">Scroll</auro-anchorlink>
-<auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
+<auro-anchorlink fluid href="#nocheckmark" class="level2 body-xs">No checkmark</auro-anchorlink>
 <auro-anchorlink fluid href="#dividers" class="level2 body-xs">Dividers</auro-anchorlink>
-<auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested Menu</auro-anchorlink>
+<auro-anchorlink fluid href="#nestedMenu" class="level2 body-xs">Nested menu</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#static" class="level2 body-xs">Static Options</auro-anchorlink>
-<auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match Word</auro-anchorlink>
-<auro-anchorlink fluid href="#persistent" class="level2 body-xs">Persistent Option</auro-anchorlink>
-<auro-anchorlink fluid href="#nomatch" class="level2 body-xs">No Match Placeholder</auro-anchorlink>
-<auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled Options</auro-anchorlink>
-<auro-anchorlink fluid href="#disabledMenu" class="level2 body-xs">Disabled Menu</auro-anchorlink>
+<auro-anchorlink fluid href="#static" class="level2 body-xs">Static options</auro-anchorlink>
+<auro-anchorlink fluid href="#matchWord" class="level2 body-xs">Match word</auro-anchorlink>
+<auro-anchorlink fluid href="#persistent" class="level2 body-xs">Persistent option</auro-anchorlink>
+<auro-anchorlink fluid href="#nomatch" class="level2 body-xs">No match placeholder</auro-anchorlink>
+<auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled options</auro-anchorlink>
+<auro-anchorlink fluid href="#disabledMenu" class="level2 body-xs">Disabled menu</auro-anchorlink>
 <auro-anchorlink fluid href="#loading" class="level2 body-xs">Loading</auro-anchorlink>
-<auro-anchorlink fluid href="#hidden" class="level2 body-xs">Hidden Options</auro-anchorlink>
-<auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-Select</auro-anchorlink>
-<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
-<auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset Value (Multi)</auro-anchorlink>
-<auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-Unique Option Values</auro-anchorlink>
+<auro-anchorlink fluid href="#hidden" class="level2 body-xs">Hidden options</auro-anchorlink>
+<auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-select</auro-anchorlink>
+<auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset value</auro-anchorlink>
+<auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset value (multi-select)</auro-anchorlink>
+<auro-anchorlink fluid href="#nonUniqueValues" class="level2 body-xs">Non-unique option values</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -31,12 +31,11 @@
 <section>
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
-<p>The component may be restyled by overriding the following CSS custom properties (design tokens).</p>
+<p>Restyle the component by overriding the following CSS custom properties (design tokens).</p>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/default/tokens.scss) -->
 <!-- The below code snippet is automatically added from ./../src/styles/default/tokens.scss -->
 <pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-​
-:host {
+&#10;:host {
   --ds-auro-menu-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
   --ds-auro-menu-loader-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   --ds-auro-menu-loader-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
@@ -81,7 +80,7 @@
     --ds-auro-menuoption-text-color: #5b1a6e;
   }
 &lt;/style&gt;
-&lt;auro-menu id="customTokensMenu" value="price"&gt;
+&#10;&lt;auro-menu id="customTokensMenu" value="price"&gt;
   &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
@@ -91,8 +90,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="restrictedWidth">Restricted Width</auro-header>
-<p>Use inline styles or a wrapping container to restrict the width of the menu. Long option text will wrap within the available space.</p>
+<auro-header level="3" id="restrictedWidth">Restricted width</auro-header>
+<p>Use inline styles or a wrapping container to restrict the width of the menu. Long option text doesn't wrap: it's cut off with an ellipsis.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/restricted-width.html) -->
 <!-- The below content is automatically added from ./../apiExamples/restricted-width.html -->
@@ -207,7 +206,7 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nocheckmark">No Checkmark</auro-header>
+<auro-header level="3" id="nocheckmark">No checkmark</auro-header>
 <p>Use the <code>nocheckmark</code> attribute to hide the selection checkmark icon on menu options.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nocheckmark.html) -->
@@ -285,7 +284,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="dividers">Dividers</auro-header>
-<p>Insert standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers are non-interactive and are skipped during keyboard navigation.</p>
+<p>Insert standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers can't be selected, and keyboard navigation skips them.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/hr.html) -->
 <!-- The below content is automatically added from ./../apiExamples/hr.html -->
@@ -325,8 +324,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nestedMenu">Nested Menu</auro-header>
-<p>Nest additional <code>auro-menu</code> elements inside the default slot to create sub-menus. Each nested menu maintains its own selection state.</p>
+<auro-header level="3" id="nestedMenu">Nested menu</auro-header>
+<p>Nest additional <code>auro-menu</code> elements inside the default slot to create indented groups of options. The outermost menu owns the selection for every option, including options in nested menus.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested-menu.html) -->
 <!-- The below content is automatically added from ./../apiExamples/nested-menu.html -->
@@ -405,13 +404,13 @@
 </section>
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
-<auro-header level="3" id="static">Static Options</auro-header>
-<p>Add the <code>static</code> attribute to an <code>auro-menuoption</code> to make it non-interactive — the option renders but is skipped during keyboard navigation and cannot be selected. Useful for section headers or informational rows inside a menu.</p>
+<auro-header level="3" id="static">Static options</auro-header>
+<p>Add the <code>static</code> attribute to an <code>auro-menuoption</code> to make it non-interactive: the option renders, but keyboard navigation skips it and it can't be selected. Use it for section headings or informational rows inside a menu.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/static.html) -->
 <!-- The below content is automatically added from ./../apiExamples/static.html -->
 <auro-menu>
-<auro-menuoption static>Popular Destinations</auro-menuoption>
+<auro-menuoption static>Popular destinations</auro-menuoption>
 <auro-menuoption value="sea">Seattle (SEA)</auro-menuoption>
 <auro-menuoption value="pdx">Portland (PDX)</auro-menuoption>
 <auro-menuoption value="sfo">San Francisco (SFO)</auro-menuoption>
@@ -426,7 +425,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/static.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/static.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-menu&gt;
-  &lt;auro-menuoption static&gt;Popular Destinations&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption static&gt;Popular destinations&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="sea"&gt;Seattle (SEA)&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="pdx"&gt;Portland (PDX)&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="sfo"&gt;San Francisco (SFO)&lt;/auro-menuoption&gt;
@@ -436,8 +435,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="matchWord">Match Word</auro-header>
-<p>Set the <code>matchWord</code> property to a string, and any option whose text contains that substring will render the matching portion visually highlighted. Typically driven by an input's <code>keyup</code> handler to power real-time filtering — this is the mechanism <code>&lt;auro-combobox&gt;</code> uses to highlight matches as the user types.</p>
+<auro-header level="3" id="matchWord">Match word</auro-header>
+<p>Set the <code>matchWord</code> property to a string, and any option whose text contains it, ignoring case, shows the matching part in bold. Set it from an input's <code>keyup</code> handler to highlight matches as someone types. <code>&lt;auro-combobox&gt;</code> sets it for you.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-word.html) -->
 <!-- The below content is automatically added from ./../apiExamples/match-word.html -->
@@ -481,8 +480,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="persistent">Persistent Option</auro-header>
-<p>Add the <code>persistent</code> attribute to an <code>auro-menuoption</code> to opt it out of <code>matchWord</code> highlighting. The option remains fully interactive but its label is never rewritten — useful for utility rows like "Add new…" that should render identically regardless of the current filter string.</p>
+<auro-header level="3" id="persistent">Persistent option</auro-header>
+<p>Add the <code>persistent</code> attribute to an <code>auro-menuoption</code> to opt it out of <code>matchWord</code> highlighting. The option remains fully interactive, but its label is never rewritten. Use it for utility rows, such as "Add new…", that should render the same whatever the filter string is.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persistent.html) -->
 <!-- The below content is automatically added from ./../apiExamples/persistent.html -->
@@ -518,8 +517,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nomatch">No Match Placeholder</auro-header>
-<p>Mark an option with the <code>nomatch</code> attribute to designate it as the placeholder shown when no other options match the user's input. When paired with <code>&lt;auro-combobox&gt;</code>, the combobox toggles the <code>hidden</code> attribute on this option automatically based on filter results.</p>
+<auro-header level="3" id="nomatch">No match placeholder</auro-header>
+<p>Add the <code>nomatch</code> attribute to an option to mark it as the "no matching results" row. <code>&lt;auro-combobox&gt;</code> shows it only when nothing matches what someone typed, and hides it otherwise. On its own, <code>auro-menu</code> shows it like any other option.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nomatch.html) -->
 <!-- The below content is automatically added from ./../apiExamples/nomatch.html -->
@@ -543,7 +542,7 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="disabled">Disabled Options</auro-header>
+<auro-header level="3" id="disabled">Disabled options</auro-header>
 <p>Use the <code>disabled</code> attribute on <code>auro-menuoption</code> to prevent interaction with specific options.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
@@ -584,7 +583,7 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="disabledMenu">Disabled Menu</auro-header>
+<auro-header level="3" id="disabledMenu">Disabled menu</auro-header>
 <p>Use the <code>disabled</code> attribute on <code>auro-menu</code> to disable the entire menu and all of its options.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled-menu.html) -->
@@ -626,17 +625,17 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="loading">Loading</auro-header>
-<p>Use the <code>loading</code> attribute on <code>auro-menu</code> to indicate that options are being fetched asynchronously. Optional <code>loadingIcon</code> and <code>loadingText</code> slots let you customize the placeholder — a spinner, message, both, or neither.</p>
+<p>Use the <code>loading</code> attribute on <code>auro-menu</code> to indicate that options are being fetched asynchronously. Optional <code>loadingIcon</code> and <code>loadingText</code> slots let you customize the placeholder: a spinner, a message, both, or neither.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
 <!-- The below content is automatically added from ./../apiExamples/loading.html -->
-<auro-button id="loadingExampleToggleButton">Toggle Loading</auro-button>
+<auro-button id="loadingExampleToggleButton">Toggle loading</auro-button>
 <table id="loadingExampleTable">
 <thead>
 <tr>
-<td width="25%">Spinner + Text</td>
-<td width="25%">Text Only</td>
-<td width="25%">Spinner Only</td>
+<td width="25%">Spinner and text</td>
+<td width="25%">Text only</td>
+<td width="25%">Spinner only</td>
 <td width="25%">None</td>
 </tr>
 </thead>
@@ -688,13 +687,13 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/loading.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-button id="loadingExampleToggleButton"&gt;Toggle Loading&lt;/auro-button&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-button id="loadingExampleToggleButton"&gt;Toggle loading&lt;/auro-button&gt;
 &lt;table id="loadingExampleTable"&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;td width="25%"&gt;Spinner + Text&lt;/td&gt;
-      &lt;td width="25%"&gt;Text Only&lt;/td&gt;
-      &lt;td width="25%"&gt;Spinner Only&lt;/td&gt;
+      &lt;td width="25%"&gt;Spinner and text&lt;/td&gt;
+      &lt;td width="25%"&gt;Text only&lt;/td&gt;
+      &lt;td width="25%"&gt;Spinner only&lt;/td&gt;
       &lt;td width="25%"&gt;None&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
@@ -742,8 +741,8 @@
 &lt;/table&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="hidden">Hidden Options</auro-header>
-<p>Use the <code>hidden</code> attribute on <code>auro-menuoption</code> to visually hide an option while keeping it in the DOM.</p>
+<auro-header level="3" id="hidden">Hidden options</auro-header>
+<p>Use the <code>hidden</code> attribute on <code>auro-menuoption</code> to hide an option from view and from screen readers while keeping it in the DOM. Keyboard navigation skips hidden options, but the menu's <code>value</code> and <code>selectByValue()</code> can still select them.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/hidden.html) -->
 <!-- The below content is automatically added from ./../apiExamples/hidden.html -->
@@ -783,8 +782,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="multiselect">Multi-Select</auro-header>
-<p>Use the <code>multiselect</code> attribute on <code>auro-menu</code> to allow multiple options to be selected simultaneously.</p>
+<auro-header level="3" id="multiselect">Multi-select</auro-header>
+<p>Use the <code>multiselect</code> attribute on <code>auro-menu</code> to let people select more than one option. Choosing a selected option again deselects it.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multi-select.html) -->
 <!-- The below content is automatically added from ./../apiExamples/multi-select.html -->
@@ -810,8 +809,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="presetValue">Preset Value</auro-header>
-<p>Use the <code>value</code> attribute on <code>auro-menu</code> to set the selected option when the menu renders. The value must match a selectable option; if it matches an option marked <code>disabled</code> or <code>static</code>, no option is selected and <code>auroMenu-selectValueFailure</code> is dispatched.</p>
+<auro-header level="3" id="presetValue">Preset value</auro-header>
+<p>Use the <code>value</code> attribute on <code>auro-menu</code> to set the selected option when the menu renders. The value must match a selectable option; if it matches an option marked <code>disabled</code> or <code>static</code>, no option is selected and <code>auroMenu-selectValueFailure</code> fires.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preset-value.html) -->
 <!-- The below content is automatically added from ./../apiExamples/preset-value.html -->
@@ -837,7 +836,7 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="presetValueMultiselect">Preset Value with Multi-Select</auro-header>
+<auro-header level="3" id="presetValueMultiselect">Preset value with multi-select</auro-header>
 <p>When using <code>multiselect</code>, set the <code>value</code> attribute to a JSON stringified array of values to pre-select multiple options.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preset-value-multiselect.html) -->
@@ -864,8 +863,8 @@
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nonUniqueValues">Non-Unique Option Values</auro-header>
-<p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label &mdash; for example, several airports that all serve the same city. The menu tracks the specific option a user selects rather than resolving by <code>value</code> alone, so selecting one of several options that share a <code>value</code> highlights exactly the option that was chosen.</p>
+<auro-header level="3" id="nonUniqueValues">Non-unique option values</auro-header>
+<p>Two or more <code>auro-menuoption</code> elements may share the same <code>value</code>. This is common when the <code>value</code> represents a coarser grouping than the option label, such as several airports that all serve the same city. The menu tracks the specific option a user selects rather than resolving by <code>value</code> alone, so selecting one of several options that share a <code>value</code> highlights exactly the option that was chosen.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/duplicate-values.html) -->
 <!-- The below content is automatically added from ./../apiExamples/duplicate-values.html -->
