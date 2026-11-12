@@ -1417,8 +1417,8 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Checks whether the menu has content for the `loadingIcon` or `loadingText` slot. Only content present when the menu first renders counts.
-   * @returns {boolean} True if either slot had content when the menu first rendered; false otherwise.
+   * Checks whether the menu has an element in the `loadingIcon` or `loadingText` slot, even an empty one. Only elements present when the menu first renders count.
+   * @returns {boolean|null} True if the menu had an element in either slot when it first rendered; false if it didn't; null before the menu first renders.
    */
   get hasLoadingPlaceholder() {
     return this.loadingSlots && this.loadingSlots.length > 0;
