@@ -87,7 +87,7 @@
 <auro-header level="3">Coordinated value object and total</auro-header>
 <p><code>auro-counter-group</code> exposes a single <code>value</code> property as an object keyed by each counter's <code>name</code>, along with a separate <code>total</code> property for the aggregate sum. With native HTML, you must query each input individually, build the value object yourself, and recompute the total on every change.</p>
 <auro-header level="3">Spinbutton ARIA semantics</auro-header>
-<p><code>auro-counter</code> renders a <code>role="spinbutton"</code> element with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, <code>aria-valuetext</code>, and <code>aria-labelledby</code> so screen readers announce the value as a spinbutton, the role most of them expect for stepper controls. A native <code>&lt;input type="number"&gt;</code> is announced as an editable text field, not a spinbutton, and native HTML has no slots for naming the surrounding +/− buttons.</p>
+<p><code>auro-counter</code> renders a <code>role="spinbutton"</code> element with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, <code>aria-valuetext</code>, and <code>aria-labelledby</code>, and it names the minus and plus buttons through the <code>ariaLabel.minus</code> and <code>ariaLabel.plus</code> slots. A native <code>&lt;input type="number"&gt;</code> also has an implicit <code>spinbutton</code> role, but native HTML has no slots for naming the surrounding +/− buttons, so you add an <code>aria-label</code> to each button yourself.</p>
 <auro-header level="3">Validation and error messaging</auro-header>
 <p><code>auro-counter</code> integrates with <code>@aurodesignsystem/form-validation</code> to expose a <code>validity</code> property, an <code>error</code> attribute, and a help text region that switches to an alert with <code>role="alert"</code> and <code>aria-live="assertive"</code> when invalid. Native number inputs surface browser-controlled validation tooltips that aren't announced inline and can't be styled or customized beyond <code>setCustomValidity()</code>.</p>
 <auro-header level="3">Keyboard strategy</auro-header>
@@ -141,9 +141,9 @@
 <td>Single <code>value</code> and <code>total</code></td>
 </tr>
 <tr>
-<td>Spinbutton ARIA semantics</td>
-<td>Not supported</td>
-<td><code>role="spinbutton"</code> with value, range, and label attributes</td>
+<td>Named plus and minus buttons</td>
+<td>Manual <code>aria-label</code> on each button</td>
+<td><code>ariaLabel.minus</code> and <code>ariaLabel.plus</code> slots</td>
 </tr>
 <tr>
 <td>Validation messages</td>
@@ -178,4 +178,4 @@
 </tbody>
 </table>
 <auro-header level="2">Recommendation</auro-header>
-<p>Use <code>auro-counter</code> and <code>auro-counter-group</code> whenever possible. Fall back to a CSS-styled native number input only in environments that don't support custom elements, or when integrating with third-party systems that require plain HTML. Be prepared to rebuild button wiring, min/max disabling, group totals, spinbutton ARIA, and keyboard coordination yourself.</p>
+<p>Use <code>auro-counter</code> and <code>auro-counter-group</code> whenever possible. Fall back to a CSS-styled native number input only in environments that don't support custom elements, or when integrating with third-party systems that require plain HTML. Be prepared to rebuild button wiring, <code>min</code> and <code>max</code> disabling, group totals, accessible button names, and keyboard coordination yourself.</p>

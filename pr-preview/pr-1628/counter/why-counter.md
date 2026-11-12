@@ -65,9 +65,9 @@
 </thead>
 <tbody>
 <tr>
-<td>ARIA spinbutton semantics</td>
-<td>No</td>
-<td>Yes, except <code>aria-invalid</code></td>
+<td>Named plus and minus buttons</td>
+<td>Manual <code>aria-label</code> on each button</td>
+<td>Yes, with the <code>ariaLabel.minus</code> and <code>ariaLabel.plus</code> slots</td>
 </tr>
 <tr>
 <td>Auto-disable at min/max</td>

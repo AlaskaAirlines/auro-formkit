@@ -19,7 +19,7 @@
 </section>
 <section>
 <auro-header level="2" id="screenReader">Screen reader announcements</auro-header>
-<p>The counter keeps its <code>aria-valuenow</code> and <code>aria-valuetext</code> attributes set to the current value, so screen readers announce the new value when it changes. When the counter gets focus, screen readers announce its label and current value.</p>
+<p>The counter updates its <code>aria-valuenow</code> and <code>aria-valuetext</code> attributes when the value changes, so screen readers announce the new value. The counter doesn't currently set <code>aria-valuetext</code> to the bare number: it wraps the number in single quotes, such as <code>'2'</code>. When the counter gets focus, screen readers announce its label and current value.</p>
 </section>
 <section>
 <auro-header level="2" id="disabledState">Disabled state</auro-header>
