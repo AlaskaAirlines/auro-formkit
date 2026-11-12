@@ -1,4 +1,4 @@
-In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
+When your project can't process JS assets, use the pre-processed assets instead. Legacy browsers, such as IE11, aren't supported.
 
 Each component is imported individually by its export path:
 

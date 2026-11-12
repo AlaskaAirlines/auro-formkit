@@ -1,5 +1,5 @@
 <style>
-  #customTokensCounter {
+  #customTokensCounter auro-counter {
     --ds-auro-counter-control-background-color: #e8d5f5;
     --ds-auro-counter-control-border-color: #7b2d8e;
     --ds-auro-counter-icon-color: #7b2d8e;
@@ -10,10 +10,14 @@
 <auro-counter-group id="customTokensCounter">
   <auro-counter>
     Adults
+    <span slot="ariaLabel.minus">Remove adult</span>
+    <span slot="ariaLabel.plus">Add adult</span>
     <span slot="description">18 years or older</span>
   </auro-counter>
   <auro-counter>
     Children
-    <span slot="description">2-17 years</span>
+    <span slot="ariaLabel.minus">Remove child</span>
+    <span slot="ariaLabel.plus">Add child</span>
+    <span slot="description">2–17 years</span>
   </auro-counter>
 </auro-counter-group>

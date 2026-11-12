@@ -1,5 +1,5 @@
 <auro-form id="bookingForm" class="trip-form">
-  <!-- Cabin — auro-radio-group -->
+  <!-- Cabin: auro-radio-group -->
   <div class="form-section">
     <auro-radio-group required name="cabin">
       <span slot="legend">Cabin</span>
@@ -9,13 +9,14 @@
     </auro-radio-group>
   </div>
 
-  <!-- Route — auro-select (from) + auro-combobox (to) -->
+  <!-- Route: auro-select (from) and auro-combobox (to) -->
   <div class="form-section">
     <h4 class="section-heading">Where are you going?</h4>
     <div class="field-row">
       <auro-select required name="departureAirport">
         <span slot="label">From</span>
         <span slot="bib.fullscreen.headline">Choose a departure city</span>
+        <span slot="ariaLabel.bib.close">Close popup</span>
         <auro-menu>
           <auro-menuoption value="SEA">Seattle (SEA)</auro-menuoption>
           <auro-menuoption value="PDX">Portland (PDX)</auro-menuoption>
@@ -28,6 +29,8 @@
       <auro-combobox required name="destination">
         <span slot="label">To</span>
         <span slot="bib.fullscreen.headline">Search destinations</span>
+        <span slot="ariaLabel.input.clear">Clear destination</span>
+        <span slot="ariaLabel.bib.close">Close combobox</span>
         <auro-menu>
           <auro-menuoption value="HNL">Honolulu (HNL)</auro-menuoption>
           <auro-menuoption value="OGG">Maui (OGG)</auro-menuoption>
@@ -40,7 +43,7 @@
     </div>
   </div>
 
-  <!-- When & who — auro-datepicker (range) + auro-counter-group -->
+  <!-- When and who: auro-datepicker (range) and auro-counter-group -->
   <div class="form-section">
     <h4 class="section-heading">When and who?</h4>
     <div class="field-row">
@@ -49,29 +52,37 @@
         <span slot="toLabel">Return</span>
         <span slot="bib.fullscreen.fromLabel">Departure</span>
         <span slot="bib.fullscreen.toLabel">Return</span>
+        <span slot="bib.fullscreen.headline">Choose travel dates</span>
+        <span slot="ariaLabel.bib.close">Close calendar</span>
       </auro-datepicker>
 
       <auro-counter-group isDropdown max="9" name="travelers">
         <div slot="label">Travelers</div>
         <span slot="bib.fullscreen.headline">Travelers</span>
-        <span slot="ariaLabel.bib.close">Close</span>
+        <span slot="ariaLabel.bib.close">Close popup</span>
         <auro-counter name="adults" min="1" max="9" value="1">
           Adults
+          <span slot="ariaLabel.minus">Remove adult</span>
+          <span slot="ariaLabel.plus">Add adult</span>
           <span slot="description">Age 18+</span>
         </auro-counter>
         <auro-counter name="children" min="0" max="8" value="0">
           Children
+          <span slot="ariaLabel.minus">Remove child</span>
+          <span slot="ariaLabel.plus">Add child</span>
           <span slot="description">Age 2–17</span>
         </auro-counter>
         <auro-counter name="infants" min="0" max="4" value="0">
           Lap infants
+          <span slot="ariaLabel.minus">Remove lap infant</span>
+          <span slot="ariaLabel.plus">Add lap infant</span>
           <span slot="description">Under 2</span>
         </auro-counter>
       </auro-counter-group>
     </div>
   </div>
 
-  <!-- Lead traveler — auro-input -->
+  <!-- Lead traveler: auro-input -->
   <div class="form-section">
     <h4 class="section-heading">Lead traveler</h4>
     <div class="field-row">
@@ -90,10 +101,10 @@
     </div>
   </div>
 
-  <!-- Extras — auro-checkbox-group -->
+  <!-- Extras: auro-checkbox-group -->
   <div class="form-section">
     <auro-checkbox-group name="extras">
-      <span slot="legend">Add to your trip (optional)</span>
+      <span slot="legend">Add to your trip</span>
       <auro-checkbox id="extra-bags" value="bags">First checked bag</auro-checkbox>
       <auro-checkbox id="extra-insurance" value="insurance">Travel insurance</auro-checkbox>
       <auro-checkbox id="extra-lounge" value="lounge">Alaska Lounge+ day pass</auro-checkbox>
@@ -106,7 +117,7 @@
   </div>
 </auro-form>
 
-<output id="bookingFormOutput" aria-live="polite">Fill in the required fields and submit to see the collected form value. Notice the shapes each field contributes — <code>travelDates</code> as a two-item <code>[departure, return]</code> array, <code>travelers</code> as an object keyed by counter name, <code>extras</code> as an array, and <code>cabin</code> as the selected value.</output>
+<output id="bookingFormOutput" aria-live="polite">Fill in the required fields and submit to see the collected form value. Notice the shapes each field contributes: <code>travelDates</code> as a two-item <code>[departure, return]</code> array, <code>travelers</code> as an object keyed by counter name, <code>extras</code> as an array, and <code>cabin</code> as the selected value.</output>
 
 <style>
   #bookingFormOutput {

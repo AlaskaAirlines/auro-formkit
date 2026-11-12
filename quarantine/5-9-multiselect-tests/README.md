@@ -1,4 +1,4 @@
-# Quarantined MultiSelect 5.9 Tests
+# Quarantined multiselect 5.9 tests
 
 ## Why these tests exist
 
@@ -6,7 +6,7 @@ Preserved baseline for future multiSelect rebuild per ADO #1544890 AC2. These te
 
 ## What contract they encode
 
-- JSON-stringified array value contract (e.g. `'["Apples"]'`)
+- JSON-stringified array value contract, such as `'["Apples"]'`
 - `allowDeselect` attribute on `auro-menu`
 - `selectAllMatchingOptions` attribute on `auro-menu`
 - `key` attribute on `auro-menuoption`
@@ -16,7 +16,7 @@ Preserved baseline for future multiSelect rebuild per ADO #1544890 AC2. These te
 ## Activation procedure
 
 1. Change `describe.skip` to `describe` in each `.spec.js` file
-2. Restore imports — each file documents the imports it needs at the top
+2. Restore imports. Each file documents the imports it needs at the top
 3. Copy fixtures from `testFixtures.multiselect.js` back to the component test dirs
 4. Run with `npm run test`
 

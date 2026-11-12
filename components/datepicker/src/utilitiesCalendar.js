@@ -1,14 +1,22 @@
 import { AuroDatepickerUtilities } from './utilities.js';
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Helpers the datepicker's calendar uses to change the month it shows, show or hide the previous and next month buttons, and scroll to a month.
+ */
 export class CalendarUtilities {
   constructor() {
+
+    /**
+     * The date helpers these methods use.
+     * @private
+     */
     this.util = new AuroDatepickerUtilities();
   }
 
 
   /**
-   * Scroll the calendar month list to a given valid date if in mobile view.
+   * Scrolls the calendar to the month of a valid date when the window is narrower than the calendar's mobile breakpoint.
    * @param {Object} elem - The calendar element.
    * @param {String} date - The date to scroll into view.
    * @returns {void}
@@ -28,7 +36,8 @@ export class CalendarUtilities {
   }
 
   /**
-   * Sends an event requesting the dropdown bib be closed.
+   * Called when someone selects the fullscreen calendar's close button or the Done button.
+   * Fires `auroCalendar-dismissRequest` so the datepicker closes the calendar.
    * @private
    * @returns {void}
    */
@@ -41,7 +50,7 @@ export class CalendarUtilities {
   }
 
   /**
-   * Handles the visibility of the previous and next month buttons.
+   * Shows or hides the previous and next month buttons, so people can't move before the first month or past the last month the calendar allows.
    * @param {Object} elem - The auro-calendar element.
    * @returns {void}
    */
@@ -104,7 +113,8 @@ export class CalendarUtilities {
   }
 
   /**
-   * Handles the change of the centralDate property.
+   * Called when the calendar's `centralDate` changes. Updates the previous and next month buttons
+   * and fires `auroCalendar-centralDateChanged` with the new date.
    * @param {Object} elem - The auro-calendar element.
    * @private
    * @returns {void}
@@ -125,7 +135,7 @@ export class CalendarUtilities {
   /**
    * Updates the month and year when the user navigates to a different calendar month.
    * @param {Object} elem - The auro-calendar element.
-   * @param {String} direction - The direction the user is navigating.
+   * @param {String} direction - The direction to move: `next` or `prev`.
    * @returns {void}
    */
   handleMonthChange(elem, direction) {

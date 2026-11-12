@@ -2,7 +2,7 @@
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"></script>
 ```
-<p>This script registers the <code>&lt;auro-select&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This script registers the <code>&lt;auro-select&gt;</code> custom element globally. Then use it in your HTML:</p>
 ```html
 <auro-select id="cdn-select">
   <span slot="label">Choose an option</span>

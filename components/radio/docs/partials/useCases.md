@@ -1,5 +1,5 @@
-The `<auro-radio>` element is designed to be a single component for the use of creating an input `type="radio"` with an associated `<label>` that meets all use case and accessibility standards.
+Use the `<auro-radio>` element when people need to choose exactly one option from a short list. It provides an accessible radio button with a label.
 
-The following examples illustrate fully functional `<auro-radio>` elements wrapped with the `<auro-radio-group>` element. The `<auro-radio-group>` element is REQUIRED in order to mantain the relationship between individual `<auro-radio>` elements for functional radio button actions.
+Always place `<auro-radio>` elements inside an `<auro-radio-group>` element. The group makes the radio buttons work together, so selecting one clears the others.
 
-**Note**: The `<auro-radio>` element is only for to for use as a set of two or more `<auro-radio>` elements within an `<auro-radio-group>` element.
+**Note**: Use `<auro-radio>` only as a set of two or more `<auro-radio>` elements within an `<auro-radio-group>` element.

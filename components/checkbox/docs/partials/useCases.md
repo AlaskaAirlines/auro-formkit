@@ -1,4 +1,4 @@
-The <code>&lt;auro-checkbox&gt;</code> element should be used in situations where users may:
+Use the <code>&lt;auro-checkbox&gt;</code> element when people need to:
 
-* Be filling out a form
-* Need to select one or more options
+* Fill out a form
+* Select one or more options

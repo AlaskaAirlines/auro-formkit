@@ -1,13 +1,17 @@
-<!-- Example of all counter properties -->
+<!-- Example of the counter's min, max, value, and disabled properties -->
 <auro-counter-group>
   <!-- Basic counter with min/max -->
   <auro-counter min="2" max="5" value="2">
-    Min 1, Max 5
+    Min 2, max 5
+    <span slot="ariaLabel.minus">Decrease value</span>
+    <span slot="ariaLabel.plus">Increase value</span>
   </auro-counter>
 
   <!-- Disabled counter -->
   <auro-counter disabled value="0">
     Disabled counter
+    <span slot="ariaLabel.minus">Decrease disabled counter</span>
+    <span slot="ariaLabel.plus">Increase disabled counter</span>
   </auro-counter>
 
 </auro-counter-group>

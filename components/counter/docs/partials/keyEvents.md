@@ -4,6 +4,6 @@
 <auro-header level="3" id="keyEventsCounter">Counter</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counter.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="3" id="keyEventsCounterGroup">Counter Group</auro-header>
+<auro-header level="3" id="keyEventsCounterGroup">Counter group</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counterGroup.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->

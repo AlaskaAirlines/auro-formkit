@@ -16,7 +16,7 @@ export default class AuroFormValidation {
   /**
    * Resets the element to its initial state.
    * @private
-   * @param {object} elem - HTML element to reset.
+   * @param {object} elem - The element to reset.
    * @returns {void}
    */
   reset(elem) {
@@ -39,29 +39,21 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Validates the attributes of a given element based on predefined validation rules.
+   * Checks the element's value against the limits its attributes set, and sets the element's validity state and error message when a check fails.
    *
-   * @param {HTMLElement} elem - The element to be validated.
+   * The checks depend on the element:
+   * - `auro-input`: `tooShort` when a non-empty value is shorter than `minLength`, `tooLong` when it's longer than `maxLength`, and `patternMismatch` when it doesn't match `pattern`.
+   * - `auro-counter` and `auro-counter-group`: `rangeOverflow` when the value is over `max`, and `rangeUnderflow` when it's under `min`.
+   * - `auro-combobox` with `behavior="filter"`: `valueMissing` when the input has text but no matching option is selected.
+   *
+   * When more than one check fails, the last one in this list wins.
+   *
+   * @param {HTMLElement} elem - The element to validate.
    * @returns {void}
    *
    * @example
-   * // Assuming `inputElement` is a reference to an input element in the DOM
-   * validateElementAttributes(inputElement);
-   *
-   * The function checks the element's attributes against the validation rules defined for 'input' and 'counter' types.
-   * If a validation rule is violated, it sets the element's validity state and error message accordingly.
-   *
-   * Validation rules:
-   * - input:
-   *   - length:
-   *     - tooShort: Checks if the value length is less than the minimum length.
-   *     - tooLong: Checks if the value length exceeds the maximum length.
-   *   - pattern:
-   *     - patternMismatch: Checks if the value does not match the specified pattern.
-   * - counter:
-   *   - range:
-   *     - rangeOverflow: Checks if the value exceeds the maximum value.
-   *     - rangeUnderflow: Checks if the value is less than the minimum value.
+   * // `validation` is an AuroFormValidation instance, and `inputElement` is an auro-input element.
+   * validation.validateElementAttributes(inputElement);
    */
   validateElementAttributes(elem) {
     const validationRules = {
@@ -174,7 +166,7 @@ export default class AuroFormValidation {
   /**
    * Determines the validity state of the element based on the type attribute.
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - The element to validate.
    * @returns {void}
    */
   validateType(elem) {
@@ -269,8 +261,8 @@ export default class AuroFormValidation {
 
   /**
    * Determines the validity state of the element.
-   * @param {object} elem - HTML element to validate.
-   * @param {boolean} force - Boolean that forces validation to run.
+   * @param {object} elem - The element to validate.
+   * @param {boolean} force - If true, validates the element even when it's focused or hasn't been touched. If false, validates only when the element isn't focused and has been touched or has a value, unless `validateOnInput` is set.
    * @returns {void}
    */
   validate(elem, force) {
@@ -415,9 +407,9 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Gets all the HTML5 `inputs` in the element shadow DOM.
+   * Finds all the `<input>` elements in the element's render root and stores them in `inputElements`.
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - The element to validate.
    * @returns {void}
    */
   getInputElements(elem) {
@@ -425,9 +417,9 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Gets all the `auro-inputs` in the element shadow DOM.
+   * Finds all the `auro-input` elements, and elements with the `auro-input` attribute, in the element's shadow DOM and stores them in `auroInputElements`.
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - The element to validate.
    * @returns {void}
    */
   getAuroInputs(elem) {
@@ -435,9 +427,9 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Return appropriate error message.
+   * Sets the element's error message when it's invalid: `setCustomValidity` when it's set, or else, when no message is set yet, the browser's validation message from an inner `<input>`. Clears the message when the element is valid.
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - The element to set the error message on.
    * @returns {void}
    */
   getErrorMessage(elem) {

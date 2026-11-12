@@ -1,8 +1,8 @@
-## Custom Component Registration for Version Management
+## Custom component registration for version management
 
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
+Every Auro component has two key parts: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
-You can do this by importing only the component class and using the `register(name)` method with a unique name:
+To do this, import only the component class and call the `register(name)` method with a unique name:
 
 ```js
 // Import the class only
@@ -12,22 +12,22 @@ import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class
 AuroDropdown.register('custom-dropdown');
 ```
 
-This will create a new custom element `<custom-dropdown>` that behaves exactly like `<auro-dropdown>`, allowing both to coexist on the same page without interfering with each other.
+This creates a new custom element `<custom-dropdown>` that behaves exactly like `<auro-dropdown>`, allowing both to coexist on the same page without interfering with each other.
 
 ```html
-  <custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg" aria-label="Label content for screen reader">
+  <custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg">
     <div style="padding: var(--ds-size-150);">
-      Lorem ipsum solar
+      Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
       <br />
       <auro-button id="customCommonButton">
-        Dismiss Dropdown
+        Dismiss dropdown
       </auro-button>
     </div>
     <span slot="helpText">
-      Help text
+      Times are local to each airport
     </span>
     <div slot="trigger">
-      Trigger
+      Flight details
     </div>
   </custom-dropdown>
 ```

@@ -3,8 +3,8 @@
     <tr>
       <th>Key</th>
       <th>Modifier</th>
-      <th>Current State</th>
-      <th>Focus Element</th>
+      <th>Current state</th>
+      <th>Focus element</th>
       <th>Behavior</th>
     </tr>
   </thead>
@@ -24,7 +24,7 @@
       <td>Focus within the radio group</td>
       <td>Any radio in the group</td>
       <td>
-        Selects and focuses the next enabled radio. Wraps from last to first. Skips disabled items. Calls <code>preventDefault()</code>.
+        Selects and focuses the next enabled radio. Wraps from last to first. Skips disabled items, but doesn't currently wrap to the first radio when every radio after the current one is disabled. Calls <code>preventDefault()</code>.
       </td>
     </tr>
     <tr>

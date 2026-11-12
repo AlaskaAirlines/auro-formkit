@@ -2,12 +2,15 @@
 
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Date helpers the datepicker and its calendar share, such as finding the first day of a month and counting the months between two dates.
+ */
 export class AuroDatepickerUtilities {
 
   /**
-   * Converts any date object to a date object representing the first day of the month.
-   * @param {Object} date - Date to convert to the first day of the month.
-   * @returns {Object}
+   * Converts a date to a `Date` object for the first day of its month, at local midnight.
+   * @param {Date} date - The date to convert.
+   * @returns {Date} The first day of the date's month.
    */
   convertDateToFirstOfMonth(date) {
     const dateObj = new Date(date);
@@ -15,10 +18,10 @@ export class AuroDatepickerUtilities {
   }
 
   /**
-   * Calculate the number of months between two dates.
-   * @param {Object} date1 - First date to compare.
-   * @param {Object} date2 - Second date to compare.
-   * @returns {Number}
+   * Counts the calendar months from `date1` through `date2`, including both months. Returns 0 when `date2` is in an earlier month.
+   * @param {Date} date1 - The first date.
+   * @param {Date} date2 - The last date.
+   * @returns {Number} The number of months.
    */
   monthDiff(date1, date2) {
     let months = 0;
@@ -30,10 +33,10 @@ export class AuroDatepickerUtilities {
   }
 
   /**
-   * Function to generate checkmark svg.
+   * Creates an SVG element from an icon's markup.
    * @private
-   * @param {Object} icon - Icon object containing the SVG.
-   * @returns {Object}
+   * @param {Object} icon - The icon object containing the SVG.
+   * @returns {Object} The SVG element.
    */
   generateIconHtml(icon) {
     this.dom = new DOMParser().parseFromString(icon.svg, 'text/html');
@@ -42,11 +45,11 @@ export class AuroDatepickerUtilities {
   }
 
   /**
-   * Compares two dates to see if they match.
+   * Checks whether two dates are the same moment in time.
    * @private
-   * @param {Object} date1 - First date to compare.
-   * @param {Object} date2 - Second date to compare.
-   * @returns {Boolean}
+   * @param {Object} date1 - The first date to compare.
+   * @param {Object} date2 - The second date to compare.
+   * @returns {Boolean} True if the dates match; false otherwise.
    */
   datesMatch(date1, date2) {
     return new Date(date1).getTime() === new Date(date2).getTime();

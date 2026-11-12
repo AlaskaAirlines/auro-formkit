@@ -1,6 +1,6 @@
 # @aurodesignsystem/form-validation
 
-Shared validation logic for all form components in the `auro-formkit` monorepo. Used internally by `auro-input`, `auro-datepicker`, `auro-counter`, and `auro-combobox`.
+Shared validation logic for the form components in the `auro-formkit` monorepo. `auro-checkbox-group`, `auro-combobox`, `auro-counter`, `auro-counter-group`, `auro-datepicker`, `auro-input`, `auro-radio-group`, and `auro-select` use it internally.
 
 ## Usage
 
@@ -23,19 +23,19 @@ Type-specific validation for `auro-input`. Handles `email`, `credit-card`, `numb
 
 ### `validateElementAttributes(elem)` _(private)_
 
-Attribute-based validation (`minLength`, `maxLength`, `pattern`) for `auro-input`, and range constraints for `auro-counter`.
+Attribute-based validation (`minLength`, `maxLength`, and `pattern`) for `auro-input`, range constraints for `auro-counter` and `auro-counter-group`, and a check that the typed text matches a selected option for `auro-combobox` with `behavior="filter"`.
 
 ## Validity states
 
 | State | Trigger |
 |---|---|
-| `valueMissing` | `required` field left empty |
+| `valueMissing` | `required` field left empty, or for `auro-combobox` with `behavior="filter"`, text that doesn't match a selected option |
 | `tooShort` | Value shorter than `minLength` (or date value shorter than expected format length) |
 | `tooLong` | Value longer than `maxLength` (or date value longer than expected format length) |
-| `patternMismatch` | Value does not match `pattern`; or for `type="date"`, a structurally complete date string that is not a valid calendar date (e.g. `02/30/2024`) |
+| `patternMismatch` | Value doesn't match `pattern`; or for `type="date"`, a structurally complete date string that isn't a valid calendar date, such as `02/30/2024` |
 | `rangeOverflow` | Numeric or date value exceeds `max` |
 | `rangeUnderflow` | Numeric or date value is below `min` |
-| `customError` | `error` attribute is set |
+| `customError` | `error` attribute is set (ignored on `auro-counter-group`) |
 
 ## Date type validation and `patternMismatch`
 

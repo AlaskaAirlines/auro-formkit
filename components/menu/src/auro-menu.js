@@ -34,19 +34,37 @@ let menuInstanceIdCounter = 0;
 
 
 /**
- * The `auro-menu` element provides users a way to select from a list of options.
+ * A list of options that people choose from, used as the options list inside `auro-select` and `auro-combobox`.
+ *
+ * **Key capabilities**
+ * - **Multiple selection**: Set `multiselect` to let people select more than one option.
+ * - **Preset selection**: Set `value` to select the matching option when the menu renders.
+ * - **Match highlighting**: Set `matchword` to show the matching text in each option in bold.
+ * - **Loading state**: Set `loading` to show the `loadingIcon` and `loadingText` slots in place of the options.
+ * - **Grouped options**: Nest an `auro-menu` inside another to indent a group of options, while the outer menu keeps track of the selection.
+ * - **Disabled menu**: Set `disabled` to turn off every option without changing each option's own `disabled` setting.
+ *
+ * **Example**
+ * ```html
+ * <auro-menu>
+ *   <auro-menuoption value="stops">Stops</auro-menuoption>
+ *   <auro-menuoption value="price">Price</auro-menuoption>
+ * </auro-menu>
+ * ```
+ *
+ * @summary A list of options with single or multiple selection, match highlighting, a loading state, and grouped options.
  * @customElement auro-menu
  *
- * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
- * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
- * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
- * @event {CustomEvent<{ options: Array<HTMLElement> }>} auroMenu-optionsChange - Notifies that the set of available menu options has changed.
- * @event {CustomEvent<any>} auroMenu-selectValueFailure - Notifies that an attempt to select a menuoption by matching a value has failed.
- * @event {CustomEvent<any>} auroMenu-selectValueReset - Notifies that the component value has been reset.
- * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
- * @slot loadingText - Text to show while loading attribute is set
- * @slot loadingIcon - Icon to show while loading attribute is set
- * @slot - Slot for insertion of menu options.
+ * @event {CustomEvent<Element>} auroMenu-activatedOption - Fires when an option becomes the active (highlighted) option, through the arrow keys, hover, or `updateActiveOption()`. The option is in `detail`.
+ * @event {CustomEvent<any>} auroMenu-customEventFired - Fires right after the menu fires the event named in an option's `event` attribute. The option is in `detail.option`.
+ * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Fires when `loading` changes, and once when the menu first renders.
+ * @event {CustomEvent<{ options: Array<HTMLElement> }>} auroMenu-optionsChange - Fires when the set of options in the menu changes.
+ * @event {CustomEvent<any>} auroMenu-selectValueFailure - Fires when a value doesn't match any option that can be selected, or when someone chooses an option with no `value` in multi-select mode.
+ * @event {CustomEvent<any>} auroMenu-selectValueReset - Fires when `reset()` clears the menu.
+ * @event {CustomEvent<any>} auroMenu-selectedOption - Fires when the selection changes, including when an option is deselected or the selection is cleared. In single-select mode, it also fires when someone chooses the option that's already selected.
+ * @slot loadingText - Text shown while the menu is loading, such as "Loading...". {@relevantWhen loading} {@category ui}
+ * @slot loadingIcon - Icon shown while the menu is loading, such as an `auro-loader`. {@relevantWhen loading} {@category ui}
+ * @slot - The `auro-menuoption` elements to choose from. It can also hold `<hr>` dividers and nested `auro-menu` elements. {@requiredWhen always} {@category ui}
  */
 export class AuroMenu extends AuroElement {
 
@@ -127,6 +145,10 @@ export class AuroMenu extends AuroElement {
   // (not the constructor body) so the CEM analyzer keeps their `@type` unions
   // instead of inferring `string` from a constructor-literal assignment.
   // See AlaskaAirlines/discussions#653.
+  /**
+   * Sets the default `shape` and `size` values. Called from the constructor.
+   * @internal
+   */
   initializeArchitectureDefaults() {
     this.shape = "box";
     this.size = "sm";
@@ -137,7 +159,8 @@ export class AuroMenu extends AuroElement {
       ...super.properties,
 
       /**
-       * Applies a named layout variant to the menu. Free-form string consumed by the shared architecture helpers; menu defines no closed value set.
+       * Sets a layout name for the menu. The menu has no layouts, so this doesn't currently change how it looks.
+       * @category ui
        */
       layout: {
         type: String,
@@ -146,9 +169,10 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Sets the shape of the menu options.
+       * Sets the corner shape of every option in the menu. `box` and `snowflake` have square corners, and `pill` has fully rounded ends. An option's own `shape` overrides it.
        * @type {'box' | 'pill' | 'snowflake'}
        * @default 'box'
+       * @category ui
        */
       shape: {
         type: String,
@@ -157,9 +181,10 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Sets the size of the menu options.
+       * Sets the text size and spacing of every option in the menu, from `xs` (smallest) to `xl` (largest). An option's own `size` overrides it.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'sm'
+       * @category ui
        */
       size: {
         type: String,
@@ -168,7 +193,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * When true, the entire menu is disabled: options render inert (not focusable, keyboard-navigable, or selectable, and visually disabled) without changing any option's own `disabled` state.
+       * Turns off the whole menu. Every option is shown in a muted style and can't be highlighted or selected with the mouse or keyboard, but each option's own `disabled` setting stays unchanged. A selected option in a nested menu doesn't currently switch to the muted style unless the nested menu is also disabled.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -176,7 +202,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Indent level for submenus.
+       * Holds how deeply a nested menu is indented, which sets how many spacers its options get.
        * @private
        */
       level: {
@@ -186,7 +212,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * When true, displays a loading state using the loadingIcon and loadingText slots if provided.
+       * Shows a loading placeholder in place of the options, using the `loadingIcon` and `loadingText` slots when they have content. Also sets `aria-busy` so screen readers know the options aren't ready.
+       * @category ui
        */
       loading: {
         type: Boolean,
@@ -194,7 +221,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Specifies a string used to highlight matched string parts in options.
+       * Sets the text to highlight in each option, such as what someone has typed into a search field. Matching text is shown in bold, ignoring case. Options marked `persistent`, `disabled`, `hidden`, or `static` aren't highlighted.
+       * @category behavior
        */
       matchWord: {
         type: String,
@@ -202,7 +230,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * When true, the selected option can be multiple options.
+       * Lets people select more than one option. Choosing a selected option again deselects it, and `value` holds the selected values as a JSON array string, such as `'["stops","price"]'`.
+       * @category behavior
        */
       multiSelect: {
         type: Boolean,
@@ -211,7 +240,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * When true, selected option will not show the checkmark.
+       * Hides the checkmark next to selected options. Applies to every option in the menu, including options in nested menus.
+       * @category ui
        */
       noCheckmark: {
         type: Boolean,
@@ -220,9 +250,10 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Specifies the current active menuOption.
+       * Gets the active option: the one highlighted by the arrow keys or hover. It's `undefined` when no option is highlighted.
        * @readonly
        * @type {HTMLElement}
+       * @category behavior
        */
       optionActive: {
         type: Object,
@@ -230,9 +261,10 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * The currently selected menu option(s). In single-select mode this is a single `HTMLElement` (or `undefined` when nothing is selected). In multi-select mode this is an array of `HTMLElement`s.
+       * Gets the selected option, or an array of the selected options in multi-select mode. It's `undefined` when nothing is selected.
        * @readonly
        * @type {HTMLElement | HTMLElement[]}
+       * @category behavior
        */
       optionSelected: {
         // Allow HTMLElement, HTMLElement[] arrays and undefined
@@ -241,8 +273,8 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.
-       * Options marked `disabled` or `static` are not selectable by value; `hidden` options remain selectable. In single-select mode, if the value matches a non-selectable option the selection is cleared (`optionSelected` becomes `undefined`) and `auroMenu-selectValueFailure` is dispatched. In multi-select mode, non-selectable entries are dropped from the value and the remaining selectable entries are selected; `auroMenu-selectValueFailure` is dispatched only when none of the entries match a selectable option.
+       * Sets the selected option by its `value`, such as `stops`, and updates when someone selects an option. In multi-select mode, it's a JSON array string, such as `'["stops","price"]'`, and values that match only `disabled` or `static` options are dropped. Options marked `disabled` or `static` can't be selected by value, but `hidden` options can; when nothing selectable matches, the selection is cleared and `auroMenu-selectValueFailure` fires.
+       * @category behavior
        */
       value: {
         type: String,
@@ -261,11 +293,11 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-menu"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-menu"] - The tag name to register the element under.
    *
    * @example
-   * AuroMenu.register("custom-menu") // this will register this element to <custom-menu/>
+   * AuroMenu.register("custom-menu") // registers the element as <custom-menu>
    *
    */
   static register(name = "auro-menu") {
@@ -273,30 +305,37 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
+   * Gets the options in the menu, including options in nested menus, in the order they appear.
    * @readonly
-   * @returns {Array<HTMLElement>} - Returns the array of available menu options.
+   * @returns {Array<HTMLElement>|undefined} The `auro-menuoption` elements, or undefined when the menu has none.
+   * @category behavior
    */
   get options() {
     return this.items;
   }
 
   /**
-   * @returns {number} - Returns the index of the currently active option.
+   * Gets or sets the position in `options` of the option that Enter and Tab act on: the option last highlighted or selected. It's `-1` when there's none.
+   * @returns {number} The position in `options`, or -1 when there's none.
+   * @category behavior
    */
   get index() {
     return this._index;
   }
 
   /**
-   * @param {number} value - Sets the index of the currently active option.
+   * Gets or sets the position in `options` of the option that Enter and Tab act on: the option last highlighted or selected. Setting it highlights that option and fires `auroMenu-activatedOption`.
+   * @param {number} value - The position in `options` of the option to highlight. Positions outside `options` are ignored.
+   * @category behavior
    */
   set index(value) {
     this.updateActiveOption(value);
   }
 
   /**
-   * Gets the currently selected options as an array.
-   * @returns {Array<HTMLElement>}
+   * Gets the selected options as an array.
+   * @returns {Array<HTMLElement>} The selected options, or an empty array when nothing is selected.
+   * @category behavior
    */
   get selectedOptions() {
     if (!this.optionSelected) {
@@ -309,8 +348,9 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Gets the first selected option, or null if none.
-   * @returns {HTMLElement|null}
+   * Gets the first selected option, or `null` when nothing is selected.
+   * @returns {HTMLElement|null} The first selected option, or null when nothing is selected.
+   * @category behavior
    */
   get selectedOption() {
     const opts = this.selectedOptions;
@@ -318,8 +358,10 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
+   * Gets the text of the selected option. In multi-select mode, gets the text of every selected option, separated by commas.
    * @readonly
-   * @returns {string} - Returns the label of the currently selected option(s).
+   * @returns {string} The selected options' text, or an empty string when nothing is selected.
+   * @category behavior
    */
   get currentLabel() {
     if (!this.optionSelected) {
@@ -332,8 +374,8 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Formatted value based on `multiSelect` state.
-   * Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+   * Gets `value` in the shape the menu works with: the string itself, or, in multi-select mode,
+   * an array of values parsed from the JSON array string.
    * @private
    * @returns {String|Array<String>}
    */
@@ -366,8 +408,8 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Selects options by value. Options marked `disabled` or `static` are not selectable; `hidden` options remain selectable. In single-select mode, if the value matches a non-selectable option the selection is cleared and `auroMenu-selectValueFailure` is dispatched. In multi-select mode, non-selectable entries are dropped and the remaining selectable entries are selected; `auroMenu-selectValueFailure` is dispatched only when none of the entries match a selectable option. Passing `undefined`, `null`, an empty string, or an empty array clears the selection without dispatching a failure.
-   * @param {string|string[]|undefined|null} value - The value(s) to select.
+   * Selects the option whose `value` matches, or in multi-select mode, the options that match an array of values. Options marked `disabled` or `static` can't be selected, but `hidden` options can; when nothing selectable matches, the selection is cleared and `auroMenu-selectValueFailure` fires. Passing `undefined`, `null`, an empty string, or an empty array clears the selection without firing that event.
+   * @param {string|string[]|undefined|null} value - The value to select, or an array of values in multi-select mode.
    * @public
    */
   selectByValue(value) {
@@ -844,7 +886,7 @@ export class AuroMenu extends AuroElement {
   /**
    * Assigns a private, auto-generated unique key (`_optionKey`) to each menu
    * option that does not already have one. Keys are internal state on the
-   * element instance — never reflected as an attribute or exposed publicly —
+   * element instance, never reflected as an attribute or exposed publicly,
    * and let selection tracking distinguish options that share the same `value`.
    *
    * The `_optionKey === undefined` guard makes this idempotent: options keep the
@@ -972,7 +1014,7 @@ export class AuroMenu extends AuroElement {
    * Re-sorts the multi-select selection into DOM order and rebuilds the derived
    * `_selectedKey` and `value` from `optionSelected`. Selection is always stored
    * and serialized in the order options appear in the menu, never in click
-   * order — so selecting C then A yields `[A, C]`.
+   * order, so selecting C then A yields `[A, C]`.
    * @private
    */
   _sortSelectedByDomOrder() {
@@ -1005,8 +1047,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Resets the menu to its initial state.
-   * This is the only way to return value to undefined.
+   * Clears the selection and the active option, and sets `value` to `undefined`. Fires `auroMenu-selectValueReset`.
    * @public
    */
   reset() {
@@ -1127,7 +1168,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Toggle the selection state of the menuoption.
+   * Toggles the selection state of the menuoption.
    * @private
    * @param {HTMLElement} option - The menuoption to toggle.
    */
@@ -1144,7 +1185,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Handles keyboard navigation and selection.
+   * Called when a key is pressed in the menu. The arrow keys move the active option, and Enter and Tab select it.
    * @private
    * @param {KeyboardEvent} event - The keydown event.
    */
@@ -1172,7 +1213,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Handles option selection via click events from menuoptions.
+   * Called when an option fires `auroMenuOption-click`. Selects the clicked option, unless the menu is disabled or nested in another menu.
    * @private
    * @param {CustomEvent} event - The auroMenuOption-click event.
    */
@@ -1192,9 +1233,9 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Handles option hover events.
+   * Called when the pointer moves over an option. Makes it the active option, unless it can't be highlighted.
    * @private
-   * @param {CustomEvent} event - Event object from the browser.
+   * @param {CustomEvent} event - The `auroMenuOption-mouseover` event.
    */
   handleOptionHover(event) {
     const option = event.detail;
@@ -1216,7 +1257,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Handles slot change events.
+   * Called when the menu's content changes. Sets the menu up again, and re-applies a `value` that was set before the options arrived.
    * @private
    */
   handleSlotChange() {
@@ -1240,8 +1281,8 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Navigates through options using keyboard.
-   * @param {string} direction - 'up' or 'down'.
+   * Moves the active option to the next or previous option, wrapping around at either end. Skips options that are `disabled`, `hidden`, or `static`, and does nothing when the menu is disabled.
+   * @param {string} direction - The direction to move, `up` or `down`.
    */
   navigateOptions(direction) {
     // A disabled menu is inert — no option becomes active via keyboard.
@@ -1287,9 +1328,8 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Updates the active option state and dispatches events.
-   * Accepts either a numeric index or an HTMLElement option.
-   * @param {number|HTMLElement} indexOrOption - Index of the option or the option element to make active.
+   * Makes an option the active (highlighted) option and fires `auroMenu-activatedOption`. Does nothing when the option or position isn't in `options`.
+   * @param {number|HTMLElement} indexOrOption - The position in `options` of the option to make active, or the option element itself.
    */
   updateActiveOption(indexOrOption) {
     let idx = -1;
@@ -1313,7 +1353,7 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Handles custom events defined on options.
+   * Fires the event named in the option's `event` attribute, then `auroMenu-customEventFired`, with the option in `detail.option`.
    * @private
    * @param {HTMLElement} option - Option with custom event.
    */
@@ -1333,10 +1373,11 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
+   * Checks whether two selections hold the same options, in any order.
    * @private
-   * @param {any} current - Current selection.
-   * @param {any} next - New selection to compare.
-   * @returns {boolean} Whether the selections are equal.
+   * @param {any} current - The current selection.
+   * @param {any} next - The new selection to compare.
+   * @returns {boolean} True if both are the same option or hold the same set of options; false otherwise.
    */
   selectionEquals(current, next) {
     if (current === next) {
@@ -1376,16 +1417,16 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Getter for loading placeholder state.
-   * @returns {boolean} - True if loading slots are present and non-empty.
+   * Checks whether the menu has an element in the `loadingIcon` or `loadingText` slot, even an empty one. Only elements present when the menu first renders count.
+   * @returns {boolean|null} True if the menu had an element in either slot when it first rendered; false if it didn't; null before the menu first renders.
    */
   get hasLoadingPlaceholder() {
     return this.loadingSlots && this.loadingSlots.length > 0;
   }
 
   /**
-   * Getter for wrapper classes based on size.
-   * @returns {Object} - Class map for the wrapper element.
+   * Gets the wrapper element's classes, based on `size`.
+   * @returns {Object} The class map for the wrapper element.
    * @private
    */
   get wrapperClasses() {
@@ -1396,9 +1437,9 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * Logic to determine the layout of the component.
+   * Renders the menu's content: the options, or the loading placeholder while `loading` is set.
    * @protected
-   * @returns {void}
+   * @returns {import("lit").TemplateResult} The template to render.
    */
   renderLayout() {
     if (this.loading) {

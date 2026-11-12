@@ -20,22 +20,22 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-The <code>auro-counter</code> component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the <code>auro-counter-group</code> to facilitate a collection of counters to add passenger types to a flight.
+<code>auro-counter</code> lets people choose a number with minus and plus buttons, such as how many passengers are traveling. Use it inside <code>auro-counter-group</code> to collect several related counts, such as adults, children, and lap infants on a flight.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Counter Use Cases
+## Counter use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `auro-counter` element should be used in situations where users may:
+Use `auro-counter` when people need to:
 
-* Need to input a numeric value within a defined range
-* Need a user-friendly interface for quantity selection
+* Choose a number within a set range
+* Pick a quantity, such as the number of passengers
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-counter Getting Started page](https://auro.alaskaair.com/components/auro/counter/getting-started).
+For getting started instructions, visit the [`auro-counter` getting started page](https://auro.alaskaair.com/components/auro/counter/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

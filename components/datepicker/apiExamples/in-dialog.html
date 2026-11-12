@@ -1,12 +1,16 @@
 
 <div>
-  <auro-button id="datepicker-dialog-opener">Datepicker in Dialog</auro-button>
+  <auro-button id="datepicker-dialog-opener">Datepicker in dialog</auro-button>
 
   <auro-dialog id="datepicker-dialog">
-    <span slot="bib.fullscreen.headline">inDialog Example</span>
-    <span slot="header">Datepicker in Dialog</span>
+    <span slot="header">Datepicker in dialog</span>
     <div slot="content">
-      <auro-datepicker />
+      <auro-datepicker>
+        <span slot="fromLabel">Choose a date</span>
+        <span slot="ariaLabel.bib.close">Close calendar</span>
+        <span slot="bib.fullscreen.headline">Datepicker in dialog</span>
+        <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+      </auro-datepicker>
     </div>
   </auro-dialog>
 </div>

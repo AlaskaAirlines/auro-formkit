@@ -5,11 +5,12 @@ import { doubleRaf } from '@aurodesignsystem/utils';
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 /**
- * Whether `el` is currently visible enough to receive focus. Prefers the
- * browser's `checkVisibility()`; otherwise combines a display/visibility check
- * with an ancestor-hidden probe that keeps position:fixed elements visible.
+ * Checks whether `el` is visible enough to receive focus. Uses the browser's
+ * `checkVisibility()` when it's available; otherwise checks `display` and
+ * `visibility`, and treats an element with no offset parent as hidden unless
+ * it has `position: fixed`.
  * @param {Element} el - The element to test.
- * @returns {boolean}
+ * @returns {boolean} True if the element is visible enough to receive focus; false otherwise.
  */
 function isVisibleForFocus(el) {
   if (typeof el.checkVisibility === 'function') {
@@ -23,12 +24,12 @@ function isVisibleForFocus(el) {
 }
 
 /**
- * Return the tab stop that comes before the counter-group in page tab order,
+ * Gets the tab stop that comes before the counter group in the page's tab order,
  * skipping any hidden entries the walker doesn't filter itself. The group host
- * itself is not a tab stop; its focusables (the internal dropdown and the
+ * itself isn't a tab stop; its focusables (the internal dropdown and the
  * counters) are, so anchor the search on the group's earliest focusable.
- * @param {Element} component - The auro-counter-group host element.
- * @returns {Element|null}
+ * @param {Element} component - The `auro-counter-group` host element.
+ * @returns {Element|null} The previous visible tab stop, or null when nothing comes before the group.
  */
 function getPreviousTabStop(component) {
   const tabStops = getFocusableElements(component.ownerDocument.body);
@@ -53,6 +54,9 @@ function getPreviousTabStop(component) {
   return null;
 }
 
+/**
+ * Holds the counter group's keyboard handlers, `Escape` and `Tab`, which it uses only when `isDropdown` is set. Escape closes the open dropdown without closing a dialog or drawer around it, and Shift+Tab on the first counter of a dropdown that isn't fullscreen closes it and moves focus to whatever comes before the group.
+ */
 export const counterGroupKeyboardStrategy = {
   Escape(component, evt) {
     if (!component.dropdown || !component.dropdown.isPopoverVisible) {

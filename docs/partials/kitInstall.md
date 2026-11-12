@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/npm/l/@aurodesignsystem/auro-formkit?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 ![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
 
-#### NPM Installation
+#### NPM installation
 
 ```shell
 $ npm i @aurodesignsystem/{{ monorepoName }}

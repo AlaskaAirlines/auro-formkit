@@ -7,13 +7,14 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeStringify from 'rehype-stringify';
 
 /**
- * Fetches the docs/pages/ directory listing, builds a nav bar with links to
- * each .md file, and prepends it to <body>. Clicking a link renders that page
- * without a full reload. Pass the path to the pages directory relative to the
- * HTML file, e.g. '../docs/pages/'.
+ * Fetches the `pages.json` list of doc pages, builds a nav bar with a link to
+ * each page's HTML file, and prepends it to `<body>`. The current page's link
+ * is highlighted. Does nothing when `pages.json` can't be loaded or is empty.
+ * Pass the path to the folder that holds `pages.json`, relative to the HTML
+ * file, for example `../docs/pages/`.
  *
- * @param {string} pagesDir - Path to the docs/pages directory.
- * @param {string} [activeFile] - Filename (no path) of the currently active page.
+ * @param {string} pagesDir - The path to the folder that holds `pages.json`, ending in `/`.
+ * @param {string} [activeFile] - The file name, without a path, of the current page.
  */
 export async function injectPageNav(pagesDir, activeFile) {
   let files = [];

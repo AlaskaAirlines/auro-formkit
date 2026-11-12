@@ -1,7 +1,7 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-input&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
-Import and register the components in the `<script>` block:
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
+Import and register the component in the `<script>` block:
 
 ```html
 <script lang="ts">
@@ -11,8 +11,8 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
-Use `<auro-input>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
+Use `<auro-input>` directly in your Svelte template. Bind properties with standard Svelte attribute syntax:
 
 ```html
 <script lang="ts">
@@ -27,8 +27,8 @@ Use `<auro-input>` directly in your Svelte template. Properties can be bound usi
 </custom-input>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-input>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-input>` props in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
 
 ```js
 import type { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
@@ -40,10 +40,10 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting for attributes like `value`, `disabled`, and others directly in Svelte templates.
+This turns on prop hints in Svelte templates for attributes, such as `value` and `disabled`.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
-Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
+The input fires standard DOM events, such as `input`. Use the `oninput` handler directly on the element:
 
 ```html
 <script lang="ts">
@@ -59,7 +59,7 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
 <p>Current value: {value}</p>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 
 ```js

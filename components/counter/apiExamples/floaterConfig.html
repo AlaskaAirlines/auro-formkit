@@ -1,54 +1,74 @@
 <div style="width: 350px">
   <auro-counter-group isDropdown offset="20" placement="bottom-end">
+    <span slot="ariaLabel.bib.close">Close popup</span>
     <div slot="bib.fullscreen.headline">Passengers</div>
-    <span slot="label">Label</span>
-    <span slot="helpText">bottom-end bib with 20px offset</span>
+    <span slot="label">Passengers</span>
+    <span slot="helpText">Bottom-end placement with a 20px offset</span>
     <auro-counter>
       Adults
+      <span slot="ariaLabel.minus">Remove adult</span>
+      <span slot="ariaLabel.plus">Add adult</span>
       <span slot="description">18 years or older</span>
     </auro-counter>
     <auro-counter>
       Children
-      <span slot="description">2-17 years</span>
+      <span slot="ariaLabel.minus">Remove child</span>
+      <span slot="ariaLabel.plus">Add child</span>
+      <span slot="description">2–17 years</span>
     </auro-counter>
   </auro-counter-group>
   <auro-counter-group isDropdown offset="20" placement="bottom-end" noFlip>
+    <span slot="ariaLabel.bib.close">Close popup</span>
     <div slot="bib.fullscreen.headline">Passengers</div>
-    <span slot="label">Label</span>
-    <span slot="helpText">bottom-end bib with 20px offset and noFlip</span>
+    <span slot="label">Passengers</span>
+    <span slot="helpText">Bottom-end placement with a 20px <code>offset</code> and <code>noFlip</code></span>
     <auro-counter>
       Adults
+      <span slot="ariaLabel.minus">Remove adult</span>
+      <span slot="ariaLabel.plus">Add adult</span>
       <span slot="description">18 years or older</span>
     </auro-counter>
     <auro-counter>
       Children
-      <span slot="description">2-17 years</span>
+      <span slot="ariaLabel.minus">Remove child</span>
+      <span slot="ariaLabel.plus">Add child</span>
+      <span slot="description">2–17 years</span>
     </auro-counter>
   </auro-counter-group>
-  <auro-counter-group isDropdown offset="20" placement="right" noFlip autoPlacement>
+  <auro-counter-group isDropdown offset="20" placement="right" noFlip>
+    <span slot="ariaLabel.bib.close">Close popup</span>
     <div slot="bib.fullscreen.headline">Passengers</div>
-    <span slot="label">Label</span>
-    <span slot="helpText">right bib with 20px offset, noFlip and autoPlacement</span>
+    <span slot="label">Passengers</span>
+    <span slot="helpText">Right placement with a 20px offset and noFlip</span>
     <auro-counter>
       Adults
+      <span slot="ariaLabel.minus">Remove adult</span>
+      <span slot="ariaLabel.plus">Add adult</span>
       <span slot="description">18 years or older</span>
     </auro-counter>
     <auro-counter>
       Children
-      <span slot="description">2-17 years</span>
+      <span slot="ariaLabel.minus">Remove child</span>
+      <span slot="ariaLabel.plus">Add child</span>
+      <span slot="description">2–17 years</span>
     </auro-counter>
   </auro-counter-group>
-  <auro-counter-group width="350px" isDropdown offset="20" placement="bottom-start" shift noFlip>
+  <auro-counter-group isDropdown offset="20" placement="bottom-start" shift noFlip>
+    <span slot="ariaLabel.bib.close">Close popup</span>
     <div slot="bib.fullscreen.headline">Passengers</div>
-    <span slot="label">Label</span>
-    <span slot="helpText">bottom-start with 20px offset, noFlip and shift enabled</span>
+    <span slot="label">Passengers</span>
+    <span slot="helpText">Bottom-start placement with a 20px offset, noFlip, and shift</span>
     <auro-counter>
       Adults
+      <span slot="ariaLabel.minus">Remove adult</span>
+      <span slot="ariaLabel.plus">Add adult</span>
       <span slot="description">18 years or older</span>
     </auro-counter>
     <auro-counter>
       Children
-      <span slot="description">2-17 years</span>
+      <span slot="ariaLabel.minus">Remove child</span>
+      <span slot="ariaLabel.plus">Add child</span>
+      <span slot="description">2–17 years</span>
     </auro-counter>
   </auro-counter-group>
 </div>

@@ -1,4 +1,4 @@
-<auro-header level="3" id="selectOption">Select an Option</auro-header>
+<auro-header level="3" id="selectOption">Select an option</auro-header>
 <p>As a user, I want to select a single option from a predefined list so that I can indicate my preference or make a choice.</p>
 <ol>
   <li>The options are presented as a group of radio buttons with a descriptive legend.</li>
@@ -15,7 +15,7 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-<auro-header level="3" id="presetValue">Preset Value</auro-header>
+<auro-header level="3" id="presetValue">Preset value</auro-header>
 <p>As a user, I want to see a pre-selected option so that I can quickly accept a default or change it if needed.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/checked.html) -->
@@ -27,7 +27,7 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-<auro-header level="3" id="requiredSelection">Required Selection</auro-header>
+<auro-header level="3" id="requiredSelection">Required selection</auro-header>
 <p>As a user, I want to be informed when a selection is required so that I can complete the form correctly.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->

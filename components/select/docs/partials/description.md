@@ -1,5 +1,5 @@
-<p>The component is a combination <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements">HTML custom elements</auro-hyperlink> that consists of a pre-defined trigger element, <code>&lt;auro-menu&gt;</code> for the panel content. The <code>&lt;auro-select&gt;</code> element presents a menu of options. The options within the menu are represented by <code>&lt;auro-menu&gt;</code> and <code>&lt;auro-menuoption&gt;</code> elements. You can pre-select options for the user with the `selected` attribute as part of the <code>&lt;auro-menuoption&gt;</code> API.</p>
-<p>The component is used to create a drop-down list for user input within a form. It acts as a container for options.</p>
+<p>The <code>&lt;auro-select&gt;</code> element lets people choose an option from a list in a form. It's built from <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements">HTML custom elements</auro-hyperlink>: a trigger that shows the label and the current value, and an <code>&lt;auro-menu&gt;</code> of <code>&lt;auro-menuoption&gt;</code> elements that opens from the trigger. To preselect an option, set the select's <code>value</code> attribute.</p>
+<p>Use it to create a dropdown list for user input within a form.</p>
 <p>Key features:</p>
 <ul>
   <li>Preset values</li>
@@ -8,5 +8,5 @@
   <li>Enable multi-select</li>
   <li>Separate options into groups with dividers</li>
   <li>Group options into nested levels</li>
-  <li>Autocomplete</li>
+  <li>Browser autofill hints with <code>autocomplete</code></li>
 </ul>

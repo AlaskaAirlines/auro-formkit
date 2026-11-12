@@ -7,17 +7,13 @@
  */
 
 /**
- * Converts a `YYYY-MM-DD` ISO date string to a Unix timestamp (seconds)
- * representing local midnight on that calendar day. Returns `null` for
- * inputs that don't parse to a finite timestamp.
+ * Converts a `YYYY-MM-DD` ISO date string to a Unix timestamp, in seconds,
+ * for local midnight on that calendar day. Returns `null` when the value
+ * isn't a real date in that format. It uses local midnight, not UTC midnight,
+ * so calendar days line up in time zones west of UTC.
  *
- * Uses the `new Date(year, monthIndex, day)` constructor (NOT
- * `new Date(isoStr)`) so the result is local-midnight rather than UTC
- * midnight — required to keep the calendar grid aligned with the user's
- * local calendar day in negative-offset timezones.
- *
- * @param {string} isoStr - Date string in `YYYY-MM-DD` format.
- * @returns {number|null} Local-midnight Unix timestamp (seconds), or null.
+ * @param {string} isoStr - The date string, in `YYYY-MM-DD` format.
+ * @returns {number|null} The local-midnight Unix timestamp, in seconds, or null.
  */
 export function parseIsoToTimestamp(isoStr) {
   // Strict YYYY-MM-DD matcher with named groups. Rejects trailing garbage
@@ -55,13 +51,13 @@ export function parseIsoToTimestamp(isoStr) {
 }
 
 /**
- * Builds a `Set<number>` of seconds-since-epoch timestamps covering both the
- * legacy `disabledDays` (already-numeric) array and the ISO `blackoutDates`
- * array. Use this for O(1) membership checks in hot paths.
+ * Creates a `Set<number>` of Unix timestamps, in seconds, from both the
+ * deprecated `disabledDays` timestamp array and the ISO `blackoutDates`
+ * array. Use it for fast lookups in code that runs often, such as cell rendering.
  *
- * @param {Array<string|number>|undefined} disabledDays - Legacy timestamp array.
- * @param {Array<string>|undefined} blackoutDates - ISO `YYYY-MM-DD` array.
- * @returns {Set<number>}
+ * @param {Array<string|number>|undefined} disabledDays - The deprecated array of Unix timestamps.
+ * @param {Array<string>|undefined} blackoutDates - The array of ISO `YYYY-MM-DD` date strings.
+ * @returns {Set<number>} The blackout dates, as Unix timestamps in seconds.
  */
 export function buildBlackoutSet(disabledDays, blackoutDates) {
   const set = new Set();
@@ -85,15 +81,15 @@ export function buildBlackoutSet(disabledDays, blackoutDates) {
 }
 
 /**
- * One-shot membership test for a single timestamp against both blackout
- * sources. Allocates a Set on each call; only use this in cold paths
- * (e.g. the pre-`firstUpdated` cell fallback). Hot paths should hold the
- * Set returned from `buildBlackoutSet` and `.has(ts)` directly.
+ * Checks whether one timestamp is a blackout date in either source.
+ * Creates a new `Set` on each call, so use it only in code that runs rarely,
+ * such as a cell's first render. In code that runs often, keep the `Set` from
+ * `buildBlackoutSet` and call its `has()` method instead.
  *
- * @param {number} dateTs - Unix timestamp (seconds) to test.
- * @param {Array<string|number>|undefined} disabledDays - Legacy timestamp array.
- * @param {Array<string>|undefined} blackoutDates - ISO `YYYY-MM-DD` array.
- * @returns {boolean}
+ * @param {number} dateTs - The Unix timestamp, in seconds, to check.
+ * @param {Array<string|number>|undefined} disabledDays - The deprecated array of Unix timestamps.
+ * @param {Array<string>|undefined} blackoutDates - The array of ISO `YYYY-MM-DD` date strings.
+ * @returns {boolean} True if the timestamp is a blackout date; false otherwise.
  */
 export function isBlackoutTimestamp(dateTs, disabledDays, blackoutDates) {
   return buildBlackoutSet(disabledDays, blackoutDates).has(dateTs);

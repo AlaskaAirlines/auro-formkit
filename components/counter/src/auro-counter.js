@@ -29,23 +29,46 @@ import formkitVersion from '@aurodesignsystem/version';
 import { keyboardStrategy } from './keyboardStrategy.js';
 
 /**
- * The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
+ * A counter that lets people choose a number, such as how many passengers are traveling, with minus and plus buttons.
+ *
+ * **Key capabilities**
+ * - **Range limits**: The `min` and `max` attributes set the lowest and highest values, and the matching button turns off at each limit.
+ * - **Keyboard support**: The counter is a single tab stop, and the Up Arrow and Down Arrow keys change its value.
+ * - **Supporting text**: The `description` and `helpText` slots add text below the label.
+ * - **Error state**: The `error` attribute marks the counter invalid and shows its value as the error message.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use the counter on dark backgrounds.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-counter>
+ *   Adults
+ *   <span slot="ariaLabel.minus">Remove adult</span>
+ *   <span slot="ariaLabel.plus">Add adult</span>
+ * </auro-counter>
+ * ```
+ * @summary A counter with minus and plus buttons, range limits, keyboard support, and error messages.
  * @customElement auro-counter
  *
- * @slot default - Main label content for the counter.
- * @slot ariaLabel.minus - Accessible label for the decrement button.
- * @slot ariaLabel.plus - Accessible label for the increment button.
- * @slot helpText - Help text content for the counter.
- * @slot description - Descriptive content for the counter.
+ * @slot default - The counter's label, such as "Adults". Screen readers read it, with any `description`, as the counter's name. {@requiredWhen always} {@category ui}
+ * @slot ariaLabel.minus - Text screen readers announce for the minus button, such as "Remove adult". Defaults to "−" (a minus sign). {@requiredWhen always} {@category a11y}
+ * @slot ariaLabel.plus - Text screen readers announce for the plus button, such as "Add adult". Defaults to "+". {@requiredWhen always} {@category a11y}
+ * @slot helpText - Extra guidance shown below the counter. An error message replaces it while the counter is invalid. {@category ui}
+ * @slot description - Short supporting text shown below the label, such as "18 years or older". Screen readers read it as part of the counter's name. {@category ui}
  *
- * @csspart counterControl - The container for the counter's spinbutton controls and value.
- * @csspart controlMinus - The decrement button.
- * @csspart controlPlus - The increment button.
- * @csspart helpText - The help text and error message container.
+ * @csspart counterControl - The spinbutton element that holds the minus button, the value, and the plus button.
+ * @csspart controlMinus - The minus button, which lowers the value by 1.
+ * @csspart controlPlus - The plus button, which raises the value by 1.
+ * @csspart helpText - The paragraph that shows the help text, or the error message while the counter is invalid.
  *
- * @event input - Notifies that the counter's value has changed.
+ * @event input - Fires whenever `value` changes, including when the counter sets its starting value, with the new number in `event.detail.value`. It doesn't currently bubble, so listen on the counter itself.
  */
 export class AuroCounter extends LitElement {
+
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...LitElement.shadowRootOptions,
@@ -59,6 +82,10 @@ export class AuroCounter extends LitElement {
     this._initializeDefaults();
   }
 
+  /**
+   * Sets the initial property values. Called from the constructor.
+   * @internal
+   */
   _initializeDefaults() {
     this.appearance = "default";
     this.defaultSlot = undefined;
@@ -67,6 +94,7 @@ export class AuroCounter extends LitElement {
     this.disableMin = false;
     this.max = 9;
     this.min = 0;
+    this.name = undefined;
     this.onDark = false;
     this.validity = undefined;
     this.value = undefined;
@@ -112,15 +140,17 @@ export class AuroCounter extends LitElement {
 
   /**
    * Gets the current value of the counter.
-   * @returns {number|undefined} The current value of the counter, or undefined if the value is not set or invalid.
+   * @returns {number|undefined} The current value of the counter, or undefined if the value isn't set or isn't a number.
+   * @category behavior
    */
   get value() {
     return this._value;
   }
 
   /**
-   * Sets the value of the counter. If the provided value is undefined, null, or cannot be converted to a number, the internal value will be set to undefined.
-   * @param {number|string|undefined|null} val - The value to set for the counter. Can be a number, a string that can be converted to a number, undefined, or null.
+   * Sets the counter's value. A value outside `min` and `max` (0–9 by default) isn't moved back into range; it marks the counter invalid instead. A value that's `undefined`, `null`, or not a number clears the value to `undefined`.
+   * @param {number|string|undefined|null} val - The new value: a number, a string that converts to a number, `undefined`, or `null`.
+   * @category behavior
    */
   set value(val) {
     const old = this._value;
@@ -134,15 +164,16 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Defines reactive properties for the component.
-   * @returns {Object} Property configuration.
+   * Gets the component's reactive properties.
+   * @returns {Object} The property configuration.
    */
   static get properties() {
     return {
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the colors to match the background behind the counter. Use `inverse` on dark backgrounds and `default` on light ones.
        * @type {'default' | 'inverse'}
+       * @category ui
        * @default 'default'
        */
       appearance: {
@@ -151,7 +182,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The default slot content.
+       * Holds the trimmed text of the default slot, which `auro-counter-group` shows in its dropdown summary.
        * @private
        */
       defaultSlot: {
@@ -160,7 +191,8 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Indicates if the counter is disabled.
+       * Turns the counter off. A disabled counter is shown in a muted style, its buttons can't be clicked, and it's removed from the keyboard tab order.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -168,8 +200,9 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Group will attach to counter to disable the increment button.
+       * Turns off the plus button. Set by `auro-counter-group` when the group's total reaches its `max`.
        * @private
+       * @category behavior
        */
       disableMax: {
         type: Boolean,
@@ -177,8 +210,9 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Group will attach to counter to disable the decrement button.
+       * Turns off the minus button. Set by `auro-counter-group` when the group's total is at or below its `min`.
        * @private
+       * @category behavior
        */
       disableMin: {
         type: Boolean,
@@ -186,8 +220,8 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Error state and message.
-       * True if set, value is the error message.
+       * Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set the `error` attribute before the counter first renders, or call `validate()` after changing it: setting only the property, or changing the attribute later, doesn't currently update `validity`.
+       * @category behavior
        */
       error: {
         type: String,
@@ -195,7 +229,11 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The maximum value for the counter.
+       * Sets the highest value the counter allows. The plus button turns off at this value.
+       * @minimum 0
+       * @maximum 9
+       * @default 9
+       * @category behavior
        */
       max: {
         type: Number,
@@ -203,7 +241,11 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The minimum value for the counter.
+       * Sets the lowest value the counter allows. The counter starts at this value, and the minus button turns off at it.
+       * @minimum 0
+       * @maximum 9
+       * @default 0
+       * @category behavior
        */
       min: {
         type: Number,
@@ -211,7 +253,18 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Sets the key for this counter's entry in the group's `value` object, such as `adults`. Applies only inside `auro-counter-group`, which uses `counter-0`, `counter-1`, and so on for counters without a name.
+       * @category behavior
+       */
+      name: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the counter in colors for dark backgrounds.
+       * @category ui
        * @deprecated Use `appearance="inverse"` instead.
        */
       onDark: {
@@ -221,7 +274,9 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The validity state of the counter.
+       * Reports whether the counter passes validation: `valid`, or the reason it fails, such as `customError`, `rangeOverflow`, or `rangeUnderflow`.
+       * @readonly
+       * @category behavior
        */
       validity: {
         type: String,
@@ -229,7 +284,8 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * The current value of the counter.
+       * Sets the counter's number, such as `2`. Starts at `min` when not set.
+       * @category behavior
        */
       value: {
         type: Number
@@ -239,7 +295,7 @@ export class AuroCounter extends LitElement {
 
   /**
    * Registers the custom element with the browser.
-   * @param {string} [name="auro-counter"] - The name of the element that you want to register.
+   * @param {string} [name="auro-counter"] - The tag name to register the element under.
    * @example
    * AuroCounter.register("custom-counter") // registers <custom-counter/>
    */
@@ -256,9 +312,9 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Increments the counter value by 1. If a value is provided, it increments by that amount.
+   * Increases the value by 1, or by the given amount. Does nothing while the plus button is off: when the counter is disabled, its value is at or above `max`, or its group's total has reached the group's `max`. It doesn't cap a larger step at `max`.
    * @method increment
-   * @param {number} [value] - The amount to increment by.
+   * @param {number} [value] - The amount to add. Defaults to 1.
    * @returns {void}
    */
   increment(value) {
@@ -270,9 +326,9 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.
+   * Decreases the value by 1, or by the given amount. Does nothing while the minus button is off: when the counter is disabled, its value is at or below `min`, or its group's total is at or below the group's `min`. It doesn't stop a larger step at `min`.
    * @method decrement
-   * @param {number} [value] - The amount to decrement by.
+   * @param {number} [value] - The amount to subtract. Defaults to 1.
    * @returns {void}
    */
   decrement(value) {
@@ -304,7 +360,7 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Handles a pointer click on a control button.
+   * Called when someone clicks the minus or plus button.
    * A pointer click focuses the clicked button, so if the value change disables
    * that button at an extreme the browser would drop focus to the document body.
    * Move focus to the spinbutton container first, then change the value: focus is
@@ -330,10 +386,11 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Determines if the increment button should be disabled based on the current value and extrema.
+   * Checks whether the button for the given limit should be turned off, based on the current value.
+   * Used for both buttons: pass `min` for the minus button and `max` for the plus button.
    *
-   * @param {number} extrema - The extreme value (either min or max) to compare against the current value.
-   * @returns {boolean} - Returns true if the increment button should be disabled, otherwise false.
+   * @param {number} extrema - The limit to compare the current value against, either `min` or `max`.
+   * @returns {boolean} True if the value is at or past that limit; false otherwise.
    * @private
    */
   isIncrementDisabled(extrema) {
@@ -350,16 +407,15 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Checks the counter's value against `min`, `max`, and the `error` attribute, and updates `validity`.
+   * @param {boolean} [force=false] - If true, checks `min` and `max` even while the counter has focus. If false, skips those checks while the counter has focus.
    */
   validate(force = false) {
     this.validation.validate(this, force);
   }
 
   /**
-   * Resets the counter to its default state, clearing validity/touched state and returning
-   * the value to `min` — matching the clear-on-reset behavior of the other Auro form elements.
+   * Sets the value back to `min` and clears the counter's validation state. A counter with the `error` attribute stays invalid.
    * @returns {void}
    */
   reset() {
@@ -374,7 +430,7 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Sets an attribute that matches the default tag name if the tag name is not the default.
+   * Sets an attribute that matches the default tag name if the tag name isn't the default.
    * @param {string} tagName - The tag name to set as an attribute.
    * @private
    */
@@ -385,8 +441,8 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Handles the change event for the default slot.
-   * Updates the defaultSlot property with the trimmed text content of the first assigned node.
+   * Called when the default slot's content changes.
+   * Stores the trimmed text of the first assigned node in `defaultSlot`.
    *
    * @param {Event} event - The event object representing the slot change event.
    * @private
@@ -416,9 +472,9 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Returns HTML for the help text and error message.
+   * Renders the help text, or the error message while the counter is invalid.
    * @private
-   * @returns {html} - Returns HTML for the help text and error message.
+   * @returns {TemplateResult} The help text or error message template.
    */
   renderHelpText() {
     return html`

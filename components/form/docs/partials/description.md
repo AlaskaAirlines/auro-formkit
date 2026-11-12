@@ -1,4 +1,2 @@
-<p><code>&lt;auro-form&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> designed to
-serve as the base logic for all auro-constructed forms.</p>
-<p>It automatically "scrapes" its inner content for any auro form elements, and surfaces
-them (along with events) to the parent form element as a JSON object.</p>
+<p><code>&lt;auro-form&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that collects the values of the Auro form elements inside it, such as <code>auro-input</code> and <code>auro-select</code>.</p>
+<p>It finds every named Auro form element in its content, tracks each one's value and validity, and gives you the combined values as one object through its <code>value</code> property and its <code>submit</code> event. It also turns its submit and reset buttons on and off to match the form's state.</p>

@@ -36,8 +36,8 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * from cursor editing don't break filtering or highlighting.  Whitespace-only
  * values are preserved as-is to prevent a lone space from being treated as
  * empty input.
- * @param {string} value - Raw input value.
- * @returns {string} Normalized value.
+ * @param {string} value - The raw input value.
+ * @returns {string} The value without trailing whitespace, or the value unchanged when it's only whitespace.
  */
 function normalizeFilterValue(value) {
   const raw = value || '';
@@ -45,11 +45,12 @@ function normalizeFilterValue(value) {
 }
 
 /**
- * Returns the option's plain-text label suitable for input.value, with
- * HTML-indentation whitespace collapsed and the displayValue slot text
- * removed (the slot renders separately in the trigger).
- * @param {HTMLElement} option - An auro-menuoption element.
- * @returns {string} Normalized label.
+ * Gets the option's plain-text label to put in `input.value`, with
+ * HTML-indentation whitespace collapsed and the `displayValue` slot text
+ * removed (the slot renders separately in the trigger). The option's
+ * `data-label` attribute, when set, is used as-is.
+ * @param {HTMLElement} option - An `auro-menuoption` element.
+ * @returns {string} The option's label, or an empty string when there's no option.
  */
 function getOptionLabel(option) {
   if (!option) {
@@ -76,22 +77,45 @@ function getOptionLabel(option) {
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * The `auro-combobox` element provides users with a way to select an option from a list of filtered or suggested options based on user input.
+ * A text field with a list of options that narrows as people type, so they can choose an option or enter their own value, such as a destination airport.
+ *
+ * **Key capabilities**
+ * - **Suggestion or filter**: Set `behavior="filter"` to require choosing an option from the menu; the default, `suggestion`, also accepts typed text.
+ * - **Filtering as people type**: Typing hides options that don't match the typed text or their `suggest` keywords, unless `noFilter` is set; `persistent` options always stay visible.
+ * - **Validation**: Set `required` to require a value, and `setCustomValidity` to change the error message.
+ * - **Fullscreen on small screens**: Set `fullscreenBreakpoint` to choose the largest screen size at which the list opens as a fullscreen dialog.
+ * - **Layouts**: Set `layout` to `classic`, `emphasized`, or `snowflake` to change the overall look.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-combobox>
+ *   <span slot="bib.fullscreen.headline">Choose a destination</span>
+ *   <span slot="label">Destination</span>
+ *   <span slot="ariaLabel.input.clear">Clear destination</span>
+ *   <span slot="ariaLabel.bib.close">Close destination list</span>
+ *   <auro-menu>
+ *     <auro-menuoption value="SEA">Seattle</auro-menuoption>
+ *     <auro-menuoption value="LAX">Los Angeles</auro-menuoption>
+ *   </auro-menu>
+ * </auro-combobox>
+ * ```
+ * @summary A text field with options that filter as people type, plus validation and a fullscreen mode for small screens.
  * @customElement auro-combobox
  *
- * @slot - Default slot for the menu content.
- * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
- * @slot ariaLabel.input.clear - Sets aria-label on clear button
- * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
- * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
- * @slot label - Defines the content of the label.
- * @slot helpText - Defines the content of the helpText.
- * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
- * @csspart helpText - The help text and error message content container.
- * @event auroCombobox-valueSet - Notifies that the component has a new value set. **DEPRECATED** - Use the `input` event instead.
- * @event input - Notifies that the component has a new value set.
- * @event inputValue - Notifies that the components internal HTML5 input value has changed.
- * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
+ * @slot - The `<auro-menu>` that holds the options. {@requiredWhen always} {@category ui}
+ * @slot {HTMLSlotElement} optionalLabel - Text shown after the label when `required` isn't set, such as a translated "(optional)". Defaults to "(optional)". {@relevantWhen !required} {@category ui}
+ * @slot ariaLabel.input.clear - Text screen readers announce for the clear button, such as "Clear destination". The combobox has no default text, so without it the clear button has no accessible name. In the fullscreen bib, the clear button currently uses "Clear Input" instead. {@requiredWhen always} {@category a11y}
+ * @slot ariaLabel.bib.close - Text screen readers announce for the close button in the fullscreen bib, such as "Close destination list". Defaults to "Close". {@requiredWhen always} {@category a11y}
+ * @slot bib.fullscreen.headline - Headline shown above the options in the fullscreen bib, such as "Choose a destination". {@requiredWhen always} {@category ui}
+ * @slot label - Label that names the combobox. Screen readers announce it as the name of the input and of the fullscreen dialog. {@requiredWhen always} {@category ui}
+ * @slot helpText - Help text shown below the combobox. An error message replaces it while the combobox is invalid. {@category ui}
+ * @slot displayValue - Content shown in the input in place of the selected option's text while the combobox doesn't have focus, such as an icon. Put it inside each `<auro-menuoption>` with `slot="displayValue"`, and the combobox copies the selected option's content here. {@category ui}
+ * @csspart helpText - The help text or error message shown below the combobox.
+ * @event auroCombobox-valueSet - Deprecated: Use the `input` event instead, which also includes the new value. Fires whenever `value` changes.
+ * @event input - Fires whenever `value` changes, with the new `value` and `optionSelected` in `event.detail`.
+ * @event inputValue - Fires when the text in the input changes, with the new text in `event.detail.value`.
+ * @event auroFormElement-validated - Fires each time the combobox validates, with the current `validity` and error `message` in `event.detail`.
  */
 export class AuroCombobox extends AuroElement {
 
@@ -102,8 +126,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Sets the default property values and internal state.
    * @private
-   * @returns {void} Internal defaults.
+   * @returns {void}
    */
   _initializeDefaults() {
     // Defaults that effect the combobox behavior and state
@@ -183,11 +208,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Wraps setTimeout and records the timer id so disconnectedCallback
-   * can cancel any outstanding callbacks. The id is removed from the set
-   * once the callback fires so the set doesn't grow unbounded.
-   * @param {Function} fn - Callback to run.
-   * @param {number} ms - Delay in milliseconds.
+   * Wraps `setTimeout` and records the timer ID so `disconnectedCallback`
+   * can cancel any outstanding callbacks. The ID is removed from the set
+   * once the callback fires, so the set doesn't keep growing.
+   * @param {Function} fn - The callback to run.
+   * @param {number} ms - The delay in milliseconds.
    * @returns {number} The timer id.
    * @private
    */
@@ -208,9 +233,11 @@ export class AuroCombobox extends AuroElement {
       // ...super.properties,
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the colors for the background the combobox sits on.
+       * Use `inverse` on dark backgrounds and `default` everywhere else.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -218,7 +245,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       * Sets what the browser can suggest when filling in the field, such as `off` to turn off
+       * autofill suggestions (the input's `autocomplete`). Only `autocomplete="off"` is currently supported.
+       * @category behavior
        */
       autocomplete: {
         type: String,
@@ -226,7 +255,11 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, bib's position will be automatically calculated where to appear.
+       * Deprecated: Use `placement` instead.
+       * Moves the bib to whichever side of the trigger has the most space.
+       * The bib already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
+       * @deprecated Use `placement` instead.
+       * @category ui
        */
       autoPlacement: {
         type: Boolean,
@@ -235,8 +268,8 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Array of available options to display in the dropdown.
-       * This array contains all non-hidden options (e.g., hidden by filtering on input value).
+       * Holds the options shown in the menu: every option that isn't hidden,
+       * such as by filtering on the typed text, plus `persistent` options.
        * @private
        * @type {HTMLElement[]}
        */
@@ -260,11 +293,12 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the behavior of the combobox, "filter" or "suggestion".
-       * "filter" requires the user to select an option from the menu.
-       * "suggestion" allows the user to enter a value not present in the menu options.
+       * Sets whether the combobox accepts typed text that isn't one of the options. Use `suggestion` (the default) when people
+       * can enter their own value, and `filter` when they must choose an option from the menu.
+       * In `filter` mode, typed text that doesn't match a chosen option fails validation, even when `required` isn't set.
        * @type {'filter' | 'suggestion'}
        * @default 'suggestion'
+       * @category behavior
        */
       behavior: {
         type: String,
@@ -272,7 +306,8 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * When attribute is present auro-menu will apply check marks to selected options.
+       * Shows a check mark next to the selected option in the menu.
+       * @category ui
        */
       checkmark: {
         type: Boolean,
@@ -280,7 +315,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, disables the combobox.
+       * Turns the combobox off. A disabled combobox is shown in a muted style, and its input
+       * can't be edited or reached with the keyboard.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -288,7 +325,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * ID for the dropdown.
+       * Holds the dropdown's ID, which the trigger input uses for `aria-controls`.
        * @private
        */
       dropdownId: {
@@ -298,7 +335,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Whether or not the dropdown is open.
+       * Records whether the bib is open.
        * @private
        */
       dropdownOpen: {
@@ -308,7 +345,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If defined, the display value slot content will only mask the HTML5 input element. The inputs label will not be masked.
+       * Keeps the label visible while `displayValue` content is shown in place of the value.
+       * Without it, the `displayValue` content hides both the label and the value.
+       * @category ui
        */
       dvInputOnly: {
         type: Boolean,
@@ -317,7 +356,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
+       * Shows an error that stays until you remove the attribute, and sets `validity` to `customError`.
+       * The attribute value is the error message, unless `setCustomValidityCustomError` or `setCustomValidity` is set.
+       * @category behavior
        */
       error: {
         type: String,
@@ -325,14 +366,20 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the input mask format.
+       * Sets the pattern the value is formatted to as the user types, such as `mm/dd/yyyy` for a date.
+       * Does not currently apply to the trigger input, only to the input in the fullscreen bib.
+       * @category behavior
        */
       format: {
         type: String,
         reflect: true
       },
 
-      /** Exposes inputmode attribute for input.  */
+      /**
+       * Sets which on-screen keyboard mobile devices show, such as `numeric` for digits only
+       * (the input's `inputmode`). Defaults to `numeric` when `type` is `number`, `tel`, `credit-card`, or `date`.
+       * @category behavior
+       */
       inputmode: {
         type: String,
         attribute: true,
@@ -340,9 +387,11 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the layout of the combobox.
+       * Sets the overall style of the combobox. Use `emphasized` for a large, prominent combobox on light backgrounds,
+       * and `snowflake` only on dark backgrounds with `appearance="inverse"`. The `emphasized` layout also shows larger menu options.
        * @type {'classic' | 'emphasized' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       layout: {
         type: String,
@@ -351,9 +400,12 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the shape of the combobox.
+       * Sets the shape of the trigger. Use `classic` with the `classic` layout, `pill`, `pill-left`, or `pill-right` with the
+       * `emphasized` layout, and `snowflake` with the `snowflake` layout. In the `snowflake` layout, the menu options use the
+       * same shape unless the `<auro-menu>` sets its own `shape`.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       shape: {
         type: String,
@@ -362,9 +414,11 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets the size of the combobox.
+       * Sets the height of the trigger. The menu options don't follow it: they use `lg` in the
+       * `emphasized` layout and `md` otherwise.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'xl'
+       * @category ui
        */
       size: {
         type: String,
@@ -373,7 +427,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, the popover and trigger will be set to the same width.
+       * Makes the bib the same width as the trigger.
        * @private
        */
       matchWidth: {
@@ -383,7 +437,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, combobox will not filter menuoptions based on input.
+       * Shows every option whatever the user types, instead of hiding options that don't match.
+       * Use it when your code replaces the options as the user types, such as with results from a server.
+       * @category behavior
        */
       noFilter: {
         type: Boolean,
@@ -392,8 +448,8 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Keeps the bib at its `placement` when there isn't enough space, instead of flipping it to the opposite side.
+       * @category ui
        */
       noFlip: {
         type: Boolean,
@@ -402,7 +458,8 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Slides the bib along the trigger's edge to keep it inside the viewport.
+       * @category ui
        */
       shift: {
         type: Boolean,
@@ -410,7 +467,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, disables auto-validation on blur.
+       * Turns off validation when focus leaves the combobox, and when its value changes while it doesn't have focus.
+       * Setting `error` or calling `validate()` still validates.
+       * @category behavior
        */
       noValidate: {
         type: Boolean,
@@ -419,8 +478,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Gap between the trigger element and bib.
+       * Sets the gap between the trigger and the bib in pixels, such as `8`.
        * @default 0
+       * @category ui
        */
       offset: {
         type: Number,
@@ -428,8 +488,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Styles the combobox for a dark background.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -438,8 +500,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the current selected option.
+       * Holds the selected `<auro-menuoption>` element, or `undefined` when no option is selected.
+       * The combobox updates it, so read it instead of setting it.
        * @type {HTMLElement}
+       * @category behavior
        */
       optionSelected: {
         type: Object,
@@ -447,9 +511,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, selecting a menu option will not change the input value. By doing so,
-       * the current menu filter will be preserved and the user can continue from their last
-       * filter state. It is recommended to use this in combination with the `displayValue` slot.
+       * Keeps the typed text in the input when the user chooses an option, so the menu stays filtered
+       * and they can choose again from the same results. Use it with the `displayValue` slot to show
+       * the chosen option while the combobox doesn't have focus.
+       * @category behavior
        */
       persistInput: {
         type: Boolean,
@@ -458,9 +523,11 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
+       * Sets where the bib opens relative to the trigger, such as `bottom-start` for below the trigger, lined up with its start edge.
+       * The bib flips to the opposite side when there isn't room, unless `noFlip` is set.
        * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
        * @default 'bottom-start'
+       * @category ui
        */
       placement: {
         type: String,
@@ -468,7 +535,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Define custom placeholder text, only supported by date input formats.
+       * Sets hint text shown in the empty input, such as `Search airports`.
+       * When not set and `type="date"`, the input shows the date format, such as `MM/DD/YYYY`.
+       * @category ui
        */
       placeholder: {
         type: String,
@@ -476,7 +545,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Populates the `required` attribute on the input. Used for client-side validation.
+       * Makes the combobox invalid when it's left empty, and removes the "(optional)" text after the label.
+       * Use `setCustomValidityValueMissing` to set the error message.
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -484,7 +555,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Sets a custom help text message to display for all validityStates.
+       * Sets one error message for every kind of validation error. When set, it replaces the messages from `error`
+       * and every other `setCustomValidity*` property, except `setCustomValidityValueMissingFilter`.
+       * @category behavior
        */
       setCustomValidity: {
         type: String,
@@ -492,7 +565,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `customError`.
+       * Sets the error message shown while the `error` attribute is set, in place of the `error` value.
+       * @relevantWhen error
+       * @category behavior
        */
       setCustomValidityCustomError: {
         type: String,
@@ -500,7 +575,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing`.
+       * Sets the error message shown when a `required` combobox is left empty.
+       * @relevantWhen required
+       * @category behavior
        */
       setCustomValidityValueMissing: {
         type: String,
@@ -508,7 +585,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing` due to the user not choosing a menu option when behavior = "filter".
+       * Sets the error message shown in `filter` mode when the typed text doesn't match a chosen option.
+       * Set it as an attribute: setting only the property doesn't currently change the message.
+       * @relevantWhen behavior === 'filter'
+       * @category behavior
        */
       setCustomValidityValueMissingFilter: {
         type: String,
@@ -516,7 +596,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Indicates whether the combobox is in a dirty state (has been interacted with).
+       * Records whether the user has interacted with the combobox, such as by moving focus into it.
        * @private
        */
       touched: {
@@ -526,9 +606,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, the `icon` attribute will be applied to the trigger `auro-input` element.
-       * Icon rendering is currently limited to `type="credit-card"`. Setting `triggerIcon`
-       * without a supported `type` propagates the attribute but does not render a visible icon.
+       * Shows a card icon in the input that changes to the detected card brand, such as Visa, as the user types.
+       * Applies only when `type="credit-card"`.
+       * @relevantWhen type === 'credit-card'
+       * @category ui
        */
       triggerIcon: {
         type: Boolean,
@@ -537,8 +618,11 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Applies the defined value as the type attribute on `auro-input`.
+       * Sets the kind of value the input expects, which controls its formatting, validation, and mobile keyboard.
+       * `credit-card`, `tel`, and `date` format the value as the user types, and `password` hides the text.
+       * Uses auro-input's default, `text`, when not set.
        * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number' | 'date'}
+       * @category behavior
        */
       type: {
         type: String,
@@ -546,7 +630,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the value of the input element within the combobox.
+       * Sets the text in the input, such as a search the user started earlier.
+       * It doesn't change as the user types, so read `inputValue` for the current text.
+       * @category behavior
        */
       typedValue: {
         type: String,
@@ -555,7 +641,9 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the `validityState` this element is in.
+       * Reports the result of the last validation, such as `valid`, `valueMissing`, or `customError`.
+       * Validation sets it, so read it instead of setting it.
+       * @category behavior
        */
       validity: {
         type: String,
@@ -563,7 +651,10 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Value selected for the dropdown menu. When set programmatically or as a preset attribute, the value must match a selectable option. If it matches an option marked `disabled` or `static`, the selection is rejected: `value` and `optionSelected` are cleared to `undefined`. `hidden` options (including those filtered out by type-ahead) remain selectable by value.
+       * Sets or gets the combobox's value: the chosen option's `value`, or the text in the input when no option is chosen.
+       * A value that matches only `disabled` or `static` options is rejected, which clears `value` and `optionSelected` to `undefined`.
+       * A value that matches a `hidden` option, such as one filtered out by typing, still selects it.
+       * @category behavior
        */
       value: {
         type: String
@@ -571,8 +662,8 @@ export class AuroCombobox extends AuroElement {
 
       /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Shows the `bib.fullscreen.headline` text in a larger heading style. Applies only when the bib is fullscreen.
+       * @category ui
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -582,12 +673,11 @@ export class AuroCombobox extends AuroElement {
       /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
-       * Defines the screen size breakpointat which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
+       * Sets the screen width, such as `sm`, at or below which the open bib fills the screen as a modal dialog.
+       * Use `disabled` to keep the bib from ever going fullscreen.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
        * @default 'sm'
+       * @category ui
        */
       fullscreenBreakpoint: {
         type: String,
@@ -596,7 +686,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the currently active option.
+       * Holds the active (highlighted) option.
        * @private
        * @type {HTMLElement}
        */
@@ -618,8 +708,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Returns the current value of the input element within the combobox.
-   * @returns {string|undefined} The value of the input element, or undefined if the input is not present.
+   * Gets the text currently in the input, which changes as the user types.
+   * @returns {string|undefined} The input's text, or undefined before the combobox first renders.
+   * @category behavior
    */
   get inputValue() {
     if (!this.input) {
@@ -629,8 +720,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Checks if the element is valid.
-   * @returns {boolean} - Returns true if the element is valid, false otherwise.
+   * Checks whether the combobox passed its last validation.
+   * @returns {boolean} True if `validity` is `valid` or the combobox hasn't been validated yet; false otherwise.
    */
   isValid() {
     let valid = true;
@@ -643,11 +734,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name='auro-combobox'] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name='auro-combobox'] - The tag name to register the element under.
    *
    * @example
-   * AuroCombobox.register('custom-combobox') // this will register this element to <custom-combobox/>
+   * AuroCombobox.register('custom-combobox') // registers the element as <custom-combobox>
    *
    */
   static register(name = 'auro-combobox') {
@@ -660,12 +751,12 @@ export class AuroCombobox extends AuroElement {
    * applies. A menu never writes `disabled` onto its options (AB#1566578),
    * so an ancestor's disabled state has to be resolved at check-time by
    * walking up, mirroring `auro-menu`'s own `isOptionInteractive()`/
-   * `isSelectableByValue()` — duplicated here rather than imported since
+   * `isSelectableByValue()`. It's duplicated here rather than imported because
    * `auro-combobox` only ever talks to `auro-menu` through its public DOM
    * contract, not its internal module.
    * @private
    * @param {HTMLElement} option - The option to check.
-   * @returns {boolean} True if the option or any ancestor menu is disabled.
+   * @returns {boolean} True if the option or any ancestor menu is disabled; false otherwise.
    */
   isOptionOrAncestorMenuDisabled(option) {
     if (option.disabled) {
@@ -685,7 +776,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Mark the first available (non-hidden), enabled option as `active`.
+   * Marks the first available (non-hidden), enabled option as `active`.
    * @private
    * @returns {void}
    */
@@ -695,7 +786,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Mark the last available (non-hidden), enabled option as `active`.
+   * Marks the last available (non-hidden), enabled option as `active`.
    * @private
    * @returns {void}
    */
@@ -772,7 +863,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Syncs the values and states of this component, the input, and the menu, including this.optionSelected and this.menu.optionSelected.
+   * Sets the menu's `matchWord` to the input text, then updates the input text and `displayValue` content from the selected option's label, or from `value` when no option is selected.
    * @private
    * @returns {void}
    */
@@ -789,7 +880,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Update displayValue or input.value, it's called when making a selection.
+   * Updates the `displayValue` content and `input.value` after a selection.
    * @param {string} label - The label of the selected option.
    * @private
    */
@@ -852,11 +943,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Writes nextValue to the trigger input and the bib input when their current
+   * Writes `nextValue` to the trigger input and the bib input when their current
    * value differs, then re-asserts imask after Lit's update flushes.
    * @param {string} nextValue - The value to write to both inputs.
-   * @returns {Promise<void>} Resolves after both inputs flush and imask
-   *   re-asserts; resolves immediately when no sync is needed.
+   * @returns {Promise<void>} The promise that resolves after both inputs flush and imask
+   *   re-asserts, or right away when no sync is needed.
    * @private
    */
   async syncInputValuesAcrossTriggerAndBib(nextValue) {
@@ -901,14 +992,14 @@ export class AuroCombobox extends AuroElement {
   /**
    * Processes hidden state of all menu options and determines if there are any available options not hidden.
    * @private
-   * @param {object} [options={}] - Optional flag bag.
-   * @param {boolean} [options.preferComboboxValue=false] - When true,
-   *   handleMenuOptions matches the selected option against `this.value`
-   *   first instead of `this.input.value`. Needed on mount and re-mount
-   *   because under `persistInput` the consumer's typedValue prop can drift
+   * @param {object} [options={}] - The optional flags.
+   * @param {boolean} [options.preferComboboxValue=false] - If true,
+   *   matches the selected option against `this.value` first. If false,
+   *   matches against `this.input.value` first. Matching `this.value` first is needed on mount and re-mount
+   *   because under `persistInput` the consumer's `typedValue` prop can drift
    *   from the framework value (Svelte `{#key}` re-mount after a swap, or
    *   SPA preselect after route change) and the old input-first match would
-   *   then pick the stale text. Only handleSlotChange passes this; typing
+   *   then pick the stale text. Only `handleSlotChange` passes this; typing
    *   and clearing paths keep the input-first match so user clears aren't
    *   undone.
    * @returns {void}
@@ -961,7 +1052,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Determines the element error state based on the `required` attribute and input value.
+   * Copies the menu's options into `this.options`, or sets an empty array when there's no menu.
    * @private
    * @returns {void}
    */
@@ -974,7 +1065,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Hides the dropdown bib if its open.
+   * Closes the bib if it's open.
    * @returns {void}
    */
   hideBib() {
@@ -984,7 +1075,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Shows the dropdown bib if there are options to show.
+   * Opens the bib when the input has text and the menu has options to show, a `nomatch` option, or a `loading` attribute with a value, such as `loading="loading"`.
+   * When the menu is loading without `loadingText` or `loadingIcon` content, the bib opens once loading ends, if focus is still in the combobox.
+   * Doesn't currently open the bib for a menu with no options to show, no `nomatch` option, and an empty `loading` attribute, such as the one the menu's `loading` property sets.
    * @returns {void}
    */
   showBib() {
@@ -1160,6 +1253,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the clear button in the trigger input, after two animation frames.
+   * Focuses the input first, because the clear button can't take focus while focus is on the page body,
+   * such as after a click selection closes the bib.
    * @private
    */
   setClearBtnFocus() {
@@ -1179,6 +1275,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the native `<input>` in the trigger after two animation frames, so focus lands
+   * after the input finishes rendering. Does nothing when the trigger has no native `<input>` yet.
    * @private
    */
   setTriggerInputFocus() {
@@ -1193,6 +1291,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Moves focus to the input people type in: the native `<input>` in the fullscreen bib while that bib is open,
+   * or the trigger input otherwise.
+   * In the fullscreen bib, it first copies the trigger's text into the bib's input, then puts the cursor at the end of the text.
    * @private
    */
   setInputFocus() {
@@ -1233,7 +1334,7 @@ export class AuroCombobox extends AuroElement {
   /**
    * Suppresses or restores dialog semantics on the bib's dialog element.
    * On desktop (non-fullscreen), VoiceOver verbosely announces "listbox inside
-   * of a dialog" which disrupts combobox usage. Setting role="presentation"
+   * of a dialog" which disrupts combobox usage. Setting `role="presentation"`
    * suppresses this. In fullscreen mode, dialog semantics are restored.
    * @private
    */
@@ -1247,7 +1348,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
+   * Sets the menu's `size` and `shape`: `md` and `box` in the fullscreen bib, otherwise based on `this.layout`.
    * @private
    */
   updateMenuShapeSize() {
@@ -1279,11 +1380,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Returns the shadow root containing the live region for screen reader announcements.
-   * When the bib is open in fullscreen modal mode, everything outside the <dialog>
-   * is inert, so we target the bib's own shadow root instead of the host's.
+   * Gets the shadow root containing the live region for screen reader announcements.
+   * When the bib is open in fullscreen modal mode, everything outside the `<dialog>`
+   * is inert, so this targets the bib's own shadow root instead of the host's.
    * @private
-   * @returns {ShadowRoot}
+   * @returns {ShadowRoot} The shadow root to announce from.
    */
   _getAnnouncementRoot() {
     if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible && this.dropdown.bibElement && this.dropdown.bibElement.value) {
@@ -1474,7 +1575,7 @@ export class AuroCombobox extends AuroElement {
   configureInput() {
 
     /**
-     * Validate every time we remove focus from the combo box.
+     * Validates the combobox each time focus leaves it, unless `noValidate` is set.
      */
     this.addEventListener('focusout', () => {
       // Skip while the dropdown is open — focus transits out briefly on
@@ -1493,8 +1594,8 @@ export class AuroCombobox extends AuroElement {
     });
 
     /**
-     * Track focus on the clear button within the input.
-     * This is used to prevent unwanted interactions when the clear button is focused.
+     * Tracks whether the clear button within the input has focus,
+     * to prevent unwanted interactions while it does.
      *
      * Use event delegation on the shadow root so the listener works regardless
      * of when .clearBtn is rendered (it only exists after a value is set).
@@ -1512,20 +1613,20 @@ export class AuroCombobox extends AuroElement {
 
   /**
    * Flags genuine clear-button activations on an auro-input so the SPA-preselect
-   * guard in handleInputValueChange doesn't swallow them.
+   * guard in `handleInputValueChange` doesn't swallow them.
    *
-   * The auro-input clear button fires an `isProgrammatic` input event (via
-   * notifyValueChanged) that is indistinguishable in shape from the
-   * SPA-preselect echo that guard bails on (isProgrammatic + set value + empty
-   * input). Without this one-shot flag, clicking clear would leave
-   * this.value/optionSelected stale (AB#1634257).
+   * The auro-input clear button fires an `isProgrammatic` input event (through
+   * `notifyValueChanged`) that has the same shape as the SPA-preselect echo
+   * that guard bails on (`isProgrammatic`, a set value, and an empty input).
+   * Without this one-shot flag, clicking clear would leave `value` and
+   * `optionSelected` stale (AB#1634257).
    *
-   * Delegated on the shadow root so it works regardless of when .clearBtn
-   * renders (it only exists after a value is set), and covers both real clicks
-   * and programmatic clearBtn.click() (which no focusin precedes). Registered in
-   * the CAPTURE phase so the flag is set BEFORE the button's own @click
-   * (handleClickClear) fires its synchronous input event — which is when
-   * handleInputValueChange reads the flag.
+   * Delegated on the shadow root so it works whenever `.clearBtn` renders
+   * (it only exists after a value is set), and covers both real clicks and
+   * programmatic `clearBtn.click()` calls, which no `focusin` precedes.
+   * Registered in the capture phase so the flag is set before the button's own
+   * `@click` handler (`handleClickClear`) fires its synchronous input event,
+   * which is when `handleInputValueChange` reads the flag.
    * @private
    * @param {Element} inputEl - The auro-input whose clear button to track.
    * @returns {void}
@@ -1555,12 +1656,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Manages the visibility of the dropdown based on loading state changes.
+   * Called when the menu's loading state changes.
    *
-   * This method listens for loading state changes and adjusts the visibility of the dropdown accordingly.
-   * If the dropdown is visible and loading is true without any loading placeholders, it hides the dropdown
-   * and sets a flag to indicate it is hidden while loading. If loading is false and the dropdown was previously
-   * hidden, it checks if the active element is within the dropdown and shows it again if true.
+   * When loading starts while the input has text and focus, it calls `showBib()`, which opens the bib,
+   * or, when the menu has no loading placeholder, sets `isHiddenWhileLoading` instead. When loading ends
+   * and `isHiddenWhileLoading` is set, it opens the bib if focus is still inside the combobox, then clears the flag.
    *
    * @private
    * @param {CustomEvent} event - The event object containing details about the loading state change.
@@ -1587,7 +1687,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Handle changes to the input value and trigger changes that should result.
+   * Called when the text in the trigger input or the fullscreen bib input changes.
+   * Keeps both inputs and `value` in sync, clears the combobox when the input is emptied,
+   * validates when focus is outside the combobox unless `noValidate` is set, and fires `inputValue`.
    * @private
    * @param {Event} event - The input event triggered by the input element.
    * @returns {void}
@@ -1697,9 +1799,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Handles input value changes originating from the trigger input.
-   * Refreshes menu options and filtering, delegates to handleInputValueChange
-   * for value synchronization, and manages fullscreen bib focus.
+   * Called when the text in the trigger input changes.
+   * Refreshes the menu's options and filtering, passes the change to `handleInputValueChange`,
+   * and keeps focus in the fullscreen bib input while that bib is open.
    * @private
    * @param {Event} event - The input event from the trigger input element.
    * @returns {void}
@@ -1775,7 +1877,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Handle element attributes on update.
+   * Runs the update, then sets `nocheckmark` on every menu to match `checkmark`.
    * @private
    * @returns {void}
    */
@@ -1826,7 +1928,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Focuses the combobox trigger input.
+   * Moves focus to the input, unless focus is already inside the combobox.
    * @returns {void}
    */
   focus() {
@@ -1836,8 +1938,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Sets the menu value if menu is available.
-   * @param {string} value - The value to set on the menu.
+   * Selects the menu option whose `value` matches. Does nothing when there's no menu or the menu already has that value;
+   * when no option can be selected, it clears `value` and `optionSelected` to `undefined`.
+   * @param {string} value - The `value` of the option to select.
    * @returns {void}
    */
   setMenuValue(value) {
@@ -1856,7 +1959,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Clears the value, the input text, and the selected option, and clears the validation state,
+   * so no error shows until the combobox validates again.
    * @returns {void}
    */
   reset() {
@@ -1877,7 +1981,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Clears the current value of the combobox.
+   * Clears the value, the input text, and the selected option.
+   * Doesn't clear the validation state; use `reset()` for that.
    * @returns {void}
    */
   clear() {
@@ -1922,8 +2027,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Checks the value against the validation rules, such as `required` and `behavior="filter"`, and updates `validity` and the error message.
+   * @param {boolean} [force=false] - If true, validates even when the combobox has focus or hasn't been used yet.
+   *   If false, validates only when focus is outside the combobox and it has been used or has a value.
    */
   validate(force = false) {
     if (this._inFullscreenTransition) {
@@ -2087,7 +2193,7 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Applies slotted nodes to a target element with a new slot name.
+   * Copies the nodes assigned to a slot into a target element under a new slot name, replacing earlier copies.
    * @private
    * @param {HTMLSlotElement} slot - The slot element containing the nodes to apply.
    * @param {HTMLElement} target - The target element to apply the nodes to.
@@ -2105,8 +2211,9 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Updates the active option in the menu.
-   * @param {number} index - Index of the option to make active.
+   * Sets the active (highlighted) option to the one at `index` among the options currently shown.
+   * Does nothing when no shown option is at that position.
+   * @param {number} index - The position of the option among the options currently shown, starting at 0.
    */
   updateActiveOption(index) {
     if (this.menu && this.menu.options && index >= 0 && this.availableOptions[index]) {
@@ -2118,7 +2225,8 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Watch for slot changes and recalculate the menuoptions.
+   * Called when a slot's content changes. For the default slot, sets up the menu and recalculates its options;
+   * for the `label`, `ariaLabel.input.clear`, `optionalLabel`, and `bib.fullscreen.headline` slots, copies the content into the bib.
    * @private
    * @param {Event} event - `slotchange` event.
    * @returns {void}

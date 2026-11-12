@@ -4,12 +4,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "^build:version", "@aurodesignsystem/build-tools#build:formkit-version"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/custom-elements.json", "$TURBO_ROOT$/docs/templates/**"],
       "outputs": [
         "dist/**",
         "demo/*.md",
         "demo/*.min.js",
         "docTemplates/**",
         "docs/api.md",
+        "README.md",
         "src/styles/**/*.css",
         "src/styles/**/*-css.js"
       ]
@@ -22,7 +24,8 @@
       "persistent": true
     },
     "build:docs": {
-      "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/custom-elements.json", "$TURBO_ROOT$/docs/templates/**"],
+      "outputs": ["README.md", "demo/index.*", "docs/api.md", "docs/partials/*.md"]
     },
     "dev": {
       "dependsOn": ["build"],

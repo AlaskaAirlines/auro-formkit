@@ -132,6 +132,30 @@ function runFullTest(mobileView) {
           counter2: 3 });
       });
 
+      it('should key the value by a counter name set as a property', async () => {
+        const el = await fixture(html`
+                <auro-counter-group>
+                    <auro-counter value="2">Counter1</auro-counter>
+                    <auro-counter value="3">Counter2</auro-counter>
+                </auro-counter-group>
+            `);
+
+        const counters = el.querySelectorAll('auro-counter');
+        const first = counters[0];
+        const second = counters[1];
+        first.name = 'adults';
+        second.name = 'children';
+        await elementUpdated(first);
+        await elementUpdated(second);
+
+        el.configureCounters();
+        el.updateValue();
+
+        expect(first.getAttribute('name')).to.equal('adults');
+        expect(el.value).to.deep.equal({ adults: 2,
+          children: 3 });
+      });
+
       it('should update the total property with the sum of counter values', async () => {
         const el = await fixture(html`
                 <auro-counter-group>

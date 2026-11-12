@@ -1,1 +1,1 @@
-For Getting Started instructions, visit the [auro-form Getting Started page](https://auro.alaskaair.com/components/auro/form/getting-started).
+For getting started instructions, visit the [`auro-form` getting started page](https://auro.alaskaair.com/components/auro/form/getting-started).

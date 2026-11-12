@@ -1,7 +1,8 @@
 <div style="display: flex; flex-direction: row; gap: 10px;">
   <auro-select layout="emphasized" shape="pill" size="xl" value="flights" forceDisplayValue style="display:inline-block;">
-    <span slot="ariaLabel.bib.close">Close Popup</span>
-    <span slot="label">Select Example</span>
+    <span slot="ariaLabel.bib.close">Close popup</span>
+    <span slot="bib.fullscreen.headline">Select example</span>
+    <span slot="label">Select example</span>
     <auro-menu nocheckmark>
       <auro-menuoption value="flights">
         <auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights
@@ -27,7 +28,9 @@
   </auro-select>
 
   <auro-select layout="emphasized" shape="pill" size="xl" value="flights" style="display:inline-block;">
-    <span slot="label">Select Example</span>
+    <span slot="ariaLabel.bib.close">Close popup</span>
+    <span slot="bib.fullscreen.headline">Select example</span>
+    <span slot="label">Select example</span>
     <auro-menu nocheckmark>
       <auro-menuoption value="flights">
         <auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights
@@ -53,8 +56,10 @@
   </auro-select>
 
   <auro-select layout="emphasized" shape="pill" size="xl" value="flights" required style="display:inline-block;">
-    <span slot="label">Select Example</span>
-    <span slot="helpText">no displayValue in menuoptions</span>
+    <span slot="ariaLabel.bib.close">Close popup</span>
+    <span slot="bib.fullscreen.headline">Select example</span>
+    <span slot="label">Select example</span>
+    <span slot="helpText">No display value in the menu options</span>
     <auro-menu nocheckmark>
       <auro-menuoption value="flights">
         <auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights

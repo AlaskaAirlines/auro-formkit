@@ -1,4 +1,4 @@
-Import the component, then register the custom element:
+Import the component, which registers the custom element:
 
 ```js
 import '@aurodesignsystem/auro-formkit/auro-form';

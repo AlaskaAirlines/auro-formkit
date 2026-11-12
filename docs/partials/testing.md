@@ -4,19 +4,19 @@ npm run test
 
 #### Port configuration
 
-Turbo will attempt to test components in parallel which will lead to port conflicts.
+Turbo tests components in parallel, which can lead to port conflicts.
 
-Setting the `concurrency` to `1` will prevent Turbo from running tests in parallel:
+To stop Turbo from running the component tests in parallel, set `--concurrency` to `1` in the `test:wtr` script:
 
 ```
-"test": "turbo run test --concurrency=1",
+"test:wtr": "turbo run test --concurrency=1 --continue",
 ```
 
-`turbo.json`does not support `--concurrency` yet. See [this issue](https://github.com/vercel/turborepo/discussions/7493).
+`turbo.json` doesn't currently support `--concurrency`. See [this issue](https://github.com/vercel/turborepo/discussions/7493).
 
 ## Framework tests
 
-The `apps/` directory contains minimal consumer harnesses for React and SvelteKit. These run Playwright tests against the real component lifecycle inside each framework, covering scenarios like initial value assignment and DOM remount.
+The `apps/` directory contains minimal consumer harnesses for React and SvelteKit. These run Playwright tests against the real component lifecycle inside each framework, covering scenarios such as initial value assignment and DOM remount.
 
 ### Prerequisites
 
@@ -52,7 +52,7 @@ npm run test:frameworks
 | `@aurodesignsystem/react-framework` | 5181 | `apps/react-framework/` |
 | `@aurodesignsystem/svelte-framework` | 5182 | `apps/svelte-framework/` |
 
-Each app starts its own dev server automatically when `playwright test` runs (via `webServer` in `playwright.config.ts`). Existing running servers on those ports are reused to speed up local iteration.
+Each app starts its own dev server automatically when `playwright test` runs (via `webServer` in `playwright.config.ts`). It always starts a fresh server and doesn't reuse one already running on that port, so tests don't run against a server with stale `dist/` files.
 
 To open an app manually:
 

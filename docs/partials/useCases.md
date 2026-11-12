@@ -1,39 +1,35 @@
-### 1. User Accounts
+### 1. User accounts
 - Sign up and login forms  
 - Email and password validation  
 
-### 2. Checkout & Payments
+### 2. Checkout and payments
 - Collect shipping and billing info  
 - Use autofill and validation to reduce errors  
 
-### 3. Booking & Scheduling
+### 3. Booking and scheduling
 - Select dates and times  
-- Prevent invalid selections (like past dates)  
+- Prevent invalid selections, such as past dates  
 
-### 4. Search & Filters
+### 4. Search and filters
 - Search inputs with suggestions  
-- Filters like price ranges or categories  
+- Filters, such as price ranges or categories  
 
-### 5. File Uploads
-- Upload images, documents, or media  
-- Restrict file types and allow multiple files  
-
-### 6. Feedback & Surveys
+### 5. Feedback and surveys
 - Collect ratings, choices, and comments  
 - Require answers where needed  
 
-### 7. Calculators & Dynamic Forms
-- Show real-time results (e.g., pricing, totals)  
+### 6. Calculators and dynamic forms
+- Show real-time results, such as prices and totals  
 
-### 8. Multi-Step Forms
+### 7. Multi-step forms
 - Break long forms into smaller steps  
 
-### 9. Mobile-Friendly Input
+### 8. Mobile-friendly input
 - Use input types that trigger the right keyboard  
 
-### 10. Accessible Forms
+### 9. Accessible forms
 - Proper labels and grouped inputs  
 - Built-in error handling  
 
-### 11. Built-in Validation
-- Use HTML5 rules instead of custom JavaScript
+### 10. Built-in validation
+- Set rules with attributes, such as `required` and `pattern`, instead of writing custom JavaScript

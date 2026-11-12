@@ -92,5 +92,4 @@ export const LocalizationLocaleFormatted = stories.LocalizationLocaleFormatted;
 export const LocalizationLocaleInherited = stories.LocalizationLocaleInherited;
 export const LocalizationScreenreaderStrings = stories.LocalizationScreenreaderStrings;
 export const LocalizationVisibleStrings = stories.LocalizationVisibleStrings;
-export const Nested = stories.Nested;
 export const Simple = stories.Simple;

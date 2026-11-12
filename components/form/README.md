@@ -20,22 +20,20 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-<p><code>&lt;auro-form&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> designed to
-serve as the base logic for all auro-constructed forms.</p>
-<p>It automatically "scrapes" its inner content for any auro form elements, and surfaces
-them (along with events) to the parent form element as a JSON object.</p>
+<p><code>&lt;auro-form&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that collects the values of the Auro form elements inside it, such as <code>auro-input</code> and <code>auro-select</code>.</p>
+<p>It finds every named Auro form element in its content, tracks each one's value and validity, and gives you the combined values as one object through its <code>value</code> property and its <code>submit</code> event. It also turns its submit and reset buttons on and off to match the form's state.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Form Use Cases
+## Form use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-form>` element should be used in situations where users want to build HTML forms.
+Use `<auro-form>` when you build a form from Auro form elements and want their values, validity, and submit and reset buttons handled together.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-form Getting Started page](https://auro.alaskaair.com/components/auro/form/getting-started).
+For getting started instructions, visit the [`auro-form` getting started page](https://auro.alaskaair.com/components/auro/form/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

@@ -1,4 +1,4 @@
-Import the component, then register the custom element:
+Import the component to register the custom element:
 
 ```js
 import '@aurodesignsystem/auro-formkit/auro-dropdown';
@@ -7,10 +7,10 @@ import '@aurodesignsystem/auro-formkit/auro-dropdown';
 Then use the element in your HTML:
 
 ```html
-<auro-dropdown aria-label="custom label">
-  Lorem ipsum solar
+<auro-dropdown>
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   <div slot="trigger">
-    Trigger
+    Flight details
   </div>
 </auro-dropdown>
 ```
