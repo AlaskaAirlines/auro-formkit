@@ -1,6 +1,6 @@
 /**
- * Creates a snapshot of the dropdown's display state for one keydown event.
- * Centralizes null-safety checks and makes the shared/modal/popover branching explicit.
+ * Creates a snapshot of the dropdown's display state for one `keydown` event.
+ * Handles a missing dropdown without throwing, so callers don't need their own checks.
  *
  * @param {HTMLElement} component - The component with a dropdown reference.
  * @param {Object} [options] - The optional settings.

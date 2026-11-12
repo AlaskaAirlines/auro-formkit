@@ -86,20 +86,11 @@ export function guardTouchPassthrough(element) {
 }
 
 /**
- * Restores the dropdown trigger after a fullscreen dialog closes without focus
- * leaving the component, such as when the Esc or Enter key closes it.
- * When focus leaves the component, for example by tabbing out of the combobox
- * after closing the fullscreen dialog, the browser's native dialog focus
- * restoration handles it, so this function only restores focus when focus
- * remains inside the component after the dialog closes.
- *
- * Removes the `inert` attribute from the trigger so it's accessible again,
- * and restores focus to the given target after one animation frame. The rAF
- * delay lets Lit's microtask update cycle call `dialog.close()` first. Without
- * it, the browser's native dialog focus restoration can conflict.
- *
- * The focus is only applied if the dropdown is still closed at the time the
- * rAF fires, guarding against a rapid close-then-reopen race.
+ * Restores the dropdown trigger after a fullscreen dialog closes, so keyboard users keep their place.
+ * Removes the `inert` attribute from the trigger, then, after one animation frame, moves focus to
+ * the given target if the dropdown is still closed and focus is inside the trigger.
+ * The one-frame wait lets Lit finish closing the dialog first, because the browser's native dialog
+ * focus restoration can conflict otherwise.
  *
  * @param {HTMLElement} dropdown - The `auro-dropdown` element.
  * @param {HTMLElement} focusTarget - The element to focus, such as the trigger or the input.
