@@ -18,20 +18,37 @@ import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * The `auro-checkbox` element is for the purpose of allowing users to select one or more options of a limited number of choices.
+ * A checkbox that lets people turn one option on or off, usually as one of several choices in an `auro-checkbox-group`.
+ *
+ * **Key capabilities**
+ * - **Preselected options**: Set `checked` to show the option as selected when the page loads.
+ * - **Disabled options**: Set `disabled` to stop people from changing the option.
+ * - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.
+ * - **Accessible label**: The checkbox always uses its text content as the name screen readers announce.
+ *
+ * **Example**
+ *
+ * ```html
+ * <auro-checkbox-group>
+ *   <span slot="legend">Seat preferences</span>
+ *   <auro-checkbox value="window" name="seat">Window seat</auro-checkbox>
+ *   <auro-checkbox value="aisle" name="seat">Aisle seat</auro-checkbox>
+ * </auro-checkbox-group>
+ * ```
+ * @summary A checkbox for turning a single option on or off, with preselected, disabled, and dark-background styles.
  * @customElement auro-checkbox
  *
- * @csspart checkbox - apply css to a specific checkbox.
- * @csspart checkbox-input - apply css to a specific checkbox's input.
- * @csspart checkbox-label - apply css to a specific checkbox's label.
+ * @csspart checkbox - The container that wraps the checkbox's box and its label.
+ * @csspart checkbox-input - The native `<input type="checkbox">` element. It's hidden with `display: none`, so styles on this part don't change the visible box.
+ * @csspart checkbox-label - The element that wraps the label text from the default slot.
  *
- * @slot default - The default slot for the checkbox label.
+ * @slot default - Label text for the checkbox, such as "Window seat". Screen readers announce this text as the checkbox's name. {@requiredWhen always} {@category ui}
  *
- * @event change - Notifies when checked value is changed. **DEPRECATED** - Use the `input` event instead.
- * @event input - Notifies when checked value is changed by user's interface.
- * @event auroCheckbox-input - Notifies when the checked value is changed by user interaction. **DEPRECATED** - Use the `input` event instead.
- * @event auroCheckbox-focusin - Notifies when the checkbox receives focus.
- * @event auroCheckbox-focusout - Notifies when the checkbox loses focus.
+ * @event change - Deprecated: Use the `input` event instead. Fires when someone checks or unchecks the checkbox.
+ * @event input - Fires when someone checks or unchecks the checkbox.
+ * @event auroCheckbox-input - Deprecated: Use the `input` event instead. Fires when someone checks or unchecks the checkbox.
+ * @event auroCheckbox-focusin - Fires when the checkbox gets focus or is clicked.
+ * @event auroCheckbox-focusout - Fires when the checkbox loses focus.
  */
 
 // build the component class
@@ -42,6 +59,10 @@ export class AuroCheckbox extends LitElement {
     this._initializeDefaults();
   }
 
+  /**
+   * Sets the initial property values. Called from the constructor.
+   * @internal
+   */
   _initializeDefaults() {
     this.appearance = 'default';
     this.checked = false;
@@ -73,9 +94,11 @@ export class AuroCheckbox extends LitElement {
       ...super.properties,
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the checkbox colors to match its background. Use `inverse` on dark backgrounds and `default` on light ones.
+       * Inside an `auro-checkbox-group`, the group's `appearance` replaces this value.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -83,7 +106,8 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * If set to true, the checkbox will be filled with a checkmark.
+       * Selects the checkbox and shows a checkmark. Set it in markup to preselect an option.
+       * @category behavior
        */
       checked: {
         type: Boolean,
@@ -91,7 +115,9 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * If set to true, the checkbox will not be clickable.
+       * Turns the checkbox off, so clicks and the Space key don't change it.
+       * A disabled checkbox is shown in a muted style but stays in the keyboard tab order.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -99,7 +125,9 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * If set to true, the checkbox will be displayed with an error state.
+       * Shows the checkbox in its error style.
+       * Inside an `auro-checkbox-group`, the group sets and clears this from its own validation, so set `error` on the group instead.
+       * @category behavior
        */
       error: {
         type: Boolean,
@@ -107,7 +135,8 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
+       * Sets a unique identifier for the checkbox, such as `seat-window` (the `id` attribute).
+       * @category behavior
        */
       id: {
         type: String,
@@ -115,7 +144,7 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The id for input node.
+       * The `id` of the inner `<input>` element.
        * @private
        */
       inputId: {
@@ -125,13 +154,17 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       * Sets the name of the checkbox's inner `<input>` element, such as `seat` (the input's `name`).
+       * This doesn't add the checkbox to form data: `auro-form` reads the `name` attribute of the `auro-checkbox-group` instead.
+       * @category behavior
        */
       name: { type: String },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Shows the checkbox in colors made for dark backgrounds.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -150,7 +183,10 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
+       * Sets the value the checkbox adds to the group's selected values when it's checked, such as `window`.
+       * Use a value that's unique within the `auro-checkbox-group`.
+       * @requiredWhen always
+       * @category behavior
        */
       value: {
         type: String,
@@ -158,7 +194,7 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The tabindex attribute for the checkbox.
+       * The checkbox's `tabindex` attribute.
        * @private
        */
       tabIndex: {
@@ -168,7 +204,7 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The aria-checked attribute for the checkbox.
+       * The checkbox's `aria-checked` attribute.
        * @private
        */
       ariaChecked: {
@@ -178,7 +214,7 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The aria-disabled attribute for the checkbox.
+       * The checkbox's `aria-disabled` attribute.
        * @private
        */
       ariaDisabled: {
@@ -188,7 +224,7 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * The ARIA role for the element. Must remain 'checkbox' for screen readers
+       * The ARIA role for the element. Must remain `checkbox` for screen readers
        * to correctly identify this as a checkbox control.
        * @private
        */
@@ -201,11 +237,11 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-checkbox"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-checkbox"] - The tag name to register the element under.
    *
    * @example
-   * AuroCheckbox.register("custom-checkbox") // this will register this element to <custom-checkbox/>
+   * AuroCheckbox.register("custom-checkbox") // registers the element as <custom-checkbox>
    *
    */
   static register(name = "auro-checkbox") {
@@ -213,11 +249,10 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Handles the change event for the checkbox input.
-   * Updates the checked state and dispatches a corresponding custom event.
-   * This custom event is only for the purpose of supporting IE.
+   * Called when the inner `<input>` fires `change`.
+   * Updates `checked` and dispatches the event again from the host, because a native `change` event doesn't cross the shadow DOM boundary.
    * @private
-   * @param {Event} event - The change event from the checkbox input.
+   * @param {Event} event - The `change` event from the inner `<input>`.
    * @returns {void}
    */
   handleChange(event) {
@@ -228,10 +263,10 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Handles the input event for the checkbox input.
-   * Updates the checked state and dispatches a custom 'auroCheckbox-input' event.
+   * Called when the inner `<input>` fires `input`.
+   * Updates `checked` and dispatches the deprecated `auroCheckbox-input` event, which `auro-checkbox-group` listens for.
    * @private
-   * @param {Event} event - The input event from the checkbox input.
+   * @param {Event} event - The `input` event from the inner `<input>`.
    * @returns {void}
    */
   handleInput(event) {
@@ -246,7 +281,8 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Function to support @focusin event.
+   * Called when the checkbox gets focus or is clicked.
+   * Marks the checkbox as interacted with and dispatches `auroCheckbox-focusin`.
    * @private
    * @returns {void}
    */
@@ -260,9 +296,9 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Function to generate checkmark svg.
+   * Creates the checkmark SVG element shown while the checkbox is checked.
    * @private
-   * @returns {HTMLElement}
+   * @returns {SVGElement} The checkmark `<svg>` element.
    */
   generateIconHtml() {
     this.dom = new DOMParser().parseFromString(checkLg.svg, 'text/html');
@@ -274,7 +310,7 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Resets the checkbox: unchecks it, removes its error style, and marks it as not yet interacted with.
    * @returns {void}
    */
   reset() {
@@ -284,7 +320,8 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Updates the aria-label based on slot content.
+   * Called when the default slot content changes.
+   * Sets the host's `aria-label` to the slot text, so screen readers announce it as the checkbox's name.
    * @private
    * @returns {void}
    */
@@ -344,9 +381,10 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Updates ARIA attributes when properties change.
+   * Called after each update.
+   * Keeps `aria-checked` and `aria-disabled` in sync with `checked` and `disabled`.
    * @private
-   * @param {Map} changedProperties - Map of changed properties.
+   * @param {Map} changedProperties - The properties that changed in this update.
    * @returns {void}
    */
   updated(changedProperties) {
@@ -362,9 +400,10 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
-   * Handles keydown event to toggle the checkbox with Space key.
+   * Called when a key is pressed while the checkbox has focus.
+   * Toggles the checkbox when the key is Space and the checkbox isn't disabled.
    * @private
-   * @param {KeyboardEvent} event - The keydown event from the checkbox input.
+   * @param {KeyboardEvent} event - The `keydown` event from the checkbox.
    * @returns {void}
    */
   handleKeyDown(event) {
@@ -377,7 +416,7 @@ export class AuroCheckbox extends LitElement {
 
   /**
    * @private
-   * @returns {HTMLElement}
+   * @returns {import('lit').TemplateResult} The checkbox's rendered template.
    */
   render() {
     const labelClasses = {

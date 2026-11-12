@@ -8,11 +8,10 @@ import { html } from "lit/static-html.js";
 export class IconUtil {
 
   /**
-   * Generates an HTML element containing an SVG icon based on the provided `svgContent`.
+   * Creates a Lit template that renders an icon's `<svg>` element in the `svg` slot.
    *
-   * @param {string} svgContent - The SVG content to be embedded.
-   * @param {Object} _attributes - Additional attributes to set on the icon element.
-   * @returns {Element} The HTML element containing the SVG icon.
+   * @param {{ svg: string }} svgContent - The icon object, such as one imported from `@alaskaairux/icons`, whose `svg` property holds the SVG markup.
+   * @returns {import('lit').TemplateResult|undefined} The template with the `<svg>` element, or undefined when the markup can't be parsed.
    */
   static generateSvgHtml(svgContent) {
     try {

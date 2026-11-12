@@ -11,37 +11,37 @@ export class RangeDatepicker extends LitElement {
     super();
 
     /**
-     * Array of disabled days. Format is Unix timestamp.
+     * Sets dates people can't select, as Unix timestamps in seconds.
      */
     this.disabledDays = [];
 
     /**
-     * Display a select year control.
+     * Shows the previous and next month buttons on every month, and lets each month change on its own. It doesn't currently show a control for choosing the year.
      */
     this.enableYearChange = false;
 
     /**
-     * Force display of only one month.
+     * Shows one month at a time, even on screens wider than 650 pixels.
      */
     this.forceNarrow = false;
 
     /**
-     * Set locale of the calendar.
+     * Sets the date-fns locale object used for the month and weekday names, such as `enUS`. Uses `enUS` when not set.
      */
     this.locale = null;
 
     /**
-     * Max date. Format is Unix timestamp.
+     * Sets the latest date people can choose, as a Unix timestamp in seconds.
      */
     this.max = '8640000000000';
 
     /**
-     * Minimal date. Format is Unix timestamp.
+     * Sets the earliest date people can choose, as a Unix timestamp in seconds.
      */
     this.min = '-8640000000000';
 
     /**
-     * If true only one date can be selected.
+     * Lets people choose only one date instead of a start date and an end date.
      */
     this.noRange = false;
     this.dateFrom = null;

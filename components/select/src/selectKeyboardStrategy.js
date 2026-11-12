@@ -2,6 +2,9 @@
 import { navigateArrow } from '@aurodesignsystem/utils';
 import { getActiveOptions } from './selectUtils.js';
 
+/**
+ * Holds the select's keyboard handlers: one function each for `ArrowDown`, `ArrowUp`, `End`, `Enter`, `Escape`, `Home`, and `Tab`, and a `default` function for the space bar and type-ahead characters.
+ */
 export const selectKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
     evt.preventDefault();

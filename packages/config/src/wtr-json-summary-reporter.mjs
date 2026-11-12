@@ -21,8 +21,9 @@ function countTests(suite) {
 }
 
 /**
- * WTR reporter that writes a test-results.json summary to the component's
- * coverage/ directory after the test run finishes.
+ * Creates a WTR reporter that writes a `test-results.json` summary to the
+ * `coverage/` folder in the current working directory after the test run
+ * finishes. For a per-component test run, that's the component's folder.
  *
  * Usage in web-test-runner.config.mjs:
  *   import { jsonSummaryReporter } from './wtr-json-summary-reporter.mjs';

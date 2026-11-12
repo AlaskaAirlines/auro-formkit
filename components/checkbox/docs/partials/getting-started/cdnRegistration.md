@@ -2,7 +2,7 @@
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-checkbox/+esm"></script>
 ```
-<p>This script registers the <code>&lt;auro-checkbox&gt;</code> and <code>&lt;auro-checkbox-group&gt;</code> custom elements globally. You can then use them in your HTML:</p>
+<p>This script registers the <code>&lt;auro-checkbox&gt;</code> and <code>&lt;auro-checkbox-group&gt;</code> custom elements globally. Then use them in your HTML:</p>
 ```html
 <auro-checkbox-group>
   <span slot="legend">Choose your options</span>

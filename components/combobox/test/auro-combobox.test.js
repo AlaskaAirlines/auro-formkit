@@ -782,10 +782,19 @@ function runFullTest(mobileView) {
       // click the second — the true duplicate-disambiguation path.
       el.focus();
       await elementUpdated(el);
-      await sendKeys({ type: 'Seattle' });
+      // The first keystroke opens the bib. In the small viewport that bib is
+      // fullscreen and moves focus to its own input, so wait for that handoff
+      // before typing the rest — keys sent mid-handoff are dropped, leaving a
+      // partial value like "St" that matches nothing and never opens the bib.
+      await sendKeys({ press: 'S' });
       el.input.click();
       await elementUpdated(el);
       await waitUntil(() => el.dropdown.isPopoverVisible);
+      if (mobileView) {
+        await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      }
+      await sendKeys({ type: 'eattle' });
+      await elementUpdated(el);
 
       const menu = el.querySelector('auro-menu');
       const opts = menu.querySelectorAll('auro-menuoption');

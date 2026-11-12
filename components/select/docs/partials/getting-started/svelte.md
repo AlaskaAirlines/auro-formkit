@@ -1,6 +1,6 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-select&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 
 Import and register the components in the `<script>` block:
 
@@ -15,9 +15,9 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
 
-Use `<auro-select>` directly in your Svelte template. Properties can be bound using standard Svelte attribute syntax:
+Use `<auro-select>` directly in your Svelte template. Bind properties with standard Svelte attribute syntax:
 
 ```html
 <script lang="ts">
@@ -34,9 +34,7 @@ Use `<auro-select>` directly in your Svelte template. Properties can be bound us
     ['duration', 'Duration'],
   ];
 
-  let selectValue = $state<string>(''); // this will work to preset the value but it will not be reactive - it's a one way binding
-
-  // Need to add testing that oninput works in all our components
+  let selectValue = $state<string>(''); // Presets the value, but isn't reactive: it's a one-way binding.
 </script>
 
 <custom-select value={selectValue}>
@@ -49,9 +47,9 @@ Use `<auro-select>` directly in your Svelte template. Properties can be bound us
 </custom-select>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
 
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-select>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-select>` props in templates, add the following to a `.d.ts` file in your project (such as `src/auro-elements.d.ts`):
 
 ```js
 import type { AuroSelect } from '@aurodesignsystem/auro-formkit/auro-select/class';
@@ -66,9 +64,9 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting for attributes like `value`, `placeholder`, `disabled`, and others directly in Svelte templates.
+This turns on prop hints in Svelte templates for attributes such as `value`, `placeholder`, and `disabled`.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
 
 Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
 
@@ -92,7 +90,7 @@ Auro components emit native `CustomEvent`s. Use the `oninput` handler directly o
 <p>Selected: {value}</p>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 

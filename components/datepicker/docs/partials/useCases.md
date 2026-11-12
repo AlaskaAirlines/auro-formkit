@@ -1,4 +1,4 @@
-The <code>&lt;auro-datepicker&gt;</code> element should be used in situations where users may:
+Use the <code>&lt;auro-datepicker&gt;</code> element when people need to:
 
-* select a single date
-* select a pair of dates which identify a calendar range
+* Select a single date.
+* Select a pair of dates that sets a range, such as a trip's start and end dates.

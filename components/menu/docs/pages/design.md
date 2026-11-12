@@ -1,26 +1,26 @@
-<auro-header level="1" id="overview">Menu - Design</auro-header>
+<auro-header level="1" id="overview">Menu: Design</auro-header>
 <div class="contentWrapper">
   <div class="mainContent">
     <div class="scrollWrapper">
       <section>
-        <auro-header level="2" id="anatomy">Component Anatomy</auro-header>
+        <auro-header level="2" id="anatomy">Component anatomy</auro-header>
         <p>The <code>auro-menu</code> component is a list container that renders one or more <code>auro-menuoption</code> elements. The component consists of the following key elements:</p>
         <ul>
-          <li><strong>Menu Container</strong> — The outer list element (<code>role="listbox"</code>) that holds all options and manages selection state, keyboard navigation, and active/selected tracking.</li>
-          <li><strong>Menu Option</strong> — An individual selectable item (<code>auro-menuoption</code>) within the menu. Each option can carry a <code>value</code>, display label text, and respond to selection, disabled, and hidden states.</li>
-          <li><strong>Checkmark Icon</strong> — A visual indicator shown on the selected option(s). Can be hidden with the <code>nocheckmark</code> attribute.</li>
-          <li><strong>Divider (<code>&lt;hr&gt;</code>)</strong> — A horizontal rule used to visually separate groups of options within the menu.</li>
+          <li><strong>Menu container:</strong> The outer list element (<code>role="listbox"</code>) that holds all options and manages selection state, keyboard navigation, and active/selected tracking.</li>
+          <li><strong>Menu option:</strong> An individual selectable item (<code>auro-menuoption</code>) within the menu. Each option has a <code>value</code> and label text, and responds to the selected, disabled, and hidden states.</li>
+          <li><strong>Checkmark icon:</strong> A visual indicator shown on each selected option. Hide it with the <code>nocheckmark</code> attribute.</li>
+          <li><strong>Divider (<code>&lt;hr&gt;</code>):</strong> A horizontal rule used to visually separate groups of options within the menu.</li>
         </ul>
-        <auro-header level="3" id="menuOption">Menu Option</auro-header>
-        <p>Each <code>auro-menuoption</code> is a focusable element that visually responds to common UI states — <strong>Hover</strong>, <strong>Active</strong> (keyboard-highlighted), <strong>Selected</strong>, and <strong>Disabled</strong>. Options support a default slot for display text and a <code>value</code> attribute that is used for programmatic selection.</p>
+        <auro-header level="3" id="menuOption">Menu option</auro-header>
+        <p>Each <code>auro-menuoption</code> has a distinct look for these states: <strong>Hover</strong>, <strong>Active</strong> (keyboard-highlighted), <strong>Selected</strong>, and <strong>Disabled</strong>. Options support a default slot for display text and a <code>value</code> attribute that identifies the option when it's selected.</p>
         <auro-header level="3" id="dividers">Dividers</auro-header>
-        <p>Use standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers are non-interactive and are skipped during keyboard navigation.</p>
+        <p>Use standard <code>&lt;hr&gt;</code> elements between <code>auro-menuoption</code> elements to create visual group separators. Dividers can't be selected, and keyboard navigation skips them.</p>
         <auro-header level="3" id="checkmark">Checkmark</auro-header>
-        <p>By default, a checkmark icon appears next to the selected option(s). Use the <code>nocheckmark</code> attribute on <code>auro-menu</code> to hide this indicator when a simpler visual style is preferred.</p>
+        <p>By default, a checkmark icon appears next to each selected option. Use the <code>nocheckmark</code> attribute on <code>auro-menu</code> to hide this indicator when you want a simpler look.</p>
       </section>
       <section>
-        <auro-header level="2" id="shapeSizeLayout">Shape | Size | Layout Support</auro-header>
-        <p>The <code>auro-menu</code> component supports the <code>shape</code> and <code>size</code> feature set. The component defaults to <code>shape="box"</code> and <code>size="sm"</code>. The <code>layout</code> attribute is not supported by this component.</p>
+        <auro-header level="2" id="shapeSizeLayout">Shape, size, and layout support</auro-header>
+        <p>The <code>auro-menu</code> component supports the <code>shape</code> and <code>size</code> feature set. The component defaults to <code>shape="box"</code> and <code>size="sm"</code>. The component doesn't support the <code>layout</code> attribute.</p>
         <auro-header level="3" id="size">Size</auro-header>
         <p>Use the <code>size</code> attribute to change the size of menu options. Supported values are <code>xs</code>, <code>sm</code> (default), <code>md</code>, <code>lg</code>, and <code>xl</code>.</p>
         <div class="exampleWrapper">
@@ -33,7 +33,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="shape">Shape</auro-header>
-        <p>Use the <code>shape</code> attribute to change the shape of menu options. Supported values are <code>box</code> (default) and <code>round</code>.</p>
+        <p>Use the <code>shape</code> attribute to change the shape of menu options. Supported values are <code>box</code> (default), <code>pill</code>, and <code>snowflake</code>. <code>box</code> and <code>snowflake</code> have square corners, and <code>pill</code> has fully rounded ends.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/shape.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

@@ -1,6 +1,6 @@
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-menu&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
-<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+<auro-header level="3" id="svelteImport">Import the component</auro-header>
 Import and register the components in the `<script>` block:
 
 ```html
@@ -12,7 +12,7 @@ Import and register the components in the `<script>` block:
 </script>
 ```
 
-<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+<auro-header level="3" id="svelteUsage">Basic usage</auro-header>
 Use `<auro-menu>` directly in your Svelte template:
 
 ```html
@@ -29,8 +29,8 @@ Use `<auro-menu>` directly in your Svelte template:
 </custom-menu>
 ```
 
-<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
-Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-menu>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+<auro-header level="3" id="svelteTypeScript">TypeScript declarations</auro-header>
+Svelte doesn't automatically know about custom element attributes. To get autocomplete and type checking for `<auro-menu>` props in templates, add the following to a `.d.ts` file in your project, such as `src/auro-elements.d.ts`:
 
 ```js
 import type { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
@@ -43,10 +43,10 @@ declare namespace svelteHTML {
 }
 ```
 
-This enables prop hinting for attributes like `value`, `disabled`, and others directly in Svelte templates.
+This enables prop hinting for attributes such as `value` and `disabled` directly in Svelte templates.
 
-<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
-Auro components emit native `CustomEvent`s. Listen for the `selectedOption` event on the element:
+<auro-header level="3" id="svelteEvents">Event handling</auro-header>
+Auro components emit native `CustomEvent`s. Listen for the `auroMenu-selectedOption` event on the element:
 
 ```html
 <script lang="ts">
@@ -56,14 +56,14 @@ Auro components emit native `CustomEvent`s. Listen for the `selectedOption` even
     value = (e.target as HTMLElement & { value: string }).value;
   }
 </script>
-<custom-menu on:selectedOption={handleSelect}>
+<custom-menu on:auroMenu-selectedOption={handleSelect}>
   <custom-menuoption value="option1">Option 1</custom-menuoption>
   <custom-menuoption value="option2">Option 2</custom-menuoption>
 </custom-menu>
 <p>Selected: {value}</p>
 ```
 
-<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+<auro-header level="3" id="svelteModuleResolution">Module resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
 
 ```js

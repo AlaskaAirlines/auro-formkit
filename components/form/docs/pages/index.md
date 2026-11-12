@@ -2,13 +2,13 @@
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-      <auro-anchorlink fluid href="#formValueGeneration">Form Value Generation</auro-anchorlink>
-      <auro-anchorlink fluid href="#formDataStructure" class="level2 body-xs">Form Data Structure</auro-anchorlink>
-      <auro-anchorlink fluid href="#accessingFormData">Accessing Form Data</auro-anchorlink>
-      <auro-anchorlink fluid href="#basicExample">Basic Form Example</auro-anchorlink>
+      <auro-anchorlink fluid href="#formValueGeneration">Form value generation</auro-anchorlink>
+      <auro-anchorlink fluid href="#formDataStructure" class="level2 body-xs">Form data structure</auro-anchorlink>
+      <auro-anchorlink fluid href="#accessingFormData">Accessing form data</auro-anchorlink>
+      <auro-anchorlink fluid href="#basicExample">Basic form example</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -19,42 +19,43 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="formValueGeneration">Form Value Generation</auro-header>
-        <p>Auro form exists to make a developer's life easier through surfacing all Auro form elements in a given form as a single JSON object. The most common use case the Auro team identified when building Form was the need to collect form data in a structured way.</p>
-        <p>The following is required on each Auro form element in a form for it to be collected automatically:</p>
+        <auro-header level="2" id="formValueGeneration">Form value generation</auro-header>
+        <p><code>auro-form</code> gathers the values of all the Auro form elements in a form into a single object, so you can collect form data in a structured way without reading each field.</p>
+        <p>For the form to collect an Auro form element automatically, the element must meet both of these requirements:</p>
         <ol>
-          <li>It <strong>must</strong> have a <code>name</code> attribute. This is required in vanilla HTML forms, and we follow the same pattern.</li>
-          <li>It <strong>must</strong> be an Auro form element. See the section on custom elements for more information.</li>
+          <li>It <strong>must</strong> have a <code>name</code> attribute, the same as in plain HTML forms.</li>
+          <li>It <strong>must</strong> be one of the Auro form elements the form tracks: <code>auro-input</code>, <code>auro-select</code>, <code>auro-datepicker</code>, <code>auro-combobox</code>, <code>auro-checkbox-group</code>, <code>auro-radio-group</code>, or <code>auro-counter-group</code>, including one registered under a custom tag name.</li>
         </ol>
-        <p>That being said, we do <em>not</em> require form elements to be direct children of <code>auro-form</code>. They can be nested within other elements for styling, such as a <code>div</code>, <code>span</code> or <code>fieldset</code>.</p>
-        <auro-header level="3" id="formDataStructure">Form Data Structure</auro-header>
-        <p>In a correctly registered scenario, <code>auro-form</code> will automatically recognize the auro form elements and collect data from each on the form's <code>value</code> key as a JSON object.</p>
-        <p>Each element will be added using the element's <code>name</code> attribute as the key, and the element's <code>value</code> as the value.</p>
+        <p>Form elements don't need to be direct children of <code>auro-form</code>. Nest them in other elements for styling, such as a <code>div</code>, <code>span</code>, or <code>fieldset</code>.</p>
+        <auro-header level="3" id="formDataStructure">Form data structure</auro-header>
+        <p>When the elements are registered correctly, <code>auro-form</code> automatically recognizes the Auro form elements and collects their data in the form's <code>value</code> property as one object.</p>
+        <p>The form uses each enabled element's <code>name</code> attribute as the key and the element's <code>value</code> as the value. A <code>range</code> <code>auro-datepicker</code> adds its <code>values</code> array, <code>[start, end]</code>, instead, once the user enters dates.</p>
       </section>
       <section>
-        <auro-header level="2" id="accessingFormData">Accessing Form Data</auro-header>
-        <p>As Auro components are designed to be framework-agnostic, data can be retrieved using simple vanilla JavaScript patterns. If you have ever worked with a standard HTML5 form, you are already equipped to work with Auro forms!</p>
-        <p>Once you have a reference to the form element (React ref, querySelector, etc.), you can access the form data using the following methods:</p>
-        <p><strong>Data Keys + Get Methods</strong>:</p>
+        <auro-header level="2" id="accessingFormData">Accessing form data</auro-header>
+        <p>Auro components are framework-agnostic, so you read form data with plain JavaScript. If you've worked with a standard HTML form, you already know the pattern.</p>
+        <p>Once you have a reference to the form element, such as a React ref or the result of <code>querySelector</code>, read the form data from these properties:</p>
+        <p><strong>Form data</strong>:</p>
         <ul>
-          <li><code>.value</code> - Getter which returns the current form data as a JSON object.</li>
-          <li><code>.validity</code> - Returns the current validity state of the form (<code>valid</code> or <code>invalid</code>).</li>
+          <li><code>.value</code>: The current values of all named, enabled form elements, as one object.</li>
+          <li><code>.validity</code>: The form's validity: <code>valid</code>, <code>invalid</code>, or <code>null</code> while the form is in its initial state.</li>
         </ul>
-        <p><strong>Extra Information</strong>:</p>
+        <p><strong>Extra information</strong>:</p>
         <ul>
-          <li><code>.isInitialState</code> - Returns a boolean indicating if the form is in its initial state.</li>
+          <li><code>.isInitialState</code>: <code>true</code> while every field holds its starting value and no field has failed validation.</li>
         </ul>
         <p><strong>Events</strong>:</p>
         <ul>
-          <li><code>input</code> - Fires when the form state changes.</li>
-          <li><code>reset</code> - Fires when the form is reset.</li>
-          <li><code>submit</code> - Fires when the form is submitted.</li>
+          <li><code>input</code>: Bubbles up from a child form element when it receives user input. <code>auro-counter-group</code> doesn't currently bubble its <code>input</code> event, so listen for <code>change</code> to catch every field.</li>
+          <li><code>change</code>: Fires when a child form element's value changes, and when the form rebuilds its state.</li>
+          <li><code>reset</code>: Fires after the form resets.</li>
+          <li><code>submit</code>: Fires when the form is submitted and no enabled field is invalid or required but empty.</li>
         </ul>
       </section>
       <section>
-        <auro-header level="2" id="basicExample">Basic Form Example</auro-header>
-        <p>The most basic form implementation requires an <code>auro-input</code> and an optional auro button with <code>type="submit"</code>.</p>
-        <p>By default, Auro Form connects a <code>submit</code> event to all <code>type="submit"</code> buttons within the form.</p>
+        <auro-header level="2" id="basicExample">Basic form example</auro-header>
+        <p>The smallest working form needs one named <code>auro-input</code>. Add an <code>auro-button</code> with <code>type="submit"</code> so users can submit it.</p>
+        <p><code>auro-form</code> runs <code>submit()</code> when someone clicks a <code>button</code> or <code>auro-button</code> with <code>type="submit"</code> inside it.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

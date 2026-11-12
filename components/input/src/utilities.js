@@ -11,13 +11,16 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 
 import IMask from 'imask';
 
+/**
+ * Helpers that set up input masks and convert between the text shown in the field, `Date` objects, and ISO date strings (`YYYY-MM-DD`), for one locale and date format.
+ */
 export class AuroInputUtilities {
 
   /**
-   * Creates an instance of AuroInputUtilities.
-   * @param {object} config - Configuration object for the utilities.
-   * @param {string} config.locale - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
-   * @param {string} config.format - Optional Date format override string.
+   * Creates a set of date and mask helpers for one locale and format.
+   * @param {object} config - The settings for the helpers.
+   * @param {string} [config.locale] - The BCP 47 language tag, such as `en-US`, `fr-FR`, or `ja-JP`. Defaults to `en-US` when missing or invalid.
+   * @param {string} [config.format] - The date format to use instead of the locale's format, such as `mm/dd/yyyy`.
    */
   constructor(config = { locale: undefined, format: undefined }) {
     if (config.locale) {
@@ -30,7 +33,17 @@ export class AuroInputUtilities {
     } else {
       this.locale = 'en-US';
     }
+
+    /**
+     * Sets the date format to use instead of the locale's format, such as `mm/dd/yyyy`. `updateFormat()` also sets it.
+     * @type {string|undefined}
+     */
     this.overrideFormat = config.format;
+
+    /**
+     * The `Intl.DateTimeFormat` date formatter for the helpers' locale. The helpers don't currently use it.
+     * @type {Intl.DateTimeFormat}
+     */
     this.formatter = new Intl.DateTimeFormat(this.locale);
 
     // Bindings - many of these are passed into IMask callbacks,
@@ -42,8 +55,8 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Updates the date format override.
-   * @param {string} newFormat - New date format string.
+   * Sets the date format to use instead of the locale's format.
+   * @param {string} newFormat - The new date format, such as `dd/mm/yyyy`.
    * @returns {void}
    */
   updateFormat(newFormat) {
@@ -51,9 +64,9 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Converts an IMask-style date mask to a date-fns compatible format string.
-   * @param {string} mask - IMask date mask (e.g. "MM/DD/YYYY").
-   * @returns {string} A date-fns format string (e.g. "MM/dd/yyyy").
+   * Converts an IMask date mask to a date-fns format string.
+   * @param {string} mask - The IMask date mask, such as `MM/DD/YYYY`.
+   * @returns {string} The date-fns format string, such as `MM/dd/yyyy`.
    */
   toDateFnsMask(mask) {
     return mask
@@ -64,9 +77,10 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Generates a date mask based on the provided locale.
-   * @param {string} [locale] - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
-   * @returns {string}
+   * Gets the uppercase date mask for the instance's locale, such as `MM/DD/YYYY` for `en-US`.
+   * Returns the override format in uppercase instead when one is set.
+   * @param {string} [locale] - A BCP 47 language tag, such as `fr-FR`. Used only when the instance has no locale, which doesn't happen because the constructor always sets one.
+   * @returns {string} The uppercase date mask.
    */
   getDateMaskFromLocale(locale) {
     // Break out if we have an override format
@@ -111,15 +125,15 @@ export class AuroInputUtilities {
    * @private
    * @param {string} dateString - The date string to parse.
    * @param {string} mask - The date mask to use for parsing.
-   * @returns {string}
+   * @returns {Date}
    */
   parseDateByMask(dateString, mask) {
     return dateFns.parse(dateString, this.toDateFnsMask(mask), new Date());
   }
 
   /**
-   * Configures the mask to be used on the input element based on format and/or type.
-   * IMask tool documentation: https://imask.js.org/.
+   * Gets the IMask options for the inner `<input>` element based on `type` and `format`.
+   * See the IMask documentation at https://imask.js.org/.
    * @private
    * @param {string} type - The input type.
    * @param {string} format - The format of the mask to apply.
@@ -218,7 +232,7 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Determines if the given type and format combination represents a full year/month/day date.
+   * Checks whether the type and format describe a full date with a year, month, and day.
    * @private
    * @param {string} type - The input type.
    * @param {string} format - The date format string.
@@ -231,12 +245,12 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Validates a value against a partial date format (one that lacks yy/mm/dd all three).
-   * Day- and year-only formats (dd/yy/yyyy) are checked as integer ranges; other partial formats use
-   * a date-fns parse + round-trip to confirm both validity and exact formatting.
-   * @param {string} value - The user-facing display value.
-   * @param {string} format - The partial date format string (e.g. "mm/yyyy", "yyyy", "dd").
-   * @returns {boolean}
+   * Checks whether a value is a valid date in a partial date format, meaning one without all of a year, month, and day.
+   * Day-only and year-only formats (`dd`, `yy`, `yyyy`) are checked as number ranges; other partial formats are parsed
+   * with date-fns and formatted back to confirm the date is valid and written exactly in the format.
+   * @param {string} value - The value as shown in the field.
+   * @param {string} format - The partial date format, such as `mm/yyyy`, `yyyy`, or `dd`.
+   * @returns {boolean} True if the value is a valid date in the format; false otherwise.
    */
   isValidPartialDate(value, format) {
     if (!value || !format) {
@@ -274,11 +288,11 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Converts a display string to its model value.
-   * For full date formats, converts the display string to an ISO date string.
+   * Converts the text shown in the field to the value stored in `value`.
+   * For full date formats, converts a complete date to an ISO date string; other text is returned unchanged.
    * @private
-   * @param {string} inputValue - String from the rendered input.
-   * @param {string} format - The date format string.
+   * @param {string} inputValue - The text in the inner `<input>` element.
+   * @param {string} format - The date format.
    * @returns {string}
    */
   toModelValue(inputValue, format) {
@@ -301,11 +315,11 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Converts a model value to a display value for the input element.
-   * For full date formats, converts an ISO model value to the configured display format.
+   * Converts a `Date` to the text shown in the field for a date format.
+   * Returns `undefined` when `valueObject` isn't a valid `Date` or `format` is empty.
    * @private
-   * @param {Date|undefined} valueObject - Date object representation of value.
-   * @param {string} format - The date format string.
+   * @param {Date|undefined} valueObject - The date to format, such as the input's `valueObject`.
+   * @param {string} format - The date format, such as `mm/dd/yyyy`.
    * @returns {string | undefined}
    */
   toFormattedValue(valueObject, format) {
@@ -329,10 +343,10 @@ export class AuroInputUtilities {
 }
 
 /**
- * Derives a locale-aware date format string suitable for use in input masks. This helper exposes the internal AuroInputUtilities locale logic in a simple function form.
+ * Gets the date format a locale uses, such as `mm/dd/yyyy` for `en-US` or `dd.mm.yyyy` for `de-DE`.
  *
- * @param {string} locale - BCP 47 language tag used to determine the date format (e.g. "en-US", "fr-FR").
- * @returns {string} A lowercase date format mask string corresponding to the provided locale.
+ * @param {string} locale - The BCP 47 language tag, such as `en-US` or `fr-FR`. Invalid tags fall back to `en-US`.
+ * @returns {string} The locale's date format in lowercase.
  */
 export function getDateFormatFromLocale (locale) {
   return new AuroInputUtilities({ locale }).

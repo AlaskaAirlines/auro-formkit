@@ -1,30 +1,30 @@
 <p>The component consists of the following elements:</p>
 <ul>
   <li>
-    <strong>trigger:</strong> shows the component label(s), current date value(s), and will render to reflect the state of the component (e.g. <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, <code>invalid</code>). The trigger includes one or two text inputs (depending on whether <code>range</code> is set) that allow the user to type a date directly.
+    <strong>Trigger:</strong> Shows the component label(s), current date value(s), and the state of the component, such as <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, or <code>invalid</code>. The trigger includes one or two text inputs (depending on whether <code>range</code> is set) that allow the user to type a date directly.
   </li>
   <li>
-    <strong>calendar:</strong> a monthly calendar grid rendered in a dropdown bib. Users can navigate between months and select dates by clicking or tapping calendar cells. On smaller viewports the calendar opens in a fullscreen modal dialog.
+    <strong>Calendar:</strong> Shows a monthly calendar grid in a dropdown. Users can navigate between months and select dates by clicking or tapping calendar cells. On smaller viewports the calendar opens in a fullscreen modal dialog.
   </li>
   <li>
-    <strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
+    <strong>Help text:</strong> Shows text below the trigger that explains what to enter. The error message replaces it when validation fails.
   </li>
 </ul>
 <auro-header level="4" id="trigger">Trigger</auro-header>
-<p>The trigger includes the component label(s) and the current date value(s). The label is required to ensure correct behavior with accessibility tools such as screen readers.</p>
-<p>When <code>range</code> is set, two inputs are shown — one for the departure date and one for the return date — separated by a visual divider.</p>
-<p>The trigger is a focusable element and will visually respond to common UI states — <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
-<auro-header level="4" id="triggerConditional">Conditional Elements</auro-header>
+<p>The trigger includes the component label(s) and the current date value(s). The label is required, so screen reader users know what the datepicker is for.</p>
+<p>When <code>range</code> is set, two inputs are shown, one for the start date and one for the end date, separated by a visual divider.</p>
+<p>The trigger is a focusable element and visually responds to common UI states: <strong>Hover</strong> (<code>:hover</code>), <strong>Focus</strong> (<code>:focus</code> and <code>:focus-visible</code>), and <strong>Disabled</strong> (<code>:disabled</code>). The component doesn't have a visual response to the <strong>Active</strong> (<code>:active</code>) state.</p>
+<auro-header level="4" id="triggerConditional">Conditional elements</auro-header>
 <p>The trigger contains the following elements that render conditionally:</p>
 <ul>
   <li>
-    <strong>Calendar icon:</strong> a decorative calendar icon rendered to the left of the input field(s). Provides a visual cue that the component opens a calendar.
+    <strong>Calendar icon:</strong> A decorative calendar icon to the left of the input fields gives a visual cue that the component opens a calendar.
   </li>
   <li>
-    <strong>Clear button:</strong> rendered when the input has a value, allowing the user to clear the current date selection.
+    <strong>Clear button:</strong> Shows when the input has a value and someone hovers over the field or moves focus into it, so they can clear the date.
   </li>
   <li>
-    <strong>Validation error icon:</strong> rendered when the component is in an invalid state, visually indicating a validation problem.
+    <strong>Validation error icon:</strong> Shows when the component is invalid, to flag a validation problem.
   </li>
 </ul>
 <auro-header level="4" id="calendar">Calendar</auro-header>
@@ -34,16 +34,16 @@
   <li>Arrow-key navigation between date cells with automatic cross-month boundary handling.</li>
   <li>Date range highlighting when <code>range</code> is set.</li>
   <li>Disabled dates outside the <code>minDate</code>/<code>maxDate</code> bounds.</li>
-  <li>Blackout dates that are focusable but not selectable.</li>
+  <li>Blackout dates that keyboard users can reach with the arrow keys but can't select.</li>
   <li>Custom cell content via the <code>date_YYYY_MM_DD</code> slot.</li>
   <li>Cell popovers via the <code>popover_YYYY_MM_DD</code> slot.</li>
 </ul>
-<auro-header level="4" id="helpText">Help Text</auro-header>
-<p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers.</p>
-<p>If the component fails validation, the help text will change to show a validation help message instead of the default help text.</p>
+<auro-header level="4" id="helpText">Help text</auro-header>
+<p>Help text isn't required. Add it when people, especially screen reader users, need more context to know what to enter.</p>
+<p>If the component fails validation, the help text changes to show a validation help message instead of the default help text.</p>
 <auro-header level="3" id="colors">Colors</auro-header>
-<auro-header level="4" id="defaultColor">Default Color</auro-header>
-<p>When the component is used on a light background.</p>
+<auro-header level="4" id="defaultColor">Default color</auro-header>
+<p>Use the default colors when the component is on a light background.</p>
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -53,7 +53,7 @@
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="4" id="inverseColor">Inverse Color</auro-header>
+<auro-header level="4" id="inverseColor">Inverse color</auro-header>
 <p>When the component is used on a darker background, set <code>appearance="inverse"</code> to invert the component colors for proper contrast and visibility.</p>
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->

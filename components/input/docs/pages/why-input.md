@@ -1,6 +1,6 @@
 <auro-header level="1" id="overview">Why auro-input?</auro-header>
 
-<p>The native <code>&lt;input&gt;</code> element is the workhorse of HTML forms, but it has significant limitations in styling, validation messaging, input formatting, and accessibility. <code>auro-input</code> addresses these while remaining a drop-in upgrade for common input types.</p>
+<p>The native <code>&lt;input&gt;</code> element is the workhorse of HTML forms, but it has significant limitations in styling, validation messaging, input formatting, and accessibility. <code>auro-input</code> addresses these for common input types. To include its value in form data, place it inside <code>auro-form</code> and set <code>name</code>, because a native <code>&lt;form&gt;</code> doesn't include it.</p>
 
 <auro-header level="2" id="accessibility">Accessibility</auro-header>
 
@@ -9,11 +9,11 @@
 <p><code>auro-input</code> provides:</p>
 
 <ul>
-  <li><strong>Automatic label binding</strong> — The label slot is automatically associated with the input. No <code>for</code>/<code>id</code> wiring required.</li>
-  <li><strong>Dynamic label positioning</strong> — Labels float above the input when focused or populated, providing context without consuming space.</li>
-  <li><strong>Clear button</strong> — An accessible clear button appears when the input has a value, with a customizable ARIA label via the <code>ariaLabel.clear</code> slot.</li>
-  <li><strong>Password toggle</strong> — For <code>type="password"</code>, a show/hide toggle is built in with customizable ARIA labels for both states (<code>ariaLabel.password.show</code>, <code>ariaLabel.password.hide</code>).</li>
-  <li><strong>Validation announcements</strong> — Error messages display in help text with appropriate ARIA roles so screen readers announce validity changes.</li>
+  <li><strong>Automatic label binding</strong>: The label slot is automatically associated with the input. You don't need to wire up <code>for</code> and <code>id</code>.</li>
+  <li><strong>Dynamic label positioning</strong>: In the <code>classic</code> layout, labels float above the input when focused or populated, providing context without consuming space.</li>
+  <li><strong>Clear button</strong>: An accessible clear button appears when the input has a value. Set its accessible name with the <code>ariaLabel.clear</code> slot.</li>
+  <li><strong>Password toggle</strong>: In the <code>classic</code> layout, <code>type="password"</code> adds a show/hide button. Set its accessible name for each state with the <code>ariaLabel.password.show</code> and <code>ariaLabel.password.hide</code> slots.</li>
+  <li><strong>Validation announcements</strong>: Error messages display in help text with appropriate ARIA roles so screen readers announce validity changes.</li>
 </ul>
 
 <auro-header level="2" id="inputMaskingAndFormatting">Input masking and formatting</auro-header>
@@ -23,41 +23,41 @@
 <p><code>auro-input</code> includes IMask integration:</p>
 
 <ul>
-  <li><strong>Format attribute</strong> — Set <code>format="(###) ###-####"</code> for phone numbers, <code>format="mm/dd/yyyy"</code> for dates, or any custom pattern.</li>
-  <li><strong>Auto-formatting</strong> — Characters are formatted as the user types, with cursor position preserved.</li>
-  <li><strong>Date formats</strong> — Supports <code>mm/dd/yyyy</code>, <code>dd/mm/yyyy</code>, <code>yyyy-mm-dd</code> with automatic conversion.</li>
+  <li><strong>Format attribute</strong>: Set <code>format="(000) 000-0000"</code> for phone numbers, <code>format="mm/dd/yyyy"</code> for dates, or any custom pattern.</li>
+  <li><strong>Auto-formatting</strong>: Formats characters as the user types and keeps the cursor in place.</li>
+  <li><strong>Date formats</strong>: Supports formats such as <code>mm/dd/yyyy</code>, <code>dd/mm/yyyy</code>, and <code>yyyy-mm-dd</code>, and stores full dates in <code>value</code> as ISO (<code>YYYY-MM-DD</code>).</li>
 </ul>
 
 <auro-header level="2" id="creditCardDetection">Credit card detection</auro-header>
 
-<p>There is no native way to detect a credit card type from input, apply the correct formatting mask, or display the appropriate card icon.</p>
+<p>Native inputs can't detect a card brand from what's typed, apply the matching format, or show the brand's icon.</p>
 
 <p><code>auro-input</code> with <code>type="credit-card"</code> provides:</p>
 
 <ul>
-  <li><strong>Auto-detection</strong> — Identifies Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits typed.</li>
-  <li><strong>Dynamic formatting</strong> — Applies the correct digit grouping (e.g., 4-4-4-4 for Visa, 4-6-5 for Amex).</li>
-  <li><strong>Card icon</strong> — Displays the detected card brand icon automatically.</li>
+  <li><strong>Auto-detection</strong>: Identifies Visa, Mastercard, American Express, Discover, Diners Club, JCB, China UnionPay, and Alaska Airlines cards from the first digits typed.</li>
+  <li><strong>Dynamic formatting</strong>: Applies the correct digit grouping, such as 4-4-4-4 for Visa or 4-6-5 for Amex.</li>
+  <li><strong>Card icon</strong>: Shows the detected card brand's icon when the <code>icon</code> attribute is set.</li>
 </ul>
 
 <auro-header level="2" id="validation">Validation</auro-header>
 
-<p>Native input validation provides <code>required</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>maxlength</code>, and <code>pattern</code>, but error messages are browser-controlled and cannot be customized.</p>
+<p>Native input validation provides <code>required</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>maxlength</code>, and <code>pattern</code>, but error messages are browser-controlled and can't be customized.</p>
 
 <p><code>auro-input</code> provides:</p>
 
 <ul>
-  <li>Custom error messages for every validity state: <code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityTooLong</code>, <code>setCustomValidityTooShort</code>, <code>setCustomValidityBadInput</code>, <code>setCustomValidityCustomError</code>, <code>setCustomValidityForType</code></li>
-  <li>Type-specific validation (email format, credit card format, phone format, date format)</li>
-  <li>Validation timing control: on blur (default), on every input (<code>validateOnInput</code>), or disabled (<code>noValidate</code>)</li>
-  <li>Programmatic vs. user input distinction — the component tracks whether a value change was user-initiated or programmatic</li>
+  <li>Custom error messages for each kind of error: <code>setCustomValidityValueMissing</code>, <code>setCustomValidityRangeOverflow</code>, <code>setCustomValidityRangeUnderflow</code>, <code>setCustomValidityTooLong</code>, <code>setCustomValidityTooShort</code>, <code>setCustomValidityPatternMismatch</code>, <code>setCustomValidityCustomError</code>, and <code>setCustomValidityForType</code></li>
+  <li>Type-specific validation for email addresses, card numbers, and dates</li>
+  <li>Validation timing control: when the input loses focus (default), also on every keystroke (<code>validateOnInput</code>), or not when the input loses focus (<code>noValidate</code>)</li>
+  <li>Programmatic vs. user input distinction: the component tracks whether a value change was user-initiated or programmatic</li>
 </ul>
 
 <auro-header level="2" id="displayValueMasking">Display value masking</auro-header>
 
-<p>Native inputs show the raw value at all times. There is no way to display a formatted or alternative representation when the input is not focused.</p>
+<p>Native inputs show the raw value at all times. They can't show a formatted or alternative version of the value when the input doesn't have focus.</p>
 
-<p><code>auro-input</code> supports a <code>displayValue</code> slot that shows custom HTML when the input is blurred, hiding the raw value. This is useful for displaying formatted currency, masked account numbers, or rich content while keeping the underlying value clean for submission.</p>
+<p><code>auro-input</code> supports a <code>displayValue</code> slot that shows custom HTML in place of the raw value when the input has a value and doesn't have focus. This is useful for displaying formatted currency, masked account numbers, or rich content while keeping the underlying value clean for submission.</p>
 
 <auro-header level="2" id="layoutOptions">Layout options</auro-header>
 
@@ -66,10 +66,9 @@
 <p><code>auro-input</code> offers:</p>
 
 <ul>
-  <li><strong>Three layouts</strong> — Classic (floating label), emphasized (prominent label), and snowflake (custom positioning)</li>
-  <li><strong>Shape variants</strong> — Box, pill, pill-left, pill-right for different visual contexts</li>
-  <li><strong>Nested mode</strong> — Removes borders and hides help/error text for embedding inside other components</li>
-  <li><strong>Simple mode</strong> — Borderless variant for inline use</li>
+  <li><strong>Three layouts</strong>: <code>classic</code> (floating label), <code>emphasized</code> (prominent label), and <code>snowflake</code> (custom positioning)</li>
+  <li><strong>Shape variants</strong>: <code>box</code>, <code>pill</code>, <code>pill-left</code>, and <code>pill-right</code>, for different visual contexts</li>
+  <li><strong>Simple mode</strong>: Borderless variant for use inside other components</li>
 </ul>
 
 <auro-header level="2" id="designSystemIntegration">Design system integration</auro-header>
@@ -81,7 +80,7 @@
 <ul>
   <li>Consistent visual language across all browsers and platforms</li>
   <li>Light and dark theme support (<code>appearance</code>)</li>
-  <li>CSS <code>::part()</code> selectors for granular styling (<code>wrapper</code>, <code>label</code>, <code>input</code>, <code>helpText</code>, <code>accentIcon</code>, <code>iconContainer</code>, <code>displayValue</code>)</li>
+  <li>CSS <code>::part()</code> selectors for granular styling (such as <code>wrapper</code>, <code>label</code>, <code>input</code>, <code>helpText</code>, <code>accentIcon</code>, and <code>displayValue</code>)</li>
   <li>Design token integration for colors, spacing, and typography</li>
 </ul>
 
@@ -109,7 +108,7 @@
     <tr>
       <td>Credit card detection</td>
       <td>No</td>
-      <td>Auto-detect with icon and formatting</td>
+      <td>Auto-detect and formatting, with an optional icon</td>
     </tr>
     <tr>
       <td>Custom validation messages</td>
@@ -124,7 +123,7 @@
     <tr>
       <td>Password show/hide</td>
       <td>No</td>
-      <td>Built-in toggle</td>
+      <td>Built-in toggle in the <code>classic</code> layout</td>
     </tr>
     <tr>
       <td>Display value masking</td>
@@ -134,7 +133,7 @@
     <tr>
       <td>Multiple layouts</td>
       <td>No</td>
-      <td>Classic, emphasized, snowflake</td>
+      <td><code>classic</code>, <code>emphasized</code>, and <code>snowflake</code></td>
     </tr>
     <tr>
       <td>Consistent cross-browser UI</td>

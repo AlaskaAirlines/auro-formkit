@@ -1,8 +1,8 @@
-<p>Once installed, the component can be used in your project by importing the component's registered module:</p>
+<p>After you install the package, import the component's registered module to use it in your project:</p>
 ```js
 import '@aurodesignsystem/auro-formkit/auro-checkbox';
 ```
-<p>This import registers the <code>&lt;auro-checkbox&gt;</code> and <code>&lt;auro-checkbox-group&gt;</code> custom elements globally. You can then use them in your HTML:</p>
+<p>This import registers the <code>&lt;auro-checkbox&gt;</code> and <code>&lt;auro-checkbox-group&gt;</code> custom elements globally. Then use them in your HTML:</p>
 ```html
 <auro-checkbox-group>
   <span slot="legend">Choose your options</span>

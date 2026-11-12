@@ -1,14 +1,14 @@
-<auro-header level="1" id="overview">Radio - Overview and UX Guide</auro-header>
+<auro-header level="1" id="overview">Radio: Overview and UX guide</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-      <auro-anchorlink fluid href="#userStories">User Stories</auro-anchorlink>
-      <auro-anchorlink fluid href="#selectOption" class="level2 body-xs">Select an Option</auro-anchorlink>
-      <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#requiredSelection" class="level2 body-xs">Required Selection</auro-anchorlink>
+      <auro-anchorlink fluid href="#userStories">User stories</auro-anchorlink>
+      <auro-anchorlink fluid href="#selectOption" class="level2 body-xs">Select an option</auro-anchorlink>
+      <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset value</auro-anchorlink>
+      <auro-anchorlink fluid href="#requiredSelection" class="level2 body-xs">Required selection</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -26,7 +26,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </auro-accordion>
       <section>
-        <auro-header level="2" id="userStories">User Stories</auro-header>
+        <auro-header level="2" id="userStories">User stories</auro-header>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>

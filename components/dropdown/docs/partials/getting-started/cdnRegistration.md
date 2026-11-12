@@ -1,4 +1,4 @@
-The dropdown component can be loaded via CDN without a build step:
+Load the dropdown from a CDN, without a build step:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-dropdown/+esm" type="module"></script>
@@ -7,10 +7,10 @@ The dropdown component can be loaded via CDN without a build step:
 Then use the element in your HTML:
 
 ```html
-<auro-dropdown aria-label="custom label">
-  Lorem ipsum solar
+<auro-dropdown>
+  Seattle (SEA) to Anchorage (ANC), departs 8:15 AM
   <div slot="trigger">
-    Trigger
+    Flight details
   </div>
 </auro-dropdown>
 ```

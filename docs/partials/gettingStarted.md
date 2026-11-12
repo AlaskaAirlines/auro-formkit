@@ -1,6 +1,6 @@
-### Getting Started
+### Getting started
 
-Each component contains its own Getting Started documentation.
+Each component has its own getting started guide:
 
 <ul>
   <li><a href="https://auro.alaskaair.com/components/auro/checkbox/getting-started">checkbox</a></li>

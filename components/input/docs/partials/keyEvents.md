@@ -2,5 +2,5 @@
 <!-- All text input behavior is delegated to the native <input> element. -->
 <!-- The clear button intercepts keydown with stopPropagation() to prevent parent components from handling the event. -->
 <div class="note">
-  <p><strong>Note:</strong> The <code>&lt;auro-input&gt;</code> component delegates all keyboard behavior to the native <code>&lt;input&gt;</code> element. No custom key event handlers are implemented at this time. The clear button uses <code>stopPropagation()</code> on <code>keydown</code> to prevent parent components (e.g., <code>&lt;auro-select&gt;</code>, <code>&lt;auro-combobox&gt;</code>) from intercepting key events while the clear button has focus.</p>
+  <p><strong>Note:</strong> The <code>&lt;auro-input&gt;</code> component delegates all keyboard behavior to the native <code>&lt;input&gt;</code> element. The component doesn't add any key shortcuts of its own. The clear button calls <code>stopPropagation()</code> on <code>keydown</code>, so parent components, such as <code>&lt;auro-combobox&gt;</code> and <code>&lt;auro-datepicker&gt;</code>, don't handle keys pressed while the clear button has focus.</p>
 </div>

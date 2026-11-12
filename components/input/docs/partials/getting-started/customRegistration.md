@@ -9,12 +9,12 @@ import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
 AuroInput.register('[custom]-input');
 ```
 
-<p>This will create a new custom element <code>&lt;custom-input&gt;</code> that behaves exactly like <code>&lt;auro-input&gt;</code>, allowing both to coexist on the same page without interfering with each other.</p>
+<p>This creates a new custom element, such as <code>&lt;custom-input&gt;</code>, that behaves exactly like <code>&lt;auro-input&gt;</code>, allowing both to coexist on the same page without interfering with each other.</p>
 
 ```html
   <custom-input>
     <span slot="label">Label</span>
-    <span slot="helpText">Help Text</span>
+    <span slot="helpText">Help text</span>
   </custom-input>
 ```
 </auro-accordion>

@@ -5,7 +5,7 @@ import { dirname, resolve } from 'path';
 /**
  * Writes a version file for the specified dependency package.
  * Supports workspace and node_modules packages.
- * @param {string} pkg Dependency to write version file for
+ * @param {string} pkg - The name of the dependency package to write a version file for, such as `@aurodesignsystem/auro-button`.
  * @returns {Promise<void>}
  */
 export async function writeDepVersionFile(pkg) {

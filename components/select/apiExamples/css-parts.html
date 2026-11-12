@@ -1,7 +1,4 @@
 <style>
-  auro-select.css-parts-demo::part(dropdownTrigger) {
-    border-color: orange;
-  }
   auro-select.css-parts-demo::part(dropdownChevron) {
     color: purple;
   }
@@ -13,11 +10,13 @@
   }
 </style>
 <auro-select class="css-parts-demo">
-  <span slot="label">CSS Parts Example</span>
-  <span slot="helpText">This select has custom styles applied via CSS Shadow Parts.</span>
+  <span slot="ariaLabel.bib.close">Close popup</span>
+  <span slot="bib.fullscreen.headline">CSS parts example</span>
+  <span slot="label">CSS parts example</span>
+  <span slot="helpText">This select has custom styles applied through CSS shadow parts.</span>
   <auro-menu>
-    <auro-menuoption value="one">Option One</auro-menuoption>
-    <auro-menuoption value="two">Option Two</auro-menuoption>
-    <auro-menuoption value="three">Option Three</auro-menuoption>
+    <auro-menuoption value="one">Option one</auro-menuoption>
+    <auro-menuoption value="two">Option two</auro-menuoption>
+    <auro-menuoption value="three">Option three</auro-menuoption>
   </auro-menu>
 </auro-select>

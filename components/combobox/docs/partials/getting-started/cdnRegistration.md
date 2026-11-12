@@ -2,10 +2,12 @@
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-combobox/+esm"></script>
 ```
-<p>This script registers the <code>&lt;auro-combobox&gt;</code> custom element globally. You can then use it in your HTML:</p>
+<p>This script registers the <code>&lt;auro-combobox&gt;</code> custom element globally. Then use it in your HTML:</p>
 ```html
 <auro-combobox>
+  <span slot="bib.fullscreen.headline">Choose an option</span>
   <span slot="label">Choose an option</span>
+  <span slot="ariaLabel.input.clear">Clear selection</span>
   <auro-menu>
     <auro-menuoption value="option1">Option 1</auro-menuoption>
     <auro-menuoption value="option2">Option 2</auro-menuoption>

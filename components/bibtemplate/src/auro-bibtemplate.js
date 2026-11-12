@@ -26,17 +26,33 @@ import { AuroHeader } from '@aurodesignsystem/auro-header/class';
 import headerVersion from './headerVersion.js';
 
 /**
- * The `auro-bibtemplate` element provides users a template for creating modal dialog elements.
+ * Lays out the content of a dropdown bib, adding a headline, close button, and footer when the bib is shown fullscreen on small screens. Auro form elements such as `auro-select`, `auro-combobox`, `auro-datepicker`, and `auro-counter-group` use it inside their bibs.
+ *
+ * **Key capabilities**
+ * - **Fullscreen layout**: `isFullscreen` adds a header row with the `header` slot and a close button, the `subheader` region, and the footer.
+ * - **Large headline**: `large` shows the fullscreen headline in the larger display heading style.
+ * - **Footer outside fullscreen**: `showFooter` shows the `footer` slot when the bib isn't fullscreen.
+ * - **Close button**: In the fullscreen layout, clicking the close button fires `close-click`, and the `ariaLabel.close` slot sets its accessible name.
+ *
+ * **Example**
+ * ```html
+ * <auro-bibtemplate isfullscreen>
+ *   <span slot="header">Choose a departure city</span>
+ *   <span slot="ariaLabel.close">Close city list</span>
+ *   <p>Bib content</p>
+ * </auro-bibtemplate>
+ * ```
+ * @summary A layout for dropdown bib content that adds a headline, close button, and footer when the bib is fullscreen.
  * @customElement auro-bibtemplate
  *
- * @slot default - The default slot for the main content.
- * @slot header - Slot for the header content.
- * @slot subheader - Slot for the subheader content.
- * @slot footer - Slot for the footer content.
- * @slot ariaLabel.close - Slot for the close button aria-label.
- * @csspart bibtemplate - The outermost bibtemplate container element.
+ * @slot default - Main content of the bib, such as a menu or calendar. {@requiredWhen always} {@category ui}
+ * @slot header - Headline text shown at the top of the fullscreen layout, next to the close button. {@relevantWhen isFullscreen} {@requiredWhen isFullscreen} {@category ui}
+ * @slot subheader - Content shown below the headline in the fullscreen layout. {@relevantWhen isFullscreen} {@category ui}
+ * @slot footer - Content shown at the bottom of the bib. Appears only when `isFullscreen` or `showFooter` is set. {@category ui}
+ * @slot ariaLabel.close - Text screen readers announce for the close button in the fullscreen layout, for example "Close city list". Defaults to "Close". {@relevantWhen isFullscreen} {@category a11y}
+ * @csspart bibtemplate - The outermost container `<div>`, which wraps the header, body, and footer.
  * @event close-click - Notifies when the close button is clicked.
- * @event auro-bibtemplate-connected - Notifies that the bibtemplate has connected to the DOM, passing a reference to the element in the event detail.
+ * @event auro-bibtemplate-connected - Notifies once, after the bibtemplate first renders, passing a reference to the element in `detail.element`.
  */
 export class AuroBibtemplate extends LitElement {
 
@@ -78,7 +94,8 @@ export class AuroBibtemplate extends LitElement {
     return {
 
       /**
-       * If declared, the bibtemplate renders in fullscreen mode, exposing the header, subheader, and footer regions.
+       * Shows the fullscreen layout, with a header row that holds the `header` slot and a close button, plus the `subheader` and `footer` regions. The dropdown bib turns this on while the bib is shown fullscreen.
+       * @category ui
        */
       isFullscreen: {
         type: Boolean,
@@ -87,7 +104,9 @@ export class AuroBibtemplate extends LitElement {
       },
 
       /**
-       * If declared, the fullscreen headline renders using the larger display heading style.
+       * Shows the fullscreen headline in the larger display heading style. Applies only when `isFullscreen` is set.
+       * @relevantWhen isFullscreen
+       * @category ui
        */
       large: {
         type: Boolean,
@@ -95,7 +114,9 @@ export class AuroBibtemplate extends LitElement {
       },
 
       /**
-       * If declared, the footer slot will be rendered even when not in fullscreen mode.
+       * Shows the `footer` slot even when the bib isn't fullscreen. The fullscreen layout always shows it.
+       * @relevantWhen !isFullscreen
+       * @category ui
        */
       showFooter: {
         type: Boolean,
@@ -107,11 +128,11 @@ export class AuroBibtemplate extends LitElement {
 
   // function to define props used within the scope of this component
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-bibtemplate"] - The name of element that you want to register to.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-bibtemplate"] - The tag name to register the element under.
    *
    * @example
-   * AuroCheckbox.register("custom-bibtemplate") // this will register this element to <custom-bibtemplate/>
+   * AuroBibtemplate.register("custom-bibtemplate") // registers as <custom-bibtemplate>
    *
    */
   static register(name = "auro-bibtemplate") {
@@ -119,8 +140,8 @@ export class AuroBibtemplate extends LitElement {
   }
 
   /**
-   * Prevents scrolling of the body when touching empty areas of the component.
-   * @param {Event} event - The touchmove event.
+   * Called when a `touchmove` event reaches the element. Stops the page behind the bib from scrolling when the touch is on the bibtemplate's own layout, such as its padding, instead of on slotted content.
+   * @param {Event} event - The `touchmove` event.
    * @returns {void}
    */
   preventBodyScroll(event) {
@@ -143,8 +164,7 @@ export class AuroBibtemplate extends LitElement {
   }
 
   /**
-   * Focuses the close button inside the bibtemplate's shadow DOM.
-   * Used by parent components to set initial focus when the fullscreen dialog opens.
+   * Moves keyboard focus to the close button. Parent components such as `auro-select` call it when the fullscreen layout opens, so focus starts on the close button. Does nothing when `isFullscreen` isn't set.
    * @returns {void}
    */
   focusCloseButton() {
@@ -154,13 +174,17 @@ export class AuroBibtemplate extends LitElement {
     }
   }
 
+  /**
+   * Called when the close button is clicked, and fires `close-click`.
+   * @returns {void}
+   */
   onCloseButtonClick() {
     this.dispatchEvent(new Event("close-click", { bubbles: true,
       composed: true }));
   }
 
   /**
-   * Exposes CSS parts for styling from parent components.
+   * Exports the `bibtemplate` part as `dropdownBibTemplate`, so a parent component's styles can reach it.
    * @returns {void}
    */
   exposeCssParts() {

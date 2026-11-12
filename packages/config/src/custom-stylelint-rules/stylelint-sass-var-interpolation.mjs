@@ -7,8 +7,8 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 });
 
 /**
- * Stylelint rule to enforce Sass variables in var() fallbacks are interpolated.
- * @param {boolean} primaryOption - Whether the rule is enabled.
+ * Creates the Stylelint rule that reports a Sass variable used without `#{}` interpolation as the `var()` fallback in a custom property declaration.
+ * @param {boolean} primaryOption - If true, the rule runs. If false, it reports nothing.
  * @returns {Function} The rule function that processes CSS and reports violations.
  */
 const ruleFunction = (primaryOption) => (root, result) => {

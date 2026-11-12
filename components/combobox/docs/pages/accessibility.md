@@ -1,28 +1,26 @@
-<auro-header level="1" id="overview">Combobox - Accessibility</auro-header>
+<auro-header level="1" id="overview">Combobox: Accessibility</auro-header>
 <div class="contentWrapper">
   <div class="mainContent">
     <div class="scrollWrapper">
 
 The `auro-combobox` component follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/" target="_blank">W3C APG Combobox</a> pattern. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
 
-For keyboard interaction details, see the <auro-hyperlink href="keyboard-behavior">Keyboard Behavior</auro-hyperlink> page.
+For keyboard interaction details, see the <auro-hyperlink href="keyboard-behavior">Keyboard behavior</auro-hyperlink> page.
 
-<auro-header level="2" id="ariaRolesAndAttributes">ARIA Roles and Attributes</auro-header>
+<auro-header level="2" id="ariaRolesAndAttributes">ARIA roles and attributes</auro-header>
 
 <auro-header level="3" id="trigger">Trigger</auro-header>
 
-The trigger element exposes the following ARIA attributes:
+The trigger input exposes the following ARIA attributes. It gets its accessible name from the `label` slot through a native `<label>` element.
 
 | Attribute | Value | Description |
 |---|---|---|
 | `role` | `combobox` | Identifies the trigger as a combobox control. |
 | `aria-expanded` | `true` / `false` | Reflects whether the bib (listbox) is currently open. |
 | `aria-controls` | `{bib-id}` | References the bib element that the trigger controls. |
-| `aria-labelledby` | `{label-id}` | Associates the trigger with its visible label text. |
 | `aria-activedescendant` | `{option-id}` | Points to the currently highlighted option when the bib is open. Cleared when the bib closes. |
-| `aria-autocomplete` | `list` / `both` | Indicates the type of autocomplete behavior provided by the combobox. |
 
-<auro-header level="3" id="menuOptions">Menu Options</auro-header>
+<auro-header level="3" id="menuOptions">Menu options</auro-header>
 
 Each menu option exposes the following ARIA attributes:
 
@@ -33,12 +31,12 @@ Each menu option exposes the following ARIA attributes:
 | `aria-setsize` | `{count}` | Total number of options available, so screen readers can announce "option X of Y." |
 | `aria-posinset` | `{index}` | The 1-based position of the option within the set. |
 
-<auro-header level="3" id="helpTextAndErrors">Help Text and Errors</auro-header>
+<auro-header level="3" id="helpTextAndErrors">Help text and errors</auro-header>
 
-- Help text is associated with the component so screen readers can announce contextual guidance.
-- When validation fails, the error message is rendered with `role="alert"` and `aria-live="assertive"` to ensure it is announced immediately.
+- The input doesn't currently reference the `helpText` slot content with `aria-describedby`, so screen readers don't read the help text when the input gets focus. While the combobox is invalid, they read the error message instead.
+- When validation fails, the error message is rendered with `role="alert"` and `aria-live="assertive"` so screen readers announce it immediately.
 
-<auro-header level="2" id="activeDescendant">Active Descendant</auro-header>
+<auro-header level="2" id="activeDescendant">Active descendant</auro-header>
 
 Focus management in `auro-combobox` follows the **active descendant** pattern rather than moving DOM focus between options:
 
@@ -46,42 +44,38 @@ Focus management in `auro-combobox` follows the **active descendant** pattern ra
 2. Arrow keys update `aria-activedescendant` on the input to reference the currently highlighted option.
 3. This allows screen readers to announce each option as the user navigates without moving focus away from the input.
 
-When the bib closes, `aria-activedescendant` is cleared so stale references are not announced.
+When the bib closes, `aria-activedescendant` is cleared so stale references aren't announced.
 
-<auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
+<auro-header level="2" id="screenReaderAnnouncements">Screen reader announcements</auro-header>
 
 The component uses a visually hidden live region (`aria-live="polite"`) to announce state changes:
 
-- **Option highlighted** — When an option becomes active (via arrow keys or type-ahead), the live region announces the option text along with its selected state (e.g. "Apples, not selected").
-- **Option selected** — After an option is selected, the live region announces the selected value (e.g. "Apples, selected"). This announcement is slightly delayed to avoid being overridden by the bib's collapse announcement.
+- **Option highlighted**: In the fullscreen bib, when an option becomes active, the live region announces the option text, its selected state, and its position, for example "Apples, not selected, 1 of 5". In the dropdown bib, screen readers read the active option through `aria-activedescendant` instead.
+- **Option selected**: After an option is selected, the live region announces the selected value, for example "Apples, selected". This announcement is slightly delayed so the bib's collapse announcement doesn't override it.
 
-<auro-header level="2" id="accessibleLabels">Accessible Labels</auro-header>
+<auro-header level="2" id="accessibleLabels">Accessible labels</auro-header>
 
-- The `label` slot content is used as the accessible name for both the input (via `aria-labelledby`) and the menu (via `aria-label`).
-- A label is required. Without it, assistive technology users will not have context for what the combobox controls.
-- The `(optional)` label is automatically appended when the `required` attribute is not set.
+- The `label` slot content is the accessible name for the input, through a native `<label>` element, and for the fullscreen dialog.
+- A label is required. Without it, screen reader users don't know what the combobox is for.
+- When the `required` attribute isn't set, the combobox adds "(optional)" after the label. Change that text with the `optionalLabel` slot.
 
-<auro-header level="2" id="fullscreenBehavior">Fullscreen (Modal) Behavior</auro-header>
+<auro-header level="2" id="fullscreenBehavior">Fullscreen (modal) behavior</auro-header>
 
 On smaller viewports, the bib opens as a fullscreen modal dialog:
 
-- The dialog is opened with `showModal()`, which provides **native focus trapping** — only elements inside the dialog are reachable via Tab.
+- The dialog is opened with `showModal()`, which provides **native focus trapping**: only elements inside the dialog are reachable with Tab.
 - Content outside the dialog is automatically made **inert** by the browser, preventing interaction with the page behind it.
-- The dialog receives an accessible label derived from the component's `label` slot text via `aria-labelledby`.
-- A close button inside the dialog is focused when the modal opens, giving screen reader users an immediate action to dismiss it.
+- The dialog receives an accessible label derived from the component's `label` slot text through `aria-labelledby`.
+- When the dialog opens, focus moves to the input inside it, so the user can keep typing.
 - Touch scrolling on the page behind the dialog is blocked to prevent the background from scrolling into view.
 
-<auro-header level="2" id="reducedMotion">Reduced Motion</auro-header>
+<auro-header level="2" id="reducedMotion">Reduced motion</auro-header>
 
-The component respects the `prefers-reduced-motion` media query. When the user has requested reduced motion, scroll animations (e.g. scrolling the selected or active option into view) use instant scrolling instead of smooth scrolling.
+The component respects the `prefers-reduced-motion` media query. When the user has requested reduced motion, scrolling the active option into view is instant instead of smooth.
 
-<auro-header level="2" id="formParticipation">Form Participation</auro-header>
+<auro-header level="2" id="formParticipation">Form participation</auro-header>
 
-A hidden native `<input>` element is rendered alongside the custom component with `aria-hidden="true"`. This element:
-
-- Participates in HTML form submissions, ensuring the selected value is included in form data.
-- Supports the `required` and `disabled` attributes.
-- Is invisible and unreachable by assistive technology — all user interaction goes through the custom component.
+A native `<form>` doesn't include the combobox's value, because its input is inside shadow DOM. Inside an `auro-form`, the form reads the combobox's `value` and `validity` using its `name` attribute, and skips the combobox while it's `disabled`.
 
     </div>
   </div>

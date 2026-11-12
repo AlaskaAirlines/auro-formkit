@@ -2,15 +2,23 @@ import { html } from 'lit';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
+/**
+ * Helpers the datepicker and its calendar use to set the month the calendar shows, and to choose and render the calendar's months.
+ */
 export class UtilitiesCalendarRender {
   constructor() {
+
+    /**
+     * The date helpers these methods use.
+     * @private
+     */
     this.util = new AuroDatepickerUtilities();
   }
 
   /**
-   * Attempt to update the central date but only if the date is a valid date.
-   * @param {Object} elem - The element to set the centralDate on.
-   * @param {String} date - The date to set the centralDate to.
+   * Sets `centralDate` to the first day of the date's month, when the date is valid.
+   * @param {Object} elem - The element to set `centralDate` on.
+   * @param {string|Date|number} date - The date whose month to show: an ISO date string, a `Date` object, or a timestamp in milliseconds.
    * @private
    */
   updateCentralDate(elem, date) {
@@ -34,10 +42,10 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Determine how many months to render based on the defined calendar range.
+   * Determines how many months to render based on the defined calendar range.
    * @param {Object} elem - The auro-calendar element.
    * @private
-   * @returns {Number} Returns the number of months between the calendarStartDate and the calendarEndDate.
+   * @returns {Number|undefined} The number of months from `calendarStartDate` through `calendarEndDate`, or undefined when either isn't set.
    */
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {
@@ -55,9 +63,9 @@ export class UtilitiesCalendarRender {
   /**
    * Determines how many calendar months can be rendered based on the screen size and defined range.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - True if it's to render for mobile view.
+   * @param {Boolean} isMobile - If true, sizes the calendar for the fullscreen mobile view. If false, sizes it for the dropdown.
    * @private
-   * @returns {Number} Returns the maximum number of months that can be rendered.
+   * @returns {Number} The maximum number of months that can be rendered.
    */
   maximumRenderableMonths(elem, isMobile) {
     const definedRangeMonths = this.determineDefinedCalendarRange(elem);
@@ -89,7 +97,7 @@ export class UtilitiesCalendarRender {
   /**
    * Determines the number of months rendered inside the calendar.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - True if it's to render for mobile view.
+   * @param {Boolean} isMobile - If true, sizes the calendar for the fullscreen mobile view. If false, sizes it for the dropdown.
    * @private
    * @returns {void}
    */
@@ -114,7 +122,7 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Determine which month is to be rendered first.
+   * Determines which month to render first.
    * @param {Object} elem - The auro-calendar element.
    * @private
    * @returns {void}
@@ -136,12 +144,12 @@ export class UtilitiesCalendarRender {
   }
 
   /**
-   * Renders one auro-calendar-month HTML for the given month/date combination.
+   * Renders an `auro-formkit-calendar-month` element for one month.
    * @private
    * @param {Object} elem - The auro-calendar element.
-   * @param {Number} month - Month the calendar displays.
-   * @param {Number} year - Year the calendar displays.
-   * @returns {Object} Returns the auro-calendar-month HTML.
+   * @param {Number} month - The month the calendar displays.
+   * @param {Number} year - The year the calendar displays.
+   * @returns {Object} The `auro-formkit-calendar-month` template.
    */
   renderCalendar(elem, month, year) {
     return html`

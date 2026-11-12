@@ -1,1 +1,1 @@
-The `<auro-form>` element should be used in situations where users want to build HTML forms.
+Use `<auro-form>` when you build a form from Auro form elements and want their values, validity, and submit and reset buttons handled together.

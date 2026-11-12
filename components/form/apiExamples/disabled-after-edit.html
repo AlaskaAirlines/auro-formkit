@@ -10,7 +10,7 @@
   <auro-button type="reset">Reset</auro-button>
 </auro-form>
 
-<output id="disableAfterEditOutput" aria-live="polite">Type something, then click "Disable field". The form correctly reports as non-initial, Reset stays enabled, and the field is excluded from the submit payload.</output>
+<output id="disableAfterEditOutput" aria-live="polite">Type something, then click "Disable field". <code>isInitialState</code> stays <code>false</code>, the reset button stays on, and the form leaves the field out of the <code>submit</code> event.</output>
 
 <style>
   #disableAfterEditOutput {

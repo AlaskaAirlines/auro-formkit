@@ -1,17 +1,17 @@
-<auro-header level="1" id="overview">Dropdown - Getting Started</auro-header>
+<auro-header level="1" id="overview">Dropdown: Getting started</auro-header>
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
       <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
+      <auro-anchorlink fluid href="#minimalConfig">Minimal configuration</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slotTrigger" class="level2 body-xs">Trigger</auro-anchorlink>
-      <auro-anchorlink fluid href="#slotHelpText" class="level2 body-xs">Help Text</auro-anchorlink>
+      <auro-anchorlink fluid href="#slotHelpText" class="level2 body-xs">Help text</auro-anchorlink>
       <auro-anchorlink fluid href="#functions">Functions</auro-anchorlink>
       <auro-anchorlink fluid href="#fnShow" class="level2 body-xs">show()</auro-anchorlink>
       <auro-anchorlink fluid href="#fnHide" class="level2 body-xs">hide()</auro-anchorlink>
@@ -28,8 +28,8 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="minimalConfig">Minimal Configuration</auro-header>
-        <p>The most basic use of <code>auro-dropdown</code> requires content in the default slot and a trigger element in the <code>trigger</code> slot. An accessible label must also be provided via <code>aria-label</code>, <code>aria-labelledby</code>, or the <code>label</code> slot.</p>
+        <auro-header level="2" id="minimalConfig">Minimal configuration</auro-header>
+        <p>The most basic use of <code>auro-dropdown</code> requires content in the default slot and a trigger element in the <code>trigger</code> slot. The <code>trigger</code> slot content also names the trigger for screen readers, so make sure it describes what the dropdown opens.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -43,7 +43,7 @@
       <section>
         <auro-header level="2" id="slots">Slots</auro-header>
         <auro-header level="3" id="slotTrigger">Trigger</auro-header>
-        <p>The <code>trigger</code> slot defines the clickable element that toggles the dropdown bib. Any valid HTML can be placed in this slot.</p>
+        <p>The <code>trigger</code> slot holds the content people select to open and close the bib. It accepts any valid HTML.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-button.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -53,8 +53,8 @@
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-button.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="slotHelpText">Help Text</auro-header>
-        <p>Content defined in the <code>helpText</code> slot will be rendered left aligned below the trigger.</p>
+        <auro-header level="3" id="slotHelpText">Help text</auro-header>
+        <p>Content in the <code>helpText</code> slot appears below the trigger, aligned to the left, or centered in the <code>snowflake</code> layout.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/help-text.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

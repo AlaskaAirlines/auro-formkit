@@ -20,22 +20,22 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-<code>&lt;auro-checkbox&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> for the purpose of allowing users to select one or more options of a limited number of choices.
+<code>&lt;auro-checkbox&gt;</code> is an <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that lets people select one or more options from a short list of choices.
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Checkbox Use Cases
+## Checkbox use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The <code>&lt;auro-checkbox&gt;</code> element should be used in situations where users may:
+Use the <code>&lt;auro-checkbox&gt;</code> element when people need to:
 
-* Be filling out a form
-* Need to select one or more options
+* Fill out a form
+* Select one or more options
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Getting Started
+## Getting started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeGettingStarted.md -->
-For Getting Started instructions, visit the [auro-checkbox Getting Started page](https://auro.alaskaair.com/components/auro/checkbox/getting-started).
+For getting started instructions, visit the [`auro-checkbox` getting started page](https://auro.alaskaair.com/components/auro/checkbox/getting-started).
 <!-- AURO-GENERATED-CONTENT:END -->

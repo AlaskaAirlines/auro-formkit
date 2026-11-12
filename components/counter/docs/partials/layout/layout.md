@@ -1,10 +1,10 @@
-<p>The counter component consists of the following key elements:</p>
+<p>The counter is made up of these parts:</p>
 <ul>
-  <li><strong>Counter Label</strong> — The main label text (default slot) identifying what is being counted</li>
-  <li><strong>Description</strong> — Optional supplementary text below the label (description slot)</li>
-  <li><strong>Increment Button</strong> — Increases the counter value by 1</li>
-  <li><strong>Decrement Button</strong> — Decreases the counter value by 1</li>
-  <li><strong>Value Display</strong> — Shows the current numeric value</li>
-  <li><strong>Help Text</strong> — Optional guidance text below the counter (helpText slot)</li>
+  <li><strong>Label</strong>: The text in the default slot, which names what's being counted.</li>
+  <li><strong>Description</strong>: Optional supporting text below the label, set with the <code>description</code> slot.</li>
+  <li><strong>Minus button</strong>: Lowers the value by 1.</li>
+  <li><strong>Value</strong>: Shows the current number.</li>
+  <li><strong>Plus button</strong>: Raises the value by 1.</li>
+  <li><strong>Help text</strong>: Optional guidance below the counter, set with the <code>helpText</code> slot.</li>
 </ul>
-<p>In a <strong>counter group</strong>, multiple counters are rendered together. When used with the <code>isDropdown</code> attribute, the group appears as a collapsible dropdown with a trigger element showing a label and summary of values.</p>
+<p>A <strong>counter group</strong> shows several counters together. With the <code>isDropdown</code> attribute, the group appears as a dropdown whose trigger shows a label and a summary of the counters' values.</p>

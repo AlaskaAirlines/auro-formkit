@@ -9,11 +9,11 @@
 <p><code>auro-counter</code> provides:</p>
 
 <ul>
-  <li><strong>ARIA spinbutton pattern</strong> — The component uses <code>role="spinbutton"</code> with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, and <code>aria-valuetext</code> for complete screen reader semantics.</li>
-  <li><strong>Labeled controls</strong> — Increment and decrement buttons have customizable ARIA labels via <code>ariaLabel.plus</code> and <code>ariaLabel.minus</code> slots.</li>
-  <li><strong>Keyboard shortcuts</strong> — Arrow Up/Down, Ctrl+Arrow, and +/- keys all increment and decrement the value. These shortcuts go beyond what native number inputs provide.</li>
-  <li><strong>Focus delegation</strong> — <code>delegatesFocus</code> ensures focus reaches the interactive control regardless of where the user clicks.</li>
-  <li><strong>Description binding</strong> — The <code>description</code> slot content is linked via <code>aria-describedByElements</code> for additional context.</li>
+  <li><strong>ARIA spinbutton pattern</strong>: The component uses <code>role="spinbutton"</code> with <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, and <code>aria-valuetext</code>, so screen readers announce its range and current value. It doesn't currently set <code>aria-invalid</code>.</li>
+  <li><strong>Labeled controls</strong>: Increment and decrement buttons take their ARIA labels from the <code>ariaLabel.plus</code> and <code>ariaLabel.minus</code> slots.</li>
+  <li><strong>Single tab stop</strong>: The Up Arrow and Down Arrow keys change the value, and the increment and decrement buttons stay out of the tab order, so each counter is one tab stop.</li>
+  <li><strong>Focus delegation</strong>: <code>delegatesFocus</code> ensures focus reaches the interactive control regardless of where the user clicks.</li>
+  <li><strong>Description binding</strong>: The <code>description</code> slot content is part of the spinbutton's <code>aria-labelledby</code> name, so screen readers read it with the label.</li>
 </ul>
 
 <auro-header level="2" id="smartButtonState">Smart button state</auro-header>
@@ -37,8 +37,8 @@
 <ul>
   <li>An aggregate <code>total</code> computed from all child counters</li>
   <li>Group-level <code>min</code> and <code>max</code> constraints applied across all children</li>
-  <li>A <code>value</code> object with named entries (e.g., <code>{ adults: 2, children: 1 }</code>)</li>
-  <li>Dynamic button disabling — when the group total reaches max, all increment buttons disable; when it reaches min, all decrement buttons disable</li>
+  <li>A <code>value</code> object with named entries, such as <code>{ adults: 2, children: 1 }</code></li>
+  <li>Dynamic button disabling: when the group total reaches <code>max</code>, all increment buttons disable; when it reaches <code>min</code>, all decrement buttons disable</li>
   <li>Group-level validation that aggregates individual counter errors</li>
   <li>Optional dropdown presentation with <code>isDropdown</code> for compact UI</li>
 </ul>
@@ -50,9 +50,9 @@
 <p><code>auro-counter-group</code> in dropdown mode adapts to the viewport:</p>
 
 <ul>
-  <li><strong>Desktop</strong> — Counters appear in a positioned dropdown panel</li>
-  <li><strong>Mobile</strong> — Counters open in a fullscreen dialog with a configurable breakpoint</li>
-  <li>Layout options (classic, snowflake) control visual presentation</li>
+  <li><strong>Desktop</strong>: Counters appear in a positioned dropdown panel</li>
+  <li><strong>Mobile</strong>: Counters open in a fullscreen dialog with a configurable breakpoint</li>
+  <li>Layout options (<code>classic</code> and <code>snowflake</code>) control visual presentation</li>
 </ul>
 
 <auro-header level="2" id="validation">Validation</auro-header>
@@ -63,18 +63,18 @@
 
 <ul>
   <li>Group-level validation aggregates errors from all child counters</li>
-  <li><code>touched</code> tracking ensures errors appear only after interaction</li>
+  <li>Custom error messages on any counter with the <code>error</code> attribute</li>
   <li>Dispatches <code>auroFormElement-validated</code> events for parent form coordination</li>
 </ul>
 
 <auro-header level="2" id="designSystemIntegration">Design system integration</auro-header>
 
-<p>Native number inputs render browser-specific controls that cannot be styled consistently.</p>
+<p>Native number inputs render browser-specific controls that can't be styled consistently.</p>
 
 <p><code>auro-counter</code> is built with the Auro Design System:</p>
 
 <ul>
-  <li>Consistent visual language with clearly labeled +/- buttons</li>
+  <li>Consistent visual language with minus and plus buttons</li>
   <li>Light and dark theme support (<code>appearance</code>)</li>
   <li>CSS <code>::part()</code> selectors (<code>counterControl</code>, <code>controlPlus</code>, <code>controlMinus</code>, <code>helpText</code>)</li>
   <li>Design token integration for sizing and spacing</li>
@@ -92,9 +92,9 @@
   </thead>
   <tbody>
     <tr>
-      <td>ARIA spinbutton semantics</td>
-      <td>No</td>
-      <td>Full implementation</td>
+      <td>Named plus and minus buttons</td>
+      <td>Manual <code>aria-label</code> on each button</td>
+      <td>Yes, with the <code>ariaLabel.minus</code> and <code>ariaLabel.plus</code> slots</td>
     </tr>
     <tr>
       <td>Auto-disable at min/max</td>
@@ -110,11 +110,6 @@
       <td>Aggregate value object</td>
       <td>Not supported</td>
       <td><code>{ name: value }</code> pairs</td>
-    </tr>
-    <tr>
-      <td>Keyboard shortcuts</td>
-      <td>Arrow keys only</td>
-      <td>Arrows, Ctrl+Arrows, +/-</td>
     </tr>
     <tr>
       <td>Mobile fullscreen (group)</td>

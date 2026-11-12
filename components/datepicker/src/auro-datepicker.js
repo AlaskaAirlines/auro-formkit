@@ -55,41 +55,64 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
+ * A date field that lets people type a date or choose it from a calendar, including a start and end date for a range.
+ *
+ * **Key capabilities**
+ * - **Date ranges**: `range` adds a second input for an end date and highlights the chosen range in the calendar.
+ * - **Limits and unavailable dates**: `minDate` and `maxDate` turn off dates outside a range, and `blackoutDates` marks single dates people can't select.
+ * - **Validation**: `required` shows an error when no date is chosen, and the `setCustomValidity` attributes replace the built-in error messages.
+ * - **Content on dates**: The `date_YYYY_MM_DD` and `popover_YYYY_MM_DD` slots add content to a date in the calendar, such as a price.
+ * - **Localization**: `locale` sets the date format and the month and weekday names, and attributes and slots let you translate most other text, except the calendar's Done button and the word "selected" in screen reader announcements.
+ * - **Fullscreen on small screens**: `fullscreenBreakpoint` sets the screen size at or below which the calendar opens fullscreen.
+ *
+ * **Example**
+ * ```html
+ * <auro-datepicker>
+ *   <span slot="fromLabel">Departure date</span>
+ *   <span slot="ariaLabel.bib.close">Close calendar</span>
+ *   <span slot="bib.fullscreen.headline">Choose a date</span>
+ * </auro-datepicker>
+ * ```
+ * @summary An accessible date field with a calendar, date ranges, blackout dates, validation, and localization.
  * @customElement auro-datepicker
  *
- * @slot helpText - Defines the content of the helpText.
- * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
- * @slot ariaLabel.input.clear - Sets aria-label on clear button
- * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
- * @slot bib.fullscreen.dateLabel - **DEPRECATED** - Use `bib.fullscreen.fromLabel` instead.
- * @slot bib.fullscreen.fromLabel - Defines the content to display above the first input in the mobile layout.
- * @slot bib.fullscreen.toLabel - Defines the content to display above the second input in the mobile layout when `range` is true.
- * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
- * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
- * @slot fromLabel - Defines the label content for the first input.
- * @slot optionalFromLabel - Overrides the "(optional)" text rendered next to the first input's label when the datepicker is not `required`.
- * @slot optionalToLabel - Overrides the "(optional)" text rendered next to the second input's label when `range` is set and the datepicker is not `required`.
- * @slot date_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
- * @slot popover_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell popover for the specified date.
- * @csspart dropdown - Use for customizing the style of the dropdown.
- * @csspart trigger - Use for customizing the style of the datepicker trigger.
- * @csspart wrapper - Use for customizing the style of the trigger content wrapper.
- * @csspart mainLabel - Use for customizing the style of the main label in the snowflake layout.
- * @csspart inputSection - Use for customizing the style of the input section within the trigger.
- * @csspart accentIcon - Use for customizing the style of the leading calendar accent icon.
- * @csspart input - Use for customizing the style of the datepicker inputs.
- * @csspart calendarWrapper - Use for customizing the style of the calendar container.
- * @csspart calendar - Use for customizing the style of the calendar.
- * @csspart helpTextSpan - Use for customizing the style of the datepicker help text span.
- * @csspart helpText - Use for customizing the style of the datepicker help text.
- * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
- * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
- * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
- * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
+ * @slot helpText - Help text shown below the datepicker, such as the date format to use. An error message replaces it while the datepicker is invalid. {@category ui}
+ * @slot ariaLabel.bib.close - Text read by screen readers for the close button in the fullscreen calendar, for example "Close calendar". It has no default, so without it the button has no accessible name. {@requiredWhen always} {@category a11y}
+ * @slot ariaLabel.input.clear - Text read by screen readers for the clear button, for example "Clear dates". Defaults to "Clear input field", or a Spanish translation when the datepicker has `lang="es"`. {@category a11y}
+ * @slot bib.fullscreen.headline - Headline shown at the top of the fullscreen calendar, such as "Choose travel dates". {@requiredWhen always} {@category ui}
+ * @slot bib.fullscreen.dateLabel - Deprecated: Use `bib.fullscreen.fromLabel` instead. Label shown above the start date in the fullscreen calendar. {@category ui}
+ * @slot bib.fullscreen.fromLabel - Label shown above the start date in the fullscreen calendar, such as "Departure". {@category ui}
+ * @slot bib.fullscreen.toLabel - Label shown above the end date in the fullscreen calendar of a range, such as "Return". {@relevantWhen range} {@category ui}
+ * @slot label - Label for the whole datepicker in the `snowflake` layout, such as "Travel dates". The `classic` layout doesn't show it. {@category ui}
+ * @slot toLabel - Label for the end date input of a range, such as "Return date". {@relevantWhen range} {@requiredWhen range} {@category ui}
+ * @slot fromLabel - Label for the start date input, or the only input, such as "Departure date". Also gives the calendar dialog its accessible name. {@requiredWhen always} {@category ui}
+ * @slot optionalFromLabel - Text shown after the start date input's label when `required` isn't set, in place of "(optional)", such as a translation. {@relevantWhen !required} {@category ui}
+ * @slot optionalToLabel - Text shown after the end date input's label when `range` is set and `required` isn't, in place of "(optional)", such as a translation. {@relevantWhen range} {@category ui}
+ * @slot date_YYYY_MM_DD - Content shown under the day number in the calendar for one date, such as a price. Replace `YYYY_MM_DD` with the date, as in `date_2025_04_21`, and add the `highlight` attribute to show the text in the success color. {@category ui}
+ * @slot popover_YYYY_MM_DD - Content shown in a popover when someone points to a date in the calendar or moves to it with the keyboard, such as seat availability. Replace `YYYY_MM_DD` with the date, as in `popover_2025_04_21`. Screen readers read it with the date. {@category ui}
+ * @csspart dropdown - The dropdown that holds the trigger, the calendar, and the help text.
+ * @csspart trigger - The `<div>` in the dropdown's trigger that holds the calendar icon, the inputs, and the clear button.
+ * @csspart wrapper - The `<div>` inside `trigger` that lays out the calendar icon, the inputs, and the clear button or error icon.
+ * @csspart mainLabel - The `<label>` that holds the `label` slot, rendered only when `layout="snowflake"`.
+ * @csspart inputSection - The `<div>` that holds the date inputs.
+ * @csspart accentIcon - The calendar icon shown before the inputs in the `snowflake` layout. The `classic` layout hides it and shows the start date input's own calendar icon instead.
+ * @csspart input - Each date input: one, or two when `range` is set.
+ * @csspart calendarWrapper - The `<div>` in the dropdown that holds the calendar.
+ * @csspart calendar - The calendar shown in the dropdown.
+ * @csspart helpTextSpan - The `<div>` that holds the help text or error message.
+ * @csspart helpText - The `<p>` that holds the help text or error message.
+ * @event auroDatePicker-toggled - Notifies that the calendar dropdown opened or closed, with `event.detail.expanded` set to `true` when it opened.
+ * @event auroDatePicker-monthChanged - Notifies that the calendar moved to a different month, such as when someone selects the next month button.
+ * @event auroFormElement-validated - Notifies each time the datepicker validates, with the result in `event.detail.validity` and `event.detail.message`.
+ * @event auroDatePicker-newSlotContent - Notifies the calendar's day cells to copy their `date_YYYY_MM_DD` and `popover_YYYY_MM_DD` slot content again, such as after `blackoutDates` or `referenceDates` changes. The datepicker doesn't currently fire it on its own when slot content is added.
  * @event input - Notifies that the datepicker's value has changed.
  */
 export class AuroDatePicker extends AuroElement {
+
+  /**
+   * Lit's options for creating the shadow root.
+   * @internal
+   */
   static get shadowRootOptions() {
     return {
       ...AuroElement.shadowRootOptions,
@@ -150,6 +173,8 @@ export class AuroDatePicker extends AuroElement {
 
     /** @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'} */
     this.fullscreenBreakpoint = 'sm';
+
+    /** @internal */
     this._validLocale = 'en-US';
     // floaterConfig
     /** @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'} */
@@ -176,6 +201,14 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.hasFocus = false;
+
+    /**
+     * Tracks whether the current open cycle promoted the fullscreen bib via
+     * showModal(). Used by the close handler to decide whether native <dialog>
+     * focus restoration will fire (see the auroDropdown-toggled handler).
+     * @private
+     */
+    this._bibOpenedAsModal = false;
 
     /**
      * @private
@@ -243,9 +276,9 @@ export class AuroDatePicker extends AuroElement {
      * with one abort() call.
      *
      * The genuine leak risk is the listeners attached to children that can
-     * outlive the host if they get reparented — `this.dropdown`,
+     * outlive the host if they get reparented: `this.dropdown`,
      * `this.calendar`, and the inputs inside the dropdown's slot.
-     * Listeners attached to `this` (e.g. focusin/focusout on the host)
+     * Listeners attached to `this` (for example, focusin/focusout on the host)
      * form a self-contained reference graph that the GC can collect with
      * the host anyway, but they share the same signal so the cleanup
      * pattern stays uniform across all configure* sites.
@@ -265,6 +298,10 @@ export class AuroDatePicker extends AuroElement {
   // helper (not the constructor body) so the CEM analyzer keeps their `@type`
   // unions instead of inferring `string` from a constructor-literal assignment.
   // See AlaskaAirlines/discussions#653.
+  /**
+   * Sets the default `layout`, `shape`, and `size` values. Called from the constructor.
+   * @internal
+   */
   initializeArchitectureDefaults() {
     this.layout = 'classic';
     this.shape = 'classic';
@@ -279,9 +316,10 @@ export class AuroDatePicker extends AuroElement {
       // ...super.properties,
 
       /**
-       * Defines whether the component will be on lighter or darker backgrounds.
+       * Sets the datepicker's colors for the background it sits on. Use `inverse` on dark backgrounds and `default` on light ones.
        * @type {'default' | 'inverse'}
        * @default 'default'
+       * @category ui
        */
       appearance: {
         type: String,
@@ -289,8 +327,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, bib's position will be automatically calculated where to appear.
-       * @default false
+       * Deprecated: Use `placement` instead.
+       * Places the calendar dropdown on whichever side of the input has the most space. The dropdown already flips to the opposite side when it doesn't fit, unless `noFlip` is set.
+       * @deprecated Use `placement` instead.
+       * @category ui
        */
       autoPlacement: {
         type: Boolean,
@@ -299,16 +339,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
-       *
-       * **Immutable update required.** The datepicker treats this array as
-       * immutable and memoizes a lookup Set keyed on the array's reference
-       * identity — matching Lit's own reactivity semantics for array
-       * properties. In-place mutations (`blackoutDates.push(...)`,
-       * `blackoutDates[i] = ...`, `blackoutDates.splice(...)`) will not
-       * invalidate the cache and the new entries will be silently ignored.
-       * To update, reassign the property: `el.blackoutDates = [...el.blackoutDates, '2024-12-25']`.
+       * Sets dates people can't select, such as sold-out days, as ISO date strings (`YYYY-MM-DD`). These dates look unavailable in the calendar, and typing one in fails validation with `customError`.
+       * To change the list, assign a new array, such as `el.blackoutDates = [...el.blackoutDates, '2024-12-25']`, because the datepicker doesn't notice changes made in place, such as `push()`.
        * @type {string[]}
+       * @category behavior
        */
       blackoutDates: {
         type: Array,
@@ -317,8 +351,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for blackout (disabled but in-range) date cells.
+       * Sets the text screen readers add to blackout dates, the dates in `blackoutDates`. Set it to explain why people can't choose those dates, such as `sold out`.
        * @default 'unavailable'
+       * @category a11y
        */
       blackoutLabel: {
         type: String,
@@ -327,7 +362,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * The last date that may be displayed in the calendar.
+       * Sets the last month the calendar can show, as an ISO date string such as `2025-12-31`. People can't move past that month, but unlike `maxDate`, it doesn't turn off any dates.
+       * @category behavior
        */
       calendarEndDate: {
         type: String,
@@ -336,8 +372,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Accessible label for the calendar grid containing the days of the month.
+       * Sets the name screen readers announce for the calendar's grid of days. Set it to translate the default.
        * @default 'Calendar days of the month'
+       * @category a11y
        */
       calendarGridLabel: {
         type: String,
@@ -346,7 +383,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * The date that will first be visually rendered to the user in the calendar.
+       * Sets the date whose month the calendar shows when it opens, such as `2025-12-01`. It takes priority over `value` for the month shown. When not set, the datepicker sets it to the first valid `value`, or to `minDate`.
+       * @category behavior
        */
       calendarFocusDate: {
         type: String,
@@ -355,7 +393,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * The first date that may be displayed in the calendar.
+       * Sets the first month the calendar can show, as an ISO date string such as `2025-01-01`. People can't move before that month, and the fullscreen calendar starts there, but unlike `minDate`, it doesn't turn off any dates.
+       * @category behavior
        */
       calendarStartDate: {
         type: String,
@@ -364,7 +403,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * The date that determines the currently visible month.
+       * Sets the date whose month the calendar shows, such as `2025-04-01`. When the calendar opens, it moves to the month of `calendarFocusDate` or `value` instead, if either is set.
+       * @category behavior
        */
       centralDate: {
         type: String,
@@ -372,7 +412,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If set, disables the datepicker.
+       * Turns the datepicker off. A disabled datepicker is shown in a muted style, people can't type a date or open the calendar, and keyboard users can't tab to it.
+       * @category ui
        */
       disabled: {
         type: Boolean,
@@ -380,7 +421,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       * Hides the `label` slot while the display value shows in place of the date inputs, which is when every date is filled in and the datepicker doesn't have focus. Only affects the `snowflake` layout. Without it, the label stays visible above the display value.
+       * @category ui
        */
       dvInputOnly: {
         type: Boolean,
@@ -389,7 +431,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
+       * Shows an error state with this text as the error message, such as "Choose a later date", unless `setCustomValidity` or `setCustomValidityCustomError` is set. While `error` is set, `validity` stays `customError`.
+       * @category behavior
        */
       error: {
         type: String,
@@ -397,7 +440,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Specifies the date format. The default is `mm/dd/yyyy`.
+       * Sets the order and separators of the typed date, such as `mm/dd/yyyy` or `dd.mm.yyyy`. When not set, the format comes from `locale`, such as `mm/dd/yyyy` for `en-US`.
+       * @category behavior
        */
       format: {
         type: String,
@@ -405,7 +449,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Defines the locale of the element. Used to derive the date format when `format` is not explicitly set.
+       * Sets the language and region for the date format and the calendar's month and weekday names, such as `en-US` or `fr-FR`. When not set, the datepicker uses the `data-locale` attribute of the nearest ancestor that has one, or `en-US`. An unsupported value falls back to `en-US`.
+       * @category behavior
        */
       locale: {
         type: String,
@@ -413,12 +458,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
+       * Sets the largest screen size at which the calendar opens fullscreen instead of in a dropdown, such as `sm`. Use `disabled` to never open it fullscreen.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
        * @default 'sm'
+       * @category ui
        */
       fullscreenBreakpoint: {
         type: String,
@@ -451,8 +494,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the `inputmode` attribute on the underlying input, hinting at the virtual keyboard to display.
+       * Sets which on-screen keyboard phones and tablets show when someone types a date, such as `numeric` for a number pad (the input's `inputmode`). In a range, it applies only to the start date input.
        * @type {'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'}
+       * @category behavior
        */
       inputmode: {
         type: String,
@@ -461,8 +505,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600.
+       * Shows the fullscreen calendar's headline in a larger heading style.
+       * @category ui
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -471,9 +515,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the layout of the datepicker.
+       * Sets the datepicker's layout. Use `classic` (the default) for a standard date field, and `snowflake` only on dark backgrounds with `appearance="inverse"`. The `snowflake` layout shows one label for the whole datepicker, from the `label` slot, and shows chosen dates as short text, such as "Apr 21".
        * @type {'classic' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       layout: {
         type: String,
@@ -482,9 +527,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the shape of the datepicker.
+       * Sets the shape of the date field. Use `classic` (the default) with the `classic` layout, and `snowflake` with the `snowflake` layout.
        * @type {'box' | 'classic' | 'pill' | 'pill-left' | 'pill-right' | 'rounded' | 'snowflake'}
        * @default 'classic'
+       * @category ui
        */
       shape: {
         type: String,
@@ -493,9 +539,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets the size of the datepicker.
+       * Sets the height of the date field, from `xs`, the shortest, to `xl`, the tallest. The `classic` and `snowflake` shapes have a fixed height, so `size` doesn't change them. The `rounded` shape supports only `lg`, and the `pill`, `pill-left`, and `pill-right` shapes support only `md` and `xl`.
        * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl'}
        * @default 'lg'
+       * @category ui
        */
       size: {
         type: String,
@@ -504,7 +551,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Maximum date. All dates after will be disabled.
+       * Sets the latest date people can choose, as an ISO date string such as `2025-12-31`. Later dates are turned off in the calendar, a typed later date fails validation with `rangeOverflow`, and setting it clears the chosen dates when the start date is later.
+       * @category behavior
        */
       maxDate: {
         type: String,
@@ -513,7 +561,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Minimum date. All dates before will be disabled.
+       * Sets the earliest date people can choose, as an ISO date string such as `2025-01-01`. Earlier dates are turned off in the calendar, a typed earlier date fails validation with `rangeUnderflow`, and setting it clears the chosen dates when the start date is earlier.
+       * @category behavior
        */
       minDate: {
         type: String,
@@ -522,7 +571,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * When set, the calendar displays the month before the year in the header.
+       * Doesn't currently do anything. The calendar's month heading shows the month before the year whenever `format` puts `mm` before `yyyy`.
+       * @category ui
        */
       monthFirst: {
         type: Boolean,
@@ -530,9 +580,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Names of all 12 months to render in the calendar.
-       * When omitted, month names will be automatically populated from the active `locale` (falling back to `en-US`).
+       * Sets the 12 month names shown in the calendar, from January to December, such as abbreviated or translated names. When not set, the names come from `locale`.
        * @type {string[]}
+       * @category ui
        */
       monthNames: {
         type: Array,
@@ -540,8 +590,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Accessible label for the next month navigation button.
+       * Sets the name screen readers announce for the next month button. Set it to translate the default.
        * @default 'Next month'
+       * @category a11y
        */
       navLabelNextMonth: {
         type: String,
@@ -550,8 +601,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Accessible label for the previous month navigation button.
+       * Sets the name screen readers announce for the previous month button. Set it to translate the default.
        * @default 'Previous month'
+       * @category a11y
        */
       navLabelPrevMonth: {
         type: String,
@@ -560,8 +612,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Keeps the calendar dropdown in the `placement` position even when there isn't room for it there. By default, the dropdown flips to the opposite side when it doesn't fit.
+       * @category ui
        */
       noFlip: {
         type: Boolean,
@@ -570,7 +622,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If set, disables auto-validation on blur.
+       * Turns off the automatic validation that runs when focus leaves the datepicker. Changing the end date of a range or `blackoutDates` still validates it.
+       * @category behavior
        */
       noValidate: {
         type: Boolean,
@@ -579,8 +632,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Gap between the trigger element and bib.
+       * Sets the space, in pixels, between the input and the calendar dropdown.
        * @default 0
+       * @category ui
        */
       offset: {
         type: Number,
@@ -588,8 +642,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance="inverse"` instead.
+       * Deprecated: Use `appearance="inverse"` instead.
+       * Switches the datepicker to colors designed for dark backgrounds.
        * @deprecated Use `appearance="inverse"` instead.
+       * @category ui
        */
       onDark: {
         type: Boolean,
@@ -598,7 +654,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Placeholder text to display in the input(s) when no value is set.
+       * Sets the hint text shown in an empty input, such as `MM/DD/YYYY`. When not set, the input shows the date format in capital letters. In a range, the end date input uses it too, unless `placeholderEndDate` is set.
+       * @category ui
        */
       placeholder: {
         type: String,
@@ -606,9 +663,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Optional placeholder text to display in the second input when using date range.
-       * By default, datepicker will use `placeholder` for both inputs if placeholder is
-       * specified, but placeholderEndDate is not.
+       * Sets the hint text shown in the end date input of a range when it's empty. When not set, the end date input uses `placeholder`.
+       * @relevantWhen range
+       * @category ui
        */
       placeholderEndDate: {
         type: String,
@@ -617,9 +674,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
+       * Sets where the calendar dropdown opens relative to the input, such as `bottom-start` (below the input, lined up with its start edge). The dropdown still flips to the opposite side when it doesn't fit, unless `noFlip` is set.
        * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
        * @default 'bottom-start'
+       * @category ui
        */
       placement: {
         type: String,
@@ -627,7 +685,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If set, turns on date range functionality in auro-calendar.
+       * Lets people choose a start date and an end date. Adds a second input for the end date, and on larger screens the calendar shows two months side by side.
+       * @category behavior
        */
       range: {
         type: Boolean,
@@ -635,11 +694,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for cells after a fully selected range (both
-       * `dateFrom` and `dateTo` are set). While a range is still being
-       * picked (`dateFrom` set, `dateTo` unset), focused cells past the
-       * start use `rangeLabelEndPreview` instead.
+       * Sets the text screen readers add to dates after the end of a chosen range. While someone is still choosing the end date, later dates use `rangeLabelEndPreview` instead.
+       * @relevantWhen range
        * @default 'after range'
+       * @category a11y
        */
       rangeLabelAfterRange: {
         type: String,
@@ -648,8 +706,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for cells before the range start.
+       * Sets the text screen readers add to dates before the start of a range.
+       * @relevantWhen range
        * @default 'before range'
+       * @category a11y
        */
       rangeLabelBeforeRange: {
         type: String,
@@ -658,8 +718,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for the range end date cell.
+       * Sets the text screen readers add to the end date of a range.
+       * @relevantWhen range
        * @default 'range end'
+       * @category a11y
        */
       rangeLabelEnd: {
         type: String,
@@ -668,10 +730,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for the focused cell while previewing a range end
-       * (dateFrom set, dateTo not yet selected). Tells AT users that
-       * pressing Enter would commit this cell as the range end.
+       * Sets the text screen readers add to a date after the start date while someone is choosing the end date of a range. It tells screen reader users that pressing Enter makes that date the end of the range.
+       * @relevantWhen range
        * @default 'previewing range end'
+       * @category a11y
        */
       rangeLabelEndPreview: {
         type: String,
@@ -680,8 +742,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for cells within the selected range.
+       * Sets the text screen readers add to dates inside a chosen range.
+       * @relevantWhen range
        * @default 'in range'
+       * @category a11y
        */
       rangeLabelInRange: {
         type: String,
@@ -690,8 +754,10 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for the range start date cell.
+       * Sets the text screen readers add to the start date of a range.
+       * @relevantWhen range
        * @default 'range start'
+       * @category a11y
        */
       rangeLabelStart: {
         type: String,
@@ -700,9 +766,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Dates that the user should have for reference as part of their decision-making when selecting a date.
-       * This should be a JSON string array of ISO date strings (`YYYY-MM-DD`).
+       * Sets dates to mark in the calendar for comparison, such as the dates of an earlier trip, as an array of ISO date strings (`YYYY-MM-DD`). Marked dates get an outline. Add `popover_YYYY_MM_DD` content to explain why each date is marked.
        * @type {string[]}
+       * @category ui
        */
       referenceDates: {
         type: Array,
@@ -711,7 +777,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Populates the `required` attribute on the input. Used for client-side validation.
+       * Makes a date required. When it's empty, validation fails with `valueMissing`, and in a range, both dates are required. When not set, each input's label shows "(optional)".
+       * @category behavior
        */
       required: {
         type: Boolean,
@@ -719,7 +786,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Sets a custom help text message to display for all validityStates.
+       * Sets one error message for every kind of validation error except a blackout date, in place of the built-in messages and the other `setCustomValidity` messages. For a blackout date, use `setCustomValidityCustomError`.
+       * @category behavior
        */
       setCustomValidity: {
         type: String,
@@ -727,8 +795,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `customError`.
-       * Also used as the validation message when a blackout date is typed into the input.
+       * Sets the error message shown when `validity` is `customError`, in place of the `error` text. It also replaces the "Selected date is unavailable" message shown when someone types a blackout date.
+       * @category behavior
        */
       setCustomValidityCustomError: {
         type: String,
@@ -736,7 +804,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `rangeOverflow`.
+       * Sets the error message shown when the date is later than `maxDate` (`rangeOverflow`).
+       * @category behavior
        */
       setCustomValidityRangeOverflow: {
         type: String,
@@ -744,7 +813,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `rangeUnderflow`.
+       * Sets the error message shown when the date is earlier than `minDate` (`rangeUnderflow`).
+       * @category behavior
        */
       setCustomValidityRangeUnderflow: {
         type: String,
@@ -752,7 +822,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Custom help text message to display when validity = `valueMissing`.
+       * Sets the error message shown when `required` is set and no date is chosen (`valueMissing`).
+       * @category behavior
        */
       setCustomValidityValueMissing: {
         type: String,
@@ -760,7 +831,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Moves the calendar dropdown along the input's edge so the edge of the screen doesn't cut it off.
+       * @category ui
        */
       shift: {
         type: Boolean,
@@ -768,7 +840,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Set true to make datepicker stacked style.
+       * Doesn't currently change the datepicker's appearance or behavior.
+       * @category ui
        */
       stacked: {
         type: Boolean,
@@ -776,7 +849,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Indicates whether the datepicker is in a dirty state (has been interacted with).
+       * Marks the datepicker as used once it gets focus, so validation can report a missing required date. `reset()` clears it.
        * @private
        */
       touched: {
@@ -786,7 +859,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Specifies the `validityState` this element is in.
+       * Reports the datepicker's current validation state, such as `valid`, `valueMissing`, `rangeOverflow`, or `customError`. The datepicker sets it when it validates, so read it instead of setting it.
+       * @category behavior
        */
       validity: {
         type: String,
@@ -794,14 +868,17 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Value selected for the datepicker.
+       * Sets the chosen date, or the start date of a range, as an ISO date string such as `2025-04-21`.
+       * @category behavior
        */
       value: {
         type: String
       },
 
       /**
-       * Value selected for the second datepicker when using date range.
+       * Sets the end date of a range, as an ISO date string such as `2025-04-28`. When it's earlier than `value`, the datepicker clears it.
+       * @relevantWhen range
+       * @category behavior
        */
       valueEnd: {
         type: String,
@@ -828,11 +905,11 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-datepicker"] - The name of the element that you want to register.
+   * Registers the element with the browser under a tag name.
+   * @param {string} [name="auro-datepicker"] - The tag name to register the element under.
    *
    * @example
-   * AuroDatePicker.register("custom-datepicker") // this will register this element to <custom-datepicker/>
+   * AuroDatePicker.register("custom-datepicker") // registers the element as <custom-datepicker>
    *
    */
   static register(name = "auro-datepicker") {
@@ -840,8 +917,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * A convenience wrapper for `value` and `valueEnd`, uses the new Auro "array value pattern".
-   * @returns {string[]}
+   * Gets the chosen dates as an array: `[value, valueEnd]` when a range has both dates, `[value]` when only a start date is set, or `[]` when no date is set.
+   * @returns {string[]} The chosen dates, as ISO date strings.
+   * @category behavior
    */
   get values() {
     // If range, and both populated, return both values in an array
@@ -862,8 +940,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Whether the label is being hidden currently based on state.
-   * @returns {boolean} - Returns true if the label is hidden.
+   * Checks whether the `snowflake` layout's main label is visually hidden.
+   * @returns {boolean} True if the label is hidden; false otherwise.
    * @private
    */
   get labelHidden() {
@@ -871,8 +949,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Whether the displayValue container is being hidden currently based on state.
-   * @returns {boolean} - Returns true if the label is hidden.
+   * Checks whether the display value container is visually hidden.
+   * @returns {boolean} True if the display value is hidden; false otherwise.
    * @private
    */
   get dvHidden() {
@@ -880,9 +958,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Returns the input font class based on layout and visibility state.
+   * Gets the input font class for the current layout and state.
    * @private
-   * @returns {string} - The font class for the input.
+   * @returns {string} The font class for the input.
    */
   get displayValueFontClass() {
     if (this.layout.startsWith('emphasized')) {
@@ -914,9 +992,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Common display value wrapper classes.
+   * Gets the classes shared by every display value wrapper.
    * @private
-   * @returns {Object} Class map for Lit's classMap directive.
+   * @returns {Object} The class map for Lit's `classMap` directive.
    */
   get commonDisplayValueWrapperClasses() {
     return {
@@ -927,7 +1005,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Function to determine if there is any displayValue content to render.
+   * Called when the `displayValue` slot's content changes. Records whether the slot has content to show.
    * @private
    * @returns {void}
    */
@@ -949,7 +1027,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Force the calendar view to the focus date when it changes.
+   * Moves the calendar view to `calendarFocusDate` when it changes.
    * @private
    * @returns {void}
    */
@@ -962,17 +1040,18 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Creates a random string of lowercase letters and digits, used as each date input's `id`.
    * @private
-   * @param {Number} length - Number of characters for the returned random string.
-   * @returns {string}
+   * @param {Number} length - The maximum number of characters in the returned string. The string is often shorter.
+   * @returns {string} The random string.
    */
   generateRandomString(length) {
     return Math.random().toString(36).substring(2, length + 2);
   }
 
   /**
-   * Focuses the datepicker trigger input.
-   * @param {String} focusInput - Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input.
+   * Moves keyboard focus to the start date input, or to the end date input of a range.
+   * @param {String} [focusInput=''] - The input to focus. Use `endDate` for the end date input of a range, or leave it out for the start date input.
    * @returns {void}
    */
   focus(focusInput = '') {
@@ -981,82 +1060,84 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Converts valid time number to format used by wc-date-range API.
+   * Converts a date to the Unix timestamp, in seconds, that the vendored range datepicker uses.
    * @private
-   * @param {Date} date - Date to be converted.
-   * @returns {Number} Simplified number.
+   * @param {Date} date - The date to convert.
+   * @returns {Number} The Unix timestamp, in seconds.
    */
   convertToWcValidTime(date) {
     return date?.getTime() / 1000;
   }
 
-  /**
-   * Converts date object into a string.
-   * @private
-   * @param {String} time - Unix timestamp to be converted to a date object.
-   * @returns {Date} Date formatted as a string.
-   */
   // ─── Read-only *Object properties ─────────────────────────────────────────
 
   /**
-   * Read-only `Date` object derived from `value`. Returns `undefined` when `value` is empty or not a valid date.
+   * Gets `value` as a `Date` object, or `undefined` when `value` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get valueObject() {
     return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `valueEnd`. Returns `undefined` when `valueEnd` is empty or not a valid date.
+   * Gets `valueEnd` as a `Date` object, or `undefined` when `valueEnd` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get valueEndObject() {
     return this.valueEnd && dateFormatter.isValidDate(this.valueEnd) ? dateFormatter.stringToDateInstance(this.valueEnd) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `minDate`. Returns `undefined` when `minDate` is empty or not a valid date.
+   * Gets `minDate` as a `Date` object, or `undefined` when `minDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get minDateObject() {
     return this.minDate && dateFormatter.isValidDate(this.minDate) ? dateFormatter.stringToDateInstance(this.minDate) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `maxDate`. Returns `undefined` when `maxDate` is empty or not a valid date.
+   * Gets `maxDate` as a `Date` object, or `undefined` when `maxDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get maxDateObject() {
     return this.maxDate && dateFormatter.isValidDate(this.maxDate) ? dateFormatter.stringToDateInstance(this.maxDate) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `calendarStartDate`. Returns `undefined` when `calendarStartDate` is empty or not a valid date.
+   * Gets `calendarStartDate` as a `Date` object, or `undefined` when `calendarStartDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get calendarStartDateObject() {
     return this.calendarStartDate && dateFormatter.isValidDate(this.calendarStartDate) ? dateFormatter.stringToDateInstance(this.calendarStartDate) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `calendarEndDate`. Returns `undefined` when `calendarEndDate` is empty or not a valid date.
+   * Gets `calendarEndDate` as a `Date` object, or `undefined` when `calendarEndDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get calendarEndDateObject() {
     return this.calendarEndDate && dateFormatter.isValidDate(this.calendarEndDate) ? dateFormatter.stringToDateInstance(this.calendarEndDate) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `centralDate`. Returns `undefined` when `centralDate` is empty or not a valid date.
+   * Gets `centralDate` as a `Date` object, or `undefined` when `centralDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get centralDateObject() {
     return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
   }
 
   /**
-   * Read-only `Date` object derived from `calendarFocusDate`. Returns `undefined` when `calendarFocusDate` is empty or not a valid date.
+   * Gets `calendarFocusDate` as a `Date` object, or `undefined` when `calendarFocusDate` is empty or isn't a valid date.
    * @returns {Date|undefined}
+   * @category behavior
    */
   get calendarFocusDateObject() {
     return this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate) ? dateFormatter.stringToDateInstance(this.calendarFocusDate) : undefined;
@@ -1083,15 +1164,15 @@ export class AuroDatePicker extends AuroElement {
    * regression suite (`npm run test:hst`, UTC-10) will catch the symptom.
    *
    * @private
-   * @param {number} time - Unix timestamp (seconds), local midnight of the day.
-   * @returns {string} ISO date string (yyyy-mm-dd) reflecting the local calendar day.
+   * @param {number} time - The Unix timestamp, in seconds, of local midnight on the day.
+   * @returns {string} The ISO date string (`YYYY-MM-DD`) for the local calendar day.
    */
   convertWcTimeToDate(time) {
     return dateFormatter.toISOFormatString(new Date(time * 1000));
   }
 
   /**
-   * Sends event notifying that the input has changed it's value.
+   * Dispatches the `input` event to notify that the value changed.
    * @private
    * @returns {void}
    */
@@ -1104,7 +1185,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Changes the calendar's visibility to reflect the value of the central date attribute.
+   * Passes a valid `centralDate` to the calendar so it shows that month.
    * @private
    * @returns {void}
    */
@@ -1115,7 +1196,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sends event notifying that the calendar popover has been opened.
+   * Dispatches `auroDatePicker-toggled` when the calendar opens or closes.
    * @private
    * @returns {void}
    */
@@ -1130,8 +1211,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sends event notifying that the calendar's visible month has changed.
-   * @param {Object} event - Event passed in from auro-calendar when the event triggered this function.
+   * Dispatches `auroDatePicker-monthChanged` when the calendar's visible month changes.
+   * @param {Object} event - The `auroCalendar-centralDateChanged` event from the calendar.
    * @private
    * @returns {void}
    */
@@ -1232,6 +1313,15 @@ export class AuroDatePicker extends AuroElement {
     // a top-layer popover where :focus-within on the dropdown host returns false).
     this.dropdown.noHideOnThisFocusLoss = true;
 
+    // Suppress the dropdown's generic focus restoration on close — the
+    // datepicker manages its own focus in the auroDropdown-toggled handler
+    // below (respecting hasFocus / _restoreFocusOnClose, and deferring to the
+    // fullscreen dialog's native restoration on touch devices). Without this,
+    // the dropdown's setTimeout(focusTrigger) fires a second, gesture-decoupled
+    // programmatic focus on close, which on iOS Safari swallows the user's next
+    // tap and forces a second tap to reopen the calendar (AB#1634252).
+    this.dropdown.noFocusRestoreOnClose = true;
+
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
     // screen readers announce it as just "dialog" with no context.
@@ -1303,6 +1393,16 @@ export class AuroDatePicker extends AuroElement {
               bibEl.close();
               bibEl.open(true);
 
+              // Record that this open cycle actually promoted the dialog via
+              // showModal(). The close handler relies on this — not the broader
+              // isBibFullscreen flag — to decide whether native <dialog> focus
+              // restoration will occur, because isBibFullscreen is set
+              // synchronously in showBib() while this open(true) runs a
+              // microtask later. If the bib is closed before this resolves,
+              // showModal() never fires and there is no native restoration to
+              // defer to.
+              this._bibOpenedAsModal = true;
+
               doubleRaf(() => {
                 this.focusActiveCellWhenReady();
               });
@@ -1334,7 +1434,27 @@ export class AuroDatePicker extends AuroElement {
         this.dropdown.trigger.inert = false;
         const shouldRestoreFocus = this.hasFocus || this._restoreFocusOnClose;
         this._restoreFocusOnClose = false;
-        if (shouldRestoreFocus) {
+        // On coarse-pointer (touch) devices closing the fullscreen modal, rely
+        // on the <dialog>'s native focus restoration instead of forcing focus
+        // back onto the input. showModal() returns focus to the trigger anchor
+        // as part of the closing gesture, so a11y focus is preserved. Re-running
+        // .focus() here is a gesture-decoupled programmatic focus that iOS
+        // Safari penalizes: it swallows the user's next tap, so reopening the
+        // calendar takes two taps instead of one (AB#1634252). Fine-pointer
+        // (desktop) layouts keep the explicit restore for keyboard/SR
+        // correctness, and non-fullscreen bibs (no showModal, no native
+        // restoration) always restore explicitly.
+        //
+        // Gate on `_bibOpenedAsModal` — set only after the actual showModal()
+        // promotion (open(true)) — rather than `isBibFullscreen`, which is true
+        // as soon as the fullscreen layout is chosen but before the modal is
+        // promoted. If the bib is closed before that async promotion runs, no
+        // native restoration will occur, so we must still restore explicitly.
+        const bibWasModal = this._bibOpenedAsModal;
+        this._bibOpenedAsModal = false;
+        const useNativeFocusRestoration =
+          bibWasModal && window.matchMedia('(pointer: coarse)').matches;
+        if (shouldRestoreFocus && !useNativeFocusRestoration) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {
               this.inputList[0].focus();
@@ -1441,7 +1561,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Binds all behavior needed to the dropdown after rendering.
+   * Binds all behavior needed to the calendar after rendering.
    * @private
    * @returns {void}
    */
@@ -1538,7 +1658,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Hides the dropdown bib if its open.
+   * Closes the calendar if it's open.
    * @returns {void}
    */
   hideBib() {
@@ -1548,7 +1668,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Shows the dropdown bib if there are options to show.
+   * Opens the calendar if it's closed.
    * @returns {void}
    */
   showBib() {
@@ -1558,9 +1678,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Keep the datepicker in sync with the calendar's central date.
+   * Keeps the datepicker in sync with the calendar's central date.
    * @private
-   * @param {Number} event - Event received from calendar with the new central date.
+   * @param {CustomEvent} event - The event from the calendar with the new central date.
    * @returns {void}
    */
   handleCalendarCentralDateChange(event) {
@@ -1572,9 +1692,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sets the datepicker's values to the auro-calendar-cell that was clicked.
+   * Sets `value`, or `valueEnd` in a range, to the date of the calendar cell someone selected.
    * @private
-   * @param {Number} time - Unix timestamp to be converted to a date.
+   * @param {Number} time - The Unix timestamp, in seconds, of the selected date.
    * @returns {void}
    */
   handleCellClick(time) {
@@ -1618,7 +1738,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Resets values without resetting validation.
+   * Clears the chosen dates. Unlike `reset()`, the datepicker still counts as used, so the next validation can report a missing date.
+   * @internal
+   * @returns {void}
    */
   resetInputs() {
     this.inputList.forEach((input) => {
@@ -1627,7 +1749,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Clears the chosen dates and the validation state.
    * @returns {void}
    */
   reset() {
@@ -1636,7 +1758,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Clears the current value(s) of the datepicker.
+   * Clears the chosen dates. Unlike `reset()`, the datepicker still counts as used, so the next validation can report a missing date.
    * @returns {void}
    */
   clear() {
@@ -1646,8 +1768,8 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Checks whether a formatted date string matches a blackout date.
    * @private
-   * @param {string} dateStr - A date string in the component's configured format.
-   * @returns {boolean} True if the date is in the blackoutDates list.
+   * @param {string} dateStr - An ISO date string (`YYYY-MM-DD`), such as `value`.
+   * @returns {boolean} True if the date is in `blackoutDates`; false otherwise.
    */
   isBlackoutDate(dateStr) {
     if (!Array.isArray(this.blackoutDates) ||
@@ -1661,8 +1783,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Validates value.
-   * @param {boolean} [force=false] - Whether to force validation.
+   * Checks the chosen dates and updates `validity` and the error message.
+   * @param {boolean} [force=false] - If true, validates even when the datepicker has focus or hasn't been used yet, so an empty required datepicker reports `valueMissing`. If false, validates only when focus is outside the datepicker and it has been used or has a value.
    */
   validate(force = false) {
     this.inputList[0].validate(force);
@@ -1691,7 +1813,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Private method for interacting with the `hasValue` property.
+   * Sets `hasValue` and `hasAllValues` from the current dates.
    * @private
    */
   setHasValue() {
@@ -1707,8 +1829,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Returns `true` when the datepicker has an active validation error.
-   * @returns {boolean}
+   * Checks whether the datepicker has a validation error.
+   * @returns {boolean} True if `validity` is set to anything other than `valid`; false otherwise.
    */
   get hasError() {
     return this.validity !== undefined && this.validity !== 'valid';
@@ -1718,7 +1840,7 @@ export class AuroDatePicker extends AuroElement {
    * Per-class dedup set used by `_warnInvalidLocale`. Static so the dedup
    * spans every datepicker instance on the page; lives on the class (not
    * at module scope) so it stays an encapsulated implementation detail of
-   * this component and does not interfere with WCA's class-JSDoc
+   * this component and doesn't interfere with WCA's class-JSDoc
    * attachment.
    * @private
    */
@@ -1726,7 +1848,7 @@ export class AuroDatePicker extends AuroElement {
 
   /**
    * Logs a one-time `console.debug` when an unsupported locale falls back to
-   * en-US. Deduped by the offending tag so noisy re-renders that resurface
+   * `en-US`. Deduped by the offending tag so noisy re-renders that resurface
    * the same bad value stay quiet, but each new bad value still signals so
    * consumers can spot the typo or missing tag.
    * @private
@@ -1750,7 +1872,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Lifecycle method to check if the locale is valid.
+   * Checks whether `locale` is supported before each update, and keeps `format`, the calendar's reference dates, and `valueEnd` in sync.
    * @ignore
    * @param {Map} changedProperties - The map of properties that have changed since the last update.
    * @returns {void}
@@ -2024,12 +2146,13 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handles the transfer of content between slots in the component.
+   * Called when a slot the datepicker passes to the calendar changes, such as `bib.fullscreen.headline`.
+   * Copies the slot's content into the calendar.
    *
    * @private
    * @method handleSlotToSlot
    * @param {Event} event - The event object containing information about the slot transfer.
-   * @throws {Error} Throws an error if the slot cannot be found or injected.
+   * @throws {TypeError} If no light DOM element is assigned to the slot.
    */
   handleSlotToSlot(event) {
     const slot = this.querySelector(`[slot='${event.target.name}']`);
@@ -2037,7 +2160,8 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handles click events on the datepicker.
+   * Called when someone clicks the datepicker. Stops a click on the inert trigger from closing the open calendar,
+   * and in the `snowflake` layout, moves focus to the start date input when the click isn't on an input or the calendar and no input has focus.
    * @param {PointerEvent} event - The pointer event object.
    * @private
    * @returns {void}
@@ -2080,7 +2204,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Set up click handling for the datepicker.
+   * Sets up click handling for the datepicker.
    * @private
    * @returns {void}
    */
@@ -2206,7 +2330,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Renders the snowflake layout for the datepicker.
+   * Renders the classic layout for the datepicker.
    * @private
    * @returns {import("lit").TemplateResult}
    */
@@ -2261,10 +2385,9 @@ export class AuroDatePicker extends AuroElement {
   // eslint-disable-next-line no-warning-comments
   // TODO: move this to date utility when time allows :(
   /**
-   * Simple formatter that ONLY WORKS FOR US DATES.
-   * Returns formatted date like Apr 21 or Dec 25.
+   * Formats a date as a short month and day in the datepicker's `locale`, such as "Apr 21" for `en-US`.
    * @private
-   * @param {Date} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
+   * @param {Date} date - The date to format.
    * @returns {string}
    */
   formatShortDate(date) {
@@ -2278,7 +2401,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Format and render the provided date value.
+   * Formats a date as a short month and day and renders it.
    * @private
    * @param {Date} date - The date value to format and render.
    * @returns {import('lit').TemplateResult}
@@ -2408,7 +2531,7 @@ export class AuroDatePicker extends AuroElement {
   // ------------------------------------
 
   /**
-   * Handles click on the clear button.
+   * Called when someone selects the clear button. Clears the chosen dates and moves focus to the start date input.
    * @private
    * @param {MouseEvent} event - The mouse event from the clear button click.
    * @returns {void}
@@ -2494,9 +2617,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Returns HTML for the help text and error message.
+   * Renders the help text, or the error message when the datepicker is invalid.
    * @private
-   * @returns {import('lit').TemplateResult} - Returns HTML for the help text and error message.
+   * @returns {import('lit').TemplateResult} The help text or error message HTML.
    */
   renderHtmlHelpText() {
     return html`
@@ -2520,7 +2643,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Separate method for rendering the calendar.
+   * Renders the calendar.
    * @private
    * @returns {import('lit').TemplateResult}
    */
@@ -2562,7 +2685,7 @@ export class AuroDatePicker extends AuroElement {
 
       <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          ?autoPlacement="${this.autoPlacement}"}"
+          ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"

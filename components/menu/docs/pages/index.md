@@ -2,10 +2,10 @@
 <div class="contentWrapper">
   <nav>
     <auro-nav anchorNavContent=".scrollWrapper">
-      <span slot="mobileToggleCollapsed">View More</span>
-      <span slot="mobileToggleExpanded">View Less</span>
+      <span slot="mobileToggleCollapsed">View more</span>
+      <span slot="mobileToggleExpanded">View less</span>
       <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-      <auro-anchorlink fluid href="#useCases">User Stories</auro-anchorlink>
+      <auro-anchorlink fluid href="#useCases">User stories</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -16,7 +16,7 @@
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <auro-header level="2" id="useCases">User Stories</auro-header>
+        <auro-header level="2" id="useCases">User stories</auro-header>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>

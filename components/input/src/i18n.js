@@ -2,24 +2,24 @@ const watchedItems = new Set();
 
 
 /**
- * Function for setting the value of the lang attribute.
+ * Sets an element's `lang` to the page's language.
  * @private
- * @param {object} item - Individual DOM node from set of watchedItems.
- * @param {string} lang - Current language set for the document.
+ * @param {object} item - The element to update.
+ * @param {string} lang - The page's current language.
  */
 function setLang(item, lang) {
 
   /**
-   * It is desired that if the lang is `en` to maintain `undefined` as not to
-   * add the `lang` attribute to the individual element.
+   * When the language is `en`, leave `lang` undefined so the
+   * element doesn't get a `lang` attribute.
    */
   item.lang = lang === 'en' ? undefined : lang;
 }
 
 /**
- * Change handler for MutationObserver() callback.
+ * Called when the page's `lang` attribute changes. Updates `lang` on every watched element.
  * @private
- * @param {MutationRecord[]} mutationList - Observed list of mutations.
+ * @param {MutationRecord[]} mutationList - The observed mutations.
  */
 function handleChange(mutationList) {
   const [mutation] = mutationList;
@@ -90,11 +90,11 @@ const stringsEN = {
 };
 
 /**
- * Function to support the selected of a string in the set lang.
- * @param {string} lang - Requested lang for content return.
- * @param {string} requestedString - String requested in context.
+ * Gets a built-in string in the requested language. Only `es` returns Spanish; every other language returns English.
+ * @param {string} lang - The language to return the string in, such as `es`.
+ * @param {string} requestedString - The key of the string to return, such as `email`.
  * @private
- * @returns {string} Value of string request.
+ * @returns {string} The string in the requested language.
  */
 export default function i18n(lang, requestedString) {
   if (lang === 'es') {
@@ -105,8 +105,10 @@ export default function i18n(lang, requestedString) {
 }
 
 /**
+ * Registers an element to have its `lang` updated when the page's `lang` changes.
+ * Sets the element's `lang` from the page first when it has none.
  * @private
- * @param {object} element - Pass in the scope of the element in use.
+ * @param {object} element - The element to update.
  */
 export function notifyOnLangChange(element) {
   if (!element.lang) {
@@ -116,8 +118,9 @@ export function notifyOnLangChange(element) {
 }
 
 /**
+ * Stops updating an element's `lang` when the page's `lang` changes.
  * @private
- * @param {object} element - Pass in the scope of the element in use.
+ * @param {object} element - The element to stop updating.
  */
 export function stopNotifyingOnLangChange(element) {
   watchedItems.delete(element);

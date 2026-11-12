@@ -3,16 +3,16 @@
 <auro-header level="3" id="slotsGroup">auro-checkbox-group</auro-header>
 
 <auro-header level="4" id="slot-default-group">(default)</auro-header>
-<p>Default slot for the checkbox items. Place <code>&lt;auro-checkbox&gt;</code> elements here.</p>
+<p>The <code>&lt;auro-checkbox&gt;</code> elements in the group.</p>
 
 <auro-header level="4" id="slot-legend">legend</auro-header>
-<p>Defines the content of the legend label for the checkbox group.</p>
+<p>The checkbox group's label, shown above the checkboxes. Screen readers announce it as the group's name.</p>
 
 <auro-header level="4" id="slot-helpText">helpText</auro-header>
-<p>Defines the content of the help text displayed below the checkbox group.</p>
+<p>Help text shown below the checkbox group. While the group shows an error, the error message replaces it.</p>
 
 <auro-header level="4" id="slot-optionalLabel">optionalLabel</auro-header>
-<p>Allows overriding the optional display text <code>"(optional)"</code>, which appears next to the legend.</p>
+<p>Text shown after the legend when the group isn't <code>required</code>, such as "- optional". Defaults to "(optional)".</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -25,8 +25,8 @@
 
 <auro-header level="3" id="slotsCheckbox">auro-checkbox</auro-header>
 
-<auro-header level="3" id="slot-default-checkbox">(default)</auro-header>
-<p>Default slot for the checkbox label text. The content placed inside each <code>&lt;auro-checkbox&gt;</code> element becomes the visible label rendered next to the checkbox input.</p>
+<auro-header level="4" id="slot-default-checkbox">(default)</auro-header>
+<p>Label text for the checkbox, such as "Window seat". It's shown next to the box, and screen readers announce it as the checkbox's name.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->

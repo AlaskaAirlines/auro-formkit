@@ -1,114 +1,161 @@
-# auro-counter-group
-
-The `auro-counter-group` element provides a flexible interface for grouping multiple counters, supporting validation, custom validity messages, and disabled states based on the group's value.
-
-## Properties
-
-| Property                  | Attribute                 | Type                                             | Default          | Description                                      |
-|---------------------------|---------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
-| `appearance`              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
-| `autoPlacement`           | `autoplacement`           | `boolean`                                        | "false"          | If declared, bib's position will be automatically calculated where to appear. |
-| `fullscreenBreakpoint`    | `fullscreenbreakpoint`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| `isDropdown`              | `isdropdown`              | `boolean`                                        | false            | If true, the counter group is displayed as a dropdown. |
-| `largeFullscreenHeadline` | `largefullscreenheadline` | `boolean`                                        | false            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
-| `layout`                  | `layout`                  | `'classic' \| 'snowflake'`                       | "'classic'"      | Determines the layout style of the counter group when it is a dropdown. |
-| `matchWidth`              | `matchwidth`              | `boolean`                                        | false            | If declared, the dropdown will expand to the width of its parent container.<br />Otherwise, the dropdown width will be determined by its content. |
-| `max`                     | `max`                     | `number`                                         | "undefined"      | The maximum value allowed for the whole group of counters. |
-| `min`                     | `min`                     | `number`                                         | "undefined"      | The minimum value allowed for the whole group of counters. |
-| `noFlip`                  | `noflip`                  | `boolean`                                        | false            | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| `offset`                  | `offset`                  | `number`                                         | "0"              | Gap between the trigger element and bib.         |
-| `onDark`                  | `ondark`                  | `boolean`                                        | false            | DEPRECATED - use `appearance` instead.           |
-| `placement`               | `placement`               | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
-| `shape`                   | `shape`                   | `'box' \| 'classic' \| 'pill' \| 'pill-left' \| 'pill-right' \| 'rounded' \| 'snowflake'` | "'classic'"      | Sets the shape of the counter group when it is a dropdown. |
-| `shift`                   | `shift`                   | `boolean`                                        | false            | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
-| `size`                    | `size`                    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`           | "'xl'"           | Sets the size of the counter group when it is a dropdown. |
-| `total`                   | `total`                   | `number`                                         | "undefined"      | The total value of the counters.                 |
-| `validity`                | `validity`                | `string`                                         | "undefined"      | Reflects the validity state.                     |
-| `value`                   | `value`                   | `Record<string, number>`                         | "undefined"      | The current individual values of the nested counters. |
-
-## Methods
-
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
-| `reset`    | `(): void`                             | Resets the counter group to its initial state by resetting each child counter and clearing validity.<br />Each child reset dispatches an `input` event, which triggers `updateValue()` to recompute `value`/`total`. |
-| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
-
-## Events
-
-| Event                       | Type                                             | Description                                      |
-|-----------------------------|--------------------------------------------------|--------------------------------------------------|
-| `auroFormElement-validated` | `CustomEvent<{ validity: any; message: string \| undefined; }>` | Notifies that the `validity` and `errorMessage` values have changed. |
-| `input`                     | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` | Notifies that the counter group's value has changed. |
-
-## Slots
-
-| Name                      | Description                                      |
-|---------------------------|--------------------------------------------------|
-| `ariaLabel.bib.close`     | Sets aria-label on close button in fullscreen bib |
-| `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true. |
-| `bib.fullscreen.headline` | Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required. |
-| `default`                 | Slot for counter elements.                       |
-| `helpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
-| `label`                   | Dropdown label content. Only used when `isDropdown` is true. |
-| `valueText`               | Dropdown value text display. Only used when `isDropdown` is true. |
-
-## CSS Shadow Parts
-
-| Part       | Description                                      |
-|------------|--------------------------------------------------|
-| `dropdown` | The dropdown element rendered when `isDropdown` is true. |
-| `helpText` | The help text and error message container.       |
-
-
 # auro-counter
 
-The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
+A counter that lets people choose a number, such as how many passengers are traveling, with minus and plus buttons.
 
-## Properties
+**Key capabilities**
+- **Range limits**: The `min` and `max` attributes set the lowest and highest values, and the matching button turns off at each limit.
+- **Keyboard support**: The counter is a single tab stop, and the Up Arrow and Down Arrow keys change its value.
+- **Supporting text**: The `description` and `helpText` slots add text below the label.
+- **Error state**: The `error` attribute marks the counter invalid and shows its value as the error message.
+- **Dark backgrounds**: Set `appearance="inverse"` to use the counter on dark backgrounds.
 
-| Property     | Attribute    | Type                     | Default     | Description                                      |
-|--------------|--------------|--------------------------|-------------|--------------------------------------------------|
-| `appearance` | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| `disabled`   | `disabled`   | `boolean`                |             | Indicates if the counter is disabled.            |
-| `error`      | `error`      | `string`                 |             | Error state and message.<br />True if set, value is the error message. |
-| `max`        | `max`        | `number`                 |             | The maximum value for the counter.               |
-| `min`        | `min`        | `number`                 |             | The minimum value for the counter.               |
-| `onDark`     | `ondark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| `validity`   | `validity`   | `string`                 |             | The validity state of the counter.               |
-| `value`      | `value`      | `number \| undefined`    |             | Gets the current value of the counter.           |
+**Example**
 
-## Methods
+```html
+<auro-counter>
+  Adults
+  <span slot="ariaLabel.minus">Remove adult</span>
+  <span slot="ariaLabel.plus">Add adult</span>
+</auro-counter>
+```
 
-| Method      | Type                                   | Description                                      |
-|-------------|----------------------------------------|--------------------------------------------------|
-| `decrement` | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
-| `increment` | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
-| `reset`     | `(): void`                             | Resets the counter to its default state, clearing validity/touched state and returning<br />the value to `min` — matching the clear-on-reset behavior of the other Auro form elements. |
-| `validate`  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+### Properties and attributes
 
-## Events
+| Properties | Attributes | Modifiers | Type                   | Default   | Category | Range | Description                                                                                                                                                                                                                                                                                                                               |
+| ---------- | ---------- | --------- | ---------------------- | --------- | -------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| appearance | appearance |           | `default` \| `inverse` | `default` | ui       |       | Sets the colors to match the background behind the counter. Use `inverse` on dark backgrounds and `default` on light ones.                                                                                                                                                                                                                |
+| disabled   | disabled   |           | boolean                |           | ui       |       | Turns the counter off. A disabled counter is shown in a muted style, its buttons can't be clicked, and it's removed from the keyboard tab order.                                                                                                                                                                                          |
+| onDark     | ondark     |           | boolean                |           | ui       |       | Deprecated: Use `appearance="inverse"` instead.<br>Shows the counter in colors for dark backgrounds.                                                                                                                                                                                                                                      |
+| error      | error      |           | string                 |           | behavior |       | Sets a custom error message, such as "Select at least one adult", and marks the counter invalid. The message replaces the help text. Set the `error` attribute before the counter first renders, or call `validate()` after changing it: setting only the property, or changing the attribute later, doesn't currently update `validity`. |
+| max        | max        |           | number                 | `9`       | behavior | 0–9   | Sets the highest value the counter allows. The plus button turns off at this value.                                                                                                                                                                                                                                                       |
+| min        | min        |           | number                 | `0`       | behavior | 0–9   | Sets the lowest value the counter allows. The counter starts at this value, and the minus button turns off at it.                                                                                                                                                                                                                         |
+| name       | name       |           | string                 |           | behavior |       | Sets the key for this counter's entry in the group's `value` object, such as `adults`. Applies only inside `auro-counter-group`, which uses `counter-0`, `counter-1`, and so on for counters without a name.                                                                                                                              |
+| validity   | validity   | readonly  | string                 |           | behavior |       | Reports whether the counter passes validation: `valid`, or the reason it fails, such as `customError`, `rangeOverflow`, or `rangeUnderflow`.                                                                                                                                                                                              |
+| value      | value      |           | number \| undefined    |           | behavior |       | Sets the counter's value. A value outside `min` and `max` (0–9 by default) isn't moved back into range; it marks the counter invalid instead. A value that's `undefined`, `null`, or not a number clears the value to `undefined`.                                                                                                        |
 
-| Event   | Type                                           | Description                                    |
-|---------|------------------------------------------------|------------------------------------------------|
-| `input` | `CustomEvent<{ value: number \| undefined; }>` | Notifies that the counter's value has changed. |
+### Methods
 
-## Slots
+| Name      | Parameters                                                                                                                                      | Return | Description                                                                                                                                                                                                                                                |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| decrement | `value` (number) - The amount to subtract. Defaults to 1.                                                                                       | void   | Decreases the value by 1, or by the given amount. Does nothing while the minus button is off: when the counter is disabled, its value is at or below `min`, or its group's total is at or below the group's `min`. It doesn't stop a larger step at `min`. |
+| increment | `value` (number) - The amount to add. Defaults to 1.                                                                                            | void   | Increases the value by 1, or by the given amount. Does nothing while the plus button is off: when the counter is disabled, its value is at or above `max`, or its group's total has reached the group's `max`. It doesn't cap a larger step at `max`.      |
+| register  | `name` (string) - The tag name to register the element under.                                                                                   |        | Registers the custom element with the browser.                                                                                                                                                                                                             |
+| reset     | None                                                                                                                                            | void   | Sets the value back to `min` and clears the counter's validation state. A counter with the `error` attribute stays invalid.                                                                                                                                |
+| validate  | `force` (boolean) - If true, checks `min` and `max` even while the counter has focus. If false, skips those checks while the counter has focus. |        | Checks the counter's value against `min`, `max`, and the `error` attribute, and updates `validity`.                                                                                                                                                        |
 
-| Name              | Description                                |
-|-------------------|--------------------------------------------|
-| `ariaLabel.minus` | Accessible label for the decrement button. |
-| `ariaLabel.plus`  | Accessible label for the increment button. |
-| `default`         | Main label content for the counter.        |
-| `description`     | Descriptive content for the counter.       |
-| `helpText`        | Help text content for the counter.         |
+### Events
 
-## CSS Shadow Parts
+| Name  | Description                                                                                                                                                                                    |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| input | Fires whenever `value` changes, including when the counter sets its starting value, with the new number in `event.detail.value`. It doesn't currently bubble, so listen on the counter itself. |
 
-| Part             | Description                                      |
-|------------------|--------------------------------------------------|
-| `controlMinus`   | The decrement button.                            |
-| `controlPlus`    | The increment button.                            |
-| `counterControl` | The container for the counter's spinbutton controls and value. |
-| `helpText`       | The help text and error message container.       |
+### Slots
+
+| Name            | Category | Required | Description                                                                                                                     |
+| --------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| ariaLabel.minus | a11y     | Yes      | Text screen readers announce for the minus button, such as "Remove adult". Defaults to "−" (a minus sign).                      |
+| ariaLabel.plus  | a11y     | Yes      | Text screen readers announce for the plus button, such as "Add adult". Defaults to "+".                                         |
+| default         | ui       | Yes      | The counter's label, such as "Adults". Screen readers read it, with any `description`, as the counter's name.                   |
+| description     | ui       |          | Short supporting text shown below the label, such as "18 years or older". Screen readers read it as part of the counter's name. |
+| helpText        | ui       |          | Extra guidance shown below the counter. An error message replaces it while the counter is invalid.                              |
+
+### CSS shadow parts
+
+| Name           | Description                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------ |
+| controlMinus   | The minus button, which lowers the value by 1.                                             |
+| controlPlus    | The plus button, which raises the value by 1.                                              |
+| counterControl | The spinbutton element that holds the minus button, the value, and the plus button.        |
+| helpText       | The paragraph that shows the help text, or the error message while the counter is invalid. |
+
+# auro-counter-group
+
+Groups related counters, such as passenger types, so they share one total and one set of limits.
+
+**Key capabilities**
+- **Shared limits**: The `min` and `max` attributes limit the total of all counters, and every counter's minus or plus button turns off when the total reaches a limit.
+- **Combined value**: The `value` property holds each counter's number, keyed by its `name`, and `total` adds them up.
+- **Dropdown**: The `isDropdown` attribute shows the counters in a dropdown with a label and a summary of their values, which fills the screen on small screens.
+- **Combined errors**: In a dropdown, the group's help text shows the error messages of every invalid counter.
+- **Dark backgrounds**: Set `appearance="inverse"` to use the group on dark backgrounds.
+
+**Example**
+
+```html
+<auro-counter-group max="9">
+  <auro-counter name="adults">
+    Adults
+    <span slot="ariaLabel.minus">Remove adult</span>
+    <span slot="ariaLabel.plus">Add adult</span>
+  </auro-counter>
+  <auro-counter name="children">
+    Children
+    <span slot="ariaLabel.minus">Remove child</span>
+    <span slot="ariaLabel.plus">Add child</span>
+  </auro-counter>
+</auro-counter-group>
+```
+
+### Properties and attributes
+
+| Properties              | Attributes              | Modifiers | Type                                                                                                                                                               | Default        | Category | Relevant when | Description                                                                                                                                                                                                               |
+| ----------------------- | ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| appearance              | appearance              |           | `default` \| `inverse`                                                                                                                                             | `default`      | ui       |               | Sets the colors to match the background behind the group. Use `inverse` on dark backgrounds and `default` on light ones.                                                                                                  |
+| fullscreenBreakpoint    | fullscreenbreakpoint    |           | `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `disabled`                                                                                                                 | `sm`           | ui       | `isDropdown`  | Sets the largest screen size at which the open dropdown fills the screen. Use `disabled` to keep it as a dropdown on every screen size. Applies only when `isDropdown` is set.                                            |
+| isDropdown              | isdropdown              |           | boolean                                                                                                                                                            | `false`        | ui       |               | Shows the counters in a dropdown with a label and a summary of their values. Use it to save space in forms.                                                                                                               |
+| largeFullscreenHeadline | largefullscreenheadline |           | boolean                                                                                                                                                            | `false`        | ui       | `isDropdown`  | Shows the fullscreen dropdown's headline in a larger heading style. Applies only when `isDropdown` is set.                                                                                                                |
+| layout                  | layout                  |           | `classic` \| `snowflake`                                                                                                                                           | `classic`      | ui       | `isDropdown`  | Sets the dropdown's layout. Use `classic` for most forms, and `snowflake` only on dark backgrounds with `appearance="inverse"`. Applies only when `isDropdown` is set.                                                    |
+| matchWidth              | matchwidth              |           | boolean                                                                                                                                                            | `false`        | ui       | `isDropdown`  | Makes the open dropdown the same width as its trigger. Without it, the dropdown's content sets its width. Applies only when `isDropdown` is set.                                                                          |
+| noFlip                  | noflip                  |           | boolean                                                                                                                                                            | `false`        | ui       | `isDropdown`  | Keeps the open dropdown on the side set by `placement`, even when there isn't enough space there. Without it, the dropdown flips to the opposite side. Applies only when `isDropdown` is set.                             |
+| offset                  | offset                  |           | number                                                                                                                                                             |                | ui       | `isDropdown`  | Sets the gap in pixels between the trigger and the open dropdown, such as `20`. Uses `0` when not set. Applies only when `isDropdown` is set.                                                                             |
+| placement               | placement               |           | `top` \| `right` \| `bottom` \| `left` \| `bottom-start` \| `top-start` \| `top-end` \| `right-start` \| `right-end` \| `bottom-end` \| `left-start` \| `left-end` | `bottom-start` | ui       | `isDropdown`  | Sets where the open dropdown appears relative to its trigger. The first word is the side, and `-start` or `-end` lines the dropdown up with the start or end edge of the trigger. Applies only when `isDropdown` is set.  |
+| shape                   | shape                   |           | `box` \| `classic` \| `pill` \| `pill-left` \| `pill-right` \| `rounded` \| `snowflake`                                                                            | `classic`      | ui       | `isDropdown`  | Sets the shape of the dropdown's trigger. Use `classic` with the `classic` layout and `snowflake` with the `snowflake` layout; when not set, it matches the layout. Applies only when `isDropdown` is set.                |
+| shift                   | shift                   |           | boolean                                                                                                                                                            | `false`        | ui       | `isDropdown`  | Moves the open dropdown along its side so the edge of the screen doesn't cut it off. Applies only when `isDropdown` is set.                                                                                               |
+| size                    | size                    |           | `xs` \| `sm` \| `md` \| `lg` \| `xl`                                                                                                                               | `xl`           | ui       | `isDropdown`  | Sets the height of the dropdown's trigger, from `xs`, the shortest, to `xl`, the tallest. The `classic` and `snowflake` shapes have a fixed height, so `size` doesn't change them. Applies only when `isDropdown` is set. |
+| autoPlacement           | autoplacement           |           | boolean                                                                                                                                                            | `false`        | ui       | `isDropdown`  | Deprecated: Use `placement` instead.<br>Moves the open dropdown to whichever side of the trigger has the most space. Applies only when `isDropdown` is set.                                                               |
+| onDark                  | ondark                  |           | boolean                                                                                                                                                            | `false`        | ui       |               | Deprecated: Use `appearance="inverse"` instead.<br>Shows the group in colors for dark backgrounds.                                                                                                                        |
+| max                     | max                     |           | number                                                                                                                                                             | `undefined`    | behavior |               | Sets the highest total allowed across all counters. When the total reaches it, every counter's plus button turns off.                                                                                                     |
+| min                     | min                     |           | number                                                                                                                                                             | `undefined`    | behavior |               | Sets the lowest total allowed across all counters. When the total is at or below it, every counter's minus button turns off.                                                                                              |
+| total                   |                         | readonly  | number                                                                                                                                                             | `undefined`    | behavior |               | Gets the sum of every counter's value, such as `3` for 2 adults and 1 child.                                                                                                                                              |
+| validity                | validity                | readonly  | string                                                                                                                                                             | `undefined`    | behavior |               | Gets the group's validation result: `valid`, or the first invalid counter's reason, such as `customError` or `rangeOverflow`.                                                                                             |
+| value                   |                         | readonly  | Record<string, number>                                                                                                                                             | `undefined`    | behavior |               | Gets each counter's value, keyed by the counter's `name`, such as `{ adults: 2, children: 1 }`. Counters without a `name` use `counter-0`, `counter-1`, and so on.                                                        |
+
+### Methods
+
+| Name                        | Parameters                                                                                                                                                                         | Return | Description                                                                                                                                                                                                                |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| hideBib                     | None                                                                                                                                                                               | void   | Closes the dropdown if it's open. Does nothing unless `isDropdown` is set.                                                                                                                                                 |
+| register                    | `name` (string) - The tag name to register the element under.                                                                                                                      |        | Registers the custom element with the browser.                                                                                                                                                                             |
+| reset                       | None                                                                                                                                                                               | void   | Resets every counter to its `min` value and clears the group's validation state.<br>The group stays invalid while any counter has the `error` attribute.<br>`value` and `total` update as each counter finishes resetting. |
+| resetLayoutClasses          | None                                                                                                                                                                               | void   | Sets the `layout-*` class on the `.wrapper` element to match the current `layout`, such as `layout-classic`. Does nothing when `layout` isn't set or there's no `.wrapper` element.                                        |
+| resetShapeClasses           | None                                                                                                                                                                               | void   | Sets the `shape-*` class on the `.wrapper` element to match the current `shape` and `size`, such as `shape-rounded-lg`, or to `shape-none` when either isn't set. Does nothing when there's no `.wrapper` element.         |
+| showBib                     | None                                                                                                                                                                               | void   | Opens the dropdown if it's closed. Does nothing unless `isDropdown` is set.                                                                                                                                                |
+| updateComponentArchitecture | None                                                                                                                                                                               | void   | Updates the `layout-*` and `shape-*` classes on the `.wrapper` element. Called whenever `layout`, `shape`, or `size` changes, unless a subclass overrides `updated()` without calling `super.updated()`.                   |
+| validate                    | `force` (boolean) - If true, runs the group's own check even while it has focus. If false, skips that check while the group has focus; `validity` still updates from the counters. |        | Updates the group's `validity` from its counters and fires `auroFormElement-validated`.                                                                                                                                    |
+
+### Events
+
+| Name                      | Description                                                                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| auroFormElement-validated | Fires each time the group is validated, with the result in `event.detail.validity` and `event.detail.message`.                                          |
+| input                     | Fires when any counter's value changes, with the new `total` and `value` in `event.detail`. It doesn't currently bubble, so listen on the group itself. |
+
+### Slots
+
+| Name                    | Category | Required     | Relevant when | Description                                                                                                                                         |
+| ----------------------- | -------- | ------------ | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ariaLabel.bib.close     | a11y     | `isDropdown` | `isDropdown`  | Text screen readers announce for the close button in the fullscreen dropdown, such as "Close passenger selector". Defaults to "Close".              |
+| bib.fullscreen.footer   | ui       |              | `isDropdown`  | Content shown at the bottom of the fullscreen dropdown, such as Reset and Save buttons. Applies only when `isDropdown` is set.                      |
+| bib.fullscreen.headline | ui       | `isDropdown` | `isDropdown`  | The heading shown at the top of the fullscreen dropdown, such as "Passengers". Applies only when `isDropdown` is set.                               |
+| default                 | ui       | Yes          |               | The `auro-counter` elements in the group.                                                                                                           |
+| helpText                | ui       |              | `isDropdown`  | Extra guidance shown below the dropdown. An error message replaces it while any counter is invalid. Applies only when `isDropdown` is set.          |
+| label                   | ui       | `isDropdown` | `isDropdown`  | The label shown in the dropdown trigger, such as "Passengers". Applies only when `isDropdown` is set.                                               |
+| typeIcon                | ui       |              | `isDropdown`  | An icon shown at the start of the dropdown trigger, such as a person icon for a passenger selector. Applies only when `isDropdown` is set.          |
+| valueText               | ui       |              | `isDropdown`  | Custom text shown in the dropdown trigger in place of the default summary of each counter's value and label. Applies only when `isDropdown` is set. |
+
+### CSS shadow parts
+
+| Name     | Description                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| dropdown | The dropdown element, rendered when `isDropdown` is set.                                                                                  |
+| helpText | The paragraph that shows the help text, or the combined error message while a counter is invalid. Rendered only when `isDropdown` is set. |
