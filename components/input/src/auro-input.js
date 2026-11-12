@@ -48,7 +48,7 @@ import { createRef, ref } from "lit/directives/ref.js";
  *
  * **Key capabilities**
  * - **Formatting as people type**: Set `type` to `credit-card`, `tel`, or `date`, or set `format`, to format the value as the user types.
- * - **Validation messages**: Set `required`, `minlength`, `maxlength`, `pattern`, `min`, or `max` to show an error message below the field when the value doesn't meet the rule.
+ * - **Validation messages**: Set `required`, `minlength`, `maxlength`, or `pattern` to show an error message below the field when the value doesn't meet the rule; `min` and `max` work only with `type="number"`, or with `type="date"` and a `format` that has a day, month, and year.
  * - **Clear button**: The input always shows a button that clears the value when the field has a value, isn't disabled or read-only, and the user hovers over it or moves focus into it.
  * - **Password visibility**: Set `type="password"` to add a button that shows or hides the password in the `classic` layout.
  * - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.

@@ -17,7 +17,7 @@ import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/da
 
 /**
  * Shared base class for `auro-input` that handles the value, formatting, and validation.
- * @event input - Fires when the value changes, whether the user types or code sets the value. Events from code changes have `isProgrammatic` set to `true`.
+ * @event input - Fires when the value changes. Typing fires the browser's `input` event, and every change to `value` also fires an `input` event with `isProgrammatic` set to `true`. To respond only to typing, skip events that have `isProgrammatic` set.
  * @event auroFormElement-validated - Fires each time the input is validated, with the result in `event.detail.validity` and `event.detail.message`.
  * @event auroInput-validityChange - Fires when `validity` changes.
  */

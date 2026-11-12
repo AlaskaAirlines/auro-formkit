@@ -4,7 +4,7 @@ A single-line text field that lets people type a value, such as a name, email ad
 
 **Key capabilities**
 - **Formatting as people type**: Set `type` to `credit-card`, `tel`, or `date`, or set `format`, to format the value as the user types.
-- **Validation messages**: Set `required`, `minlength`, `maxlength`, `pattern`, `min`, or `max` to show an error message below the field when the value doesn't meet the rule.
+- **Validation messages**: Set `required`, `minlength`, `maxlength`, or `pattern` to show an error message below the field when the value doesn't meet the rule; `min` and `max` work only with `type="number"`, or with `type="date"` and a `format` that has a day, month, and year.
 - **Clear button**: The input always shows a button that clears the value when the field has a value, isn't disabled or read-only, and the user hovers over it or moves focus into it.
 - **Password visibility**: Set `type="password"` to add a button that shows or hides the password in the `classic` layout.
 - **Dark backgrounds**: Set `appearance="inverse"` to use colors made for dark backgrounds.
@@ -93,11 +93,11 @@ A single-line text field that lets people type a value, such as a name, email ad
 
 ### Events
 
-| Name                      | Description                                                                                                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| auroFormElement-validated | Fires each time the input is validated, with the result in `event.detail.validity` and `event.detail.message`.                             |
-| auroInput-validityChange  | Fires when `validity` changes.                                                                                                             |
-| input                     | Fires when the value changes, whether the user types or code sets the value. Events from code changes have `isProgrammatic` set to `true`. |
+| Name                      | Description                                                                                                                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| auroFormElement-validated | Fires each time the input is validated, with the result in `event.detail.validity` and `event.detail.message`.                                                                                                                              |
+| auroInput-validityChange  | Fires when `validity` changes.                                                                                                                                                                                                              |
+| input                     | Fires when the value changes. Typing fires the browser's `input` event, and every change to `value` also fires an `input` event with `isProgrammatic` set to `true`. To respond only to typing, skip events that have `isProgrammatic` set. |
 
 ### Slots
 
