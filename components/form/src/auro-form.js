@@ -481,7 +481,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Checks whether the form is unchanged, with every field still holding its starting value, the value it had when the form first found it. The form counts as changed while any field's value differs from its starting value or any field has failed validation, so changing a value back makes this true again.
+   * Checks whether the form is unchanged, with every field still holding its starting value, the value it had when the form first found it. The form counts as changed while any field's value differs from its starting value or any field has failed validation.
    * @returns {boolean} True if the form is unchanged; false otherwise.
    * @category behavior
    */

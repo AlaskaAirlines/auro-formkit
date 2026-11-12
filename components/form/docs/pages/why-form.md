@@ -119,7 +119,7 @@
     <tr>
       <td>Event normalization</td>
       <td>No</td>
-      <td>Unified input/change/submit/reset</td>
+      <td>Unified <code>change</code>, <code>submit</code>, and <code>reset</code> events</td>
     </tr>
   </tbody>
 </table>
