@@ -43,7 +43,7 @@
 <p>Without those slots, the buttons fall back to the symbols "−" and "+" as their labels.</p>
 
 <auro-header level="3" id="voiceOverValueChange">Value change</auro-header>
-<p>When the counter value changes (via button activation or arrow keys), VoiceOver announces the updated value from the spinbutton's <code>aria-valuenow</code> and <code>aria-valuetext</code> attributes.</p>
+<p>When the counter value changes (via button activation or arrow keys), VoiceOver announces the updated value from the spinbutton's <code>aria-valuenow</code> and <code>aria-valuetext</code> attributes. The counter doesn't currently set <code>aria-valuetext</code> to the bare number: it wraps the number in single quotes, such as <code>'2'</code>.</p>
 
 <auro-header level="2" id="voiceOverStandaloneWorkflow">Standalone counter workflow</auro-header>
 <ol>
