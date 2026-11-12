@@ -42,7 +42,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * - **Multiple selection**: Set `multiSelect` to let people choose more than one option.
  * - **Validation**: Set `required` to require a selection, and `setCustomValidity` to change the error message.
  * - **Fullscreen on small screens**: Set `fullscreenBreakpoint` to choose the largest screen size at which the list opens as a fullscreen dialog.
- * - **Type-ahead**: Typing always moves to the first option whose text starts with the typed characters.
+ * - **Type-ahead**: Typing moves to the first available option whose text starts with the typed characters and opens the list; repeating a letter cycles through the options that start with it.
  * - **Layouts**: Set `layout` to `classic`, `emphasized`, or `snowflake` to change the overall look.
  *
  * **Example**
@@ -565,7 +565,7 @@ export class AuroSelect extends AuroElement {
 
       /**
        * Sets the selected option by its value, such as `price`. In `multiSelect` mode, it's a JSON array string, such as `["stops","price"]`.
-       * A value that matches no option, or matches only `disabled` or `static` options, clears both `value` and `optionSelected`; `hidden` options can still be selected by value.
+       * Once the menu has options, a value that matches no option, or matches only `disabled` or `static` options, clears both `value` and `optionSelected`; `hidden` options can still be selected by value.
        * @category behavior
        */
       value: {
@@ -1392,7 +1392,7 @@ export class AuroSelect extends AuroElement {
 
   /**
    * Selects the menu option whose value matches, as setting `value` does.
-   * A value that matches no option, or matches only `disabled` or `static` options, clears `value` and `optionSelected`; `hidden` options can still be selected.
+   * Once the menu has options, a value that matches no option, or matches only `disabled` or `static` options, clears `value` and `optionSelected`; `hidden` options can still be selected.
    * @param {string} value - The option value to select, such as `price`.
    */
   setMenuValue(value) {

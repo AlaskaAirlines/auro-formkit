@@ -35,7 +35,7 @@
   <p>In some cases, you need to preset the value of the component when it first renders.</p>
   <auro-header level="4" id="us3a">Single select</auro-header>
   <p>When a value is preset, the matching option is <code>selected</code>, and it becomes <code>active</code> when the bib opens.</p>
-  <p>If a preset value doesn't match any option, the value is reset to <code>undefined</code>. A value that matches an option marked <code>disabled</code> or <code>static</code> is also rejected and reset to <code>undefined</code>; a value matching a <code>hidden</code> option is still applied.</p>
+  <p>When the menu already has options and a preset value doesn't match any of them, the value is reset to <code>undefined</code>. A value that matches an option marked <code>disabled</code> or <code>static</code> is also rejected and reset to <code>undefined</code>; a value matching a <code>hidden</code> option is still applied.</p>
   <auro-header level="4" id="us3b">Multi-select</auro-header>
   <p>When configured for multi-select, the preset value can include multiple options. The first selected option becomes <code>active</code> when the bib opens.</p>
   <p>Preset values that match an option marked <code>disabled</code> or <code>static</code> are discarded. Values that match no option stay in <code>value</code>, so options added later can still be selected. If none of the preset values match a selectable option, the value is reset to <code>undefined</code>.</p>

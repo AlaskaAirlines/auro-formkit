@@ -19,7 +19,7 @@
   min-height: var(--ds-size-600, 3rem);
   padding: var(--ds-size-100, 0.5rem) var(--ds-size-400, 2rem) var(--ds-size-100, 0.5rem) var(--ds-size-200, 1rem);
   border: 1px solid var(--ds-basic-color-border-bold, #585e67);
-  border-radius: var(--ds-border-radius, 4px);
+  border-radius: var(--ds-border-radius, 0.375rem);
   background-color: var(--ds-basic-color-surface-default, #ffffff);
   color: var(--ds-basic-color-texticon-default, #2a2a2a);
   font-family: inherit;
