@@ -133,7 +133,7 @@ export class AuroRadioGroup extends LitElement {
 
       /**
        * Sets the group colors to match its background. Use `inverse` on dark backgrounds and `default` on light ones.
-       * The group passes this value to every radio button in it.
+       * The group passes this value to the radio buttons it contains. Radio buttons you add later don't pick it up until this value changes.
        * @type {'default' | 'inverse'}
        * @default 'default'
        * @category ui
@@ -182,7 +182,7 @@ export class AuroRadioGroup extends LitElement {
 
       /**
        * Stops the group from validating automatically when focus leaves it or the selection changes.
-       * To validate the group yourself, call `validate()`. The `error` attribute still applies.
+       * To validate the group yourself, call `validate(true)`, which checks right away, even before anyone has interacted with the group. The `error` attribute still applies.
        * @category behavior
        */
       noValidate: {

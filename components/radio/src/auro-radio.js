@@ -95,7 +95,7 @@ export class AuroRadio extends LitElement {
 
       /**
        * Sets the radio button colors to match its background. Use `inverse` on dark backgrounds and `default` on light ones.
-       * Inside an `auro-radio-group`, the group's `appearance` replaces this value.
+       * Inside an `auro-radio-group`, the group's `appearance` replaces this value each time the group's `appearance` changes.
        * @type {'default' | 'inverse'}
        * @default 'default'
        * @category ui
