@@ -110,7 +110,4 @@ export const ProgrammaticallyShow = stories.ProgrammaticallyShow;
 export const CssParts = stories.CssParts;
 export const CustomTokens = stories.CustomTokens;
 export const InDrawer = stories.InDrawer;
-export const BibInset = stories.BibInset;
-export const BibRounded = stories.BibRounded;
-export const BibCommon = stories.BibCommon;
 export const Placement = stories.Placement;
